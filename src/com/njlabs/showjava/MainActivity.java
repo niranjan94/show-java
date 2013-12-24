@@ -1,18 +1,13 @@
 package com.njlabs.showjava;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -39,9 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.googlecode.dex2jar.reader.DexFileReader;
-import com.googlecode.dex2jar.v3.Dex2jar;
-
+@SuppressWarnings("unused")
 public class MainActivity extends Activity
 {
 	ArrayList<PInfo> UserPackages;
@@ -106,7 +99,7 @@ public class MainActivity extends Activity
 							fs.write(RetrievedString.getBytes());
 							fs.flush();
 							fs.close();
-							exec("/system/bin/chmod 0777 /data/data/com.njlabs.getjava/files/busybox");
+							Tools.exec("/system/bin/chmod 0777 /data/data/com.njlabs.getjava/files/busybox");
 						}
 						catch (IOException e)
 						{
@@ -209,20 +202,24 @@ public class MainActivity extends Activity
 	public String GetJavaProcess(String pkgName, String apkDir, Handler myHandler)
 	{
 		File path = Environment.getExternalStorageDirectory();
-		File appDir=new File(path + "/GetJava");
-		File newApkDir=new File(appDir + "/" + pkgName);
-		if (!appDir.isDirectory())
+		
+		File WorkingDirectory=new File(path + "/ShowJava");
+		File PerAppWorkingDirectory=new File(WorkingDirectory + "/" + pkgName);
+		
+		File OutDirectory=new File(PerAppWorkingDirectory + "/out");
+		
+		if (!WorkingDirectory.isDirectory())
 		{
-			appDir.mkdir();
+			WorkingDirectory.mkdir();
 		}
-		if (!newApkDir.isDirectory())
+		if (!PerAppWorkingDirectory.isDirectory())
 		{
-			newApkDir.mkdir();
+			PerAppWorkingDirectory.mkdir();
 		}
 		else
 		{
-			newApkDir.delete();
-			newApkDir.mkdir();
+			PerAppWorkingDirectory.delete();
+			PerAppWorkingDirectory.mkdir();
 		}
 		myHandler.post(new Runnable() {
 			@Override
@@ -233,23 +230,12 @@ public class MainActivity extends Activity
 		});
 		
 		
-		
-		String cmd="/system/bin/cp " + apkDir + " " + newApkDir;
-		String output=exec(cmd);
-		File oldApkFile=new File(appDir + "/"+ pkgName +"/"+FilenameUtils.getBaseName(apkDir.toString())+".apk");
-		File ApkFile=new File(appDir + "/"+ pkgName +"/"+pkgName+".apk");
+		String cmd="/system/bin/cp " + apkDir + " " + PerAppWorkingDirectory;
+		String output=Tools.exec(cmd);
+		File oldApkFile=new File(WorkingDirectory + "/"+ pkgName +"/"+FilenameUtils.getBaseName(apkDir.toString())+".apk");
+		File ApkFile=new File(WorkingDirectory + "/"+ pkgName +"/"+pkgName+".apk");
 		oldApkFile.renameTo(ApkFile);
 
-		
-		// DEX 2 JAR CONFIGS
-		boolean reuseReg = false; // reuse regiter while generate java .class file
-		boolean topologicalSort1 = false; // same with --topological-sort/-ts
-		boolean topologicalSort = false; // sort block by topological, that will generate more readable code
-		boolean verbose = true; // show progress
-		boolean debugInfo = false; // translate debug info
-		boolean printIR = false; // print ir to Syste.out
-		boolean optmizeSynchronized = false; // optmize-synchronized
-		//////
 		myHandler.post(new Runnable() {
 			@Override
 			public void run()
@@ -259,18 +245,16 @@ public class MainActivity extends Activity
 		});
 		///
 		
-		File file = new File(newApkDir+"/"+FilenameUtils.getBaseName(ApkFile.toString()) + ".jar");
 		try 
 		{
-			DexFileReader reader = new DexFileReader(new File(ApkFile.toString()));
-			Dex2jar.from(reader).reUseReg(reuseReg)
-            .topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
-            .optimizeSynchronized(optmizeSynchronized).printIR(printIR).verbose(verbose).to(file);
-		}
+			Tools.ApkToJar(PerAppWorkingDirectory,ApkFile);
+		} 
 		catch (IOException e) 
 		{
-			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 		myHandler.post(new Runnable() {
 			@Override
 			public void run()
@@ -278,9 +262,10 @@ public class MainActivity extends Activity
 				GetJavaDialog.setMessage("Extracting jar...");	
 			}
 		});
-    	try 
+		
+    	try
     	{
-			unzipJar(newApkDir+"/out", newApkDir+"/"+FilenameUtils.getBaseName(ApkFile.toString()) + ".jar");
+			Tools.unzipJar(OutDirectory.toString(), PerAppWorkingDirectory+"/"+FilenameUtils.getBaseName(ApkFile.toString()) + ".jar",myHandler,GetJavaDialog);
 		} 
     	catch (IOException e) 
 		{
@@ -295,7 +280,6 @@ public class MainActivity extends Activity
 		private String pname = "";
 		private String versionName = "";
 		private String sourceDir = "";
-		@SuppressWarnings("unused")
 		private int versionCode = 0;
 		private Drawable icon;
 		public String getAppname()
@@ -304,7 +288,7 @@ public class MainActivity extends Activity
 		}
 	}
 	
-	@SuppressWarnings("unused")
+	
 	private ArrayList<PInfo> getInstalledApps(boolean getSysPackages, Handler myHandler)
 	{
 		Looper.prepare();
@@ -315,7 +299,7 @@ public class MainActivity extends Activity
 			PackageInfo p = packs.get(i);
 			if ((!getSysPackages) && (p.versionName == null))
 			{
-				continue ;
+				continue;
 			}
 			final int count=i + 1;
 			final int total=packs.size();
@@ -369,70 +353,4 @@ public class MainActivity extends Activity
 		Collections.sort(res, AppNameComparator);
 		return res; 
 	}
-	public static void unzipJar(String destinationDir, String jarPath) throws IOException {
-		File file = new File(jarPath);
-		JarFile jar = new JarFile(file);
- 
-		// fist get all directories,
-		// then make those directory on the destination Path
-		for (Enumeration<JarEntry> enums = jar.entries(); enums.hasMoreElements();) {
-			JarEntry entry = (JarEntry) enums.nextElement();
- 
-			String fileName = destinationDir + File.separator + entry.getName();
-			File f = new File(fileName);
- 
-			if (fileName.endsWith("/")) {
-				f.mkdirs();
-			}
- 
-		}
- 
-		//now create all files
-		for (Enumeration<JarEntry> enums = jar.entries(); enums.hasMoreElements();) {
-			JarEntry entry = (JarEntry) enums.nextElement();
- 
-			String fileName = destinationDir + File.separator + entry.getName();
-			File f = new File(fileName);
- 
-			if (!fileName.endsWith("/")) {
-				InputStream is = jar.getInputStream(entry);
-				FileOutputStream fos = new FileOutputStream(f);
- 
-				// write contents of 'is' to 'fos'
-				while (is.available() > 0) {
-					fos.write(is.read());
-				}
- 
-				fos.close();
-				is.close();
-			}
-		}
-	}
-	private String exec(String command)
-	{
-        try
-		{
-            Process process = Runtime.getRuntime().exec(command);
-            BufferedReader reader = new BufferedReader(
-				new InputStreamReader(process.getInputStream()));
-            int read;
-            char[] buffer = new char[4096];
-            StringBuffer output = new StringBuffer();
-            while ((read = reader.read(buffer)) > 0)
-			{
-                output.append(buffer, 0, read);
-            }
-            reader.close();
-            process.waitFor();
-            return output.toString();
-        }
-		catch (IOException e)
-		{
-            throw new RuntimeException(e);
-        }
-		catch (InterruptedException e)
-		{
-            throw new RuntimeException(e);
-        }
-    }
 }
