@@ -10,6 +10,9 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+
 import org.apache.commons.io.FilenameUtils;
 
 import android.app.ProgressDialog;
@@ -115,5 +118,11 @@ public class Tools {
         .topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
         .optimizeSynchronized(optmizeSynchronized).printIR(printIR).verbose(verbose).to(file);
 	}
+	public static void unzipApk(String Source,String Destination) throws ZipException
+	{
+		ZipFile zipFile = new ZipFile(Source);
+        zipFile.extractAll(Destination);
+	}
+	
 	
 }
