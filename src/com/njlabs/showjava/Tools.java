@@ -10,16 +10,8 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-
-import org.apache.commons.io.FilenameUtils;
-
 import android.app.ProgressDialog;
 import android.os.Handler;
-
-import com.googlecode.dex2jar.reader.DexFileReader;
-import com.googlecode.dex2jar.v3.Dex2jar;
 
 public class Tools {
 	
@@ -100,29 +92,6 @@ public class Tools {
             throw new RuntimeException(e);
         }
     }
-	
-	public static void ApkToJar(File newApkDir,File ApkFile) throws IOException
-	{
-		// DEX 2 JAR CONFIGS
-		boolean reuseReg = false; // reuse register while generate java .class file
-		boolean topologicalSort1 = false; // same with --topological-sort/-ts
-		boolean topologicalSort = false; // sort block by topological, that will generate more readable code
-		boolean verbose = true; // show progress
-		boolean debugInfo = false; // translate debug info
-		boolean printIR = false; // print ir to Syste.out
-		boolean optmizeSynchronized = false; // Optimise-synchronised
-		//////
-		File file = new File(newApkDir+"/"+FilenameUtils.getBaseName(ApkFile.toString()) + ".jar");
-		DexFileReader reader = new DexFileReader(new File(ApkFile.toString()));
-		Dex2jar.from(reader).reUseReg(reuseReg)
-        .topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
-        .optimizeSynchronized(optmizeSynchronized).printIR(printIR).verbose(verbose).to(file);
-	}
-	public static void unzipApk(String Source,String Destination) throws ZipException
-	{
-		ZipFile zipFile = new ZipFile(Source);
-        zipFile.extractAll(Destination);
-	}
 	
 	
 }

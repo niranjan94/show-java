@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="DefaultLocale" severity="ignore">
+        <ignore path="src/com/njlabs/showjava/Item.java" />
+    </issue>
+    <issue id="SetJavaScriptEnabled" severity="ignore" />
+</lint>
