@@ -64,7 +64,6 @@ public class JavaExplorer extends ListActivity {
     				String num_item = String.valueOf(buf);
     				if(buf == 0) num_item = num_item + " item";
     				else num_item = num_item + " items";
-    				//String formated = lastModDate.toString();
     				dir.add(new Item(ff.getName(),num_item,date_modify,ff.getAbsolutePath(),"directory_icon"));
     			}
     			else
@@ -87,7 +86,6 @@ public class JavaExplorer extends ListActivity {
     }
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-    	// TODO Auto-generated method stub
     	super.onListItemClick(l, v, position, id);
     	Item o = adapter.getItem(position);
     	if(o.getImage().equalsIgnoreCase("directory_icon")||o.getImage().equalsIgnoreCase("directory_up")){
@@ -101,12 +99,10 @@ public class JavaExplorer extends ListActivity {
     }
     private void onFileClick(Item o)
     {
-        //Toast.makeText(this, "Folder Clicked: "+ currentDir, Toast.LENGTH_SHORT).show();
         Intent i = new Intent(getApplicationContext(), SourceViewer.class);
 		i.putExtra("file_path",currentDir.toString());
 		i.putExtra("file_name",o.getName());
 		startActivity(i);
-
     }
     @Override
     public void onBackPressed()

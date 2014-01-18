@@ -4,4 +4,7 @@
         <ignore path="src/com/njlabs/showjava/Item.java" />
     </issue>
     <issue id="SetJavaScriptEnabled" severity="ignore" />
+    <issue id="UselessParent">
+        <ignore path="res/layout/activity_landing.xml" />
+    </issue>
 </lint>

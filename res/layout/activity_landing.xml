@@ -1,0 +1,69 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Landing" >
+
+   <LinearLayout android:id="@+id/footer"
+		android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal"
+    	android:background="@drawable/bottom_bar"
+    	android:layout_alignParentBottom="true">
+		
+	    <Button
+	        android:id="@+id/saveButton"
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="SELECT FROM SDCARD"
+	        android:textAllCaps="true"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
+	        android:textSize="12sp"
+	        android:onClick="OpenFilePicker"
+	        android:textStyle="bold|normal" />
+	    
+	    <View
+	        android:layout_width="1dip"
+	        android:layout_height="fill_parent"
+	        android:layout_marginBottom="7dp"
+	        android:layout_marginTop="7dp"
+	        android:background="#C7C7C7" />
+	        
+	    <Button
+	        android:id="@+id/cancelButton"
+	        style="?android:attr/buttonBarButtonStyle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="PICK FROM INSTALLED"
+	        android:onClick="OpenAppListing"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
+	        android:textStyle="bold" />
+	    
+	</LinearLayout>
+
+   <ListView
+       android:id="@+id/listView1"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_above="@+id/footer"
+       android:layout_alignParentLeft="true"
+       android:layout_alignParentRight="true"
+       android:layout_below="@+id/textView1" >
+
+   </ListView>
+
+   <TextView
+       android:id="@+id/textView1"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentLeft="true"
+       android:layout_alignParentTop="true"
+       android:layout_marginLeft="3dp"
+       android:layout_marginTop="@dimen/activity_vertical_margin"
+       android:text="Decompiled Applications"
+       android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>

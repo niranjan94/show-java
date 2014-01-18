@@ -5,23 +5,23 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import org.acra.ACRA;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.benf.cfr.reader.Main;
 import org.benf.cfr.reader.state.DCCommonState;
 import org.benf.cfr.reader.util.getopt.GetOptParser;
 import org.benf.cfr.reader.util.getopt.Options;
 import org.benf.cfr.reader.util.getopt.OptionsImpl;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -32,7 +32,6 @@ import android.widget.Toast;
 import com.googlecode.dex2jar.reader.DexFileReader;
 import com.googlecode.dex2jar.v3.Dex2jar;
 
-@SuppressWarnings("unused")
 public class AppProcessActivity extends Activity {
 
 	private ScrollView CommandScroller;
@@ -42,7 +41,8 @@ public class AppProcessActivity extends Activity {
 	private String PackageDir;
 
 	String JavaOutputDir;
-
+	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -60,20 +60,19 @@ public class AppProcessActivity extends Activity {
 		
 		CommandScroller = (ScrollView) findViewById(R.id.CommandScroller);
 		CommandDisplay = (LinearLayout) findViewById(R.id.CommandDisplay);
+		
 		Processor process=new Processor();
 		process.execute();
 	}
-	
+	@SuppressWarnings("deprecation")
 	public class Processor extends AsyncTask<String, String, String> {
 
 		@Override
 		protected String doInBackground(String... params) {
-			CopyApk(this);
 			ExtractJar(this);
 			DecompileJar(this);
 			return null;
-		}
-		
+		}	
 		@Override
 		protected void onPostExecute(String output) {
 			// execution of result of Long time consuming operation
@@ -98,12 +97,49 @@ public class AppProcessActivity extends Activity {
 			CommandStatus.setText(">> Processing APK file");
 			CommandDisplay.addView(CommandStatus);
 			CommandScroller.fullScroll(View.FOCUS_DOWN);
+			Bitmap bm = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_bar), 
+	                getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width),
+	                getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height), 
+	                true);
+	        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 01, new Intent(), Intent.FLAG_ACTIVITY_CLEAR_TASK);
+	        
+			Notification notification = new Notification.Builder(getBaseContext())
+	        											.setContentTitle("Show Java is Decompiling ("+PackageId+")")
+	        											.setContentText("Processing APK file")
+	        											.setSmallIcon(R.drawable.ic_launcher)
+	        											.setContentIntent(pendingIntent)
+	        											.setNumber(101)
+	        											.setOngoing(true)
+	        											.setTicker("Decompiling "+PackageId)
+	        											.setSmallIcon(R.drawable.ic_launcher)
+	        											.setLargeIcon(bm)
+	        											.setAutoCancel(false)
+	        											.getNotification();	    
+			notification.flags=Notification.FLAG_ONGOING_EVENT;
+	        NotificationManager notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+	        notificationManger.notify(101, notification);
+	        
+			notification = new Notification.Builder(getBaseContext())
+			.setContentText("Processing APK file")
+			.getNotification();
+
+			notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManger.notify(101, notification);
+			
 		}
 		
 		@Override
 		protected void onProgressUpdate(String... text) {
 			if(text[0].equals("start_activity"))
 			{
+				Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
+				i.putExtra("java_source_dir",JavaOutputDir+"/");
+				i.putExtra("package_id",PackageId);
+				startActivityForResult(i,1);
+			}
+			else if(text[0].equals("start_activity_with_error"))
+			{
+				Toast.makeText(getApplicationContext(), "Decompilation completed with errors. This incident has been reported to the developer.", Toast.LENGTH_LONG).show();
 				Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
 				i.putExtra("java_source_dir",JavaOutputDir+"/");
 				i.putExtra("package_id",PackageId);
@@ -120,52 +156,21 @@ public class AppProcessActivity extends Activity {
 				CommandStatus.setText(">> "+text[0]);
 				CommandDisplay.addView(CommandStatus);
 				CommandScroller.fullScroll(View.FOCUS_DOWN);
+				
+				Notification notification = new Notification.Builder(getBaseContext())
+				.setContentText(text[0])
+				.getNotification();
+
+				NotificationManager notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				notificationManger.notify(101, notification);
 			}
 		}
 	}
-	private void CopyApk(Processor task)
-	{
-		//Log.d("DEBUG","Copy Apk");
-		
-		File path = Environment.getExternalStorageDirectory();
-		
-		File WorkingDirectory=new File(path + "/ShowJava");
-		//Log.d("DEBUG","d"+WorkingDirectory);
-		File PerAppWorkingDirectory=new File(WorkingDirectory + "/" + PackageId);
-		File OutDirectory=new File(PerAppWorkingDirectory + "/out");
-		if (!WorkingDirectory.isDirectory())
-		{
-			WorkingDirectory.mkdir();
-		}
-		if (!PerAppWorkingDirectory.isDirectory())
-		{
-			PerAppWorkingDirectory.mkdir();
-		}
-		else
-		{
-			PerAppWorkingDirectory.delete();
-			PerAppWorkingDirectory.mkdir();
-		}
-		
-		//String cmd="/system/bin/cp " + PackageDir + " " + PerAppWorkingDirectory;
-		//String output=Tools.exec(cmd);
-		try
-		{
-			FileUtils.copyFile(new File(PackageDir), new File(PerAppWorkingDirectory+"/"+PackageId+".apk"));
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			ACRA.getErrorReporter().handleSilentException(e);
-		}
-
-		File oldApkFile=new File(WorkingDirectory + "/"+ PackageId +"/"+FilenameUtils.getBaseName(PackageDir.toString())+".apk");
-		File ApkFile=new File(WorkingDirectory + "/"+ PackageId +"/"+PackageId+".apk");
-		oldApkFile.renameTo(ApkFile);
-	}
+	
 	private void ExtractJar(Processor task)
 	{
-		Log.d("DEBUG","Extract Jar");
+		Log.i("STATUS","Jar Extraction Started");
+	
 		task.doProgress("Extracting jar from the apk file");
 		// DEX 2 JAR CONFIGS
 		boolean reuseReg = false; // reuse register while generate java .class file
@@ -183,13 +188,12 @@ public class AppProcessActivity extends Activity {
 	
 		File WorkingDirectory=new File(Environment.getExternalStorageDirectory() + "/ShowJava");
 		File PerAppWorkingDirectory=new File(WorkingDirectory + "/" + PackageId);
-		File ApkFile=new File(WorkingDirectory + "/"+ PackageId +"/"+PackageId+".apk");
 		
 		File file = new File(PerAppWorkingDirectory+"/"+PackageId+ ".jar");
 		
 		try
 		{
-			DexFileReader reader = new DexFileReader(new File(ApkFile.toString()));
+			DexFileReader reader = new DexFileReader(new File(PackageDir));
 			Dex2jar.from(reader).reUseReg(reuseReg).topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
 				.optimizeSynchronized(optmizeSynchronized).printIR(printIR).verbose(verbose).to(file);
 		}
@@ -197,8 +201,7 @@ public class AppProcessActivity extends Activity {
 		{
 			ACRA.getErrorReporter().handleSilentException(e);
 			task.doProgress("exit_process_on_error");
-		}
-
+		}	
 	}
 	private void DecompileJar(final Processor task)
 	{
@@ -213,7 +216,6 @@ public class AppProcessActivity extends Activity {
 		}
 		this.JavaOutputDir=JavaOutputDir.toString();
 		String[] args = {JarInput.toString(), "--outputdir", JavaOutputDir.toString()};
-		//main(args);
 		GetOptParser getOptParser = new GetOptParser();
 		    
 		Options options = null;
@@ -236,19 +238,26 @@ public class AppProcessActivity extends Activity {
 				try
 				{
 					Main.doJar(dcCommonState,path);
+					
 				}
 				catch(Exception e)
 				{
 					Exception CustomError=new Exception("APP PACKAGE ID: "+PackageId+" (ERROR : "+e+")");
 					ACRA.getErrorReporter().handleSilentException(CustomError);
-					Toast.makeText(getApplicationContext(), "Decompilation completed with errors. This incident has been reported to the developer.", Toast.LENGTH_LONG).show();
+					task.doProgress("start_activity_with_error");
 				}
+				catch (java.lang.StackOverflowError e) 
+				{
+					Exception CustomError=new Exception("APP PACKAGE ID: "+PackageId+" (ERROR : "+e+")");
+					ACRA.getErrorReporter().handleSilentException(CustomError);
+					task.doProgress("start_activity_with_error");
+				}	
 				task.doProgress("start_activity");
 			}
 		};
-		new Thread(group, run_process, "Jar to Java Thread", 15728640).start();
-		
+		new Thread(group, run_process, "Jar to Java Thread", 20971520).start();
 	}
+	@SuppressWarnings("unused")
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		  if (requestCode == 1) {

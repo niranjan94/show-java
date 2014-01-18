@@ -9,11 +9,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -25,6 +20,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,15 +30,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
-@SuppressWarnings("unused")
 public class AppListing extends Activity {
 
 	ArrayList<PInfo> UserPackages;
@@ -48,12 +44,7 @@ public class AppListing extends Activity {
 	ProgressDialog GetJavaDialog;
 	ListView listView=null;
 	View alertView;
-	/*
-	 * 
-	 * (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,6 +60,7 @@ public class AppListing extends Activity {
 		listView = (ListView) findViewById(R.id.list);
 		PackageLoadDialog.show();
 		getActionBar().setIcon(R.drawable.ic_action_bar);
+	    getActionBar().setDisplayHomeAsUpEnabled(true);
 		SharedPreferences preferences = getSharedPreferences("pref_showjava_core", Context.MODE_PRIVATE);
 		Boolean FirstRun = preferences.getBoolean("FirstRun", true);
 		if(FirstRun)
@@ -122,7 +114,7 @@ public class AppListing extends Activity {
 		@Override
 		protected ArrayList<PInfo> doInBackground(String... params) {
 			publishProgress("Sleeping..."); // Calls onProgressUpdate()
-			return getInstalledApps(true,this);
+			return getInstalledApps(this);
 		}
 		
 		@Override
@@ -225,21 +217,19 @@ public class AppListing extends Activity {
 						i.putExtra("package_dir",CPkgDir.getText().toString());
 						startActivity(i);
 	            	}
-					
-					
-				}
+	            }
 			}
 		});
 	}
 	
 	
-	
+	@SuppressWarnings("unused")
 	class PInfo
 	{
 		private String appname = "";
 		private String pname = "";
 		private String versionName = "";
-		private String sourceDir = "";
+		private String sourceDir = "";		
 		private int versionCode = 0;
 		private Drawable icon;
 		public String getAppname()
@@ -249,44 +239,48 @@ public class AppListing extends Activity {
 	}
 	
 	
-	private ArrayList<PInfo> getInstalledApps(boolean getSysPackages,ApplicationLoader task)
+	private ArrayList<PInfo> getInstalledApps(ApplicationLoader task)
 	{
 		ArrayList<PInfo> res = new ArrayList<PInfo>();
 		List<PackageInfo> packs = getPackageManager().getInstalledPackages(0);
+		
 		for (int i=0;i < packs.size();i++)
 		{
 			PackageInfo p = packs.get(i);
-			if ((!getSysPackages) && (p.versionName == null))
+			// LOAD ONLY USER APPS
+			if(!isSystemPackage(p))
 			{
-				continue;
+				ApplicationInfo appinfo=null;
+				try
+				{
+					appinfo = getPackageManager().getApplicationInfo(p.packageName, 0);
+				}
+				catch (PackageManager.NameNotFoundException e)
+				{
+					throw new RuntimeException(e);
+				}
+				final int count=i + 1;
+				final int total=packs.size();
+				@SuppressWarnings("unused")
+				final int progressVal=(count / total) * 100;
+				final PInfo newInfo = new PInfo();
+				newInfo.appname = p.applicationInfo.loadLabel(getPackageManager()).toString();
+				
+				task.doProgress("Loading application " + count + " of " + total + " (" + newInfo.appname + ")");
+				
+				newInfo.pname = p.packageName;
+				newInfo.versionName = p.versionName;
+				newInfo.versionCode = p.versionCode;
+				
+				if (appinfo != null)
+				{
+					newInfo.sourceDir = appinfo.publicSourceDir;
+				}
+				newInfo.icon = p.applicationInfo.loadIcon(getPackageManager());
+				res.add(newInfo);
 			}
-			final int count=i + 1;
-			final int total=packs.size();
-			final int progressVal=(count / total) * 100;
-			final PInfo newInfo = new PInfo();
-			newInfo.appname = p.applicationInfo.loadLabel(getPackageManager()).toString();
-			
-			task.doProgress("Loading application " + count + " of " + total + " (" + newInfo.appname + ")");
-			
-			newInfo.pname = p.packageName;
-			newInfo.versionName = p.versionName;
-			newInfo.versionCode = p.versionCode;
-			ApplicationInfo appinfo=null;
-			try
-			{
-				appinfo = getPackageManager().getApplicationInfo(p.packageName, 0);
-			}
-			catch (PackageManager.NameNotFoundException e)
-			{
-				throw new RuntimeException(e);
-			}
-			if (appinfo != null)
-			{
-				newInfo.sourceDir = appinfo.publicSourceDir;
-			}
-			newInfo.icon = p.applicationInfo.loadIcon(getPackageManager());
-			res.add(newInfo);
 		}
+		// SORT ALPHABETICALLY
 		Comparator<PInfo> AppNameComparator = new Comparator<PInfo>(){
 			public int compare(PInfo o1, PInfo o2)
 			{
@@ -295,6 +289,9 @@ public class AppListing extends Activity {
 		};
 		Collections.sort(res, AppNameComparator);
 		return res; 
+	}
+	private boolean isSystemPackage(PackageInfo pkgInfo) {
+	        return ((pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)?true:false;
 	}
 	
 	@Override

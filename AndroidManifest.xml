@@ -9,8 +9,8 @@
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name="com.njlabs.showjava.MainApplication"
@@ -20,9 +20,8 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.njlabs.showjava.AppListing"
-            android:configChanges="orientation"
-            android:label="@string/app_name" >
+            android:name="com.njlabs.showjava.Landing"
+            android:label="@string/title_activity_landing" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,10 +29,18 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.njlabs.showjava.AppListing"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.njlabs.showjava.Landing" />
+        </activity>
+        <activity
             android:name="com.njlabs.showjava.AppProcessActivity"
             android:label="@string/title_activity_app_process"
-            android:configChanges="orientation"
-            android:parentActivityName="com.njlabs.showjava.AppListing" >
+            android:parentActivityName="com.njlabs.showjava.AppListing"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.njlabs.showjava.AppListing" />
@@ -44,9 +51,10 @@
         </activity>
         <activity
             android:name="com.njlabs.showjava.SourceViewer"
-            android:theme="@style/SourceViewerTheme"
-            android:label="@string/title_activity_source_viewer" >
+            android:label="@string/title_activity_source_viewer"
+            android:theme="@style/SourceViewerTheme" >
         </activity>
+        
     </application>
 
 </manifest>
