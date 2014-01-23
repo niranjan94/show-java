@@ -3,6 +3,8 @@ package com.njlabs.showjava;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.text.DateFormat;
+import java.util.Date;
 
 import org.acra.ACRA;
 import org.benf.cfr.reader.Main;
@@ -39,10 +41,10 @@ public class AppProcessActivity extends Activity {
 	
 	private String PackageId;
 	private String PackageDir;
-
+	private String PackageName;
+	DatabaseHandler db;
 	String JavaOutputDir;
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -54,10 +56,11 @@ public class AppProcessActivity extends Activity {
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
+			PackageName = extras.getString("package_name");
 			PackageId = extras.getString("package_id");
 			PackageDir = extras.getString("package_dir");
 		}
-		
+		db = new DatabaseHandler(this);
 		CommandScroller = (ScrollView) findViewById(R.id.CommandScroller);
 		CommandDisplay = (LinearLayout) findViewById(R.id.CommandDisplay);
 		
@@ -132,6 +135,9 @@ public class AppProcessActivity extends Activity {
 		protected void onProgressUpdate(String... text) {
 			if(text[0].equals("start_activity"))
 			{
+				DecompileHistoryItem SingleItem=new DecompileHistoryItem(PackageId, PackageName, DateFormat.getDateInstance().format(new Date()));
+				db.addHistoryItem(SingleItem);
+				
 				Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
 				i.putExtra("java_source_dir",JavaOutputDir+"/");
 				i.putExtra("package_id",PackageId);
@@ -139,6 +145,9 @@ public class AppProcessActivity extends Activity {
 			}
 			else if(text[0].equals("start_activity_with_error"))
 			{
+				DecompileHistoryItem SingleItem=new DecompileHistoryItem(PackageId, PackageName, DateFormat.getDateInstance().format(new Date()));
+				db.addHistoryItem(SingleItem);
+				
 				Toast.makeText(getApplicationContext(), "Decompilation completed with errors. This incident has been reported to the developer.", Toast.LENGTH_LONG).show();
 				Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
 				i.putExtra("java_source_dir",JavaOutputDir+"/");

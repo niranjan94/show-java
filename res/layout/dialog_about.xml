@@ -9,7 +9,7 @@
         android:layout_height="88dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/showjava_logo" />
+        android:src="@drawable/ic_action_bar" />
 
     <TextView
         android:id="@+id/textView1"

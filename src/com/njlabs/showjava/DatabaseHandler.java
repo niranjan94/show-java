@@ -52,14 +52,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	////
     //// Adding new History Item
 	////
-	public void addHistoryItem(DecompileHistoryItem announcement) 
+	public void addHistoryItem(DecompileHistoryItem SingleItem) 
 	{
 	    SQLiteDatabase db = this.getWritableDatabase();
 	 
 	    ContentValues values = new ContentValues();
-	    values.put(KEY_PACKAGE_ID, announcement.getPackageID()); // Title
-	    values.put(KEY_PACKAGE_NAME, announcement.getPackageName()); // Alert
-	    values.put(KEY_DATETIME, announcement.getDatetime()); // Datetime
+	    values.put(KEY_PACKAGE_ID, SingleItem.getPackageID()); // Title
+	    values.put(KEY_PACKAGE_NAME, SingleItem.getPackageName()); // Alert
+	    values.put(KEY_DATETIME, SingleItem.getDatetime()); // Datetime
 	    
 	 
 	    // Inserting Row
@@ -84,12 +84,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	    return singleHistoryItem;
 	}
     ////
-	//// Getting All normal Announcements
+	//// Getting All normal SingleItem
 	////
 	public List<DecompileHistoryItem> getAllHistoryItems() {
 	    List<DecompileHistoryItem> allHistoryItemList = new ArrayList<DecompileHistoryItem>();
 	    // Select All Query
-	    String selectQuery = "SELECT  * FROM " + TABLE_HISTORY+" WHERE status<>'ace_club' ORDER BY id DESC";
+	    String selectQuery = "SELECT  * FROM " + TABLE_HISTORY+" WHERE id>0 ORDER BY id DESC";
 	 
 	    SQLiteDatabase db = this.getWritableDatabase();
 	    Cursor cursor = db.rawQuery(selectQuery, null);
@@ -121,23 +121,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 	
-	public int updateHistoryItem(DecompileHistoryItem announcement) {
+	public int updateHistoryItem(DecompileHistoryItem SingleItem) {
 	    SQLiteDatabase db = this.getWritableDatabase();
 	 
 	    ContentValues values = new ContentValues();
-	    values.put(KEY_PACKAGE_ID, announcement.getPackageID());
-	    values.put(KEY_PACKAGE_NAME, announcement.getPackageName());
-	    values.put(KEY_DATETIME, announcement.getDatetime());
+	    values.put(KEY_PACKAGE_ID, SingleItem.getPackageID());
+	    values.put(KEY_PACKAGE_NAME, SingleItem.getPackageName());
+	    values.put(KEY_DATETIME, SingleItem.getDatetime());
 	 
 	    // updating row
 	    return db.update(TABLE_HISTORY, values, KEY_ID + " = ?",
-	            new String[] { String.valueOf(announcement.getID()) });
+	            new String[] { String.valueOf(SingleItem.getID()) });
 	}
 
-	public void deleteHistoryItem(DecompileHistoryItem announcement) {
+	public void deleteHistoryItem(DecompileHistoryItem SingleItem) {
 	    SQLiteDatabase db = this.getWritableDatabase();
 	    db.delete(TABLE_HISTORY, KEY_ID + " = ?",
-	            new String[] { String.valueOf(announcement.getID()) });
+	            new String[] { String.valueOf(SingleItem.getID()) });
 	    db.close();
 	}
 	

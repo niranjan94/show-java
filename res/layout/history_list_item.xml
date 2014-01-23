@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="60dip">
+
+	<TextView
+	    android:id="@+id/pkg_name"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/pkg_id"
+	    android:layout_alignWithParentIfMissing="true"
+	    android:paddingRight="6dip"
+	    android:paddingTop="6dip"
+	    android:text="Amrita Info Desk v2"
+	    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<TextView
+	    android:id="@+id/pkg_id"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignWithParentIfMissing="true"
+	    android:layout_below="@id/pkg_name"
+	    android:layout_toRightOf="@+id/pkg_img_spl"
+	    android:paddingRight="6dip"
+	    android:paddingTop="6dip"
+	    android:text="com.njlabs.amrita.aid"
+	    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+	<ImageView
+	    android:id="@+id/pkg_img_spl"
+	    android:layout_width="45dip"
+	    android:layout_height="45dip"
+	    android:layout_alignParentLeft="true"
+	    android:layout_centerVertical="true"
+	    android:scaleType="fitCenter"
+	    android:src="@drawable/generic_icon" />
+
+</RelativeLayout>
+

@@ -20,7 +20,6 @@
 	        android:text="SELECT FROM SDCARD"
 	        android:textAllCaps="true"
 	        android:textAppearance="?android:attr/textAppearanceSmall"
-	        android:textSize="12sp"
 	        android:onClick="OpenFilePicker"
 	        android:textStyle="bold|normal" />
 	    
@@ -45,7 +44,7 @@
 	</LinearLayout>
 
    <ListView
-       android:id="@+id/listView1"
+       android:id="@+id/list"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:layout_above="@+id/footer"
@@ -61,7 +60,7 @@
        android:layout_height="wrap_content"
        android:layout_alignParentLeft="true"
        android:layout_alignParentTop="true"
-       android:layout_marginLeft="3dp"
+       android:layout_marginLeft="8dp"
        android:layout_marginTop="@dimen/activity_vertical_margin"
        android:text="Decompiled Applications"
        android:textAppearance="?android:attr/textAppearanceLarge" />

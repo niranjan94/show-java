@@ -31,6 +31,7 @@ public class JavaExplorer extends ListActivity {
         }
         getActionBar().setIcon(R.drawable.ic_action_bar);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        
         currentDir = new File(JavSourceDir);
         fill(currentDir);
     }
