@@ -3,8 +3,7 @@
 
     <string name="app_name">Show Java</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_app_process">Processing</string>
+    <string name="title_activity_app_process">Decompile with Show Java</string>
     <string name="title_activity_java_explorer">Java Explorer</string>
     <string name="title_activity_source_viewer">Source Viewer</string>
     <string name="crash_toast_text">Unfortunately Show Java has Crashed. A report has automatically been sent to the developer.</string>

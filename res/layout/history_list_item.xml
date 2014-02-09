@@ -11,7 +11,7 @@
 	    android:layout_alignLeft="@+id/pkg_id"
 	    android:layout_alignWithParentIfMissing="true"
 	    android:paddingRight="6dip"
-	    android:paddingTop="6dip"
+	    android:paddingTop="10dip"
 	    android:text="Amrita Info Desk v2"
 	    android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -23,7 +23,7 @@
 	    android:layout_below="@id/pkg_name"
 	    android:layout_toRightOf="@+id/pkg_img_spl"
 	    android:paddingRight="6dip"
-	    android:paddingTop="6dip"
+	    android:paddingTop="0dip"
 	    android:text="com.njlabs.amrita.aid"
 	    android:textAppearance="?android:attr/textAppearanceSmall" />
 

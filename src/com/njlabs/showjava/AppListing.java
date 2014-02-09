@@ -175,7 +175,7 @@ public class AppListing extends Activity {
 				// When clicked, show a toast with the TextView text
 				final TextView CPkgId=(TextView) view.findViewById(R.id.pkg_id);
 				final TextView CPkgDir=(TextView) view.findViewById(R.id.pkg_dir);
-				
+				final TextView CPkgName=(TextView) view.findViewById(R.id.pkg_name);
 				//Toast.makeText(getApplicationContext(), CPkgId.getText() + " --- " + CPkgDir.getText(), Toast.LENGTH_SHORT).show();
 				String myapp="com.njlabs";
 				if(CPkgId.getText().toString().toLowerCase().contains(myapp.toLowerCase()))
@@ -204,6 +204,7 @@ public class AppListing extends Activity {
 				            	JavaOutputDir.delete();
 				            	Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
 								i.putExtra("package_id",CPkgId.getText().toString());
+								i.putExtra("package_name",CPkgName.getText().toString());
 								i.putExtra("package_dir",CPkgDir.getText().toString());
 								startActivity(i);
 				            }
@@ -214,6 +215,7 @@ public class AppListing extends Activity {
 	            	{
 						Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
 						i.putExtra("package_id",CPkgId.getText().toString());
+						i.putExtra("package_name",CPkgName.getText().toString());
 						i.putExtra("package_dir",CPkgDir.getText().toString());
 						startActivity(i);
 	            	}

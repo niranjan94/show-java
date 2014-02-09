@@ -23,6 +23,7 @@ public class Landing extends Activity {
 	ListView HistoryList;
 	ProgressDialog PackageLoadDialog;
 	DatabaseHandler db;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,7 +40,8 @@ public class Landing extends Activity {
 		HistoryList = (ListView) findViewById(R.id.list);
 		PackageLoadDialog.show();
 		
-		db = new DatabaseHandler(this);
+		db=new DatabaseHandler(this);
+		
 		HistoryLoader runner = new HistoryLoader();
 		runner.execute();		
 	}
@@ -48,7 +50,7 @@ public class Landing extends Activity {
 		@Override
 		protected List<DecompileHistoryItem> doInBackground(String... params) {
 			return db.getAllHistoryItems();
-		}
+		}	
 		
 		@Override
 		protected void onPostExecute(List<DecompileHistoryItem> AllPackages) {
@@ -76,7 +78,7 @@ public class Landing extends Activity {
 			{
 				if (convertView == null)
 				{
-					convertView = getLayoutInflater().inflate(R.layout.package_list_item, null);
+					convertView = getLayoutInflater().inflate(R.layout.history_list_item, null);
 				}
 				DecompileHistoryItem pkg = getItem(position);
 				TextView PkgName=(TextView) convertView.findViewById(R.id.pkg_name);
@@ -112,6 +114,12 @@ public class Landing extends Activity {
 	public void OpenFilePicker(View v)
 	{
 		
+	}
+	@Override
+	public void onResume() {
+	    super.onResume();  // Always call the superclass method first
+	    HistoryLoader runner = new HistoryLoader();
+		runner.execute();
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
