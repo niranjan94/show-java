@@ -31,6 +31,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.animation.Animation;
@@ -50,12 +51,10 @@ public class AppProcessActivity extends Activity {
 	private String PackageDir;
 	private String PackageName;
 	
-	DatabaseHandler db;
-	Boolean isJar=false;
+	private DatabaseHandler db;
+	private Boolean isJar=false;
 	
-	File TempDir;
-	
-	String JavaOutputDir;
+	private String JavaOutputDir;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
@@ -146,10 +145,108 @@ public class AppProcessActivity extends Activity {
             }
         });
         
-		TempDir=this.getCacheDir();
+		
+		
 		db=new DatabaseHandler(this);
-		Processor process=new Processor();
-		process.execute();
+		final Processor process=new Processor();
+		
+		if(!isJar)
+		{			
+			ThreadGroup group = new ThreadGroup("Optimise Dex Group");
+			CurrentStatus.setText("Preparing Decompiler");
+			CurrentStatus.setText("Optimising dex file");
+			final Handler UIHandler=new Handler();
+			Runnable run_process=new Runnable(){
+				@Override
+				public void run(){
+					
+					DexFile dexFile = null;
+					try 
+					{
+						dexFile = DexFileFactory.loadDexFile(PackageDir, 19);
+					} 
+					catch (IOException e) 
+					{
+						ACRA.getErrorReporter().handleException(e);
+					}
+					List<ClassDef> classes = new ArrayList<ClassDef>();
+					for (ClassDef classDef: dexFile.getClasses()) {
+					    if (
+					    	classDef.getType().startsWith("Lcom/google/apps/")
+					    	||!classDef.getType().startsWith("Landroid/support/")
+					    	&&!classDef.getType().startsWith("Lcom/njlabs/")
+					    	&&!classDef.getType().startsWith("Lcom/androidquery/")
+					    	&&!classDef.getType().startsWith("Lcom/parse/")
+					    	&&!classDef.getType().startsWith("Lcom/android/")
+					    	&&!classDef.getType().startsWith("Lcom/actionbarsherlock/")
+					    	&&!classDef.getType().startsWith("Lorg/apache/")
+					    	&&!classDef.getType().startsWith("Lorg/acra/")
+					    	&&!classDef.getType().startsWith("Ljavax/")
+					    	&&!classDef.getType().startsWith("Lorg/joda/")
+					    	&&!classDef.getType().startsWith("Lorg/antlr/")
+					    	&&!classDef.getType().startsWith("Ljunit/")
+					    	&&!classDef.getType().startsWith("Lorg/codehaus/jackson/")
+					    	&&!classDef.getType().startsWith("Lcom/fasterxml/")
+					    	&&!classDef.getType().startsWith("Lcom/google/")
+					    	&&!classDef.getType().startsWith("Lcom/bugsense/")
+					    	&&!classDef.getType().startsWith("Lorg/andengine/")
+					    	&&!classDef.getType().startsWith("Lorg/andengine/")
+					    	&&!classDef.getType().startsWith("Landroid/")
+					    	&&!classDef.getType().startsWith("Lcom/google/android/gms/")
+					    	&&!classDef.getType().startsWith("Lcom/google/api/")
+					    	&&!classDef.getType().startsWith("Lcom/njlabs/")) {
+					    	
+					    	final String CurrentClass=classDef.getType();
+					    	UIHandler.post(new Runnable() {   
+					    		@Override
+					    		public void run() {
+					    			CurrentLine.setText(CurrentClass.replaceAll("Processing ", ""));
+					    		}
+					    	});
+					    	classes.add(classDef);
+					    }
+					}
+					File WorkingDirectory=new File(Environment.getExternalStorageDirectory() + "/ShowJava");
+					File PerAppWorkingDirectory=new File(WorkingDirectory + "/" + PackageId);
+					PerAppWorkingDirectory.mkdirs();
+					Log.d("DEBUGGER","Prepare Writing");
+					
+					
+					UIHandler.post(new Runnable() {   
+			            @Override
+			            public void run() {
+			            	CurrentStatus.setText("Finishing optimisation");
+							CurrentLine.setText("");
+			            }
+			        });
+					
+					dexFile = new ImmutableDexFile(classes);
+					
+					
+					try 
+					{
+						Log.d("DEBUGGER","Start Writing");
+						DexFileFactory.writeDexFile(PerAppWorkingDirectory+"/optimised_classes.dex", dexFile);
+						Log.d("DEBUGGER","Writing done!");
+					} 
+					catch (IOException e) 
+					{
+						ACRA.getErrorReporter().handleException(e);
+					}
+					UIHandler.post(new Runnable() {   
+			            @Override
+			            public void run() {
+			            	process.execute();
+			            }
+			        });
+				}
+			};
+			new Thread(group, run_process, "Optimise Dex Thread", 10485760).start();
+		}
+		else
+		{
+			process.execute();
+		}
 	}
 	public class Processor extends AsyncTask<String, String, String> {
 
@@ -157,7 +254,7 @@ public class AppProcessActivity extends Activity {
 		protected String doInBackground(String... params) {
 			if(!isJar)
 			{
-				PrepareDex(this);
+				//PrepareDex(this);
 				ExtractJar(this);
 			}
 			DecompileJar(this);
@@ -231,69 +328,7 @@ public class AppProcessActivity extends Activity {
 			}
 		}
 	}
-	private void PrepareDex(Processor task)
-	{
-		task.doProgress("optimising");
-		DexFile dexFile = null;
-		try 
-		{
-			dexFile = DexFileFactory.loadDexFile(PackageDir, 19);
-		} 
-		catch (IOException e) 
-		{
-			ACRA.getErrorReporter().handleException(e);
-		}
-		List<ClassDef> classes = new ArrayList<ClassDef>();
-		for (ClassDef classDef: dexFile.getClasses()) {
-		    if (
-		    	classDef.getType().startsWith("Lcom/google/apps/")
-		    	||!classDef.getType().startsWith("Landroid/support/")
-		    	&&!classDef.getType().startsWith("Lcom/njlabs/")
-		    	&&!classDef.getType().startsWith("Lcom/androidquery/")
-		    	&&!classDef.getType().startsWith("Lcom/parse/")
-		    	&&!classDef.getType().startsWith("Lcom/android/")
-		    	&&!classDef.getType().startsWith("Lcom/actionbarsherlock/")
-		    	&&!classDef.getType().startsWith("Lorg/apache/")
-		    	&&!classDef.getType().startsWith("Lorg/acra/")
-		    	&&!classDef.getType().startsWith("Ljavax/")
-		    	&&!classDef.getType().startsWith("Lorg/joda/")
-		    	&&!classDef.getType().startsWith("Lorg/antlr/")
-		    	&&!classDef.getType().startsWith("Ljunit/")
-		    	&&!classDef.getType().startsWith("Lorg/codehaus/jackson/")
-		    	&&!classDef.getType().startsWith("Lcom/fasterxml/")
-		    	&&!classDef.getType().startsWith("Lcom/google/")
-		    	&&!classDef.getType().startsWith("Lcom/bugsense/")
-		    	&&!classDef.getType().startsWith("Lorg/andengine/")
-		    	&&!classDef.getType().startsWith("Lorg/andengine/")
-		    	&&!classDef.getType().startsWith("Landroid/")
-		    	&&!classDef.getType().startsWith("Lcom/google/android/gms/")
-		    	&&!classDef.getType().startsWith("Lcom/google/api/")
-		    	&&!classDef.getType().startsWith("Lcom/njlabs/")) {
-		    	
-		    		task.doProgress(classDef.getType());
-		    		classes.add(classDef);
-		    }
-		}
-		task.doProgress("finaldex");
-		File WorkingDirectory=new File(Environment.getExternalStorageDirectory() + "/ShowJava");
-		File PerAppWorkingDirectory=new File(WorkingDirectory + "/" + PackageId);
-		PerAppWorkingDirectory.mkdirs();
-		Log.d("DEBUGGER","Prepare Writing");
-		dexFile = new ImmutableDexFile(classes);
-		
-		
-		try 
-		{
-			Log.d("DEBUGGER","Start Writing");
-			DexFileFactory.writeDexFile(PerAppWorkingDirectory+"/optimised_classes.dex", dexFile);
-			Log.d("DEBUGGER","Writing done!");
-		} 
-		catch (IOException e) 
-		{
-			ACRA.getErrorReporter().handleException(e);
-		}
-		
-	}
+	
 	private void ExtractJar(Processor task)
 	{
 		Log.i("STATUS","Jar Extraction Started");

@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Amrita Info Desk v2"
+            android:text="Waiting for App"
             android:textAllCaps="false"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/text_light" />
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Decompiling"
+            android:text="Processing"
             android:textAllCaps="false"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/text_light" />
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="com.njlabs.amrita.aid.v2.class.aums"
+            android:text="Getting Ready"
             android:textAllCaps="false"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/text_light" />
