@@ -28,14 +28,15 @@
 
 package org.jf.baksmali.Adaptors;
 
+import java.io.IOException;
+import java.util.BitSet;
+
+import javax.annotation.Nonnull;
+
 import org.jf.baksmali.baksmaliOptions;
 import org.jf.dexlib2.analysis.AnalyzedInstruction;
 import org.jf.dexlib2.analysis.RegisterType;
 import org.jf.util.IndentingWriter;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.BitSet;
 
 public class PostInstructionRegisterInfoMethodItem extends MethodItem {
     @Nonnull private final RegisterFormatter registerFormatter;

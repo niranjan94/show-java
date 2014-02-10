@@ -31,8 +31,13 @@
 
 package org.jf.dexlib2.dexbacked;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.base.reference.BaseMethodReference;
 import org.jf.dexlib2.dexbacked.raw.MethodIdItem;
 import org.jf.dexlib2.dexbacked.raw.ProtoIdItem;
@@ -45,11 +50,8 @@ import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.util.AbstractForwardSequentialList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterators;
 
 public class DexBackedMethod extends BaseMethodReference implements Method {
     @Nonnull public final DexBackedDexFile dexFile;

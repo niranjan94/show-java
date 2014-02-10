@@ -31,15 +31,16 @@
 
 package org.jf.dexlib2.dexbacked.value;
 
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.base.value.BaseAnnotationEncodedValue;
 import org.jf.dexlib2.dexbacked.DexBackedAnnotationElement;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.DexReader;
 import org.jf.dexlib2.dexbacked.util.VariableSizeSet;
 import org.jf.dexlib2.iface.value.AnnotationEncodedValue;
-
-import javax.annotation.Nonnull;
-import java.util.Set;
 
 public class DexBackedAnnotationEncodedValue extends BaseAnnotationEncodedValue implements AnnotationEncodedValue {
     @Nonnull public final DexBackedDexFile dexFile;

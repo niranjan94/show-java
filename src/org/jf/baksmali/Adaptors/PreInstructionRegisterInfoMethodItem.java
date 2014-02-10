@@ -28,16 +28,21 @@
 
 package org.jf.baksmali.Adaptors;
 
+import java.io.IOException;
+import java.util.BitSet;
+
+import javax.annotation.Nonnull;
+
 import org.jf.baksmali.baksmaliOptions;
 import org.jf.dexlib2.analysis.AnalyzedInstruction;
 import org.jf.dexlib2.analysis.MethodAnalyzer;
 import org.jf.dexlib2.analysis.RegisterType;
-import org.jf.dexlib2.iface.instruction.*;
+import org.jf.dexlib2.iface.instruction.FiveRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.OneRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.RegisterRangeInstruction;
+import org.jf.dexlib2.iface.instruction.ThreeRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.TwoRegisterInstruction;
 import org.jf.util.IndentingWriter;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.BitSet;
 
 public class PreInstructionRegisterInfoMethodItem extends MethodItem {
     private final int registerInfo;

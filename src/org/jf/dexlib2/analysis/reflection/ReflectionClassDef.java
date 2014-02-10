@@ -31,10 +31,15 @@
 
 package org.jf.dexlib2.analysis.reflection;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterators;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.util.AbstractSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.analysis.reflection.util.ReflectionUtils;
 import org.jf.dexlib2.base.reference.BaseTypeReference;
 import org.jf.dexlib2.iface.Annotation;
@@ -42,13 +47,10 @@ import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-import java.util.AbstractSet;
-import java.util.Iterator;
-import java.util.Set;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterators;
 
 /**
  * Wraps a ClassDef around a class loaded in the current VM

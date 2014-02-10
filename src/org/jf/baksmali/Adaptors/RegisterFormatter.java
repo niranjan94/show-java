@@ -28,11 +28,12 @@
 
 package org.jf.baksmali.Adaptors;
 
-import org.jf.baksmali.baksmaliOptions;
-import org.jf.util.IndentingWriter;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
+
+import org.jf.baksmali.baksmaliOptions;
+import org.jf.util.IndentingWriter;
 
 /**
  * This class contains the logic used for formatting registers

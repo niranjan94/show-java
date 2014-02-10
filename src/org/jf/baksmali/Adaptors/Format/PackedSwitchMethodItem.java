@@ -28,16 +28,16 @@
 
 package org.jf.baksmali.Adaptors.Format;
 
-import org.jf.baksmali.Adaptors.LabelMethodItem;
-import org.jf.baksmali.Adaptors.MethodDefinition;
-import org.jf.dexlib2.iface.instruction.SwitchElement;
-import org.jf.dexlib2.iface.instruction.formats.PackedSwitchPayload;
-import org.jf.util.IndentingWriter;
-import org.jf.baksmali.Renderers.IntegerRenderer;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jf.baksmali.Adaptors.LabelMethodItem;
+import org.jf.baksmali.Adaptors.MethodDefinition;
+import org.jf.baksmali.Renderers.IntegerRenderer;
+import org.jf.dexlib2.iface.instruction.SwitchElement;
+import org.jf.dexlib2.iface.instruction.formats.PackedSwitchPayload;
+import org.jf.util.IndentingWriter;
 
 public class PackedSwitchMethodItem extends InstructionMethodItem<PackedSwitchPayload> {
     private final List<PackedSwitchTarget> targets;

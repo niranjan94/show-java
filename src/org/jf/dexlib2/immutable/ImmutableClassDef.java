@@ -31,7 +31,13 @@
 
 package org.jf.dexlib2.immutable;
 
-import com.google.common.collect.*;
+import java.util.AbstractCollection;
+import java.util.Collection;
+import java.util.Iterator;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.base.reference.BaseTypeReference;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
@@ -42,11 +48,11 @@ import org.jf.dexlib2.util.MethodUtil;
 import org.jf.util.ImmutableConverter;
 import org.jf.util.ImmutableUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.AbstractCollection;
-import java.util.Collection;
-import java.util.Iterator;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 
 public class ImmutableClassDef extends BaseTypeReference implements ClassDef {
     @Nonnull protected final String type;

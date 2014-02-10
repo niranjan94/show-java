@@ -31,15 +31,31 @@
 
 package org.jf.dexlib2.immutable.value;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.ValueType;
-import org.jf.dexlib2.iface.value.*;
+import org.jf.dexlib2.iface.value.AnnotationEncodedValue;
+import org.jf.dexlib2.iface.value.ArrayEncodedValue;
+import org.jf.dexlib2.iface.value.BooleanEncodedValue;
+import org.jf.dexlib2.iface.value.ByteEncodedValue;
+import org.jf.dexlib2.iface.value.CharEncodedValue;
+import org.jf.dexlib2.iface.value.DoubleEncodedValue;
+import org.jf.dexlib2.iface.value.EncodedValue;
+import org.jf.dexlib2.iface.value.EnumEncodedValue;
+import org.jf.dexlib2.iface.value.FieldEncodedValue;
+import org.jf.dexlib2.iface.value.FloatEncodedValue;
+import org.jf.dexlib2.iface.value.IntEncodedValue;
+import org.jf.dexlib2.iface.value.LongEncodedValue;
+import org.jf.dexlib2.iface.value.MethodEncodedValue;
+import org.jf.dexlib2.iface.value.ShortEncodedValue;
+import org.jf.dexlib2.iface.value.StringEncodedValue;
+import org.jf.dexlib2.iface.value.TypeEncodedValue;
 import org.jf.util.ExceptionWithContext;
 import org.jf.util.ImmutableConverter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 
 public class ImmutableEncodedValueFactory {
     @Nonnull

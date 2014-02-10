@@ -28,16 +28,32 @@
 
 package org.jf.baksmali.Adaptors.Format;
 
+import java.io.IOException;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import org.jf.baksmali.baksmaliOptions;
 import org.jf.baksmali.Adaptors.MethodDefinition;
 import org.jf.baksmali.Adaptors.MethodDefinition.InvalidSwitchPayload;
 import org.jf.baksmali.Adaptors.MethodItem;
 import org.jf.baksmali.Renderers.LongRenderer;
-import org.jf.baksmali.baksmaliOptions;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.ReferenceType;
 import org.jf.dexlib2.VerificationError;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile.InvalidItemIndex;
-import org.jf.dexlib2.iface.instruction.*;
+import org.jf.dexlib2.iface.instruction.FieldOffsetInstruction;
+import org.jf.dexlib2.iface.instruction.FiveRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.InlineIndexInstruction;
+import org.jf.dexlib2.iface.instruction.Instruction;
+import org.jf.dexlib2.iface.instruction.NarrowLiteralInstruction;
+import org.jf.dexlib2.iface.instruction.OneRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.ReferenceInstruction;
+import org.jf.dexlib2.iface.instruction.RegisterRangeInstruction;
+import org.jf.dexlib2.iface.instruction.ThreeRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.TwoRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.VtableIndexInstruction;
+import org.jf.dexlib2.iface.instruction.WideLiteralInstruction;
 import org.jf.dexlib2.iface.instruction.formats.Instruction20bc;
 import org.jf.dexlib2.iface.instruction.formats.Instruction31t;
 import org.jf.dexlib2.iface.instruction.formats.UnknownInstruction;
@@ -45,10 +61,6 @@ import org.jf.dexlib2.iface.reference.Reference;
 import org.jf.dexlib2.util.ReferenceUtil;
 import org.jf.util.ExceptionWithContext;
 import org.jf.util.IndentingWriter;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.Map;
 
 public class InstructionMethodItem<T extends Instruction> extends MethodItem {
     @Nonnull protected final MethodDefinition methodDef;

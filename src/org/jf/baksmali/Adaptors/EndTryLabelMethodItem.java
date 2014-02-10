@@ -28,9 +28,9 @@
 
 package org.jf.baksmali.Adaptors;
 
-import org.jf.baksmali.baksmaliOptions;
-
 import javax.annotation.Nonnull;
+
+import org.jf.baksmali.baksmaliOptions;
 
 public class EndTryLabelMethodItem extends LabelMethodItem {
     private int endTryAddress;

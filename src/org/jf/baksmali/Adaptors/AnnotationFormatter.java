@@ -28,13 +28,13 @@
 
 package org.jf.baksmali.Adaptors;
 
+import java.io.IOException;
+import java.util.Collection;
+
 import org.jf.baksmali.Adaptors.EncodedValue.AnnotationEncodedValueAdaptor;
 import org.jf.dexlib2.AnnotationVisibility;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.util.IndentingWriter;
-
-import java.io.IOException;
-import java.util.Collection;
 
 public class AnnotationFormatter {
 

@@ -31,14 +31,15 @@
 
 package org.jf.dexlib2.rewriter;
 
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.base.reference.BaseFieldReference;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.value.EncodedValue;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Set;
 
 public class FieldRewriter implements Rewriter<Field> {
     @Nonnull protected final Rewriters rewriters;

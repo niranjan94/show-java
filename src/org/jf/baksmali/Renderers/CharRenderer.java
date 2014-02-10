@@ -28,10 +28,10 @@
 
 package org.jf.baksmali.Renderers;
 
+import java.io.IOException;
+
 import org.jf.util.IndentingWriter;
 import org.jf.util.StringUtils;
-
-import java.io.IOException;
 
 public class CharRenderer {
     public static void writeTo(IndentingWriter writer, char val) throws IOException {

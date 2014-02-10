@@ -31,15 +31,50 @@
 
 package org.jf.dexlib2.immutable.instruction;
 
-import com.google.common.collect.ImmutableList;
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.Format;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.instruction.Instruction;
-import org.jf.dexlib2.iface.instruction.formats.*;
+import org.jf.dexlib2.iface.instruction.formats.ArrayPayload;
+import org.jf.dexlib2.iface.instruction.formats.Instruction10t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction10x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction11n;
+import org.jf.dexlib2.iface.instruction.formats.Instruction11x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction12x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction20bc;
+import org.jf.dexlib2.iface.instruction.formats.Instruction20t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction21c;
+import org.jf.dexlib2.iface.instruction.formats.Instruction21ih;
+import org.jf.dexlib2.iface.instruction.formats.Instruction21lh;
+import org.jf.dexlib2.iface.instruction.formats.Instruction21s;
+import org.jf.dexlib2.iface.instruction.formats.Instruction21t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22b;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22c;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22cs;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22s;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction23x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction30t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction31c;
+import org.jf.dexlib2.iface.instruction.formats.Instruction31i;
+import org.jf.dexlib2.iface.instruction.formats.Instruction31t;
+import org.jf.dexlib2.iface.instruction.formats.Instruction32x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction35c;
+import org.jf.dexlib2.iface.instruction.formats.Instruction35mi;
+import org.jf.dexlib2.iface.instruction.formats.Instruction35ms;
+import org.jf.dexlib2.iface.instruction.formats.Instruction3rc;
+import org.jf.dexlib2.iface.instruction.formats.Instruction3rmi;
+import org.jf.dexlib2.iface.instruction.formats.Instruction3rms;
+import org.jf.dexlib2.iface.instruction.formats.Instruction51l;
+import org.jf.dexlib2.iface.instruction.formats.PackedSwitchPayload;
+import org.jf.dexlib2.iface.instruction.formats.SparseSwitchPayload;
+import org.jf.dexlib2.iface.instruction.formats.UnknownInstruction;
 import org.jf.dexlib2.util.Preconditions;
 import org.jf.util.ImmutableConverter;
 
-import javax.annotation.Nonnull;
+import com.google.common.collect.ImmutableList;
 
 public abstract class ImmutableInstruction implements Instruction {
     @Nonnull protected final Opcode opcode;

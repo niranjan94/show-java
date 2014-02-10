@@ -89,7 +89,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public List<DecompileHistoryItem> getAllHistoryItems() {
 	    List<DecompileHistoryItem> allHistoryItemList = new ArrayList<DecompileHistoryItem>();
 	    // Select All Query
-	    String selectQuery = "SELECT  * FROM " + TABLE_HISTORY+" WHERE id>0 ORDER BY id DESC";
+	    String selectQuery = "SELECT  * FROM " + TABLE_HISTORY+" WHERE id>0 ORDER BY "+KEY_PACKAGE_NAME+" ASC";
 	 
 	    SQLiteDatabase db = this.getWritableDatabase();
 	    Cursor cursor = db.rawQuery(selectQuery, null);
@@ -106,7 +106,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	            allHistoryItemList.add(singleHistoryItem);
 	        } while (cursor.moveToNext());
 	    }
-
+	    
 	    return allHistoryItemList;
 	}
     
@@ -114,11 +114,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String countQuery = "SELECT  * FROM " + TABLE_HISTORY;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
+        int count=cursor.getCount();
         cursor.close();
  
         // return count
-        return cursor.getCount();
+        return count;
     }
+	
+	public boolean packageExistsInHistory(String PackageID)
+	{
+		String countQuery = "SELECT  * FROM " + TABLE_HISTORY +" WHERE "+KEY_PACKAGE_ID+" = '"+PackageID+"'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        if(cursor.getCount()!=0)
+        {
+            cursor.close();
+        	return true;
+        }
+        else 
+        {
+            cursor.close();
+        	return false;	
+        }
+	}
 
 	
 	public int updateHistoryItem(DecompileHistoryItem SingleItem) {

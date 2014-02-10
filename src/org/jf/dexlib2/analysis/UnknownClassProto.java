@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.analysis;
 
-import org.jf.dexlib2.iface.reference.FieldReference;
-import org.jf.dexlib2.iface.reference.MethodReference;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.MethodReference;
 
 public class UnknownClassProto implements TypeProto {
     @Nonnull protected final ClassPath classPath;

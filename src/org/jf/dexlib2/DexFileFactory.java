@@ -31,17 +31,23 @@
 
 package org.jf.dexlib2;
 
-import com.google.common.io.ByteStreams;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.DexBackedOdexFile;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.writer.pool.DexPool;
 import org.jf.util.ExceptionWithContext;
 
-import javax.annotation.Nonnull;
-import java.io.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import com.google.common.io.ByteStreams;
 
 public final class DexFileFactory {
     @Nonnull

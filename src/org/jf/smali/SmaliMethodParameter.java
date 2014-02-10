@@ -31,15 +31,17 @@
 
 package org.jf.smali;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.primitives.Ints;
-import org.jf.dexlib2.base.BaseMethodParameter;
-import org.jf.dexlib2.iface.Annotation;
+import java.util.Comparator;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Comparator;
-import java.util.Set;
+
+import org.jf.dexlib2.base.BaseMethodParameter;
+import org.jf.dexlib2.iface.Annotation;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.primitives.Ints;
 
 public class SmaliMethodParameter extends BaseMethodParameter implements WithRegister {
     public final int register;

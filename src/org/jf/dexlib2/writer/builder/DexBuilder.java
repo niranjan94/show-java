@@ -31,27 +31,48 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-import org.jf.dexlib2.ValueType;
-import org.jf.dexlib2.iface.Annotation;
-import org.jf.dexlib2.iface.MethodImplementation;
-import org.jf.dexlib2.iface.MethodParameter;
-import org.jf.dexlib2.iface.reference.*;
-import org.jf.dexlib2.iface.value.*;
-import org.jf.dexlib2.writer.DexWriter;
-import org.jf.dexlib2.writer.builder.BuilderEncodedValues.*;
-import org.jf.util.ExceptionWithContext;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.jf.dexlib2.ValueType;
+import org.jf.dexlib2.iface.Annotation;
+import org.jf.dexlib2.iface.MethodImplementation;
+import org.jf.dexlib2.iface.MethodParameter;
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.MethodReference;
+import org.jf.dexlib2.iface.reference.Reference;
+import org.jf.dexlib2.iface.reference.StringReference;
+import org.jf.dexlib2.iface.reference.TypeReference;
+import org.jf.dexlib2.iface.value.BooleanEncodedValue;
+import org.jf.dexlib2.iface.value.ByteEncodedValue;
+import org.jf.dexlib2.iface.value.CharEncodedValue;
+import org.jf.dexlib2.iface.value.DoubleEncodedValue;
+import org.jf.dexlib2.iface.value.EncodedValue;
+import org.jf.dexlib2.iface.value.FloatEncodedValue;
+import org.jf.dexlib2.iface.value.IntEncodedValue;
+import org.jf.dexlib2.iface.value.LongEncodedValue;
+import org.jf.dexlib2.iface.value.ShortEncodedValue;
+import org.jf.dexlib2.writer.DexWriter;
+import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderAnnotationEncodedValue;
+import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderArrayEncodedValue;
+import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderEncodedValue;
+import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderEnumEncodedValue;
+import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderFieldEncodedValue;
+import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderMethodEncodedValue;
+import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderStringEncodedValue;
+import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderTypeEncodedValue;
+import org.jf.util.ExceptionWithContext;
+
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 
 public class DexBuilder extends DexWriter<BuilderStringReference, BuilderStringReference, BuilderTypeReference,
         BuilderTypeReference, BuilderProtoReference, BuilderFieldReference, BuilderMethodReference,

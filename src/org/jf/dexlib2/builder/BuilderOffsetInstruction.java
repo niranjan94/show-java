@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.builder;
 
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.instruction.OffsetInstruction;
-
-import javax.annotation.Nonnull;
 
 public abstract class BuilderOffsetInstruction extends BuilderInstruction implements OffsetInstruction {
     @Nonnull

@@ -31,19 +31,41 @@
 
 package org.jf.dexlib2.dexbacked.raw.util;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Ordering;
-import com.google.common.primitives.Ints;
-import org.jf.dexlib2.dexbacked.raw.*;
-import org.jf.dexlib2.util.AnnotatedBytes;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.jf.dexlib2.dexbacked.raw.AnnotationDirectoryItem;
+import org.jf.dexlib2.dexbacked.raw.AnnotationItem;
+import org.jf.dexlib2.dexbacked.raw.AnnotationSetItem;
+import org.jf.dexlib2.dexbacked.raw.AnnotationSetRefList;
+import org.jf.dexlib2.dexbacked.raw.ClassDataItem;
+import org.jf.dexlib2.dexbacked.raw.ClassDefItem;
+import org.jf.dexlib2.dexbacked.raw.CodeItem;
+import org.jf.dexlib2.dexbacked.raw.DebugInfoItem;
+import org.jf.dexlib2.dexbacked.raw.EncodedArrayItem;
+import org.jf.dexlib2.dexbacked.raw.FieldIdItem;
+import org.jf.dexlib2.dexbacked.raw.HeaderItem;
+import org.jf.dexlib2.dexbacked.raw.ItemType;
+import org.jf.dexlib2.dexbacked.raw.MapItem;
+import org.jf.dexlib2.dexbacked.raw.MethodIdItem;
+import org.jf.dexlib2.dexbacked.raw.ProtoIdItem;
+import org.jf.dexlib2.dexbacked.raw.RawDexFile;
+import org.jf.dexlib2.dexbacked.raw.SectionAnnotator;
+import org.jf.dexlib2.dexbacked.raw.StringDataItem;
+import org.jf.dexlib2.dexbacked.raw.StringIdItem;
+import org.jf.dexlib2.dexbacked.raw.TypeIdItem;
+import org.jf.dexlib2.dexbacked.raw.TypeListItem;
+import org.jf.dexlib2.util.AnnotatedBytes;
+
+import com.google.common.collect.Maps;
+import com.google.common.collect.Ordering;
+import com.google.common.primitives.Ints;
 
 public class DexAnnotator extends AnnotatedBytes {
     @Nonnull public final RawDexFile dexFile;

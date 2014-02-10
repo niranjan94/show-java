@@ -31,9 +31,10 @@
 
 package org.jf.dexlib2.writer;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 public interface IndexSection<Key> {
     int getItemIndex(@Nonnull Key key);

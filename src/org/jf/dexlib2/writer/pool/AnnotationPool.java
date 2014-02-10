@@ -31,13 +31,14 @@
 
 package org.jf.dexlib2.writer.pool;
 
+import java.util.Collection;
+
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.writer.AnnotationSection;
-
-import javax.annotation.Nonnull;
-import java.util.Collection;
 
 public class AnnotationPool extends BaseOffsetPool<Annotation>
         implements AnnotationSection<CharSequence, CharSequence, Annotation, AnnotationElement, EncodedValue> {

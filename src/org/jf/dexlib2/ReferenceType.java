@@ -31,7 +31,11 @@
 
 package org.jf.dexlib2;
 
-import org.jf.dexlib2.iface.reference.*;
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.MethodReference;
+import org.jf.dexlib2.iface.reference.Reference;
+import org.jf.dexlib2.iface.reference.StringReference;
+import org.jf.dexlib2.iface.reference.TypeReference;
 import org.jf.util.ExceptionWithContext;
 
 public final class ReferenceType {

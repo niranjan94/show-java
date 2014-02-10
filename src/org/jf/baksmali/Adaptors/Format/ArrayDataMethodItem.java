@@ -28,13 +28,13 @@
 
 package org.jf.baksmali.Adaptors.Format;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.jf.baksmali.Adaptors.MethodDefinition;
 import org.jf.baksmali.Renderers.LongRenderer;
 import org.jf.dexlib2.iface.instruction.formats.ArrayPayload;
 import org.jf.util.IndentingWriter;
-
-import java.io.IOException;
-import java.util.List;
 
 public class ArrayDataMethodItem extends InstructionMethodItem<ArrayPayload> {
     public ArrayDataMethodItem(MethodDefinition methodDef, int codeAddress, ArrayPayload instruction) {

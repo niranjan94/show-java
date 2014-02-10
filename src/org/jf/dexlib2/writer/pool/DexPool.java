@@ -31,23 +31,42 @@
 
 package org.jf.dexlib2.writer.pool;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Field;
-import org.jf.dexlib2.iface.reference.*;
-import org.jf.dexlib2.iface.value.*;
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.MethodReference;
+import org.jf.dexlib2.iface.reference.StringReference;
+import org.jf.dexlib2.iface.reference.TypeReference;
+import org.jf.dexlib2.iface.value.AnnotationEncodedValue;
+import org.jf.dexlib2.iface.value.ArrayEncodedValue;
+import org.jf.dexlib2.iface.value.BooleanEncodedValue;
+import org.jf.dexlib2.iface.value.ByteEncodedValue;
+import org.jf.dexlib2.iface.value.CharEncodedValue;
+import org.jf.dexlib2.iface.value.DoubleEncodedValue;
+import org.jf.dexlib2.iface.value.EncodedValue;
+import org.jf.dexlib2.iface.value.EnumEncodedValue;
+import org.jf.dexlib2.iface.value.FieldEncodedValue;
+import org.jf.dexlib2.iface.value.FloatEncodedValue;
+import org.jf.dexlib2.iface.value.IntEncodedValue;
+import org.jf.dexlib2.iface.value.LongEncodedValue;
+import org.jf.dexlib2.iface.value.MethodEncodedValue;
+import org.jf.dexlib2.iface.value.ShortEncodedValue;
+import org.jf.dexlib2.iface.value.StringEncodedValue;
+import org.jf.dexlib2.iface.value.TypeEncodedValue;
 import org.jf.dexlib2.writer.DexWriter;
 import org.jf.dexlib2.writer.io.FileDataStore;
 import org.jf.dexlib2.writer.pool.ProtoPool.Key;
 import org.jf.util.ExceptionWithContext;
-
-import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Set;
 
 public class DexPool extends DexWriter<CharSequence, StringReference, CharSequence, TypeReference, Key,
         FieldReference, MethodReference, PoolClassDef,

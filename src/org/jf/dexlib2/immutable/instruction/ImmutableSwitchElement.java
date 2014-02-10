@@ -31,13 +31,15 @@
 
 package org.jf.dexlib2.immutable.instruction;
 
-import com.google.common.collect.ImmutableList;
-import org.jf.dexlib2.iface.instruction.SwitchElement;
-import org.jf.util.ImmutableConverter;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+
+import org.jf.dexlib2.iface.instruction.SwitchElement;
+import org.jf.util.ImmutableConverter;
+
+import com.google.common.collect.ImmutableList;
 
 public class ImmutableSwitchElement implements SwitchElement {
     protected final int key;

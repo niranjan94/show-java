@@ -31,14 +31,15 @@
 
 package org.jf.dexlib2.dexbacked.raw;
 
-import com.google.common.base.Joiner;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.raw.util.DexAnnotator;
 import org.jf.dexlib2.util.AnnotatedBytes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Joiner;
 
 public class ClassDefItem {
     public static final int ITEM_SIZE = 32;

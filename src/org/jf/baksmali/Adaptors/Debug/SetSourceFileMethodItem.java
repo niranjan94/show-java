@@ -31,13 +31,14 @@
 
 package org.jf.baksmali.Adaptors.Debug;
 
-import org.jf.dexlib2.iface.debug.SetSourceFile;
-import org.jf.util.IndentingWriter;
-import org.jf.util.StringUtils;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
+
+import org.jf.dexlib2.iface.debug.SetSourceFile;
+import org.jf.util.IndentingWriter;
+import org.jf.util.StringUtils;
 
 public class SetSourceFileMethodItem extends DebugMethodItem {
     @Nullable private final String sourceFile;

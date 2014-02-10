@@ -28,6 +28,9 @@
 
 package org.jf.baksmali.Adaptors;
 
+import java.io.IOException;
+import java.util.Collection;
+
 import org.jf.baksmali.Adaptors.EncodedValue.EncodedValueAdaptor;
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Annotation;
@@ -35,9 +38,6 @@ import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.util.EncodedValueUtils;
 import org.jf.util.IndentingWriter;
-
-import java.io.IOException;
-import java.util.Collection;
 
 public class FieldDefinition {
     public static void writeTo(IndentingWriter writer, Field field, boolean setInStaticConstructor) throws IOException {

@@ -31,9 +31,9 @@
 
 package org.jf.baksmali.Adaptors.Debug;
 
-import org.jf.util.IndentingWriter;
-
 import java.io.IOException;
+
+import org.jf.util.IndentingWriter;
 
 public class BeginEpilogueMethodItem extends DebugMethodItem {
     public BeginEpilogueMethodItem(int codeAddress, int sortOrder) {

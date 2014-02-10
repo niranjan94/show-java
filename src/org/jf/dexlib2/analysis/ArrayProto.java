@@ -31,15 +31,16 @@
 
 package org.jf.dexlib2.analysis;
 
-import com.google.common.base.Strings;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.immutable.reference.ImmutableFieldReference;
 import org.jf.dexlib2.util.TypeUtils;
 import org.jf.util.ExceptionWithContext;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Strings;
 
 public class ArrayProto implements TypeProto {
     protected final ClassPath classPath;

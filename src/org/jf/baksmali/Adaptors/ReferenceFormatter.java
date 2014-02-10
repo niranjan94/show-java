@@ -28,13 +28,17 @@
 
 package org.jf.baksmali.Adaptors;
 
+import java.io.IOException;
+
 import org.jf.dexlib2.ReferenceType;
-import org.jf.dexlib2.iface.reference.*;
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.MethodReference;
+import org.jf.dexlib2.iface.reference.Reference;
+import org.jf.dexlib2.iface.reference.StringReference;
+import org.jf.dexlib2.iface.reference.TypeReference;
 import org.jf.dexlib2.util.ReferenceUtil;
 import org.jf.util.IndentingWriter;
 import org.jf.util.StringUtils;
-
-import java.io.IOException;
 
 public class ReferenceFormatter {
     public static void writeStringReference(IndentingWriter writer, String item) throws IOException {

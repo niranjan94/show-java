@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.iface.value;
 
-import org.jf.dexlib2.iface.reference.FieldReference;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.jf.dexlib2.iface.reference.FieldReference;
 
 /**
  * This class represents an encoded field value.

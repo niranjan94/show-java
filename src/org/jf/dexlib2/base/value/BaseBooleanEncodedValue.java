@@ -31,14 +31,15 @@
 
 package org.jf.dexlib2.base.value;
 
-import com.google.common.primitives.Booleans;
-import com.google.common.primitives.Ints;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.iface.value.BooleanEncodedValue;
 import org.jf.dexlib2.iface.value.EncodedValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.primitives.Booleans;
+import com.google.common.primitives.Ints;
 
 public abstract class BaseBooleanEncodedValue implements BooleanEncodedValue {
     @Override

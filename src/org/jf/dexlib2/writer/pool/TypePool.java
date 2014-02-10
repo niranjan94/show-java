@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.writer.pool;
 
-import org.jf.dexlib2.iface.reference.TypeReference;
-import org.jf.dexlib2.writer.TypeSection;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.jf.dexlib2.iface.reference.TypeReference;
+import org.jf.dexlib2.writer.TypeSection;
 
 public class TypePool extends StringTypeBasePool
         implements TypeSection<CharSequence, CharSequence, TypeReference> {

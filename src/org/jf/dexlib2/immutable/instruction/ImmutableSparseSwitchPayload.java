@@ -31,16 +31,18 @@
 
 package org.jf.dexlib2.immutable.instruction;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.Format;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.instruction.SwitchElement;
 import org.jf.dexlib2.iface.instruction.formats.SparseSwitchPayload;
 import org.jf.util.ImmutableUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
+import com.google.common.collect.ImmutableList;
 
 public class ImmutableSparseSwitchPayload extends ImmutableInstruction implements SparseSwitchPayload {
     public static final Opcode OPCODE = Opcode.SPARSE_SWITCH_PAYLOAD;

@@ -31,13 +31,23 @@
 
 package org.jf.dexlib2.analysis;
 
-import org.jf.dexlib2.iface.instruction.*;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.annotation.Nonnull;
+
+import org.jf.dexlib2.iface.instruction.FiveRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.Instruction;
+import org.jf.dexlib2.iface.instruction.OneRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.ReferenceInstruction;
+import org.jf.dexlib2.iface.instruction.RegisterRangeInstruction;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.iface.reference.Reference;
 import org.jf.util.ExceptionWithContext;
-
-import javax.annotation.Nonnull;
-import java.util.*;
 
 public class AnalyzedInstruction implements Comparable<AnalyzedInstruction> {
     /**

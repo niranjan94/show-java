@@ -28,15 +28,21 @@
 
 package org.jf.util;
 
-import ds.tree.RadixTree;
-import ds.tree.RadixTreeImpl;
-
-import javax.annotation.Nonnull;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.IntBuffer;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+
+import ds.tree.RadixTree;
+import ds.tree.RadixTreeImpl;
 
 /**
  * This class checks for case-insensitive file systems, and generates file names based on a given class name, that are

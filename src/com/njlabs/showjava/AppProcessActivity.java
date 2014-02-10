@@ -26,13 +26,16 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,9 +43,6 @@ import com.googlecode.dex2jar.reader.DexFileReader;
 import com.googlecode.dex2jar.v3.Dex2jar;
 
 public class AppProcessActivity extends Activity {
-
-	private ScrollView CommandScroller;
-	private LinearLayout CommandDisplay;
 	
 	private TextView CurrentStatus;
 	private TextView CurrentLine;
@@ -98,13 +98,54 @@ public class AppProcessActivity extends Activity {
 			}
 		}
         TextView AppName=(TextView) findViewById(R.id.current_package_name);
+        AppName.setSingleLine(false);
+        AppName.setEllipsize(TextUtils.TruncateAt.END);
+        AppName.setLines(1);
         AppName.setText(PackageName);
         
         CurrentStatus=(TextView) findViewById(R.id.current_status);
         CurrentLine=(TextView) findViewById(R.id.current_line);
         
-		/*CommandScroller = (ScrollView) findViewById(R.id.CommandScroller);
-		CommandDisplay = (LinearLayout) findViewById(R.id.CommandDisplay);*/
+        Typeface face=Typeface.createFromAsset(getAssets(), "roboto_light.ttf"); 
+		
+        AppName.setTypeface(face); 
+        CurrentStatus.setTypeface(face);
+        CurrentLine.setTypeface(face);
+		
+        CurrentStatus.setSingleLine(false);
+        CurrentStatus.setEllipsize(TextUtils.TruncateAt.END);
+        CurrentStatus.setLines(1);
+        
+        CurrentLine.setSingleLine(false);
+        CurrentLine.setEllipsize(TextUtils.TruncateAt.END);
+        CurrentLine.setLines(1);
+        
+        final ImageView GearProgressLeft = (ImageView) findViewById(R.id.gear_progress_left);
+        final ImageView GearProgressRight = (ImageView) findViewById(R.id.gear_progress_right);
+        
+        final RotateAnimation GearProgressLeftAnim = new RotateAnimation(0.0f,360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        GearProgressLeftAnim.setRepeatCount(Animation.INFINITE);
+        GearProgressLeftAnim.setDuration((long) 2*1500);
+        GearProgressLeftAnim.setInterpolator(this,android.R.anim.linear_interpolator);
+        
+        final RotateAnimation GearProgressRightAnim = new RotateAnimation(360.0f,0.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        GearProgressRightAnim.setRepeatCount(Animation.INFINITE);
+        GearProgressRightAnim.setDuration((long) 1*1500);
+        GearProgressRightAnim.setInterpolator(this,android.R.anim.linear_interpolator);
+                
+        GearProgressLeft.post(new Runnable() {   
+            @Override
+            public void run() {
+            	GearProgressLeft.setAnimation(GearProgressLeftAnim);
+            }
+        });
+        GearProgressLeft.post(new Runnable() {   
+            @Override
+            public void run() {
+            	GearProgressRight.setAnimation(GearProgressRightAnim);
+            }
+        });
+        
 		TempDir=this.getCacheDir();
 		db=new DatabaseHandler(this);
 		Processor process=new Processor();
@@ -134,60 +175,15 @@ public class AppProcessActivity extends Activity {
 		
 		@Override
 		protected void onPreExecute() {
-			/*TextView CommandStatus=new TextView(getBaseContext());
-			CommandStatus.setText(">> Starting Process");
-			CommandDisplay.addView(CommandStatus);
-			CommandScroller.fullScroll(View.FOCUS_DOWN);
-			CommandStatus=new TextView(getBaseContext());
-			CommandStatus.setText(">> The Process might take quite some time for larger apk's");
-			CommandDisplay.addView(CommandStatus);
-			CommandScroller.fullScroll(View.FOCUS_DOWN);
-			CommandStatus=new TextView(getBaseContext());
-			CommandStatus.setText(">> Processing APK file");
-			CommandDisplay.addView(CommandStatus);
-			CommandScroller.post(new Runnable() {
-			    @Override
-			    public void run() {
-			    	CommandScroller.fullScroll(ScrollView.FOCUS_DOWN);
-			    }
-			});
-			Bitmap bm = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_bar), 
-	                getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width),
-	                getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height), 
-	                true);
-	        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 01, new Intent(), Intent.FLAG_ACTIVITY_CLEAR_TASK);
-	        
-			Notification notification = new Notification.Builder(getBaseContext())
-	        											.setContentTitle("Show Java is Decompiling ("+PackageId+")")
-	        											.setContentText("Processing APK file")
-	        											.setSmallIcon(R.drawable.ic_launcher)
-	        											.setContentIntent(pendingIntent)
-	        											.setNumber(101)
-	        											.setOngoing(true)
-	        											.setTicker("Decompiling "+PackageId)
-	        											.setSmallIcon(R.drawable.ic_launcher)
-	        											.setLargeIcon(bm)
-	        											.setAutoCancel(false)
-	        											.getNotification();	    
-			notification.flags=Notification.FLAG_ONGOING_EVENT;
-	        NotificationManager notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-	        notificationManger.notify(101, notification);
-	        
-			notification = new Notification.Builder(getBaseContext())
-			.setContentText("Processing APK file")
-			.getNotification();
-
-			notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			notificationManger.notify(101, notification);*/
 			CurrentStatus.setText("Preparing Decompiler");
-			
 		}
 		
 		@Override
 		protected void onProgressUpdate(String... text) {
 			if(text[0].equals("start_activity"))
 			{
-				db.addHistoryItem(new DecompileHistoryItem(PackageId, PackageName,DateFormat.getDateInstance().format(new Date())));
+				if(!db.packageExistsInHistory(PackageId))
+					db.addHistoryItem(new DecompileHistoryItem(PackageId, PackageName,DateFormat.getDateInstance().format(new Date())));
 				Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
 				i.putExtra("java_source_dir",JavaOutputDir+"/");
 				i.putExtra("package_id",PackageId);
@@ -195,7 +191,8 @@ public class AppProcessActivity extends Activity {
 			}
 			else if(text[0].equals("start_activity_with_error"))
 			{
-				db.addHistoryItem(new DecompileHistoryItem(PackageId, PackageName,DateFormat.getDateInstance().format(new Date())));
+				if(!db.packageExistsInHistory(PackageId))
+					db.addHistoryItem(new DecompileHistoryItem(PackageId, PackageName,DateFormat.getDateInstance().format(new Date())));
 				Toast.makeText(getApplicationContext(), "Decompilation completed with errors. This incident has been reported to the developer.", Toast.LENGTH_LONG).show();
 				Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
 				i.putExtra("java_source_dir",JavaOutputDir+"/");
@@ -209,26 +206,14 @@ public class AppProcessActivity extends Activity {
 			}
 			else
 			{
-				/*TextView CommandStatus=new TextView(getBaseContext());
-				CommandStatus.setText(">> "+text[0]);
-				CommandDisplay.addView(CommandStatus);
-				CommandScroller.post(new Runnable() {
-				    @Override
-				    public void run() {
-				    	CommandScroller.fullScroll(ScrollView.FOCUS_DOWN);
-				    }
-				});
-				
-				Notification notification = new Notification.Builder(getBaseContext())
-				.setContentText(text[0])
-				.getNotification();
-
-				NotificationManager notificationManger = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-				notificationManger.notify(101, notification);*/
-				
 				if(text[0].equals("optimising"))
 				{
 					CurrentStatus.setText("Optimising dex file");
+				}
+				else if(text[0].equals("finaldex"))
+				{
+					CurrentStatus.setText("Finishing optimisation");
+					CurrentLine.setText("");
 				}
 				else if(text[0].equals("dex2jar"))
 				{
@@ -240,45 +225,14 @@ public class AppProcessActivity extends Activity {
 				}
 				else
 				{
-					CurrentLine.setText(text[0]);
+					CurrentLine.setText(text[0].replaceAll("Processing ", ""));
+					
 				}
 			}
 		}
 	}
 	private void PrepareDex(Processor task)
 	{
-		/*InputStream is;
-		ZipInputStream zis;
-	    try 
-	    {
-	    	String filename;
-	        is = new FileInputStream(PackageDir);
-	        zis = new ZipInputStream(new BufferedInputStream(is));          
-	        ZipEntry ze;
-	        byte[] buffer = new byte[1024];
-	        int count;
-	        while ((ze = zis.getNextEntry()) != null) 
-	        {
-	        	filename=ze.getName();
-	            if(filename.equals("classes.dex"))
-	            {
-	            
-	            	FileOutputStream fout = new FileOutputStream(TempDir+"/"+PackageId+".dex");
-		            while ((count = zis.read(buffer)) != -1) 
-		            {
-		                fout.write(buffer, 0, count);             
-		            }
-		            fout.close();               
-		            zis.closeEntry();
-	            	break;
-	            }
-	        }
-	        zis.close();
-	    } 
-	    catch(IOException e)
-	    {
-	    	e.printStackTrace();
-	    }*/
 		task.doProgress("optimising");
 		DexFile dexFile = null;
 		try 
@@ -287,23 +241,56 @@ public class AppProcessActivity extends Activity {
 		} 
 		catch (IOException e) 
 		{
-			e.printStackTrace();
+			ACRA.getErrorReporter().handleException(e);
 		}
 		List<ClassDef> classes = new ArrayList<ClassDef>();
 		for (ClassDef classDef: dexFile.getClasses()) {
-		    if (!classDef.getType().startsWith("Landroid/support/")&&!classDef.getType().startsWith("Lcom/actionbarsherlock/")&&!classDef.getType().startsWith("Lorg/apache/")&&!classDef.getType().startsWith("Lorg/acra/")&&!classDef.getType().startsWith("Lcom/google/")&&!classDef.getType().startsWith("Lcom/google/android/gms/")&&!classDef.getType().startsWith("Lcom/google/api/")&&!classDef.getType().startsWith("Lcom/njlabs/")) {
-		    	task.doProgress("Optimising "+classDef.getType());
-		    	classes.add(classDef);
+		    if (
+		    	classDef.getType().startsWith("Lcom/google/apps/")
+		    	||!classDef.getType().startsWith("Landroid/support/")
+		    	&&!classDef.getType().startsWith("Lcom/njlabs/")
+		    	&&!classDef.getType().startsWith("Lcom/androidquery/")
+		    	&&!classDef.getType().startsWith("Lcom/parse/")
+		    	&&!classDef.getType().startsWith("Lcom/android/")
+		    	&&!classDef.getType().startsWith("Lcom/actionbarsherlock/")
+		    	&&!classDef.getType().startsWith("Lorg/apache/")
+		    	&&!classDef.getType().startsWith("Lorg/acra/")
+		    	&&!classDef.getType().startsWith("Ljavax/")
+		    	&&!classDef.getType().startsWith("Lorg/joda/")
+		    	&&!classDef.getType().startsWith("Lorg/antlr/")
+		    	&&!classDef.getType().startsWith("Ljunit/")
+		    	&&!classDef.getType().startsWith("Lorg/codehaus/jackson/")
+		    	&&!classDef.getType().startsWith("Lcom/fasterxml/")
+		    	&&!classDef.getType().startsWith("Lcom/google/")
+		    	&&!classDef.getType().startsWith("Lcom/bugsense/")
+		    	&&!classDef.getType().startsWith("Lorg/andengine/")
+		    	&&!classDef.getType().startsWith("Lorg/andengine/")
+		    	&&!classDef.getType().startsWith("Landroid/")
+		    	&&!classDef.getType().startsWith("Lcom/google/android/gms/")
+		    	&&!classDef.getType().startsWith("Lcom/google/api/")
+		    	&&!classDef.getType().startsWith("Lcom/njlabs/")) {
+		    	
+		    		task.doProgress(classDef.getType());
+		    		classes.add(classDef);
 		    }
 		}
+		task.doProgress("finaldex");
+		File WorkingDirectory=new File(Environment.getExternalStorageDirectory() + "/ShowJava");
+		File PerAppWorkingDirectory=new File(WorkingDirectory + "/" + PackageId);
+		PerAppWorkingDirectory.mkdirs();
+		Log.d("DEBUGGER","Prepare Writing");
 		dexFile = new ImmutableDexFile(classes);
+		
+		
 		try 
 		{
-			DexFileFactory.writeDexFile(TempDir+"/"+PackageId+".dex", dexFile);
+			Log.d("DEBUGGER","Start Writing");
+			DexFileFactory.writeDexFile(PerAppWorkingDirectory+"/optimised_classes.dex", dexFile);
+			Log.d("DEBUGGER","Writing done!");
 		} 
 		catch (IOException e) 
 		{
-			e.printStackTrace();
+			ACRA.getErrorReporter().handleException(e);
 		}
 		
 	}
@@ -328,12 +315,11 @@ public class AppProcessActivity extends Activity {
 	
 		File WorkingDirectory=new File(Environment.getExternalStorageDirectory() + "/ShowJava");
 		File PerAppWorkingDirectory=new File(WorkingDirectory + "/" + PackageId);
-		
 		File file = new File(PerAppWorkingDirectory+"/"+PackageId+ ".jar");
 		
 		try
 		{
-			DexFileReader reader = new DexFileReader(new File(TempDir+"/"+PackageId+".dex"));
+			DexFileReader reader = new DexFileReader(new File(PerAppWorkingDirectory+"/optimised_classes.dex"));
 			Dex2jar.from(reader).reUseReg(reuseReg).topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
 				.optimizeSynchronized(optmizeSynchronized).printIR(printIR).verbose(verbose).to(file);
 		}
@@ -343,7 +329,7 @@ public class AppProcessActivity extends Activity {
 			task.doProgress("exit_process_on_error");
 		}
 		Log.i("STATUS","Clearing cache");
-		File ClassDex=new File(TempDir+"/"+PackageId+".dex");
+		File ClassDex=new File(PerAppWorkingDirectory+"/optimised_classes.dex");
 		ClassDex.delete();
 	}
 	private void DecompileJar(final Processor task)

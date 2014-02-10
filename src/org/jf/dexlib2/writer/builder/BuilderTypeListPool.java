@@ -31,19 +31,21 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import org.jf.dexlib2.writer.DexWriter;
-import org.jf.dexlib2.writer.TypeListSection;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentMap;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.jf.dexlib2.writer.DexWriter;
+import org.jf.dexlib2.writer.TypeListSection;
+
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 
 class BuilderTypeListPool implements TypeListSection<BuilderTypeReference, BuilderTypeList> {
     @Nonnull private final BuilderContext context;

@@ -31,14 +31,16 @@
 
 package org.jf.dexlib2.immutable;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Collection;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.util.ImmutableUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
+import com.google.common.collect.ImmutableSet;
 
 public class ImmutableDexFile implements DexFile {
     @Nonnull protected final ImmutableSet<? extends ImmutableClassDef> classes;

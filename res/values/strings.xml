@@ -8,5 +8,7 @@
     <string name="title_activity_source_viewer">Source Viewer</string>
     <string name="crash_toast_text">Unfortunately Show Java has Crashed. A report has automatically been sent to the developer.</string>
     <string name="title_activity_landing">Show Java</string>
+    <string name="title_activity_about">About</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

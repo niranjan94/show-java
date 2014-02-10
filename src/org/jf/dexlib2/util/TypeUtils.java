@@ -31,9 +31,9 @@
 
 package org.jf.dexlib2.util;
 
-import org.jf.dexlib2.iface.reference.TypeReference;
-
 import javax.annotation.Nonnull;
+
+import org.jf.dexlib2.iface.reference.TypeReference;
 
 public final class TypeUtils {
     public static boolean isWideType(@Nonnull String type) {

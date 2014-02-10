@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.immutable.value;
 
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.base.value.BaseMethodEncodedValue;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.iface.value.MethodEncodedValue;
-
-import javax.annotation.Nonnull;
 
 public class ImmutableMethodEncodedValue extends BaseMethodEncodedValue implements ImmutableEncodedValue {
     @Nonnull protected final MethodReference value;

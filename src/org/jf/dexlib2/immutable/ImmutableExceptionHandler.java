@@ -31,13 +31,14 @@
 
 package org.jf.dexlib2.immutable;
 
-import com.google.common.collect.ImmutableList;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.base.BaseExceptionHandler;
 import org.jf.dexlib2.iface.ExceptionHandler;
 import org.jf.util.ImmutableConverter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
 
 public class ImmutableExceptionHandler extends BaseExceptionHandler implements ExceptionHandler {
     @Nullable protected final String exceptionType;

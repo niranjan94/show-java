@@ -2,36 +2,47 @@ package com.njlabs.showjava;
 
 import java.io.File;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.text.DateFormat;
 
-import android.os.Bundle;
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
-public class JavaExplorer extends ListActivity {
+public class JavaExplorer extends Activity {
 
     private File currentDir;
     private FileArrayAdapter adapter;
-    
+    private Typeface face;
+    ListView lv;
     String PackageID;
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+    	setContentView(R.layout.activity_app_listing);
         Bundle extras = getIntent().getExtras();
         String JavSourceDir=null;
         if (extras != null) {
             JavSourceDir = extras.getString("java_source_dir");
             PackageID = extras.getString("package_id");
         }
+        face=Typeface.createFromAsset(getAssets(), "roboto_light.ttf"); 
         getActionBar().setIcon(R.drawable.ic_action_bar);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         
+        lv=(ListView) findViewById(R.id.list);
         currentDir = new File(JavSourceDir);
         fill(currentDir);
     }
@@ -40,11 +51,19 @@ public class JavaExplorer extends ListActivity {
     	File[]dirs = f.listFiles();
     	if(f.getName().equalsIgnoreCase("java_output"))
     	{
-    		this.setTitle("Viewing the source of "+PackageID);
+    		SpannableString s = new SpannableString("Viewing the source of "+PackageID);
+    	    s.setSpan(new CustomTypefaceSpan("sans-serif",face), 0, s.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    	    s.setSpan(new RelativeSizeSpan(1.1f), 0, s.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    	    
+    	    getActionBar().setTitle(s);
     	}
     	else
     	{
-    		this.setTitle(f.getName());
+    		SpannableString s = new SpannableString(f.getName());
+    	    s.setSpan(new CustomTypefaceSpan("sans-serif",face), 0, s.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    	    s.setSpan(new RelativeSizeSpan(1.1f), 0, s.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    	    
+    	    getActionBar().setTitle(s);
     	}    	
     	List<Item>dir = new ArrayList<Item>();
     	List<Item>fls = new ArrayList<Item>();
@@ -83,21 +102,24 @@ public class JavaExplorer extends ListActivity {
     	if(!f.getName().equalsIgnoreCase("java_output"))
     		dir.add(0,new Item("..","Parent Directory","",f.getParent(),"directory_up"));
     	adapter = new FileArrayAdapter(JavaExplorer.this,R.layout.java_explorer_list_item,dir);
-    	this.setListAdapter(adapter);
+    	lv.setAdapter(adapter);
+    	lv.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				Item o = adapter.getItem(position);
+		    	if(o.getImage().equalsIgnoreCase("directory_icon")||o.getImage().equalsIgnoreCase("directory_up")){
+		    		currentDir = new File(o.getPath());
+		    		fill(currentDir);
+		    	}
+		    	else
+		    	{
+		    		onFileClick(o);
+		    	}
+				
+			}
+		});
     }
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-    	super.onListItemClick(l, v, position, id);
-    	Item o = adapter.getItem(position);
-    	if(o.getImage().equalsIgnoreCase("directory_icon")||o.getImage().equalsIgnoreCase("directory_up")){
-    		currentDir = new File(o.getPath());
-    		fill(currentDir);
-    	}
-    	else
-    	{
-    		onFileClick(o);
-    	}
-    }
+
     private void onFileClick(Item o)
     {
         Intent i = new Intent(getApplicationContext(), SourceViewer.class);
@@ -121,6 +143,13 @@ public class JavaExplorer extends ListActivity {
     	}
     }
     @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -136,6 +165,10 @@ public class JavaExplorer extends ListActivity {
             		finish();
             	}
                 return true;
+            case R.id.about_option:
+	        	Intent i=new Intent(getBaseContext(),About.class);
+	        	startActivity(i);
+	        	return true;
         }
         return super.onOptionsItemSelected(item);
     }

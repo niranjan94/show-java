@@ -28,12 +28,12 @@
 
 package org.jf.baksmali.Adaptors.EncodedValue;
 
+import java.io.IOException;
+import java.util.Collection;
+
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.value.AnnotationEncodedValue;
 import org.jf.util.IndentingWriter;
-
-import java.io.IOException;
-import java.util.Collection;
 
 public abstract class AnnotationEncodedValueAdaptor {
 

@@ -31,12 +31,13 @@
 
 package org.jf.baksmali.Adaptors.Debug;
 
+import java.io.IOException;
+
+import javax.annotation.Nonnull;
+
 import org.jf.baksmali.Adaptors.RegisterFormatter;
 import org.jf.dexlib2.iface.debug.EndLocal;
 import org.jf.util.IndentingWriter;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
 
 public class EndLocalMethodItem extends DebugMethodItem {
     @Nonnull private final EndLocal endLocal;

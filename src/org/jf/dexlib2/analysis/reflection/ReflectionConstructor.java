@@ -31,7 +31,14 @@
 
 package org.jf.dexlib2.analysis.reflection;
 
-import com.google.common.collect.ImmutableSet;
+import java.lang.reflect.Constructor;
+import java.util.AbstractList;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.analysis.reflection.util.ReflectionUtils;
 import org.jf.dexlib2.base.BaseMethodParameter;
 import org.jf.dexlib2.base.reference.BaseMethodReference;
@@ -40,12 +47,7 @@ import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodImplementation;
 import org.jf.dexlib2.iface.MethodParameter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
-import java.util.AbstractList;
-import java.util.List;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
 
 public class ReflectionConstructor extends BaseMethodReference implements Method {
     private final Constructor constructor;

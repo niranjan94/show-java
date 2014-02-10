@@ -31,13 +31,15 @@
 
 package org.jf.dexlib2.writer.pool;
 
-import com.google.common.collect.Maps;
+import java.util.Collection;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.writer.OffsetSection;
 import org.jf.util.ExceptionWithContext;
 
-import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Map;
+import com.google.common.collect.Maps;
 
 public abstract class BaseOffsetPool<Key> implements OffsetSection<Key> {
     @Nonnull protected final Map<Key, Integer> internedItems = Maps.newHashMap();

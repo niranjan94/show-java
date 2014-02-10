@@ -31,10 +31,17 @@
 
 package org.jf.util;
 
-import com.google.common.collect.Iterators;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.SortedSet;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+
+import com.google.common.collect.Iterators;
 
 public class ArraySortedSet<T> implements SortedSet<T> {
     @Nonnull private final Comparator<? super T> comparator;

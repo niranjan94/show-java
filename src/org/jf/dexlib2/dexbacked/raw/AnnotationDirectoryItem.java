@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.dexbacked.raw;
 
-import org.jf.dexlib2.dexbacked.raw.util.DexAnnotator;
-import org.jf.dexlib2.util.AnnotatedBytes;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.jf.dexlib2.dexbacked.raw.util.DexAnnotator;
+import org.jf.dexlib2.util.AnnotatedBytes;
 
 public class AnnotationDirectoryItem {
     public static final int CLASS_ANNOTATIONS_OFFSET  = 0;

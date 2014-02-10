@@ -31,13 +31,14 @@
 
 package org.jf.dexlib2.analysis;
 
-import com.google.common.base.Predicates;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.analysis.util.TypeProtoUtils;
 import org.jf.dexlib2.iface.ClassDef;
@@ -49,12 +50,13 @@ import org.jf.dexlib2.immutable.ImmutableMethod;
 import org.jf.util.ExceptionWithContext;
 import org.jf.util.SparseArray;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * A class "prototype". This contains things like the interfaces, the superclass, the vtable and the instance fields

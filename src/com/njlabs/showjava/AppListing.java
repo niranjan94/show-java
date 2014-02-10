@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -19,12 +21,15 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +48,7 @@ public class AppListing extends Activity {
 	ProgressDialog PackageLoadDialog;
 	ProgressDialog GetJavaDialog;
 	ListView listView=null;
+	DatabaseHandler db;
 	View alertView;
 
 	@Override
@@ -61,6 +67,17 @@ public class AppListing extends Activity {
 		PackageLoadDialog.show();
 		getActionBar().setIcon(R.drawable.ic_action_bar);
 	    getActionBar().setDisplayHomeAsUpEnabled(true);
+	    
+	    Typeface face = Typeface.createFromAsset(getAssets(), "roboto_light.ttf"); 
+		 
+		SpannableString s = new SpannableString(getResources().getString(R.string.title_activity_landing));
+	    s.setSpan(new CustomTypefaceSpan("sans-serif",face), 0, s.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    s.setSpan(new RelativeSizeSpan(1.1f), 0, s.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	    
+	    getActionBar().setTitle(s);
+	    
+	    db=new DatabaseHandler(this);
+	    
 		SharedPreferences preferences = getSharedPreferences("pref_showjava_core", Context.MODE_PRIVATE);
 		Boolean FirstRun = preferences.getBoolean("FirstRun", true);
 		if(FirstRun)
@@ -113,7 +130,7 @@ public class AppListing extends Activity {
 
 		@Override
 		protected ArrayList<PInfo> doInBackground(String... params) {
-			publishProgress("Sleeping..."); // Calls onProgressUpdate()
+			publishProgress("Retrieving installed application"); // Calls onProgressUpdate()
 			return getInstalledApps(this);
 		}
 		
@@ -156,7 +173,12 @@ public class AppListing extends Activity {
 				TextView PkgVersion=(TextView) convertView.findViewById(R.id.pkg_version);
 				TextView PkgDir=(TextView) convertView.findViewById(R.id.pkg_dir);
 				ImageView PkgImg=(ImageView) convertView.findViewById(R.id.pkg_img);
-
+				
+				Typeface face=Typeface.createFromAsset(getAssets(), "roboto_light.ttf"); 
+				
+				PkgName.setTypeface(face); 
+				PkgVersion.setTypeface(face); 
+				
 				PkgName.setText(pkg.appname);
 				PkgId.setText(pkg.pname);
 				PkgVersion.setText("version " + pkg.versionName);
@@ -193,10 +215,13 @@ public class AppListing extends Activity {
 				        //alertDialog.setIcon(R.drawable.delete);
 				        alertDialog.setPositiveButton("Browse the Source", new DialogInterface.OnClickListener() {
 				            public void onClick(DialogInterface dialog,int which) {
+				            	
 				            	Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
 								i.putExtra("java_source_dir",JavaOutputDir+"/");
 								i.putExtra("package_id",CPkgId.getText().toString());
 								startActivity(i);
+								if(!db.packageExistsInHistory(CPkgId.getText().toString()))
+									db.addHistoryItem(new DecompileHistoryItem(CPkgId.getText().toString(), CPkgName.getText().toString(),DateFormat.getDateInstance().format(new Date())));
 				            }
 				        });
 				        alertDialog.setNegativeButton("Decompile again", new DialogInterface.OnClickListener() {
@@ -310,21 +335,8 @@ public class AppListing extends Activity {
 	            return true;
 	            
 	        case R.id.about_option:
-	        	AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
-	        	LayoutInflater factory = LayoutInflater.from(this);
-	        	final View textEntryView = factory.inflate(R.layout.dialog_about, null);
-	        	          
-	        	alt_bld.setView(textEntryView).setCancelable(true)
-	        	                   .setPositiveButton("Close !", new DialogInterface.OnClickListener() {
-	        	         	          public void onClick(DialogInterface dialog, int id) {
-	        	         	        	 dialog.cancel();
-	        	        	          }
-	        	        	      });
-	        	                    
-	        	AlertDialog alert = alt_bld.create();
-	        	alert.setTitle("About");
-	        	alert.setIcon(R.drawable.ic_action_bar);
-	        	alert.show();
+	        	Intent i=new Intent(getBaseContext(),About.class);
+	        	startActivity(i);
 	        	return true;
 	    }
 	    return super.onOptionsItemSelected(item);

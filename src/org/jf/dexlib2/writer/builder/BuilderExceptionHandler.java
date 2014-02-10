@@ -31,9 +31,9 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import org.jf.dexlib2.base.BaseExceptionHandler;
-
 import javax.annotation.Nullable;
+
+import org.jf.dexlib2.base.BaseExceptionHandler;
 
 public class BuilderExceptionHandler extends BaseExceptionHandler {
     @Nullable final BuilderTypeReference exceptionType;

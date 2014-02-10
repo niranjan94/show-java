@@ -31,16 +31,31 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.*;
+import java.io.IOException;
+import java.util.AbstractCollection;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedSet;
+import java.util.concurrent.ConcurrentMap;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.builder.MutableMethodImplementation;
 import org.jf.dexlib2.iface.ExceptionHandler;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.MethodImplementation;
 import org.jf.dexlib2.iface.TryBlock;
-import org.jf.dexlib2.iface.debug.*;
+import org.jf.dexlib2.iface.debug.DebugItem;
+import org.jf.dexlib2.iface.debug.EndLocal;
+import org.jf.dexlib2.iface.debug.LineNumber;
+import org.jf.dexlib2.iface.debug.RestartLocal;
+import org.jf.dexlib2.iface.debug.SetSourceFile;
+import org.jf.dexlib2.iface.debug.StartLocal;
 import org.jf.dexlib2.iface.instruction.Instruction;
 import org.jf.dexlib2.iface.reference.StringReference;
 import org.jf.dexlib2.iface.reference.TypeReference;
@@ -53,12 +68,13 @@ import org.jf.util.AbstractForwardSequentialList;
 import org.jf.util.CollectionUtils;
 import org.jf.util.ExceptionWithContext;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentMap;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Ordering;
 
 public class BuilderClassPool implements ClassSection<BuilderStringReference, BuilderTypeReference, BuilderTypeList,
         BuilderClassDef, BuilderField, BuilderMethod, BuilderAnnotationSet, BuilderEncodedValue> {

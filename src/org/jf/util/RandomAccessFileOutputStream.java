@@ -31,10 +31,11 @@
 
 package org.jf.util;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+
+import javax.annotation.Nonnull;
 
 public class RandomAccessFileOutputStream extends OutputStream {
     private int filePosition;

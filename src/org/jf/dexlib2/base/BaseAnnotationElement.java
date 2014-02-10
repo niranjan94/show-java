@@ -31,10 +31,11 @@
 
 package org.jf.dexlib2.base;
 
-import org.jf.dexlib2.iface.AnnotationElement;
+import java.util.Comparator;
 
 import javax.annotation.Nonnull;
-import java.util.Comparator;
+
+import org.jf.dexlib2.iface.AnnotationElement;
 
 public abstract class BaseAnnotationElement implements AnnotationElement {
     @Override

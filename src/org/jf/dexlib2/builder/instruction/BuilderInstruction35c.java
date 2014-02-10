@@ -31,14 +31,14 @@
 
 package org.jf.dexlib2.builder.instruction;
 
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.Format;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.builder.BuilderInstruction;
 import org.jf.dexlib2.iface.instruction.formats.Instruction35c;
 import org.jf.dexlib2.iface.reference.Reference;
 import org.jf.dexlib2.util.Preconditions;
-
-import javax.annotation.Nonnull;
 
 public class BuilderInstruction35c extends BuilderInstruction implements Instruction35c {
     public static final Format FORMAT = Format.Format35c;

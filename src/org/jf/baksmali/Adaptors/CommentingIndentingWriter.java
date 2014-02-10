@@ -31,10 +31,10 @@
 
 package org.jf.baksmali.Adaptors;
 
-import org.jf.util.IndentingWriter;
-
 import java.io.IOException;
 import java.io.Writer;
+
+import org.jf.util.IndentingWriter;
 
 public class CommentingIndentingWriter extends IndentingWriter {
     public CommentingIndentingWriter(Writer writer) {

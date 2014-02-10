@@ -32,7 +32,15 @@
 package org.jf.dexlib2.util;
 
 import org.jf.dexlib2.ValueType;
-import org.jf.dexlib2.iface.value.*;
+import org.jf.dexlib2.iface.value.BooleanEncodedValue;
+import org.jf.dexlib2.iface.value.ByteEncodedValue;
+import org.jf.dexlib2.iface.value.CharEncodedValue;
+import org.jf.dexlib2.iface.value.DoubleEncodedValue;
+import org.jf.dexlib2.iface.value.EncodedValue;
+import org.jf.dexlib2.iface.value.FloatEncodedValue;
+import org.jf.dexlib2.iface.value.IntEncodedValue;
+import org.jf.dexlib2.iface.value.LongEncodedValue;
+import org.jf.dexlib2.iface.value.ShortEncodedValue;
 
 public final class EncodedValueUtils {
     public static boolean isDefaultValue(EncodedValue encodedValue) {

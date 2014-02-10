@@ -31,20 +31,22 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Maps;
-import org.jf.dexlib2.iface.Annotation;
-import org.jf.dexlib2.writer.AnnotationSetSection;
-import org.jf.dexlib2.writer.DexWriter;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.jf.dexlib2.iface.Annotation;
+import org.jf.dexlib2.writer.AnnotationSetSection;
+import org.jf.dexlib2.writer.DexWriter;
+
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Maps;
 
 class BuilderAnnotationSetPool implements AnnotationSetSection<BuilderAnnotation, BuilderAnnotationSet> {
     @Nonnull private final BuilderContext context;

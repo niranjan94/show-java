@@ -31,13 +31,15 @@
 
 package org.jf.dexlib2.rewriter;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.base.reference.BaseMethodReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 
-import javax.annotation.Nonnull;
-import java.util.List;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 public class MethodReferenceRewriter implements Rewriter<MethodReference> {
     @Nonnull protected final Rewriters rewriters;

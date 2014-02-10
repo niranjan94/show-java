@@ -28,9 +28,9 @@
 
 package org.jf.baksmali.Renderers;
 
-import org.jf.util.IndentingWriter;
-
 import java.io.IOException;
+
+import org.jf.util.IndentingWriter;
 
 public class IntegerRenderer {
     public static void writeTo(IndentingWriter writer, int val) throws IOException {

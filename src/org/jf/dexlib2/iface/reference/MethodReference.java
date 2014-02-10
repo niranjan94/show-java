@@ -31,9 +31,10 @@
 
 package org.jf.dexlib2.iface.reference;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * This class represents a reference to a method.

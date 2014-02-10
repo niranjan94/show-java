@@ -31,11 +31,12 @@
 
 package org.jf.dexlib2.base;
 
-import com.google.common.primitives.Ints;
+import java.util.Comparator;
+
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.util.CollectionUtils;
 
-import java.util.Comparator;
+import com.google.common.primitives.Ints;
 
 public abstract class BaseAnnotation implements Annotation {
     @Override

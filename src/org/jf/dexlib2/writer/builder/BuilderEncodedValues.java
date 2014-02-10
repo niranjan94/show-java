@@ -31,14 +31,29 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import org.jf.dexlib2.base.value.*;
-import org.jf.dexlib2.iface.value.EncodedValue;
-import org.jf.dexlib2.immutable.value.*;
-import org.jf.util.ExceptionWithContext;
-
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
+
+import org.jf.dexlib2.base.value.BaseAnnotationEncodedValue;
+import org.jf.dexlib2.base.value.BaseArrayEncodedValue;
+import org.jf.dexlib2.base.value.BaseBooleanEncodedValue;
+import org.jf.dexlib2.base.value.BaseEnumEncodedValue;
+import org.jf.dexlib2.base.value.BaseFieldEncodedValue;
+import org.jf.dexlib2.base.value.BaseMethodEncodedValue;
+import org.jf.dexlib2.base.value.BaseNullEncodedValue;
+import org.jf.dexlib2.base.value.BaseStringEncodedValue;
+import org.jf.dexlib2.base.value.BaseTypeEncodedValue;
+import org.jf.dexlib2.iface.value.EncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableByteEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableCharEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableDoubleEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableFloatEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableIntEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableLongEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableShortEncodedValue;
+import org.jf.util.ExceptionWithContext;
 
 public abstract class BuilderEncodedValues {
     public static interface BuilderEncodedValue extends EncodedValue {

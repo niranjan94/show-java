@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.dexbacked.value;
 
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.base.value.BaseStringEncodedValue;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.DexReader;
-
-import javax.annotation.Nonnull;
 
 public class DexBackedStringEncodedValue extends BaseStringEncodedValue {
     @Nonnull public final DexBackedDexFile dexFile;

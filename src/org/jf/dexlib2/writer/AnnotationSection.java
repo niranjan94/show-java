@@ -31,8 +31,9 @@
 
 package org.jf.dexlib2.writer;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
+
+import javax.annotation.Nonnull;
 
 public interface AnnotationSection<StringKey, TypeKey, AnnotationKey, AnnotationElement, EncodedValue>
         extends OffsetSection<AnnotationKey> {

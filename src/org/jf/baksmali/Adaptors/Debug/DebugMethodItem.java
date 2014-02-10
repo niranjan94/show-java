@@ -34,7 +34,12 @@ package org.jf.baksmali.Adaptors.Debug;
 import org.jf.baksmali.Adaptors.MethodItem;
 import org.jf.baksmali.Adaptors.RegisterFormatter;
 import org.jf.dexlib2.DebugItemType;
-import org.jf.dexlib2.iface.debug.*;
+import org.jf.dexlib2.iface.debug.DebugItem;
+import org.jf.dexlib2.iface.debug.EndLocal;
+import org.jf.dexlib2.iface.debug.LineNumber;
+import org.jf.dexlib2.iface.debug.RestartLocal;
+import org.jf.dexlib2.iface.debug.SetSourceFile;
+import org.jf.dexlib2.iface.debug.StartLocal;
 import org.jf.util.ExceptionWithContext;
 
 public abstract class DebugMethodItem extends MethodItem {

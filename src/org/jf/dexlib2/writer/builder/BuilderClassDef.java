@@ -31,17 +31,28 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import com.google.common.base.Functions;
-import com.google.common.collect.*;
+import java.util.AbstractCollection;
+import java.util.AbstractSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.SortedSet;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.base.reference.BaseTypeReference;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.util.FieldUtil;
 import org.jf.dexlib2.util.MethodUtil;
 import org.jf.dexlib2.writer.DexWriter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
+import com.google.common.base.Functions;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Ordering;
 
 public class BuilderClassDef extends BaseTypeReference implements ClassDef {
     @Nonnull final BuilderTypeReference type;

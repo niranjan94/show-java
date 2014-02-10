@@ -31,12 +31,12 @@
 
 package org.jf.dexlib2.dexbacked.instruction;
 
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.instruction.formats.Instruction35ms;
 import org.jf.util.NibbleUtils;
-
-import javax.annotation.Nonnull;
 
 public class DexBackedInstruction35ms extends DexBackedInstruction implements Instruction35ms {
     public DexBackedInstruction35ms(@Nonnull DexBackedDexFile dexFile,

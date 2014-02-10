@@ -31,13 +31,13 @@
 
 package org.jf.dexlib2.builder.debug;
 
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.builder.BuilderDebugItem;
 import org.jf.dexlib2.iface.debug.StartLocal;
 import org.jf.dexlib2.iface.reference.StringReference;
 import org.jf.dexlib2.iface.reference.TypeReference;
-
-import javax.annotation.Nullable;
 
 public class BuilderStartLocal extends BuilderDebugItem implements StartLocal {
     private final int register;

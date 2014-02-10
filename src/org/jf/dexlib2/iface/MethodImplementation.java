@@ -31,11 +31,12 @@
 
 package org.jf.dexlib2.iface;
 
-import org.jf.dexlib2.iface.debug.DebugItem;
-import org.jf.dexlib2.iface.instruction.Instruction;
+import java.util.List;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+
+import org.jf.dexlib2.iface.debug.DebugItem;
+import org.jf.dexlib2.iface.instruction.Instruction;
 
 /**
  * This class represents the implementation details of a method.

@@ -31,8 +31,12 @@
 
 package org.jf.dexlib2.dexbacked;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.base.reference.BaseTypeReference;
 import org.jf.dexlib2.dexbacked.raw.ClassDefItem;
 import org.jf.dexlib2.dexbacked.util.AnnotationsDirectory;
@@ -45,10 +49,8 @@ import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.immutable.reference.ImmutableFieldReference;
 import org.jf.dexlib2.immutable.reference.ImmutableMethodReference;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Iterator;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 
 public class DexBackedClassDef extends BaseTypeReference implements ClassDef {
     @Nonnull public final DexBackedDexFile dexFile;

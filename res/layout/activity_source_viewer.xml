@@ -1,4 +1,30 @@
-<WebView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/source_view"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/holder"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" />
+    android:layout_height="fill_parent">
+    
+	<WebView
+	    android:id="@+id/source_view"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_above="@+id/adView" />
+
+	<ProgressBar
+	    android:id="@+id/progress"
+	    style="?android:attr/progressBarStyleLarge"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true" />
+  	
+  	<com.google.ads.AdView 
+  	    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+  	    android:id="@+id/adView"
+       	android:layout_width="wrap_content"
+      	android:layout_height="wrap_content"
+      	android:layout_alignParentBottom="true"
+      	ads:adUnitId="a152e3be53116cd"
+    	ads:adSize="SMART_BANNER"
+     	ads:loadAdOnCreate="true"/>
+  	
+</RelativeLayout>

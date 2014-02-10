@@ -31,15 +31,25 @@
 
 package org.jf.dexlib2.rewriter;
 
-import org.jf.dexlib2.iface.*;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+
+import org.jf.dexlib2.iface.Annotation;
+import org.jf.dexlib2.iface.AnnotationElement;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.iface.ExceptionHandler;
+import org.jf.dexlib2.iface.Field;
+import org.jf.dexlib2.iface.Method;
+import org.jf.dexlib2.iface.MethodImplementation;
+import org.jf.dexlib2.iface.MethodParameter;
+import org.jf.dexlib2.iface.TryBlock;
 import org.jf.dexlib2.iface.debug.DebugItem;
 import org.jf.dexlib2.iface.instruction.Instruction;
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.iface.value.EncodedValue;
-
-import javax.annotation.Nonnull;
-import java.util.Set;
 
 /**
  * Out-of-the box, this class does nothing except make a picture-perfect copy of a dex file.

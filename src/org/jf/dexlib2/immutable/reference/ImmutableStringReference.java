@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.immutable.reference;
 
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.base.reference.BaseStringReference;
 import org.jf.dexlib2.iface.reference.StringReference;
-
-import javax.annotation.Nonnull;
 
 public class ImmutableStringReference extends BaseStringReference implements ImmutableReference {
     @Nonnull protected final String str;

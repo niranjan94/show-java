@@ -28,12 +28,13 @@
 
 package org.jf.baksmali.Adaptors;
 
-import org.jf.baksmali.baksmaliOptions;
-import org.jf.util.IndentingWriter;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
+
+import org.jf.baksmali.baksmaliOptions;
+import org.jf.util.IndentingWriter;
 
 public class CatchMethodItem extends MethodItem {
     private final String exceptionType;

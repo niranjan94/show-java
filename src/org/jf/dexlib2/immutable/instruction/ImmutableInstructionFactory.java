@@ -31,14 +31,15 @@
 
 package org.jf.dexlib2.immutable.instruction;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.instruction.SwitchElement;
 import org.jf.dexlib2.iface.reference.Reference;
 import org.jf.dexlib2.writer.InstructionFactory;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class ImmutableInstructionFactory implements InstructionFactory<Reference> {
     public static final ImmutableInstructionFactory INSTANCE = new ImmutableInstructionFactory();

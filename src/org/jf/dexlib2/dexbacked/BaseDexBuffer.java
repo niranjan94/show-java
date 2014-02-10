@@ -31,9 +31,9 @@
 
 package org.jf.dexlib2.dexbacked;
 
-import org.jf.util.ExceptionWithContext;
-
 import javax.annotation.Nonnull;
+
+import org.jf.util.ExceptionWithContext;
 
 public class BaseDexBuffer {
     @Nonnull /* package private */ final byte[] buf;

@@ -31,21 +31,6 @@
 
 package org.jf.dexlib2.analysis;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import org.jf.dexlib2.DexFileFactory;
-import org.jf.dexlib2.analysis.reflection.ReflectionClassDef;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.immutable.ImmutableDexFile;
-import org.jf.util.ExceptionWithContext;
-
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -53,6 +38,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+
+import org.jf.dexlib2.DexFileFactory;
+import org.jf.dexlib2.analysis.reflection.ReflectionClassDef;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.immutable.ImmutableDexFile;
+import org.jf.util.ExceptionWithContext;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public class ClassPath {
     @Nonnull private final TypeProto unknownClass;

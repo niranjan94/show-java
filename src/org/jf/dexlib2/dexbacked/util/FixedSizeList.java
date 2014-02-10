@@ -31,8 +31,9 @@
 
 package org.jf.dexlib2.dexbacked.util;
 
-import javax.annotation.Nonnull;
 import java.util.AbstractList;
+
+import javax.annotation.Nonnull;
 
 /**
  * This provides a thin facade over AbstractList, to take care of bounds checking.

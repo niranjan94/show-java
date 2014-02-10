@@ -31,12 +31,13 @@
 
 package org.jf.util;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.AbstractSequentialList;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class AbstractForwardSequentialList<T> extends AbstractSequentialList<T> {
 

@@ -28,12 +28,12 @@
 
 package org.jf.baksmali.Adaptors;
 
+import java.io.IOException;
+
 import org.jf.dexlib2.ReferenceType;
 import org.jf.dexlib2.util.SyntheticAccessorResolver;
 import org.jf.util.ExceptionWithContext;
 import org.jf.util.IndentingWriter;
-
-import java.io.IOException;
 
 public class SyntheticAccessCommentMethodItem extends MethodItem {
     private final SyntheticAccessorResolver.AccessedMember accessedMember;

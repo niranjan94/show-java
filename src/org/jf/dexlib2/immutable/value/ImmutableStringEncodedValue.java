@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.immutable.value;
 
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.base.value.BaseStringEncodedValue;
 import org.jf.dexlib2.iface.value.StringEncodedValue;
-
-import javax.annotation.Nonnull;
 
 public class ImmutableStringEncodedValue extends BaseStringEncodedValue implements ImmutableEncodedValue {
     @Nonnull protected final String value;

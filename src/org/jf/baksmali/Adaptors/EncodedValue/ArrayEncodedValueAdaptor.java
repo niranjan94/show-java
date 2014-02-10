@@ -28,12 +28,12 @@
 
 package org.jf.baksmali.Adaptors.EncodedValue;
 
-import org.jf.util.IndentingWriter;
-import org.jf.dexlib2.iface.value.ArrayEncodedValue;
-import org.jf.dexlib2.iface.value.EncodedValue;
-
 import java.io.IOException;
 import java.util.Collection;
+
+import org.jf.dexlib2.iface.value.ArrayEncodedValue;
+import org.jf.dexlib2.iface.value.EncodedValue;
+import org.jf.util.IndentingWriter;
 
 public class ArrayEncodedValueAdaptor {
     public static void writeTo(IndentingWriter writer, ArrayEncodedValue arrayEncodedValue) throws IOException {

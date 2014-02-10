@@ -31,19 +31,49 @@
 
 package org.jf.dexlib2.analysis;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import java.util.BitSet;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.Opcode;
-import org.jf.dexlib2.iface.*;
-import org.jf.dexlib2.iface.instruction.*;
-import org.jf.dexlib2.iface.instruction.formats.*;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.ExceptionHandler;
+import org.jf.dexlib2.iface.Method;
+import org.jf.dexlib2.iface.MethodImplementation;
+import org.jf.dexlib2.iface.MethodParameter;
+import org.jf.dexlib2.iface.TryBlock;
+import org.jf.dexlib2.iface.instruction.FiveRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.Instruction;
+import org.jf.dexlib2.iface.instruction.NarrowLiteralInstruction;
+import org.jf.dexlib2.iface.instruction.OffsetInstruction;
+import org.jf.dexlib2.iface.instruction.OneRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.ReferenceInstruction;
+import org.jf.dexlib2.iface.instruction.RegisterRangeInstruction;
+import org.jf.dexlib2.iface.instruction.SwitchElement;
+import org.jf.dexlib2.iface.instruction.SwitchPayload;
+import org.jf.dexlib2.iface.instruction.ThreeRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.TwoRegisterInstruction;
+import org.jf.dexlib2.iface.instruction.formats.Instruction10x;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22c;
+import org.jf.dexlib2.iface.instruction.formats.Instruction22cs;
+import org.jf.dexlib2.iface.instruction.formats.Instruction35c;
+import org.jf.dexlib2.iface.instruction.formats.Instruction35mi;
+import org.jf.dexlib2.iface.instruction.formats.Instruction35ms;
+import org.jf.dexlib2.iface.instruction.formats.Instruction3rc;
+import org.jf.dexlib2.iface.instruction.formats.Instruction3rmi;
+import org.jf.dexlib2.iface.instruction.formats.Instruction3rms;
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.iface.reference.Reference;
 import org.jf.dexlib2.iface.reference.TypeReference;
-import org.jf.dexlib2.immutable.instruction.*;
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction10x;
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction21c;
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction22c;
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction35c;
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction3rc;
 import org.jf.dexlib2.immutable.reference.ImmutableFieldReference;
 import org.jf.dexlib2.immutable.reference.ImmutableMethodReference;
 import org.jf.dexlib2.util.MethodUtil;
@@ -53,10 +83,9 @@ import org.jf.util.BitSetUtils;
 import org.jf.util.ExceptionWithContext;
 import org.jf.util.SparseArray;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.BitSet;
-import java.util.List;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 /**
  * The MethodAnalyzer performs several functions. It "analyzes" the instructions and infers the register types

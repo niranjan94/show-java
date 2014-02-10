@@ -31,11 +31,12 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import javax.annotation.Nonnull;
 import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 public abstract class BuilderMapEntryCollection<Key> extends AbstractCollection<Map.Entry<Key, Integer>> {
     @Nonnull private final Collection<Key> keys;

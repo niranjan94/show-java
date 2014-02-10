@@ -31,11 +31,12 @@
 
 package org.jf.dexlib2.immutable.util;
 
-import com.google.common.collect.ImmutableList;
-import org.jf.util.ImmutableConverter;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.jf.util.ImmutableConverter;
+
+import com.google.common.collect.ImmutableList;
 
 public final class CharSequenceConverter {
     private CharSequenceConverter() {

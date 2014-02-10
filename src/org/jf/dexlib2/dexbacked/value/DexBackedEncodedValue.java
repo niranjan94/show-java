@@ -31,14 +31,22 @@
 
 package org.jf.dexlib2.dexbacked.value;
 
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.dexbacked.DexReader;
 import org.jf.dexlib2.iface.value.EncodedValue;
-import org.jf.dexlib2.immutable.value.*;
+import org.jf.dexlib2.immutable.value.ImmutableBooleanEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableByteEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableCharEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableDoubleEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableFloatEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableIntEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableLongEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableNullEncodedValue;
+import org.jf.dexlib2.immutable.value.ImmutableShortEncodedValue;
 import org.jf.dexlib2.util.Preconditions;
 import org.jf.util.ExceptionWithContext;
-
-import javax.annotation.Nonnull;
 
 public abstract class DexBackedEncodedValue {
     @Nonnull

@@ -28,8 +28,22 @@
 
 package org.jf.baksmali;
 
-import com.google.common.collect.Lists;
-import org.apache.commons.cli.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+
+import javax.annotation.Nonnull;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.PosixParser;
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.analysis.InlineMethodResolver;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
@@ -37,13 +51,7 @@ import org.jf.dexlib2.dexbacked.DexBackedOdexFile;
 import org.jf.util.ConsoleUtil;
 import org.jf.util.SmaliHelpFormatter;
 
-import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
+import com.google.common.collect.Lists;
 
 public class main {
 

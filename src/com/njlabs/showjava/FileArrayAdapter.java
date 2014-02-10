@@ -1,7 +1,9 @@
 package com.njlabs.showjava;
 
-import java.util.List; 
+import java.util.List;
+
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,11 +42,17 @@ public class FileArrayAdapter extends ArrayAdapter<Item>{
                
                final Item o = items.get(position);
                if (o != null) {
-                       TextView t1 = (TextView) v.findViewById(R.id.TextView01);
-                       TextView t2 = (TextView) v.findViewById(R.id.TextView02);
-                       TextView t3 = (TextView) v.findViewById(R.id.TextViewDate);
-
-                       ImageView imageCity = (ImageView) v.findViewById(R.id.fd_Icon1);
+                       	TextView t1 = (TextView) v.findViewById(R.id.TextView01);
+                       	TextView t2 = (TextView) v.findViewById(R.id.TextView02);
+                       	TextView t3 = (TextView) v.findViewById(R.id.TextViewDate);
+               			
+                       	Typeface face=Typeface.createFromAsset(c.getAssets(), "roboto_light.ttf"); 
+                       	
+                       	t1.setTypeface(face); 
+                       	t2.setTypeface(face); 
+                       	t3.setTypeface(face); 
+               			
+               			ImageView imageCity = (ImageView) v.findViewById(R.id.fd_Icon1);
                       	String uri = "drawable/" + o.getImage();
                            int imageResource = c.getResources().getIdentifier(uri, null, c.getPackageName());
                            Drawable image = c.getResources().getDrawable(imageResource);

@@ -31,7 +31,18 @@
 
 package org.jf.dexlib2.analysis;
 
-import com.google.common.io.Files;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.instruction.InlineIndexInstruction;
@@ -40,13 +51,7 @@ import org.jf.dexlib2.immutable.ImmutableMethodParameter;
 import org.jf.dexlib2.immutable.reference.ImmutableMethodReference;
 import org.jf.dexlib2.immutable.util.ParamUtil;
 
-import javax.annotation.Nonnull;
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.google.common.io.Files;
 
 public class CustomInlineMethodResolver extends InlineMethodResolver {
     @Nonnull private final ClassPath classPath;

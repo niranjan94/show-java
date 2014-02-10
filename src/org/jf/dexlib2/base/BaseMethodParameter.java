@@ -31,6 +31,8 @@
 
 package org.jf.dexlib2.base;
 
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.base.reference.BaseTypeReference;
 import org.jf.dexlib2.iface.Annotation;
@@ -39,8 +41,6 @@ import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.iface.value.ArrayEncodedValue;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.StringEncodedValue;
-
-import javax.annotation.Nullable;
 
 public abstract class BaseMethodParameter extends BaseTypeReference implements MethodParameter {
     @Nullable

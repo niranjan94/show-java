@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.immutable.value;
 
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.base.value.BaseFieldEncodedValue;
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.value.FieldEncodedValue;
-
-import javax.annotation.Nonnull;
 
 public class ImmutableFieldEncodedValue extends BaseFieldEncodedValue implements ImmutableEncodedValue {
     @Nonnull protected final FieldReference value;

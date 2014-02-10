@@ -31,12 +31,13 @@
 
 package org.jf.dexlib2.dexbacked.util;
 
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.dexbacked.DexReader;
-
-import javax.annotation.Nonnull;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+
+import javax.annotation.Nonnull;
+
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.dexbacked.DexReader;
 
 public abstract class VariableSizeListIterator<T> implements ListIterator<T> {
     @Nonnull private DexReader reader;

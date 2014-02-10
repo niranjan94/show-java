@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.immutable.debug;
 
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.iface.debug.EpilogueBegin;
-
-import javax.annotation.Nonnull;
 
 public class ImmutableEpilogueBegin extends ImmutableDebugItem implements EpilogueBegin {
     public ImmutableEpilogueBegin(int codeAddress) {

@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Landing" >
-
+    tools:context=".Landing" xmlns:app="http://schemas.android.com/apk/lib/com.google.ads">
    <LinearLayout android:id="@+id/footer"
 		android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
@@ -12,7 +12,7 @@
     	android:layout_alignParentBottom="true">
 		
 	    <Button
-	        android:id="@+id/saveButton"
+	        android:id="@+id/btn_file_pick"
 	        style="?android:attr/buttonBarButtonStyle"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
@@ -27,11 +27,11 @@
 	        android:layout_width="1dip"
 	        android:layout_height="fill_parent"
 	        android:layout_marginBottom="7dp"
-	        android:layout_marginTop="7dp"
+	        android:layout_marginTop="1dp"
 	        android:background="#C7C7C7" />
 	        
 	    <Button
-	        android:id="@+id/cancelButton"
+	        android:id="@+id/btn_install_pick"
 	        style="?android:attr/buttonBarButtonStyle"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
@@ -43,26 +43,96 @@
 	    
 	</LinearLayout>
 
-   <ListView
-       android:id="@+id/list"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_above="@+id/footer"
-       android:layout_alignParentLeft="true"
-       android:layout_alignParentRight="true"
-       android:layout_below="@+id/textView1" >
-
-   </ListView>
-
    <TextView
-       android:id="@+id/textView1"
+       android:id="@+id/title_history"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:layout_alignParentLeft="true"
        android:layout_alignParentTop="true"
        android:layout_marginLeft="8dp"
-       android:layout_marginTop="@dimen/activity_vertical_margin"
+       android:layout_marginTop="5dp"
+       android:paddingBottom="5dp"
        android:text="Decompiled Applications"
-       android:textAppearance="?android:attr/textAppearanceLarge" />
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:typeface="normal" />
+
+   <ListView
+       android:id="@+id/list"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_above="@+id/adView"
+       android:layout_alignParentLeft="true"
+       android:layout_below="@+id/title_history"
+       android:paddingTop="0dp" 
+       android:visibility="gone">
+
+   </ListView>
+
+   <View
+       android:layout_width="fill_parent"
+       android:layout_height="1dp"
+       android:layout_alignBottom="@+id/title_history"
+       android:layout_alignParentLeft="true"
+       android:background="#C7C7C7"
+       android:padding="5dp" />
+
+   <LinearLayout
+       android:id="@+id/EmptyLayout"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_below="@+id/title_history"
+       android:layout_centerHorizontal="true"
+       android:layout_marginTop="112dp"
+       android:visibility="gone" 
+       android:orientation="vertical" >
+
+       <ImageView
+           android:id="@+id/imageView1"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center_horizontal"
+           android:src="@drawable/sad" />
+
+       <TextView
+           android:id="@+id/tv_history"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center_horizontal"
+           android:layout_marginTop="3dp"
+           android:text="History&apos;s empty"
+           android:textAppearance="?android:attr/textAppearanceLarge"
+           android:textColor="@color/text_light" />
+
+       <TextView
+           android:id="@+id/tv_helper"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center_horizontal"
+           android:text="Select an option below"
+           android:textAppearance="?android:attr/textAppearanceSmall"
+           android:textColor="@color/text_light" />
+
+       <TextView
+           android:id="@+id/tv_helper_contd"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center_horizontal"
+           android:text=" to get started"
+           android:textColor="@color/text_light" 
+           android:textAppearance="?android:attr/textAppearanceSmall" />
+
+   </LinearLayout>
+
+   <com.google.ads.AdView
+       xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+       android:id="@+id/adView"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_above="@+id/footer"
+       android:layout_alignParentLeft="true"
+       ads:loadAdOnCreate="true"
+       app:adSize="SMART_BANNER"
+       app:adUnitId="a152e3be53116cd" >
+   </com.google.ads.AdView>
 
 </RelativeLayout>

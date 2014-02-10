@@ -31,16 +31,17 @@
 
 package org.jf.baksmali;
 
-import com.google.common.collect.Lists;
-import org.jf.dexlib2.analysis.ClassPath;
-import org.jf.dexlib2.analysis.InlineMethodResolver;
-import org.jf.dexlib2.util.SyntheticAccessorResolver;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.jf.dexlib2.analysis.ClassPath;
+import org.jf.dexlib2.analysis.InlineMethodResolver;
+import org.jf.dexlib2.util.SyntheticAccessorResolver;
+
+import com.google.common.collect.Lists;
 
 public class baksmaliOptions {
     // register info values

@@ -31,9 +31,10 @@
 
 package org.jf.dexlib2.iface;
 
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Set;
 
 /**
  * This class represents a specific instance of an annotation applied to a class/field/method/parameter

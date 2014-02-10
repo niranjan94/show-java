@@ -31,13 +31,13 @@
 
 package org.jf.dexlib2.builder.instruction;
 
+import javax.annotation.Nonnull;
+
 import org.jf.dexlib2.Format;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.builder.BuilderInstruction;
 import org.jf.dexlib2.iface.instruction.formats.Instruction23x;
 import org.jf.dexlib2.util.Preconditions;
-
-import javax.annotation.Nonnull;
 
 public class BuilderInstruction23x extends BuilderInstruction implements Instruction23x {
     public static final Format FORMAT = Format.Format23x;

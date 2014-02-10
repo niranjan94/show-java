@@ -31,9 +31,6 @@
 
 package org.jf.dexlib2.dexbacked;
 
-import org.jf.dexlib2.base.BaseExceptionHandler;
-import org.jf.dexlib2.iface.ExceptionHandler;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

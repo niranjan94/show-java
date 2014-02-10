@@ -35,7 +35,11 @@ import org.jf.dexlib2.Format;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.ReferenceType;
 import org.jf.dexlib2.VerificationError;
-import org.jf.dexlib2.iface.reference.*;
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.MethodReference;
+import org.jf.dexlib2.iface.reference.Reference;
+import org.jf.dexlib2.iface.reference.StringReference;
+import org.jf.dexlib2.iface.reference.TypeReference;
 
 public class Preconditions {
     public static void checkFormat(Opcode opcode, Format expectedFormat) {

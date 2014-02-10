@@ -31,14 +31,15 @@
 
 package org.jf.dexlib2.immutable.reference;
 
-import com.google.common.collect.ImmutableList;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.base.reference.BaseMethodReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.immutable.util.CharSequenceConverter;
 import org.jf.util.ImmutableUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
 
 public class ImmutableMethodReference extends BaseMethodReference implements ImmutableReference {
     @Nonnull protected final String definingClass;

@@ -380,7 +380,8 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
         formatNodeTo(new Formatter(System.out), 0, root);
     }
 
-    @Deprecated
+    @SuppressWarnings("unused")
+	@Deprecated
     private void display(int level, RadixTreeNode<T> node) {
         formatNodeTo(new Formatter(System.out), level, node);
     }

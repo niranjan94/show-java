@@ -28,9 +28,9 @@
 
 package org.jf.baksmali.Adaptors;
 
-import org.jf.util.IndentingWriter;
-
 import java.io.IOException;
+
+import org.jf.util.IndentingWriter;
 
 public class CommentMethodItem extends MethodItem {
     //private final StringTemplate template;

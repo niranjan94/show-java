@@ -31,15 +31,17 @@
 
 package org.jf.dexlib2.writer.pool;
 
-import com.google.common.collect.ImmutableList;
+import java.util.Collection;
+import java.util.Iterator;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.writer.DexWriter;
 import org.jf.dexlib2.writer.TypeListSection;
 import org.jf.dexlib2.writer.pool.TypeListPool.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Iterator;
+import com.google.common.collect.ImmutableList;
 
 public class TypeListPool extends BaseNullableOffsetPool<Key<? extends Collection<? extends CharSequence>>>
         implements TypeListSection<CharSequence, Key<? extends Collection<? extends CharSequence>>> {

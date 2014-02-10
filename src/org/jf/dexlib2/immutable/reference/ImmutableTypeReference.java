@@ -31,14 +31,16 @@
 
 package org.jf.dexlib2.immutable.reference;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jf.dexlib2.base.reference.BaseTypeReference;
 import org.jf.dexlib2.iface.reference.TypeReference;
 import org.jf.util.ImmutableConverter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
+import com.google.common.collect.ImmutableList;
 
 public class ImmutableTypeReference extends BaseTypeReference implements ImmutableReference {
     @Nonnull protected final String type;

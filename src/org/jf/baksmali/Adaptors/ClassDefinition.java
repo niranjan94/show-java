@@ -28,12 +28,24 @@
 
 package org.jf.baksmali.Adaptors;
 
-import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+
 import org.jf.baksmali.baksmaliOptions;
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.dexbacked.DexBackedClassDef;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile.InvalidItemIndex;
-import org.jf.dexlib2.iface.*;
+import org.jf.dexlib2.iface.Annotation;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.Field;
+import org.jf.dexlib2.iface.Method;
+import org.jf.dexlib2.iface.MethodImplementation;
 import org.jf.dexlib2.iface.instruction.Instruction;
 import org.jf.dexlib2.iface.instruction.formats.Instruction21c;
 import org.jf.dexlib2.iface.reference.FieldReference;
@@ -41,9 +53,7 @@ import org.jf.dexlib2.util.ReferenceUtil;
 import org.jf.util.IndentingWriter;
 import org.jf.util.StringUtils;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.*;
+import com.google.common.collect.Lists;
 
 public class ClassDefinition {
     @Nonnull public final baksmaliOptions options;

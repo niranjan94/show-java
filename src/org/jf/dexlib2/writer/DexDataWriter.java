@@ -31,12 +31,13 @@
 
 package org.jf.dexlib2.writer;
 
-import org.jf.util.ExceptionWithContext;
-
-import javax.annotation.Nonnull;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import javax.annotation.Nonnull;
+
+import org.jf.util.ExceptionWithContext;
 
 public class DexDataWriter extends BufferedOutputStream {
     /**
