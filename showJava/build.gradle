@@ -1,0 +1,46 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
+
+    defaultConfig {
+        applicationId "com.njlabs.showjava"
+        minSdkVersion 14
+        targetSdkVersion 19
+        versionCode 6
+        versionName "1.6 (Beta)"
+    }
+
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.google.guava:guava:16.0.1'
+    compile files('libs/acra-4.5.0.jar')
+    compile files('libs/antlr-3.1.1.jar')
+    compile files('libs/asm-all-3.3.1.jar')
+    compile files('libs/cfr_0_89.jar')
+    compile files('libs/commons-cli-1.2.jar')
+    compile files('libs/commons-io-2.4.jar')
+    compile files('libs/dex-ir-1.12.jar')
+    compile files('libs/dex-reader-1.15.jar')
+    compile files('libs/dex-tools-0.0.9.15.jar')
+    compile files('libs/dex-translator-0.0.9.15.jar')
+    compile files('libs/dx.jar')
+    compile files('libs/GoogleAdMobAdsSdk-6.4.1.jar')
+    compile files('libs/jar-rename-1.6.jar')
+    compile files('libs/jasmin-p2.5.jar')
+    compile files('libs/jsr305-1.3.9.jar')
+    compile project(':filepicker')
+}
