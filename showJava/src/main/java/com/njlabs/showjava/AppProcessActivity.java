@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.googlecode.dex2jar.reader.DexFileReader;
 import com.googlecode.dex2jar.v3.Dex2jar;
 
-import org.acra.ACRA;
 import org.apache.commons.io.FilenameUtils;
 import org.benf.cfr.reader.Main;
 import org.benf.cfr.reader.state.DCCommonState;
@@ -161,7 +160,7 @@ public class AppProcessActivity extends Activity {
 					} 
 					catch (IOException e) 
 					{
-						ACRA.getErrorReporter().handleException(e);
+
 					}
 					List<ClassDef> classes = new ArrayList<ClassDef>();
 					for (ClassDef classDef: dexFile.getClasses()) {
@@ -225,7 +224,7 @@ public class AppProcessActivity extends Activity {
 					} 
 					catch (IOException e) 
 					{
-						ACRA.getErrorReporter().handleException(e);
+
 					}
 					UIHandler.post(new Runnable() {   
 			            @Override
@@ -354,7 +353,7 @@ public class AppProcessActivity extends Activity {
 		}
 		catch(IOException e)
 		{
-			ACRA.getErrorReporter().handleSilentException(e);
+
 			task.doProgress("exit_process_on_error");
 		}
 		Log.i("STATUS","Clearing cache");
@@ -387,7 +386,7 @@ public class AppProcessActivity extends Activity {
 		Options options = null;
 		try
 		{
-			options = (Options)getOptParser.parse(args, OptionsImpl.getFactory());
+			options = (Options) getOptParser.parse(args, OptionsImpl.getFactory());
 		}
 		catch (Exception e)
 		{
@@ -408,14 +407,10 @@ public class AppProcessActivity extends Activity {
 				}
 				catch(Exception e)
 				{
-					Exception CustomError=new Exception("APP PACKAGE ID: "+PackageId+" (ERROR : "+e+")");
-					ACRA.getErrorReporter().handleSilentException(CustomError);
 					task.doProgress("start_activity_with_error");
 				}
 				catch (java.lang.StackOverflowError e) 
 				{
-					Exception CustomError=new Exception("APP PACKAGE ID: "+PackageId+" (ERROR : "+e+")");
-					ACRA.getErrorReporter().handleSilentException(CustomError);
 					task.doProgress("start_activity_with_error");
 				}	
 				task.doProgress("start_activity");

@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'http://download.crashlytics.com/maven' }
+    }
+
+    dependencies {
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'crashlytics'
+
+repositories {
+    maven { url 'http://download.crashlytics.com/maven' }
+}
+
 
 android {
     compileSdkVersion 19
@@ -8,8 +23,8 @@ android {
         applicationId "com.njlabs.showjava"
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 6
-        versionName "1.6 (Beta)"
+        versionCode 8
+        versionName "1.8 (Beta)"
     }
 
     buildTypes {
@@ -27,7 +42,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.guava:guava:16.0.1'
-    compile files('libs/acra-4.5.0.jar')
     compile files('libs/antlr-3.1.1.jar')
     compile files('libs/asm-all-3.3.1.jar')
     compile files('libs/cfr_0_89.jar')
@@ -43,4 +57,5 @@ dependencies {
     compile files('libs/jasmin-p2.5.jar')
     compile files('libs/jsr305-1.3.9.jar')
     compile project(':filepicker')
+    compile 'com.crashlytics.android:crashlytics:1.+'
 }

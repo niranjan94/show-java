@@ -82,10 +82,10 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="jsr305-1.3.9" level="project" />
     <orderEntry type="library" exported="" name="jar-rename-1.6" level="project" />
+    <orderEntry type="library" exported="" name="crashlytics-1.1.13" level="project" />
     <orderEntry type="library" exported="" name="dex-ir-1.12" level="project" />
     <orderEntry type="library" exported="" name="dx" level="project" />
     <orderEntry type="library" exported="" name="dex-translator-0.0.9.15" level="project" />
-    <orderEntry type="library" exported="" name="acra-4.5.0" level="project" />
     <orderEntry type="library" exported="" name="asm-all-3.3.1" level="project" />
     <orderEntry type="library" exported="" name="commons-io-2.4" level="project" />
     <orderEntry type="library" exported="" name="dex-tools-0.0.9.15" level="project" />

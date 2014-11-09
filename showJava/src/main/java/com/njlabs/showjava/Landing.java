@@ -190,24 +190,23 @@ public class Landing extends Activity {
                     return new File(current, name).isDirectory();
                 }
             });
+            if(directories!=null && directories.length>0) {
+                for (String directory : directories) {
+                    boolean alreadyExists = false;
+                    for (DecompileHistoryItem item : listFromDb) {
+                        if (directory.equals(item.getPackageID())) {
+                            Log.d("SaA", "Already Exists!!");
+                            alreadyExists = true;
+                        }
+                    }
 
-            for (String directory : directories) {
-                boolean alreadyExists = false;
-                for (DecompileHistoryItem item : listFromDb) {
-                    if (directory.equals(item.getPackageID())) {
-                        Log.d("SaA", "Already Exists!!");
-                        alreadyExists = true;
+                    if (alreadyExists == false) {
+                        DecompileHistoryItem newItem = new DecompileHistoryItem(directory, directory, DateFormat.getDateInstance().format(new Date()));
+                        db.addHistoryItem(newItem);
+                        listFromDb.add(newItem);
                     }
                 }
-
-                if(alreadyExists == false)
-                {
-                    DecompileHistoryItem newItem = new DecompileHistoryItem(directory,directory, DateFormat.getDateInstance().format(new Date()));
-                    db.addHistoryItem(newItem);
-                    listFromDb.add(newItem);
-                }
             }
-
             return listFromDb;
         }
 
