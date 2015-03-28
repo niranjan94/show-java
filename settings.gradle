@@ -1,2 +1,1 @@
-include ':filepicker', ':filepicker'
-include ':showJava'
+include ':app'
