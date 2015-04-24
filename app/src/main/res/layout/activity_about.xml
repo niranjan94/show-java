@@ -10,6 +10,7 @@
     <ImageView
         android:layout_width="140dp"
         android:layout_height="140dp"
+        android:id="@+id/showjava_logo_view"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/showjava_logo" />
@@ -17,9 +18,10 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="6dp"
+        android:id="@+id/name_layout"
+        android:layout_below="@id/showjava_logo_view"
         android:orientation="vertical" >
 
         <TextView
@@ -54,8 +56,8 @@
         android:id="@+id/divider"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/linearLayout1"
         android:layout_centerHorizontal="true"
+        android:layout_below="@id/name_layout"
         android:layout_marginTop="15dp"
         android:background="#C7C7C7"
         android:padding="5dp" />
@@ -82,7 +84,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_below="@+id/scrollView1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
 
             <TextView
                 android:id="@+id/ThirdPartySoftwaresList"
@@ -90,7 +95,8 @@
                 android:layout_height="wrap_content"
                 android:text="• dex2jar\n• dexlib2\n• baksmali\n• smali\n• apache-commons-cli 1.2\n• apache-commons-io 2.4\n• guava 16.0.1\n• cfr 0.99\n• ANTLR 3.1.1\n• JSR-305 1.3.9"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-            
+
         </LinearLayout>
     </ScrollView>
+
 </RelativeLayout>

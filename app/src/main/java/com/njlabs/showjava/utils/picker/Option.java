@@ -27,6 +27,7 @@ public class Option implements Comparable<Option>{
 	{
 		return path;
 	}
+
 	@Override
 	public int compareTo(Option o) {
 		if(this.name != null)
@@ -34,6 +35,7 @@ public class Option implements Comparable<Option>{
 		else 
 			throw new IllegalArgumentException();
 	}
+
 	public boolean isFolder() {
 		return folder;
 	}

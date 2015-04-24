@@ -29,3 +29,5 @@ Thumbs.db
 .idea
 .gradle
 build/
+ShowJava.iml
+app/app.iml

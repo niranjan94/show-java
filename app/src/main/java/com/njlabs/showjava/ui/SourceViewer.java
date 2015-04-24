@@ -52,7 +52,7 @@ public class SourceViewer extends BaseActivity {
 
 		WebView webView = (WebView) findViewById(R.id.source_view);
         
-    	FileInputStream fs = null;
+    	FileInputStream fs;
     	///
     	/// READ FROM EXTRENAL MEMORY
     	///
@@ -69,8 +69,7 @@ public class SourceViewer extends BaseActivity {
 			}
 			ReadText=str.toString();
 			fs.close();
-		} catch (IOException e)
-    	{
+		} catch (IOException ignored) {
 
     	}
     	

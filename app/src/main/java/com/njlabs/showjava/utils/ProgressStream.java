@@ -1,17 +1,17 @@
 package com.njlabs.showjava.utils;
 
 
-import com.njlabs.showjava.ui.AppProcessActivity;
+import com.njlabs.showjava.processor.ProcessService;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 public class ProgressStream extends OutputStream {
 
+
+    ProcessService.Processor task;
 	
-	AppProcessActivity.Processor task;
-	
-	public ProgressStream(AppProcessActivity.Processor task)
+	public ProgressStream(ProcessService.Processor task)
 	{
 		this.task=task;
 	}

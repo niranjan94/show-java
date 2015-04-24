@@ -1,43 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_height="wrap_content" 
-  android:orientation="vertical" 
-  android:layout_width="fill_parent">
-  	
-  	<LinearLayout 
-  		android:layout_height="wrap_content" 
-  		android:orientation="horizontal" 
-  		android:layout_width="fill_parent">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
   		<ImageView
-			android:id="@+id/img1" 
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" 
+			android:id="@+id/icon"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
 			android:singleLine="true"
-			android:layout_marginTop="5dip" 
-			android:layout_marginLeft="5dip"/>
-  		<LinearLayout 
+			android:layout_marginTop="5dp"
+			android:layout_marginLeft="5dp"
+            android:src="@drawable/ic_action_folder" />
+
+    <LinearLayout
   			android:layout_height="wrap_content" 
   			android:orientation="vertical" 
-  			android:layout_width="fill_parent">
-			<TextView 
-				android:text="@+id/TextView01" 
-				android:id="@+id/TextView01" 
+  			android:layout_width="fill_parent"
+        android:layout_gravity="center_vertical">
+			<TextView
+                android:text="Filename"
+				android:id="@+id/file_name"
 				android:layout_width="wrap_content" 
 				android:layout_height="wrap_content" 
-				android:singleLine="true" 
+				android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
 				android:textStyle="bold" 
-				android:layout_marginTop="5dip" 
-				android:layout_marginLeft="5dip">
+				android:layout_marginTop="5dp"
+				android:layout_marginLeft="5dp">
 			</TextView>
-			<TextView 
-				android:text="@+id/TextView02" 
-				android:id="@+id/TextView02" 
+			<TextView
+                android:text="Filetype"
+				android:id="@+id/file_type"
 				android:layout_width="wrap_content" 
-				android:layout_height="wrap_content" 
-				android:layout_marginLeft="5dip">
+				android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginLeft="5dp">
 			</TextView>
 		</LinearLayout>
 	</LinearLayout>
-	
-</LinearLayout>
