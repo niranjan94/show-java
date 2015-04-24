@@ -24,7 +24,7 @@ This is a Java Decompiler that extracts the .java source code from an APK( Andro
 
 ## Open Source License ##
 
-Unless explicitly stated otherwise all files in this repository are licensed under the [Apache Software License 2.0](http://choosealicense.com/licenses/apache-2.0/)
+Unless explicitly stated otherwise all files in this repository are licensed under the [Apache Software License 2.0](http://choosealicense.com/licenses/apache-2.0/). All projects must properly attribute [The Original Source](https://github.com/niranjan94/show-java).
     
     Copyright 2015 Niranjan Rajendran
     
