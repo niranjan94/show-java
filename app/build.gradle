@@ -59,7 +59,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.google.guava:guava:18.0'
     compile files('libs/antlr-3.1.1.jar')
     compile files('libs/asm-all-3.3.1.jar')
