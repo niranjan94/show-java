@@ -4,7 +4,7 @@ package com.njlabs.showjava.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import com.njlabs.showjava.R;
 
 @SuppressLint("Registered")
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends AppCompatActivity {
 
     public Context baseContext;
     public Toolbar toolbar;
