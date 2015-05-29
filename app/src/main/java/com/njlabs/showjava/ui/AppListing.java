@@ -188,7 +188,7 @@ public class AppListing extends BaseActivity {
 				final TextView CPkgDir=(TextView) view.findViewById(R.id.pkg_dir);
 				final TextView CPkgName=(TextView) view.findViewById(R.id.pkg_name);
 				//Toast.makeText(getApplicationContext(), CPkgId.getText() + " --- " + CPkgDir.getText(), Toast.LENGTH_SHORT).show();
-				String myapp="com.njlabs";
+				String myapp="com.njlabs.tester";
 				if(CPkgId.getText().toString().toLowerCase().contains(myapp.toLowerCase()))
 				{
 					Toast.makeText(getApplicationContext(),"The application "+CPkgId.getText().toString()+" cannot be decompiled !", Toast.LENGTH_SHORT).show();
@@ -202,7 +202,7 @@ public class AppListing extends BaseActivity {
 				        alertDialog.setTitle("This Package has already been decompiled");
 				        alertDialog.setMessage("This application has already been decompiled once and the source exists on your sdcard. What would you like to do ?");
 				        //alertDialog.setIcon(R.drawable.delete);
-				        alertDialog.setPositiveButton("Browse the Source", new DialogInterface.OnClickListener() {
+				        alertDialog.setPositiveButton("View Source", new DialogInterface.OnClickListener() {
 				            public void onClick(DialogInterface dialog,int which) {
 				            	
 				            	Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
@@ -213,7 +213,7 @@ public class AppListing extends BaseActivity {
 									db.addHistoryItem(new DecompileHistoryItem(CPkgId.getText().toString(), CPkgName.getText().toString(),DateFormat.getDateInstance().format(new Date())));
 				            }
 				        });
-				        alertDialog.setNegativeButton("Decompile again", new DialogInterface.OnClickListener() {
+				        alertDialog.setNegativeButton("Decompile", new DialogInterface.OnClickListener() {
 				            public void onClick(DialogInterface dialog, int which) {
 				            	JavaOutputDir.delete();
 				            	Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);

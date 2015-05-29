@@ -15,11 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.njlabs.showjava.R;
@@ -38,7 +34,6 @@ import java.util.List;
 
 public class Landing extends BaseActivity {
 
-	ListView HistoryList;
 	ProgressDialog PackageLoadDialog;
 	DatabaseHandler db;
     List<DecompileHistoryItem> listFromDb;
@@ -47,6 +42,7 @@ public class Landing extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setupLayout(R.layout.activity_landing);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 	    PackageLoadDialog = new ProgressDialog(this);
@@ -56,19 +52,19 @@ public class Landing extends BaseActivity {
         PackageLoadDialog.setCanceledOnTouchOutside(false);
 		PackageLoadDialog.setMessage("Loading Decompile History ...");
 		
-		HistoryList = (ListView) findViewById(R.id.list);
+		//HistoryList = (ListView) findViewById(R.id.list);
 		
 		db = new DatabaseHandler(this);
 		
 		if(db.getHistoryItemCount()!=0)
 		{
-			HistoryList.setVisibility(View.VISIBLE);
+			//HistoryList.setVisibility(View.VISIBLE);
 
 		}
 		else
 		{
-			LinearLayout EmptyLayout=(LinearLayout) findViewById(R.id.EmptyLayout);
-			EmptyLayout.setVisibility(View.VISIBLE);	 
+			/*LinearLayout EmptyLayout=(LinearLayout) findViewById(R.id.EmptyLayout);
+			EmptyLayout.setVisibility(View.VISIBLE);*/
 		}
         HistoryLoader runner = new HistoryLoader();
         runner.execute();
@@ -128,7 +124,7 @@ public class Landing extends BaseActivity {
 		};
 		//setListAdapter(aa);
 
-		HistoryList.setAdapter(aa);
+		/*HistoryList.setAdapter(aa);
 		HistoryList.setTextFilterEnabled(true);
 		/// CREATE AN ONCLICK LISTENER TO KNOW WHEN EACH ITEM IS CLICKED
 		HistoryList.setOnItemClickListener(new OnItemClickListener() {
@@ -141,7 +137,7 @@ public class Landing extends BaseActivity {
 				i.putExtra("package_id",CPkgId.getText().toString());
 				startActivity(i);
 			}
-		});
+		});*/
 	}
 	public void OpenAppListing(View v)
 	{
@@ -162,17 +158,17 @@ public class Landing extends BaseActivity {
 	    super.onResume();
 	    if(db.getHistoryItemCount()!=0)
 		{
-			LinearLayout EmptyLayout=(LinearLayout) findViewById(R.id.EmptyLayout);
+			/*LinearLayout EmptyLayout=(LinearLayout) findViewById(R.id.EmptyLayout);
 	    	EmptyLayout.setVisibility(View.GONE);
 			HistoryList.setVisibility(View.VISIBLE);
 			HistoryLoader runner = new HistoryLoader();
-			runner.execute();
+			runner.execute();*/
 		}
 		else
 		{
-			LinearLayout EmptyLayout=(LinearLayout) findViewById(R.id.EmptyLayout);
+			/*LinearLayout EmptyLayout=(LinearLayout) findViewById(R.id.EmptyLayout);
 			EmptyLayout.setVisibility(View.VISIBLE);
-			HistoryList.setVisibility(View.GONE);
+			HistoryList.setVisibility(View.GONE);*/
 		}
 	}
 

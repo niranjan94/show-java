@@ -31,22 +31,21 @@ public class JavaExplorer extends BaseActivity {
     	super.onCreate(savedInstanceState);
     	setupLayout(R.layout.activity_app_listing);
         Bundle extras = getIntent().getExtras();
-        String JavSourceDir=null;
+        String JavSourceDir = null;
         if (extras != null) {
             JavSourceDir = extras.getString("java_source_dir");
             PackageID = extras.getString("package_id");
         }
 
         lv=(ListView) findViewById(R.id.list);
-        currentDir = new File(JavSourceDir);
+		assert JavSourceDir != null;
+		currentDir = new File(JavSourceDir);
         fill(currentDir);
     }
     private void fill(File f)
     {
     	File[]dirs = f.listFiles();
-    	if(f.getName().equalsIgnoreCase("java_output"))
-    	{
-
+    	if(f.getName().equalsIgnoreCase("java_output")) {
             getSupportActionBar().setTitle("Viewing the source of "+PackageID);
     	}
     	else
@@ -79,10 +78,8 @@ public class JavaExplorer extends BaseActivity {
     				fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"file_icon"));
     			}
     		}
-    	}
-    	catch(Exception e)
-    	{   
-                             
+    	} catch(Exception e) {
+
     	}
     	Collections.sort(dir);
     	Collections.sort(fls);

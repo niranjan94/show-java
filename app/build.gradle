@@ -1,19 +1,18 @@
 buildscript {
     repositories {
-        maven { url 'http://download.crashlytics.com/maven' }
+        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
-        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.16.0'
+        classpath 'io.fabric.tools:gradle:1.19.1'
     }
 }
 apply plugin: 'com.android.application'
-apply plugin: 'crashlytics'
+apply plugin: 'io.fabric'
 
 repositories {
-    maven { url 'http://download.crashlytics.com/maven' }
+    maven { url 'https://maven.fabric.io/public' }
 }
-
 
 android {
     compileSdkVersion 22
@@ -23,15 +22,14 @@ android {
         applicationId "com.njlabs.showjava"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 11
-        versionName "1.9.2 (Beta)"
+        versionCode 20
+        versionName "2.0"
+        multiDexEnabled true
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
     }
     productFlavors {
-        pro {
-            applicationId "com.njlabs.showjava.pro"
-            buildConfigField "boolean", "IS_PRO", "true"
-            buildConfigField "boolean", "IS_FREE", "false"
-        }
         free {
             buildConfigField "boolean", "IS_FREE", "true"
             buildConfigField "boolean", "IS_PRO", "false"
@@ -49,23 +47,30 @@ android {
         }
         debug {
             debuggable true
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
+    dexOptions {
+        jumboMode = true
+    }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:22.1.1'
+    //compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:multidex:+'
+    compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.google.guava:guava:18.0'
-    compile files('libs/antlr-3.1.1.jar')
-    compile files('libs/asm-all-3.3.1.jar')
-    compile files('libs/cfr_0_99.jar')
-    compile files('libs/commons-cli-1.2.jar')
-    compile files('libs/commons-io-2.4.jar')
+    compile 'org.antlr:antlr:3.5.2'
+    compile 'org.ow2.asm:asm:5.0.4'
+    compile files('libs/cfr_0_101.jar')
+    compile 'commons-cli:commons-cli:1.3'
+    compile 'commons-io:commons-io:2.4'
     compile files('libs/dex-ir-1.12.jar')
     compile files('libs/dex-reader-1.15.jar')
     compile files('libs/dex-tools-0.0.9.15.jar')
@@ -74,6 +79,10 @@ dependencies {
     compile files('libs/jar-rename-1.6.jar')
     compile files('libs/jasmin-p2.5.jar')
     compile files('libs/jsr305-1.3.9.jar')
-    compile 'com.crashlytics.android:crashlytics:1.1.13'
-    freeCompile files('libs/GoogleAdMobAdsSdk-6.4.1.jar')
+    compile 'com.google.android.gms:play-services-ads:7.5.0'
+    compile('com.crashlytics.sdk.android:crashlytics:2.2.4@aar') {
+        transitive = true;
+    }
+    compile 'com.github.clans:fab:1.5.0'
+    compile 'net.dongliu.apk-parser:apk-parser:1.4.1'
 }

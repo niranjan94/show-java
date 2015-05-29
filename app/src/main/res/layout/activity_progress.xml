@@ -22,7 +22,7 @@
             android:text="Waiting for App"
             android:textAllCaps="false"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/text_light" />
+            android:textColor="@color/grey_400" />
 
         <TextView
             android:id="@+id/current_status"
@@ -32,7 +32,7 @@
             android:text="Processing"
             android:textAllCaps="false"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/text_light" />
+            android:textColor="@color/grey_400" />
 
         <TextView
             android:id="@+id/current_line"
@@ -42,7 +42,7 @@
             android:text="Getting Ready"
             android:textAllCaps="false"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/text_light" />
+            android:textColor="@color/grey_400" />
     </LinearLayout>
 
     <RelativeLayout
