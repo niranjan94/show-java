@@ -20,17 +20,20 @@ public class Notify {
 
     public void updateTitle(String title){
         mBuilder.setContentTitle(title);
+        mBuilder.setProgress(0,0,true);
         mNotifyManager.notify(NOTIFICATION_ID,mBuilder.build());
     }
 
     public void updateText(String text){
         mBuilder.setContentText(text);
+        mBuilder.setProgress(0,0,true);
         mNotifyManager.notify(NOTIFICATION_ID,mBuilder.build());
     }
 
     public void updateTitleText(String title, String text){
         mBuilder.setContentTitle(title);
         mBuilder.setContentText(text);
+        mBuilder.setProgress(0,0,true);
         mNotifyManager.notify(NOTIFICATION_ID,mBuilder.build());
     }
 
