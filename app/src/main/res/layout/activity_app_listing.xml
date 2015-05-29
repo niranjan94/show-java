@@ -15,15 +15,5 @@
         android:layout_below="@+id/toolbar">
 
 	</ListView>
-	
-	<com.google.ads.AdView 
-  	    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
-  	    android:id="@+id/adView"
-       	android:layout_width="wrap_content"
-      	android:layout_height="wrap_content"
-      	android:layout_alignParentBottom="true"
-      	ads:adUnitId="a152e3be53116cd"
-    	ads:adSize="SMART_BANNER"
-    	android:layout_alignParentLeft="true"
-     	ads:loadAdOnCreate="true"/>
+	<include layout="@layout/adview" android:id="@+id/adView"/>
 </RelativeLayout>
