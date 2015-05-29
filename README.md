@@ -1,6 +1,6 @@
 ## Show Java ##
 
-An apk decompiler for android. Build on Android Studio 1.1.0 with gradle 2.2.1.
+An apk decompiler for android. Build on Android Studio 1.3 Preview with gradle 2.2.1.
 
 [![Get Show Java on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=com.njlabs.showjava "Get Show Java on Google Play")
 
@@ -43,4 +43,5 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 ## External Credits ##
 
 1. A Big-Huge Thanks to Lee Benfield ([lee@benf.org](mailto:lee@benf.org)) for his awesome CFR - Class File Reader
-1. Panxiaobo ([pxb1988@gmail.com](mailto:pxb1988@gmail.com)) for dex2jar
+2. Panxiaobo ([pxb1988@gmail.com](mailto:pxb1988@gmail.com)) for dex2jar
+3. Liu Dong ([github.com/xiaxiaocao](https://github.com/xiaxiaocao)) for apk-parser
