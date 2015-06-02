@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_pick_sdcard"
                 fab:fab_size="normal"
+                android:onClick="OpenFilePicker"
                 fab:fab_label="Pick from sdcard" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -48,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_pick_installed"
                 fab:fab_size="normal"
+                android:onClick="OpenAppListing"
                 fab:fab_label="Pick from Installed" />
 
         </com.github.clans.fab.FloatingActionMenu>
