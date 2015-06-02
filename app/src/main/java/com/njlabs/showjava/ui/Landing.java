@@ -132,8 +132,8 @@ public class Landing extends BaseActivity {
 			{
 				final TextView CPkgId=(TextView) view.findViewById(R.id.history_pkg_id);
 				Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
-				File JavaOutputDir = new File(Environment.getExternalStorageDirectory()+"/ShowJava"+"/"+CPkgId.getText().toString()+"/java_output");
-				i.putExtra("java_source_dir",JavaOutputDir.toString()+"/");
+				File javaSourceOutputDir = new File(Environment.getExternalStorageDirectory()+"/ShowJava"+"/"+CPkgId.getText().toString()+"/java_output");
+				i.putExtra("java_source_dir",javaSourceOutputDir.toString()+"/");
 				i.putExtra("package_id",CPkgId.getText().toString());
 				startActivity(i);
 			}

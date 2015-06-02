@@ -13,8 +13,8 @@ public class ProcessServiceHelper {
 
     ProcessService processService;
     Handler UIHandler;
-    String packageDir;
-    String packageID;
+    String packageFilePath;
+    String packageName;
     ExceptionHandler exceptionHandler;
 
     public void broadcastStatus(String status){
