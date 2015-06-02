@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Waiting for App"
-            android:textAllCaps="false"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/grey_400" />
 
