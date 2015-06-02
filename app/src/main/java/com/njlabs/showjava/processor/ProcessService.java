@@ -19,6 +19,7 @@ import com.njlabs.showjava.R;
 import com.njlabs.showjava.ui.AppProcessActivity;
 import com.njlabs.showjava.utils.ExceptionHandler;
 import com.njlabs.showjava.utils.Notify;
+import com.njlabs.showjava.utils.SourceInfo;
 import com.njlabs.showjava.utils.logging.Ln;
 
 import net.dongliu.apk.parser.ApkParser;
@@ -29,16 +30,18 @@ import java.io.IOException;
 @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
 public class ProcessService extends IntentService {
 
-    private String PackageId;
-    private String PackageDir;
-    private String PackageName;
+    public String packageName;
+    public String packageFilePath;
+    public String packageLabel;
 
-    public String JavaOutputDir;
+    public String javaSourceOutputDir;
+    public String sourceOutputDir;
+    public ExceptionHandler exceptionHandler;
 
-    private String filePath;
-    private Handler UIHandler;
+    public Handler UIHandler;
 
-    private Notify processNotify;
+    public Notify processNotify;
+    public ApkParser apkParser;
 
     public ProcessService() {
         super("ProcessService");
@@ -61,18 +64,13 @@ public class ProcessService extends IntentService {
 
         NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent resultIntent = new Intent(getApplicationContext(), AppProcessActivity.class);
-        PendingIntent resultPendingIntent =
-                PendingIntent.getActivity( this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setContentTitle("Decompiling")
                 .setContentText("Processing the apk")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setOngoing(true)
-                .setAutoCancel(false)
-                .setContentIntent(resultPendingIntent);
+                .setAutoCancel(false);
 
         mBuilder.setProgress(0, 0, true);
         mNotifyManager.notify(Constants.PROCESS_NOTIFICATION_ID, mBuilder.build());
@@ -94,41 +92,46 @@ public class ProcessService extends IntentService {
         Ln.d("onHandleIntent ProcessService");
         Bundle extras = workIntent.getExtras();
         if (extras != null) {
-            PackageName = extras.getString("package_name");
-            PackageId = extras.getString("package_id");
-            PackageDir = extras.getString("package_dir");
 
-            ApkParser apkParser = null;
+            packageFilePath = extras.getString("package_file_path");
+
             try {
-                apkParser = new ApkParser(new File(filePath));
-                if(PackageName == null){
-                    PackageName = apkParser.getApkMeta().getLabel();
-                }
-                if(PackageId == null){
-                    PackageId = apkParser.getApkMeta().getPackageName();
-                }
+                apkParser = new ApkParser(new File(packageFilePath));
+                packageLabel = apkParser.getApkMeta().getLabel();
+                packageName = apkParser.getApkMeta().getPackageName();
+
+                Intent resultIntent = new Intent(getApplicationContext(), AppProcessActivity.class);
+                resultIntent.putExtra("from_notification",true);
+                resultIntent.putExtra("package_name",packageName);
+                resultIntent.putExtra("package_label",packageLabel);
+                resultIntent.putExtra("package_file_path",packageFilePath);
+
+                PendingIntent resultPendingIntent =
+                        PendingIntent.getActivity( this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                processNotify.updateIntent(resultPendingIntent);
             } catch (IOException e) {
-                e.printStackTrace();
+                broadcastStatus("exit_process_on_error");
             }
 
+            sourceOutputDir = Environment.getExternalStorageDirectory()+"/ShowJava"+"/"+ packageName;
+            javaSourceOutputDir = sourceOutputDir + "/java";
 
-            String JavaOutputDir = Environment.getExternalStorageDirectory()+"/ShowJava"+"/"+PackageId+"/java_output";
+            SourceInfo.initialise(this);
 
-            ExceptionHandler exceptionHandler = new ExceptionHandler(getApplicationContext(),JavaOutputDir,PackageId);
+            exceptionHandler = new ExceptionHandler(getApplicationContext(), javaSourceOutputDir, packageName);
             Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);
-            Processor.extract(this, UIHandler, PackageDir, PackageId, exceptionHandler);
+            Processor.extract(this);
         }
-
     }
 
     public void publishProgress(String progressText){
         switch (progressText) {
             case "start_activity": {
-                broadcastStatusWithPackageInfo(progressText,JavaOutputDir + "/",PackageId);
+                broadcastStatusWithPackageInfo(progressText, javaSourceOutputDir + "/", packageName);
                 break;
             }
             case "start_activity_with_error": {
-                broadcastStatusWithPackageInfo(progressText, JavaOutputDir + "/", PackageId);
+                broadcastStatusWithPackageInfo(progressText, javaSourceOutputDir + "/", packageName);
                 UIHandler.post(new ToastRunnable("Decompilation completed with errors. This incident has been reported to the developer."));
                 break;
             }
@@ -198,12 +201,25 @@ public class ProcessService extends IntentService {
             case "jar2java":
                 processNotify.updateTitleText("Decompiling to java", "");
                 break;
+            case "xml":
+                processNotify.updateTitleText("Extracting XML Resources", "");
+                break;
             case "exit":
                 processNotify.cancel();
                 break;
 
             default:
                 processNotify.updateText(statusData);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try{
+            processNotify.cancel();
+        } catch (Exception e){
+            Ln.e(e);
         }
     }
 }

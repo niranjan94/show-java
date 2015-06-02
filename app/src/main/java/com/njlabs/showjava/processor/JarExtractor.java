@@ -1,12 +1,10 @@
 package com.njlabs.showjava.processor;
 
 import android.os.Environment;
-import android.os.Handler;
 import android.util.Log;
 
 import com.googlecode.dex2jar.reader.DexFileReader;
 import com.googlecode.dex2jar.v3.Dex2jar;
-import com.njlabs.showjava.utils.ExceptionHandler;
 
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.iface.ClassDef;
@@ -25,12 +23,12 @@ import java.util.List;
 @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
 public class JarExtractor extends ProcessServiceHelper {
 
-    public JarExtractor(ProcessService processService, Handler UIHandler, String packageDir, String packageID, ExceptionHandler exceptionHandler) {
+    public JarExtractor(ProcessService processService) {
         this.processService = processService;
-        this.UIHandler = UIHandler;
-        this.packageDir = packageDir;
-        this.packageID = packageID;
-        this.exceptionHandler = exceptionHandler;
+        this.UIHandler = processService.UIHandler;
+        this.packageFilePath = processService.packageFilePath;
+        this.packageName = processService.packageName;
+        this.exceptionHandler = processService.exceptionHandler;
     }
 
     public void extract(){
@@ -54,7 +52,7 @@ public class JarExtractor extends ProcessServiceHelper {
         DexFile dexFile = null;
         try
         {
-            dexFile = DexFileFactory.loadDexFile(packageDir, 19);
+            dexFile = DexFileFactory.loadDexFile(packageFilePath, 19);
         } catch (Exception e){
             broadcastStatus("exit");
             UIHandler.post(new ToastRunnable("The app you selected cannot be decompiled. Please select another app."));
@@ -94,9 +92,9 @@ public class JarExtractor extends ProcessServiceHelper {
         }
         broadcastStatus("optimise_dex_finish");
 
-        File WorkingDirectory=new File(Environment.getExternalStorageDirectory() + "/ShowJava");
-        File PerAppWorkingDirectory=new File(WorkingDirectory + "/" + packageID);
+        File PerAppWorkingDirectory = new File(processService.sourceOutputDir);
         PerAppWorkingDirectory.mkdirs();
+
         Log.d("DEBUGGER", "Prepare Writing");
 
         broadcastStatus("merging_classes");
@@ -135,8 +133,8 @@ public class JarExtractor extends ProcessServiceHelper {
         //////
 
         File WorkingDirectory=new File(Environment.getExternalStorageDirectory() + "/ShowJava");
-        File PerAppWorkingDirectory=new File(WorkingDirectory + "/" + packageID);
-        File file = new File(PerAppWorkingDirectory+"/"+packageID+ ".jar");
+        File PerAppWorkingDirectory=new File(WorkingDirectory + "/" + packageName);
+        File file = new File(PerAppWorkingDirectory+"/"+ packageName + ".jar");
 
         try
         {
@@ -146,13 +144,14 @@ public class JarExtractor extends ProcessServiceHelper {
         } catch (Exception e) {
             broadcastStatus("exit_process_on_error");
         }
+
         Log.i("STATUS","Clearing cache");
         File ClassDex = new File(PerAppWorkingDirectory+"/optimised_classes.dex");
         ClassDex.delete();
     }
 
     private void startJavaExtractor(){
-        JavaExtractor javaExtractor = new JavaExtractor(processService,UIHandler,packageDir,packageID,exceptionHandler);
+        JavaExtractor javaExtractor = new JavaExtractor(processService);
         javaExtractor.extract();
     }
 }

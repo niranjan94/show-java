@@ -1,6 +1,7 @@
 package com.njlabs.showjava.utils;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.support.v4.app.NotificationCompat;
 
 /**
@@ -35,6 +36,11 @@ public class Notify {
         mBuilder.setContentText(text);
         mBuilder.setProgress(0,0,true);
         mNotifyManager.notify(NOTIFICATION_ID,mBuilder.build());
+    }
+
+    public void updateIntent(PendingIntent pendingIntent) {
+        mBuilder.setContentIntent(pendingIntent);
+        mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
     public void cancel(){

@@ -1,9 +1,6 @@
 package com.njlabs.showjava.processor;
 
-import android.os.Environment;
-import android.os.Handler;
-
-import com.njlabs.showjava.utils.ExceptionHandler;
+import com.njlabs.showjava.utils.SourceInfo;
 
 import org.benf.cfr.reader.Main;
 import org.benf.cfr.reader.state.DCCommonState;
@@ -18,60 +15,62 @@ import java.io.File;
  */
 public class JavaExtractor extends ProcessServiceHelper {
 
-    public JavaExtractor(ProcessService processService, Handler UIHandler, String packageDir, String packageID, ExceptionHandler exceptionHandler) {
+    public JavaExtractor(ProcessService processService) {
         this.processService = processService;
-        this.UIHandler = UIHandler;
-        this.packageDir = packageDir;
-        this.packageID = packageID;
-        this.exceptionHandler = exceptionHandler;
+        this.UIHandler = processService.UIHandler;
+        this.packageFilePath = processService.packageFilePath;
+        this.packageName = processService.packageName;
+        this.exceptionHandler = processService.exceptionHandler;
     }
 
     public void extract(){
 
         broadcastStatus("jar2java");
         File JarInput;
-        JarInput = new File(Environment.getExternalStorageDirectory()+"/ShowJava"+"/"+packageID+"/"+packageID+".jar");
-        final File JavaOutputDir = new File(Environment.getExternalStorageDirectory()+"/ShowJava"+"/"+packageID+"/java_output");
 
-        if (!JavaOutputDir.isDirectory())
-        {
+        JarInput = new File(processService.sourceOutputDir+"/"+ packageName +".jar");
+        final File JavaOutputDir = new File(processService.javaSourceOutputDir);
+
+        if (!JavaOutputDir.isDirectory()) {
             JavaOutputDir.mkdirs();
         }
 
-        processService.JavaOutputDir = JavaOutputDir.toString();
-        String[] args = {JarInput.toString(), "--outputdir", JavaOutputDir.toString()};
+        processService.javaSourceOutputDir = JavaOutputDir.toString();
+        String[] args = { JarInput.toString(), "--outputdir", JavaOutputDir.toString() };
         GetOptParser getOptParser = new GetOptParser();
 
         Options options = null;
-        try
-        {
-            options = (Options) getOptParser.parse(args, OptionsImpl.getFactory());
+        try {
+            options = getOptParser.parse(args, OptionsImpl.getFactory());
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
+
         final DCCommonState dcCommonState = new DCCommonState(options);
         final String path = options != null ? options.getFileName() : null;
 
         ThreadGroup group = new ThreadGroup("Jar 2 Java Group");
         Thread javaExtractionThread = new Thread(group, new Runnable(){
-            @Override
-            public void run(){
-                try
-                {
-                    Main.doJar(dcCommonState, path);
-
-                }
-                catch(Exception | StackOverflowError e)
-                {
-                    processService.publishProgress("start_activity_with_error");
-                }
-                processService.publishProgress("start_activity");
+                @Override
+                public void run(){
+            try {
+                Main.doJar(dcCommonState, path);
+                startXMLExtractor();
+            }
+            catch(Exception | StackOverflowError e) {
+                processService.publishProgress("start_activity_with_error");
+            }
+            processService.publishProgress("start_activity");
             }
         },"Jar to Java Thread", 20971520);
         javaExtractionThread.setPriority(Thread.MAX_PRIORITY);
         javaExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
         javaExtractionThread.start();
+    }
+
+    private void startXMLExtractor(){
+        SourceInfo.setjavaSourceStatus(processService,true);
+        ((new XmlExtractor(processService))).extract();
     }
 }
