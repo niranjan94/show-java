@@ -1,4 +1,4 @@
-## Show Java ##
+# <img src="https://raw.githubusercontent.com/niranjan94/show-java/master/app/src/main/res/mipmap-hdpi/ic_launcher.png" width="50" height="50"> Show Java #
 
 An apk decompiler for android. Build on Android Studio 1.3 Preview with gradle 2.2.1.
 
