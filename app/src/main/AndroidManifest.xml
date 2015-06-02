@@ -68,6 +68,7 @@
         <activity android:name=".utils.picker.FileChooser">
         </activity>
         <service
+            android:process=":service"
             android:name=".processor.ProcessService"
             android:exported="false"/>
     </application>
