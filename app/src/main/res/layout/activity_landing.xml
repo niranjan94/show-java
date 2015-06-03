@@ -32,7 +32,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="6dp">
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="4dp">
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/menu_item2"
