@@ -13,6 +13,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.R;
@@ -47,12 +48,10 @@ public class AppProcessActivity extends BaseActivity {
         TextView appNameView = (TextView) findViewById(R.id.current_package_name);
 
         CurrentStatus.setText("Starting Decompiler");
-        registerBroadcastReceiver();
 
         if(getIntent().getDataString() == null || getIntent().getDataString().equals("")){
             appNameView.setText(getIntent().getStringExtra("package_label"));
             packageFilePath = getIntent().getStringExtra("package_file_path");
-
         } else {
             packageFilePath = (new File(URI.create(getIntent().getDataString()))).getAbsolutePath();
             if (FilenameUtils.isExtension(packageFilePath, "apk")) {
@@ -64,6 +63,12 @@ public class AppProcessActivity extends BaseActivity {
                     exitWithError();
                 }
             }
+        }
+
+        registerBroadcastReceiver();
+
+        if(!fromNotification()){
+            startProcessorService();
         }
 
         appNameView.setSingleLine(false);
@@ -106,6 +111,7 @@ public class AppProcessActivity extends BaseActivity {
     }
 
     public void startProcessorService() {
+        killAllProcessorServices();
         Ln.d("startProcessorService AppProcessActivity");
         Intent mServiceIntent = new Intent(getContext(), ProcessService.class);
         mServiceIntent.putExtra("package_file_path", packageFilePath);
@@ -220,6 +226,7 @@ public class AppProcessActivity extends BaseActivity {
     }
 
     private void exitWithError(){
-
+        finish();
+        Toast.makeText(baseContext,"There was an error initialising the decompiler with the app you selected.",Toast.LENGTH_LONG).show();
     }
 }
