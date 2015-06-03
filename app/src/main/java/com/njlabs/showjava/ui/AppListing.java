@@ -1,5 +1,6 @@
 package com.njlabs.showjava.ui;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -95,10 +96,11 @@ public class AppListing extends BaseActivity {
 
     public void setupList(ArrayList<PackageInfoHolder> AllPackages) {
         ArrayAdapter<PackageInfoHolder> aa = new ArrayAdapter<PackageInfoHolder>(getBaseContext(), R.layout.package_list_item, AllPackages) {
+            @SuppressLint("InflateParams")
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = getLayoutInflater().inflate(R.layout.package_list_item, parent);
+                    convertView = getLayoutInflater().inflate(R.layout.package_list_item, null);
                 }
 
                 PackageInfoHolder pkg = getItem(position);
