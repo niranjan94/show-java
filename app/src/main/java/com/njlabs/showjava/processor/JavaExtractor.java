@@ -1,6 +1,7 @@
 package com.njlabs.showjava.processor;
 
 import com.njlabs.showjava.utils.SourceInfo;
+import com.njlabs.showjava.utils.logging.Ln;
 
 import org.benf.cfr.reader.Main;
 import org.benf.cfr.reader.state.DCCommonState;
@@ -28,6 +29,7 @@ public class JavaExtractor extends ProcessServiceHelper {
         broadcastStatus("jar2java");
         File JarInput;
 
+        Ln.d("jar location:" + processService.sourceOutputDir + "/" + packageName +".jar");
         JarInput = new File(processService.sourceOutputDir+"/"+ packageName +".jar");
         final File JavaOutputDir = new File(processService.javaSourceOutputDir);
 
@@ -64,6 +66,7 @@ public class JavaExtractor extends ProcessServiceHelper {
             processService.publishProgress("start_activity");
             }
         },"Jar to Java Thread", 20971520);
+
         javaExtractionThread.setPriority(Thread.MAX_PRIORITY);
         javaExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
         javaExtractionThread.start();
