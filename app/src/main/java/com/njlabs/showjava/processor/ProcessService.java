@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,7 +26,6 @@ import com.njlabs.showjava.utils.logging.Ln;
 import net.dongliu.apk.parser.ApkParser;
 
 import java.io.File;
-import java.io.IOException;
 
 @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
 public class ProcessService extends IntentService {
@@ -94,11 +94,15 @@ public class ProcessService extends IntentService {
         if (extras != null) {
 
             packageFilePath = extras.getString("package_file_path");
-
+            Ln.d("package_file_path :"+packageFilePath);
             try {
+
+                PackageInfo packageInfo = getPackageManager().getPackageArchiveInfo(packageFilePath, 0);
+
                 apkParser = new ApkParser(new File(packageFilePath));
-                packageLabel = apkParser.getApkMeta().getLabel();
-                packageName = apkParser.getApkMeta().getPackageName();
+
+                packageLabel = packageInfo.applicationInfo.loadLabel(getPackageManager()).toString();
+                packageName = packageInfo.packageName;
 
                 Intent resultIntent = new Intent(getApplicationContext(), AppProcessActivity.class);
                 resultIntent.putExtra("from_notification",true);
@@ -109,12 +113,16 @@ public class ProcessService extends IntentService {
                 PendingIntent resultPendingIntent =
                         PendingIntent.getActivity( this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 processNotify.updateIntent(resultPendingIntent);
-            } catch (IOException e) {
+
+            } catch (Exception e) {
+                Ln.e(e);
                 broadcastStatus("exit_process_on_error");
             }
 
             sourceOutputDir = Environment.getExternalStorageDirectory()+"/ShowJava"+"/"+ packageName;
             javaSourceOutputDir = sourceOutputDir + "/java";
+
+            Ln.d(sourceOutputDir);
 
             SourceInfo.initialise(this);
 
