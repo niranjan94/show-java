@@ -12,7 +12,6 @@ import android.view.View;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.njlabs.showjava.R;
 
@@ -27,44 +26,23 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         baseContext = this;
-
-        mAdView = (AdView) findViewById(R.id.adView);
-
-        if(mAdView != null){
-            mAdView.setVisibility(View.GONE);
-            mAdView.setAdSize(AdSize.SMART_BANNER);
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
-            mAdView.setAdListener(new AdListener() {
-                @Override
-                public void onAdFailedToLoad(int errorCode) {
-                    super.onAdFailedToLoad(errorCode);
-                    mAdView.setVisibility(View.GONE);
-                }
-                @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                    mAdView.setVisibility(View.VISIBLE);
-                }
-            });
-            mAdView.loadAd(adRequest);
-            if(!checkDataConnection()){
-                mAdView.setVisibility(View.GONE);
-            }
-        }
     }
     public void setupLayout(int layoutRef){
         setContentView(layoutRef);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setupGoogleAds();
     }
+
     public void setupLayout(int layoutRef, String title){
         setContentView(layoutRef);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(title);
+        setupGoogleAds();
     }
+
     public void setupLayoutNoActionBar(int layoutRef){
         setContentView(layoutRef);
     }
@@ -77,7 +55,6 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.about_option) {
                         return true;
         }
@@ -112,5 +89,29 @@ public class BaseActivity extends AppCompatActivity {
             status = true;
         }
         return status;
+    }
+
+    private void setupGoogleAds(){
+        mAdView = (AdView) findViewById(R.id.adView);
+        if(mAdView != null){
+            mAdView.setVisibility(View.GONE);
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+            mAdView.setAdListener(new AdListener() {
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    super.onAdFailedToLoad(errorCode);
+                    mAdView.setVisibility(View.GONE);
+                }
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                    mAdView.setVisibility(View.VISIBLE);
+                }
+            });
+            mAdView.loadAd(adRequest);
+            if(!checkDataConnection()){
+                mAdView.setVisibility(View.GONE);
+            }
+        }
     }
 }
