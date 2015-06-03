@@ -1,60 +1,40 @@
-/*
- * Derived from einaros's Sons of Obsidian theme at
- * http://studiostyl.es/schemes/son-of-obsidian by
- * Alex Ford of CodeTunnel:
- * http://CodeTunnel.com/blog/post/71/google-code-prettify-obsidian-theme
- */
-
-.str
-{
+.str {
     color: #EC7600;
 }
-.kwd
-{
+.kwd {
     color: #93C763;
 }
-.com
-{
+.com {
     color: #66747B;
 }
-.typ
-{
+.typ {
     color: #678CB1;
 }
-.lit
-{
+.lit {
     color: #FACD22;
 }
-.pun
-{
+.pun {
     color: #F1F2F3;
 }
-.pln
-{
+.pln {
     color: #F1F2F3;
 }
-.tag
-{
+.tag {
     color: #8AC763;
 }
-.atn
-{
+.atn {
     color: #E0E2E4;
 }
-.atv
-{
+.atv {
     color: #EC7600;
 }
-.dec
-{
+.dec {
     color: purple;
 }
-pre.prettyprint
-{
+pre.prettyprint {
     border: 0px solid #888;
 }
-ol.linenums
-{
+ol.linenums {
     margin-top: 0;
     margin-bottom: 0;
 }
@@ -71,48 +51,38 @@ li.L1, li.L3, li.L5, li.L7, li.L9 {
 }
 @media print
 {
-    .str
-    {
+    .str {
         color: #060;
     }
-    .kwd
-    {
+    .kwd {
         color: #006;
         font-weight: bold;
     }
-    .com
-    {
+    .com {
         color: #600;
         font-style: italic;
     }
-    .typ
-    {
+    .typ {
         color: #404;
         font-weight: bold;
     }
-    .lit
-    {
+    .lit {
         color: #044;
     }
-    .pun
-    {
+    .pun {
         color: #440;
     }
-    .pln
-    {
+    .pln {
         color: #000;
     }
-    .tag
-    {
+    .tag {
         color: #006;
         font-weight: bold;
     }
-    .atn
-    {
+    .atn {
         color: #404;
     }
-    .atv
-    {
+    .atv {
         color: #060;
     }
 }
