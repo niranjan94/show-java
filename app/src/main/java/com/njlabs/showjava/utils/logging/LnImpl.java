@@ -12,8 +12,8 @@ import java.util.Locale;
  */
 public class LnImpl implements LnInterface {
     protected int minimumLogLevel = Log.VERBOSE;
-    protected String packageName = "";
-    protected String tag = "";
+    protected String packageName = "com.njlabs.showjava";
+    protected String tag = packageName;
 
     public LnImpl() {
         // do nothing, used by Ln before injection is set up
@@ -222,6 +222,6 @@ public class LnImpl implements LnInterface {
             final StackTraceElement trace = Thread.currentThread().getStackTrace()[skipDepth];
             return tag + "/" + trace.getFileName() + ":" + trace.getLineNumber();
         }
-        return "com.njlabs.showjava > "+tag;
+        return tag;
     }
 }
