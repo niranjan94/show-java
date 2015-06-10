@@ -126,6 +126,7 @@ public class AppProcessActivity extends BaseActivity {
 
     private class ProcessStatus extends BroadcastReceiver {
         private ProcessStatus() {
+
         }
 
         public void onReceive(Context context, Intent intent) {

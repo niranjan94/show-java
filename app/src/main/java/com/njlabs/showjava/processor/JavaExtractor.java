@@ -54,18 +54,19 @@ public class JavaExtractor extends ProcessServiceHelper {
 
         ThreadGroup group = new ThreadGroup("Jar 2 Java Group");
         Thread javaExtractionThread = new Thread(group, new Runnable(){
-                @Override
-                public void run(){
-            try {
-                Main.doJar(dcCommonState, path);
-                startXMLExtractor();
+            @Override
+            public void run(){
+                try {
+                    Main.doJar(dcCommonState, path);
+                    startXMLExtractor();
+                }
+                catch(Exception | StackOverflowError e) {
+                    Ln.e(e);
+                    processService.publishProgress("start_activity_with_error");
+                }
+                processService.publishProgress("start_activity");
             }
-            catch(Exception | StackOverflowError e) {
-                processService.publishProgress("start_activity_with_error");
-            }
-            processService.publishProgress("start_activity");
-            }
-        },"Jar to Java Thread", 20971520);
+        }, "Jar to Java Thread", 20971520);
 
         javaExtractionThread.setPriority(Thread.MAX_PRIORITY);
         javaExtractionThread.setUncaughtExceptionHandler(exceptionHandler);

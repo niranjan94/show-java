@@ -2,6 +2,7 @@ package com.njlabs.showjava.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,22 +30,29 @@ public class BaseActivity extends AppCompatActivity {
     }
     public void setupLayout(int layoutRef){
         setContentView(layoutRef);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setupToolbar(null);
         setupGoogleAds();
     }
 
     public void setupLayout(int layoutRef, String title){
         setContentView(layoutRef);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(title);
+        setupToolbar(title);
         setupGoogleAds();
     }
 
     public void setupLayoutNoActionBar(int layoutRef){
         setContentView(layoutRef);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void setupToolbar(String title){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if(title!=null){
+            getSupportActionBar().setTitle(title);
+        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,9 +62,15 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.about_option) {
-                        return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+            case R.id.about_option:
+                Intent i = new Intent(getBaseContext(),About.class);
+                startActivity(i);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

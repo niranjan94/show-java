@@ -9,6 +9,6 @@ public class About extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setupLayoutNoActionBar(R.layout.activity_about);
+		setupLayout(R.layout.activity_about);
 	}
 }
