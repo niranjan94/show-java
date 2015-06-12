@@ -17,4 +17,5 @@ before_install:
 
 script:
   - chmod a+x gradlew
-  - ./gradlew clean build
+  - ./gradlew clean build --debug --stacktrace
+  - if [ -f /home/travis/build/niranjan94/show-java/app/build/outputs/lint-results.html ]; then; cat /home/travis/build/niranjan94/show-java/app/build/outputs/lint-results.html;
