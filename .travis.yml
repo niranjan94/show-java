@@ -5,17 +5,21 @@ android:
    - android-22
    - build-tools-22.0.1
    - extra
-
+   
+env:
+  global:
+    MALLOC_ARENA_MAX=2
+   
 jdk: oraclejdk7
 
 notifications:
   email: false
 
 before_install:
-  - sudo apt-get update -qq
-  - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
+  - sudo apt-get update
+  - if [ `uname -m` = x86_64 ]; then sudo apt-get install --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
 
 script:
   - chmod a+x gradlew
   - ./gradlew clean build --stacktrace
-  - if [ -f /home/travis/build/niranjan94/show-java/app/build/outputs/lint-results.html ]; then; cat /home/travis/build/niranjan94/show-java/app/build/outputs/lint-results.html;
+  - if [-f /home/travis/build/niranjan94/show-java/app/build/outputs/lint-results.html]; then cat /home/travis/build/niranjan94/show-java/app/build/outputs/lint-results.html; fi
