@@ -84,5 +84,4 @@ dependencies {
     }
     compile 'com.github.clans:fab:1.5.0'
     compile 'net.dongliu.apk-parser:apk-parser:1.4.1'
-    compile files('libs/commons-cli-1.2.jar')
 }
