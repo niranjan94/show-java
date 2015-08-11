@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -154,15 +153,18 @@ public class ProcessService extends IntentService {
 
     public void broadcastStatus(String status){
         sendNotification(status,"");
-        Intent localIntent = new Intent(Constants.PROCESS_BROADCAST_ACTION).putExtra(Constants.PROCESS_STATUS_KEY, status);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+        Intent localIntent = new Intent(Constants.PROCESS_BROADCAST_ACTION)
+                .putExtra(Constants.PROCESS_STATUS_KEY, status);
+        Ln.d("Sending Intent "+status);
+        sendBroadcast(localIntent);
     }
     public void broadcastStatus(String statusKey, String statusData){
         sendNotification(statusKey,statusData);
         Intent localIntent = new Intent(Constants.PROCESS_BROADCAST_ACTION)
                                     .putExtra(Constants.PROCESS_STATUS_KEY, statusKey)
                                     .putExtra(Constants.PROCESS_STATUS_MESSAGE, statusData);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+        Ln.d("Sending Intent "+statusKey);
+        sendBroadcast(localIntent);
     }
     public void broadcastStatusWithPackageInfo(String statusKey, String dir, String packId){
         sendNotification(statusKey,"");
@@ -170,8 +172,8 @@ public class ProcessService extends IntentService {
                 .putExtra(Constants.PROCESS_STATUS_KEY, statusKey)
                 .putExtra(Constants.PROCESS_DIR, dir)
                 .putExtra(Constants.PROCESS_PACKAGE_ID, packId);
-
-        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+        Ln.d("Sending Intent "+statusKey);
+        sendBroadcast(localIntent);
     }
 
     private void sendNotification(String statusKey, String statusData){

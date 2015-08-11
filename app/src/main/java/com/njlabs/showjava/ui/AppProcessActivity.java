@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -34,10 +33,12 @@ public class AppProcessActivity extends BaseActivity {
     private TextView CurrentStatus;
     private TextView CurrentLine;
     private String packageFilePath;
+    private BroadcastReceiver processStatusReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        processStatusReceiver = new ProcessStatus();
 
         Ln.d("onCreate AppProcessActivity");
         setupLayoutNoActionBar(R.layout.activity_progress);
@@ -64,8 +65,6 @@ public class AppProcessActivity extends BaseActivity {
                 }
             }
         }
-
-        registerBroadcastReceiver();
 
         if(!fromNotification()){
             startProcessorService();
@@ -108,6 +107,8 @@ public class AppProcessActivity extends BaseActivity {
                 GearProgressRight.setAnimation(GearProgressRightAnim);
             }
         });
+
+        registerBroadcastReceiver();
     }
 
     public void startProcessorService() {
@@ -119,12 +120,12 @@ public class AppProcessActivity extends BaseActivity {
     }
 
     public void registerBroadcastReceiver() {
-        ProcessStatus processStatusReceiver = new ProcessStatus();
         IntentFilter statusIntentFilter = new IntentFilter(Constants.PROCESS_BROADCAST_ACTION);
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(processStatusReceiver, statusIntentFilter);
+        registerReceiver(processStatusReceiver,statusIntentFilter);
     }
 
     private class ProcessStatus extends BroadcastReceiver {
+
         private ProcessStatus() {
 
         }
@@ -138,6 +139,7 @@ public class AppProcessActivity extends BaseActivity {
             if (intent.hasExtra(Constants.PROCESS_STATUS_MESSAGE)) {
                 statusData = intent.getStringExtra(Constants.PROCESS_STATUS_MESSAGE);
             }
+            Ln.d("Received Intent "+statusKey);
             switch (statusKey) {
                 case "optimise_dex_start":
                     CurrentStatus.setText("Optimising dex file");
@@ -229,5 +231,11 @@ public class AppProcessActivity extends BaseActivity {
     private void exitWithError(){
         finish();
         Toast.makeText(baseContext,"There was an error initialising the decompiler with the app you selected.",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(processStatusReceiver);
     }
 }
