@@ -5,65 +5,92 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.AdapterView;
 
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
+import com.mikepenz.materialdrawer.accountswitcher.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.njlabs.showjava.BuildConfig;
 import com.njlabs.showjava.R;
 import com.njlabs.showjava.modals.DecompileHistoryItem;
-import com.njlabs.showjava.utils.DatabaseHandler;
-import com.njlabs.showjava.utils.picker.FileChooser;
+import com.njlabs.showjava.utils.logging.Ln;
+import com.nononsenseapps.filepicker.FilePickerActivity;
 
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Landing extends BaseActivity {
 
 	ProgressDialog PackageLoadDialog;
-	DatabaseHandler db;
     List<DecompileHistoryItem> listFromDb;
-	private static final int FILEPICKER = 0;
+	private static final int FILE_PICKER = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setupLayout(R.layout.activity_landing);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-	    PackageLoadDialog = new ProgressDialog(this);
+
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.drawable.navbar_header)
+                .addProfiles (
+                        new ProfileDrawerItem().withName("Show Java").withEmail("Version " + BuildConfig.VERSION_NAME).setSelectable(false)
+                )
+                .withSelectionListEnabledForSingleProfile(false)
+                .build();
+
+        Drawer result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withAccountHeader(headerResult)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName("Home").withIcon(R.drawable.ic_action_home).withCheckable(false),
+                        new DividerDrawerItem(),
+                        new PrimaryDrawerItem().withName("About the app").withIcon(R.drawable.ic_action_info).withCheckable(false),
+                        new PrimaryDrawerItem().withName("Settings").withIcon(R.drawable.ic_action_settings).withCheckable(false)
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+                        switch (position) {
+                            case 2:
+                                startActivity(new Intent(baseContext, About.class));
+                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                break;
+                            case 3:
+                                //startActivity(new Intent(baseContext, SettingsActivity.class));
+                                //overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                break;
+                        }
+                        return false;
+                    }
+                })
+                .withCloseOnClick(true)
+                .build();
+
+        PackageLoadDialog = new ProgressDialog(this);
         PackageLoadDialog.setIndeterminate(false);
         PackageLoadDialog.setCancelable(false);
         PackageLoadDialog.setInverseBackgroundForced(false);
         PackageLoadDialog.setCanceledOnTouchOutside(false);
 		PackageLoadDialog.setMessage("Loading Decompile History ...");
-		
-		//HistoryList = (ListView) findViewById(R.id.list);
-		
-		db = new DatabaseHandler(this);
-		
-		if(db.getHistoryItemCount()!=0)
-		{
-			//HistoryList.setVisibility(View.VISIBLE);
 
-		}
-		else
-		{
-			/*LinearLayout EmptyLayout=(LinearLayout) findViewById(R.id.EmptyLayout);
-			EmptyLayout.setVisibility(View.VISIBLE);*/
-		}
         HistoryLoader runner = new HistoryLoader();
         runner.execute();
 				
@@ -72,12 +99,11 @@ public class Landing extends BaseActivity {
 
 		@Override
 		protected List<DecompileHistoryItem> doInBackground(String... params) {
-			return db.getAllHistoryItems();
+			return DecompileHistoryItem.listAll(DecompileHistoryItem.class);
 		}	
 		
 		@Override
 		protected void onPostExecute(List<DecompileHistoryItem> AllPackages) {
-			// execution of result of Long time consuming operation
             listFromDb = AllPackages;
 			SetupList(AllPackages);
 			PackageLoadDialog.dismiss();
@@ -95,95 +121,46 @@ public class Landing extends BaseActivity {
 			PackageLoadDialog.setMessage(text[0]);
 		}
 	}
-	public void SetupList(List<DecompileHistoryItem> AllPackages)
-	{
-		ArrayAdapter<DecompileHistoryItem> aa = new ArrayAdapter<DecompileHistoryItem>(getBaseContext(), R.layout.history_list_item, AllPackages)
-		{
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent)
-			{
-				if (convertView == null)
-				{
-					convertView = getLayoutInflater().inflate(R.layout.history_list_item, null);
-				}
-				DecompileHistoryItem pkg = getItem(position);
-				TextView PkgName = (TextView) convertView.findViewById(R.id.history_pkg_name);
-				TextView PkgId = (TextView) convertView.findViewById(R.id.history_pkg_id);
-				Typeface face=Typeface.createFromAsset(getAssets(), "roboto_light.ttf"); 
-				
-				PkgName.setTypeface(face); 
-				PkgId.setTypeface(face); 
-				
-				PkgName.setText(pkg._packagename);
-				PkgId.setText(pkg._packageid);
-				
-				return convertView;	
-			}
-		};
-		//setListAdapter(aa);
 
-		/*HistoryList.setAdapter(aa);
-		HistoryList.setTextFilterEnabled(true);
-		/// CREATE AN ONCLICK LISTENER TO KNOW WHEN EACH ITEM IS CLICKED
-		HistoryList.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-			{
-				final TextView CPkgId=(TextView) view.findViewById(R.id.history_pkg_id);
-				Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
-				File javaSourceOutputDir = new File(Environment.getExternalStorageDirectory()+"/ShowJava"+"/"+CPkgId.getText().toString()+"/java_output");
-				i.putExtra("java_source_dir",javaSourceOutputDir.toString()+"/");
-				i.putExtra("package_id",CPkgId.getText().toString());
-				startActivity(i);
-			}
-		});*/
+	public void SetupList(List<DecompileHistoryItem> AllPackages){
+
 	}
-	public void OpenAppListing(View v)
-	{
+
+	public void OpenAppListing(View v) {
 		Intent i = new Intent(getApplicationContext(), AppListing.class);
 		startActivity(i);
 	}
-	public void OpenFilePicker(View v)
-	{
-        Intent intent = new Intent(this, FileChooser.class);
-        ArrayList<String> extensions = new ArrayList<String>();
-        extensions.add(".apk");
-        intent.putStringArrayListExtra("filterFileExtension", extensions);
-        startActivityForResult(intent, FILEPICKER);
+
+	public void OpenFilePicker(View v) {
+        Intent i = new Intent(this, FilePicker.class);
+
+        i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+        i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+        i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
+
+        i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+
+        startActivityForResult(i, FILE_PICKER);
 	}
 	
 	@Override
 	public void onResume() {
 	    super.onResume();
-	    if(db.getHistoryItemCount()!=0)
-		{
-			/*LinearLayout EmptyLayout=(LinearLayout) findViewById(R.id.EmptyLayout);
-	    	EmptyLayout.setVisibility(View.GONE);
-			HistoryList.setVisibility(View.VISIBLE);
-			HistoryLoader runner = new HistoryLoader();
-			runner.execute();*/
-		}
-		else
-		{
-			/*LinearLayout EmptyLayout=(LinearLayout) findViewById(R.id.EmptyLayout);
-			EmptyLayout.setVisibility(View.VISIBLE);
-			HistoryList.setVisibility(View.GONE);*/
-		}
 	}
-
 
     private class ExistingHistoryLoader extends AsyncTask<String, String, List<DecompileHistoryItem>> {
 
         @Override
         protected List<DecompileHistoryItem> doInBackground(String... params) {
 
-            // listFromDb
-            File file = new File(Environment.getExternalStorageDirectory()+"/ShowJava");
+            File file = new File(Environment.getExternalStorageDirectory()+"/ShowJava/sources");
             String[] directories = file.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File current, String name) {
                     return new File(current, name).isDirectory();
                 }
             });
+
             if(directories!=null && directories.length>0) {
                 for (String directory : directories) {
                     boolean alreadyExists = false;
@@ -194,8 +171,8 @@ public class Landing extends BaseActivity {
                         }
                     }
                     if (!alreadyExists) {
-                        DecompileHistoryItem newItem = new DecompileHistoryItem(directory, directory, DateFormat.getDateInstance().format(new Date()));
-                        db.addHistoryItem(newItem);
+                        DecompileHistoryItem newItem = new DecompileHistoryItem(directory, directory);
+                        newItem.save();
                         listFromDb.add(newItem);
                     }
                 }
@@ -205,9 +182,7 @@ public class Landing extends BaseActivity {
 
         @Override
         protected void onPostExecute(List<DecompileHistoryItem> AllPackages) {
-            // execution of result of Long time consuming operation
             SetupList(AllPackages);
-
         }
 
         @Override
@@ -217,24 +192,27 @@ public class Landing extends BaseActivity {
 
     }
 
-	
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == FILEPICKER) {
+        if (requestCode == FILE_PICKER) {
             if (data != null) {
-                String PackageDir = data.getStringExtra("fileSelected");
-                //Toast.makeText(this, fileSelected, Toast.LENGTH_SHORT).show();
+
+                Uri uri = data.getData();
+                File apkFile = new File(uri.getPath());
+                String PackageDir = apkFile.getAbsolutePath();
+
+                Ln.d(PackageDir);
+
                 String PackageName;
                 String PackageId;
 
-                if(FilenameUtils.isExtension(PackageDir, "apk"))
-                {
+                if(FilenameUtils.isExtension(PackageDir, "apk")) {
                     PackageManager pm = getPackageManager();
                     PackageInfo info = pm.getPackageArchiveInfo(PackageDir, PackageManager.GET_ACTIVITIES);
-                    if(info != null){
+                    if(info != null) {
                         ApplicationInfo appInfo = info.applicationInfo;
 
-                        if(Build.VERSION.SDK_INT >= 8){
+                        if(Build.VERSION.SDK_INT >= 8) {
                             appInfo.sourceDir = PackageDir;
                             appInfo.publicSourceDir = PackageDir;
                         }
@@ -245,21 +223,19 @@ public class Landing extends BaseActivity {
                         PackageName = "";
                         PackageId = "";
                     }
-                }
-                else
-                {
-                    PackageName=FilenameUtils.getName(PackageDir);
-                    PackageId=FilenameUtils.getName(PackageDir).replaceAll(" ", "_").toLowerCase();
+                    Ln.d(PackageName+" "+PackageId);
+                    Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
+                    i.putExtra("package_id",PackageId);
+                    i.putExtra("package_label",PackageName);
+                    i.putExtra("package_file_path", PackageDir);
+                    startActivity(i);
+
                 }
 
-                Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
-                i.putExtra("package_id",PackageId);
-                i.putExtra("package_label",PackageName);
-                i.putExtra("package_file_path",PackageDir);
-                startActivity(i);
 
             }
         }
+
     }
 
 }
