@@ -4,7 +4,7 @@
         <item name="android:typeface">sans</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/primary</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="SourceViewerTheme" parent="Theme.AppCompat.NoActionBar">
@@ -16,8 +16,19 @@
         <item name="android:typeface">sans</item>
     </style>
 
-    <style name="AppTheme" parent="AppBaseTheme">
-        <item name="android:typeface">sans</item>
+    <style name="FilePickerTheme" parent="NNF_BaseTheme.Light">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+
+        <item name="alertDialogTheme">@style/FilePickerAlertDialogTheme</item>
+
+        <item name="nnf_toolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
+    <style name="FilePickerAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
 </resources>
