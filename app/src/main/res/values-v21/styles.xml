@@ -3,7 +3,7 @@
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/primary</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="SourceViewerTheme" parent="Theme.AppCompat.NoActionBar">
@@ -15,8 +15,4 @@
         <item name="android:typeface">sans</item>
         <item name="android:fontFamily" tools:ignore="NewApi">sans-serif</item>
     </style>
-
-    <style name="AppTheme" parent="AppBaseTheme">
-    </style>
-
 </resources>
