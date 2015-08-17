@@ -50,6 +50,7 @@ public class XmlExtractor extends ProcessServiceHelper {
                         }
                     }
                     zipFile.close();
+                    writeManifest();
                     allDone();
                 } catch(Exception | StackOverflowError e) {
                     processService.publishProgress("start_activity_with_error");
@@ -77,7 +78,16 @@ public class XmlExtractor extends ProcessServiceHelper {
     }
 
     private void allDone(){
-        SourceInfo.setXmlSourceStatus(processService,true);
-        processService.broadcastStatus("start_activity");
+        SourceInfo.setXmlSourceStatus(processService, true);
+        processService.publishProgress("start_activity");
+    }
+
+    private void writeManifest(){
+        try {
+            String manifestXml = apkParser.getManifestXml();
+            FileUtils.writeStringToFile(new File(sourceOutputDir + "/AndroidManifest.xml"), manifestXml);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
