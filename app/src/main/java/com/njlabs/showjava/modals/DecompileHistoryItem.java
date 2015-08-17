@@ -1,69 +1,60 @@
 package com.njlabs.showjava.modals;
 
-public class DecompileHistoryItem {
-    
-    //private variables
-    int _id;
-    public String _packageid;
-    public String _packagename;
-    public String _datetime;
-     
-    // Empty constructor
-    public DecompileHistoryItem(){
-         
+import com.orm.SugarRecord;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+@SuppressWarnings("unused")
+public class DecompileHistoryItem extends SugarRecord<DecompileHistoryItem>{
+
+    String packageID;
+    String packageLabel;
+    String date;
+
+    public DecompileHistoryItem() {
     }
-    // constructor
-    public DecompileHistoryItem(int id, String packageid, String packagename, String datetime){
-        this._id = id;
-        this._packageid = packageid;
-        this._packagename = packagename;
-        this._datetime = datetime;
+
+    public DecompileHistoryItem(String packageID, String packageLabel) {
+        this.packageID = packageID;
+        this.packageLabel = packageLabel;
+        this.date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH).format(new Date());
     }
-     
-    // constructor
-    public DecompileHistoryItem(String packageid, String packagename, String datetime){
-        this._packageid = packageid;
-        this._packagename = packagename;
-        this._datetime = datetime;
+
+    public DecompileHistoryItem(String packageID, String packageLabel, String date) {
+        this.packageID = packageID;
+        this.packageLabel = packageLabel;
+        this.date = date;
     }
-    // getting ID
-    public int getID(){
-        return this._id;
+
+    public DecompileHistoryItem(String packageID) {
+        this.packageID = packageID;
+        this.packageLabel = packageID;
+        this.date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH).format(new Date());
     }
-     
-    // setting id
-    public void setID(int id){
-        this._id = id;
+
+    public String getPackageID() {
+        return packageID;
     }
-     
-    // getting title
-    public String getPackageID(){
-        return this._packageid;
+
+    public void setPackageID(String packageID) {
+        this.packageID = packageID;
     }
-     
-    // setting name
-    public void setPackageID(String title){
-        this._packageid = title;
+
+    public String getPackageLabel() {
+        return packageLabel;
     }
-     
-    // getting alert
-    public String getPackageName(){
-        return this._packagename;
+
+    public void setPackageLabel(String packageLabel) {
+        this.packageLabel = packageLabel;
     }
-     
-    // setting alert
-    public void setPackageName(String alert){
-        this._packagename = alert;
+
+    public String getDate() {
+        return date;
     }
-    
- // getting datetime
-    public String getDatetime(){
-        return this._datetime;
+
+    public void setDate(String date) {
+        this.date = date;
     }
-     
-    // setting datetime
-    public void setDatetime(String datetime){
-        this._datetime = datetime;
-    }
-    
 }
