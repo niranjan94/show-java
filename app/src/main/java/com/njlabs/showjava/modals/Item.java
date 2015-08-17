@@ -1,5 +1,7 @@
 package com.njlabs.showjava.modals;
 
+import android.support.annotation.NonNull;
+
 public class Item implements Comparable<Item>{
     private String name;
     private String data;
@@ -34,7 +36,7 @@ public class Item implements Comparable<Item>{
     public String getImage() {
             return image;
     }
-    public int compareTo(Item o) {
+    public int compareTo(@NonNull Item o) {
             if(this.name != null)
                     return this.name.toLowerCase().compareTo(o.getName().toLowerCase());
             else
