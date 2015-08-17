@@ -11,8 +11,7 @@ import io.fabric.sdk.android.Fabric;
 
 public class MainApplication extends Application {
 	
-    public void onCreate() 
-    {
+    public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         FontsOverride.with(this);
