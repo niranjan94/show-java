@@ -10,51 +10,102 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
+    <LinearLayout
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
 
-    <RelativeLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@id/adView"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/adView">
+        android:id="@+id/linearLayout">
 
-        <com.github.clans.fab.FloatingActionMenu
-            android:id="@+id/menu"
+        <ImageView
+            android:layout_width="181dp"
+            android:layout_height="181dp"
+            android:layout_marginTop="8dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/showjava_logo"
+            android:layout_gravity="center_horizontal"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            card_view:cardUseCompatPadding="true"
+            card_view:cardElevation="1dp"
+            android:layout_gravity="center"
+            card_view:cardCornerRadius="4dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Welcome"
+                    android:textSize="35sp"
+                    android:textColor="@color/grey_700"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="tap the plus button to begin"
+                    android:textColor="@color/grey_700"
+                    android:layout_marginBottom="7dp"
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/menu"
+
+        android:layout_alignBottom="@+id/linearLayout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="6dp"
+        android:layout_marginBottom="4dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        fab:menu_fab_size="normal"
+        fab:menu_showShadow="true"
+        fab:menu_colorNormal="@color/accent"
+        fab:menu_colorPressed="@color/accent"
+        fab:menu_colorRipple="@color/accent"
+        fab:menu_icon="@drawable/fab_add"
+        fab:menu_backgroundColor="@android:color/transparent">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:menu_fab_size="normal"
-            fab:menu_showShadow="true"
-            fab:menu_colorNormal="#DA4336"
-            fab:menu_colorPressed="#E75043"
-            fab:menu_colorRipple="#99FFFFFF"
-            fab:menu_icon="@drawable/fab_add"
-            fab:menu_backgroundColor="@android:color/transparent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="4dp">
+            android:src="@drawable/ic_action_pick_sdcard"
+            fab:fab_size="normal"
+            android:onClick="OpenFilePicker"
+            fab:fab_label="Pick from sdcard" />
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/menu_item2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_pick_sdcard"
-                fab:fab_size="normal"
-                android:onClick="OpenFilePicker"
-                fab:fab_label="Pick from sdcard" />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_pick_installed"
+            fab:fab_size="normal"
+            android:onClick="OpenAppListing"
+            fab:fab_label="Pick from Installed" />
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/menu_item1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_pick_installed"
-                fab:fab_size="normal"
-                android:onClick="OpenAppListing"
-                fab:fab_label="Pick from Installed" />
-
-        </com.github.clans.fab.FloatingActionMenu>
-    </RelativeLayout>
+    </com.github.clans.fab.FloatingActionMenu>
 
     <include layout="@layout/adview" android:id="@+id/adView"/>
 </RelativeLayout>
