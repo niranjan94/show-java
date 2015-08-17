@@ -2,6 +2,7 @@ package com.njlabs.showjava.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.crashlytics.android.Crashlytics;
 import com.njlabs.showjava.R;
 import com.njlabs.showjava.modals.Item;
 import com.njlabs.showjava.utils.FileArrayAdapter;
@@ -26,34 +28,49 @@ public class JavaExplorer extends BaseActivity {
     private FileArrayAdapter adapter;
     ListView lv;
     String PackageID;
+    ActionBar actionBar;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	setupLayout(R.layout.activity_app_listing);
+
+        actionBar = getSupportActionBar();
+
         Bundle extras = getIntent().getExtras();
-        String JavSourceDir = null;
+        String JavSourceDir;
+
         if (extras != null) {
             JavSourceDir = extras.getString("java_source_dir");
             PackageID = extras.getString("package_id");
+
+            if(JavSourceDir != null){
+                lv=(ListView) findViewById(R.id.list);
+                currentDir = new File(JavSourceDir);
+                fill(currentDir);
+            } else {
+                finish();
+            }
         }
 
-        lv=(ListView) findViewById(R.id.list);
-		assert JavSourceDir != null;
-		currentDir = new File(JavSourceDir);
-        fill(currentDir);
+
     }
-    private void fill(File f)
-    {
+    private void fill(File f) {
+
     	File[]dirs = f.listFiles();
-    	if(f.getName().equalsIgnoreCase("java_output")) {
-            getSupportActionBar().setTitle("Viewing the source of "+PackageID);
-    	}
-    	else
-    	{
-            getSupportActionBar().setTitle(f.getName());
-    	}    	
-    	List<Item>dir = new ArrayList<Item>();
-    	List<Item>fls = new ArrayList<Item>();
+
+        if(actionBar!=null){
+            if(f.getName().equalsIgnoreCase("java_output")) {
+                actionBar.setTitle("Viewing the source of " + PackageID);
+            }
+            else
+            {
+                actionBar.setTitle(f.getName());
+            }
+        }
+
+    	List<Item>dir = new ArrayList<>();
+    	List<Item>fls = new ArrayList<>();
     	try
     	{
     		for(File ff: dirs)
@@ -63,7 +80,7 @@ public class JavaExplorer extends BaseActivity {
     			String date_modify = formater.format(lastModDate);
     			if(ff.isDirectory()){
     				File[] fbuf = ff.listFiles();
-    				int buf = 0;
+    				int buf;
     				if(fbuf != null){
     					buf = fbuf.length;
     				}
@@ -79,7 +96,7 @@ public class JavaExplorer extends BaseActivity {
     			}
     		}
     	} catch(Exception e) {
-
+            Crashlytics.logException(e);
     	}
     	Collections.sort(dir);
     	Collections.sort(fls);
@@ -89,8 +106,7 @@ public class JavaExplorer extends BaseActivity {
     	adapter = new FileArrayAdapter(JavaExplorer.this,R.layout.java_explorer_list_item,dir);
     	lv.setAdapter(adapter);
     	lv.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-			{
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Item o = adapter.getItem(position);
 		    	if(o.getImage().equalsIgnoreCase("directory_icon")||o.getImage().equalsIgnoreCase("directory_up")){
 		    		currentDir = new File(o.getPath());
@@ -105,23 +121,18 @@ public class JavaExplorer extends BaseActivity {
 		});
     }
 
-    private void onFileClick(Item o)
-    {
+    private void onFileClick(Item o) {
         Intent i = new Intent(getApplicationContext(), SourceViewer.class);
 		i.putExtra("file_path",currentDir.toString());
 		i.putExtra("file_name",o.getName());
 		startActivity(i);
     }
     @Override
-    public void onBackPressed()
-    {
-    	if(!currentDir.getName().equalsIgnoreCase("java_output"))
-    	{
+    public void onBackPressed() {
+    	if(!currentDir.getName().equalsIgnoreCase(PackageID)) {
     		currentDir = new File(currentDir.getParent());
     		fill(currentDir);
-    	}
-    	else
-    	{
+    	} else {
     		Intent returnIntent = new Intent();
     		setResult(RESULT_CANCELED, returnIntent);        
     		finish();
@@ -138,20 +149,12 @@ public class JavaExplorer extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-            	if(!currentDir.getName().equalsIgnoreCase("java_output"))
-            	{
-            		currentDir = new File(currentDir.getParent());
-            		fill(currentDir);
-            	}
-            	else
-            	{
-            		Intent returnIntent = new Intent();
-            		setResult(RESULT_CANCELED, returnIntent);        
-            		finish();
-            	}
+                Intent returnIntent = new Intent();
+                setResult(RESULT_CANCELED, returnIntent);
+                finish();
                 return true;
             case R.id.about_option:
-	        	Intent i=new Intent(getBaseContext(),About.class);
+	        	Intent i = new Intent(getBaseContext(),About.class);
 	        	startActivity(i);
 	        	return true;
         }

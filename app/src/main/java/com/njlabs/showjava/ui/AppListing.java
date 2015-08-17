@@ -136,9 +136,8 @@ public class AppListing extends BaseActivity {
                 if (holder.packageName.getText().toString().toLowerCase().contains(myApp.toLowerCase())) {
                     Toast.makeText(getApplicationContext(), "The application " + holder.packageName.getText().toString() + " cannot be decompiled !", Toast.LENGTH_SHORT).show();
                 } else {
-                    final File JavaOutputDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava" + "/" + holder.packageName.getText().toString() + "/java_output");
+                    final File JavaOutputDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + holder.packageName.getText().toString() + "");
                     if (JavaOutputDir.isDirectory()) {
-
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(AppListing.this, R.style.Theme_AppCompat_Dialog);
                         alertDialog.setTitle("This Package has already been decompiled");
                         alertDialog.setMessage("This application has already been decompiled once and the source exists on your sdcard. What would you like to do ?");

@@ -91,7 +91,6 @@ public class ProcessService extends IntentService {
         Ln.d("onHandleIntent ProcessService");
         Bundle extras = workIntent.getExtras();
         if (extras != null) {
-
             packageFilePath = extras.getString("package_file_path");
             Ln.d("package_file_path :"+packageFilePath);
             try {
@@ -118,7 +117,7 @@ public class ProcessService extends IntentService {
                 broadcastStatus("exit_process_on_error");
             }
 
-            sourceOutputDir = Environment.getExternalStorageDirectory()+"/ShowJava"+"/"+ packageName;
+            sourceOutputDir = Environment.getExternalStorageDirectory()+"/ShowJava/sources/"+ packageName;
             javaSourceOutputDir = sourceOutputDir + "/java";
 
             Ln.d(sourceOutputDir);
@@ -134,11 +133,11 @@ public class ProcessService extends IntentService {
     public void publishProgress(String progressText){
         switch (progressText) {
             case "start_activity": {
-                broadcastStatusWithPackageInfo(progressText, javaSourceOutputDir + "/", packageName);
+                broadcastStatusWithPackageInfo(progressText, sourceOutputDir, packageName);
                 break;
             }
             case "start_activity_with_error": {
-                broadcastStatusWithPackageInfo(progressText, javaSourceOutputDir + "/", packageName);
+                broadcastStatusWithPackageInfo(progressText, sourceOutputDir, packageName);
                 UIHandler.post(new ToastRunnable("Decompilation completed with errors. This incident has been reported to the developer."));
                 break;
             }
@@ -168,6 +167,7 @@ public class ProcessService extends IntentService {
     }
     public void broadcastStatusWithPackageInfo(String statusKey, String dir, String packId){
         sendNotification(statusKey,"");
+        Ln.d("DEBUGG "+dir);
         Intent localIntent = new Intent(Constants.PROCESS_BROADCAST_ACTION)
                 .putExtra(Constants.PROCESS_STATUS_KEY, statusKey)
                 .putExtra(Constants.PROCESS_DIR, dir)

@@ -1,6 +1,5 @@
 package com.njlabs.showjava.processor;
 
-import android.os.Environment;
 import android.util.Log;
 
 import com.googlecode.dex2jar.reader.DexFileReader;
@@ -29,6 +28,8 @@ public class JarExtractor extends ProcessServiceHelper {
         this.packageFilePath = processService.packageFilePath;
         this.packageName = processService.packageName;
         this.exceptionHandler = processService.exceptionHandler;
+        this.sourceOutputDir = processService.sourceOutputDir;
+        this.javaSourceOutputDir = processService.javaSourceOutputDir;
     }
 
     public void extract(){
@@ -132,8 +133,7 @@ public class JarExtractor extends ProcessServiceHelper {
         System.setOut(printStream);
         //////
 
-        File WorkingDirectory=new File(Environment.getExternalStorageDirectory() + "/ShowJava");
-        File PerAppWorkingDirectory=new File(WorkingDirectory + "/" + packageName);
+        File PerAppWorkingDirectory = new File(sourceOutputDir);
         File file = new File(PerAppWorkingDirectory+"/"+ packageName + ".jar");
 
         try

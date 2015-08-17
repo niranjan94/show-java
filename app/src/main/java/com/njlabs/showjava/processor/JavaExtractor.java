@@ -22,6 +22,8 @@ public class JavaExtractor extends ProcessServiceHelper {
         this.packageFilePath = processService.packageFilePath;
         this.packageName = processService.packageName;
         this.exceptionHandler = processService.exceptionHandler;
+        this.sourceOutputDir = processService.sourceOutputDir;
+        this.javaSourceOutputDir = processService.javaSourceOutputDir;
     }
 
     public void extract(){
@@ -29,9 +31,9 @@ public class JavaExtractor extends ProcessServiceHelper {
         broadcastStatus("jar2java");
         File JarInput;
 
-        Ln.d("jar location:" + processService.sourceOutputDir + "/" + packageName +".jar");
-        JarInput = new File(processService.sourceOutputDir+"/"+ packageName +".jar");
-        final File JavaOutputDir = new File(processService.javaSourceOutputDir);
+        Ln.d("jar location:" + sourceOutputDir + "/" + packageName +".jar");
+        JarInput = new File(sourceOutputDir+"/"+ packageName +".jar");
+        final File JavaOutputDir = new File(javaSourceOutputDir);
 
         if (!JavaOutputDir.isDirectory()) {
             JavaOutputDir.mkdirs();

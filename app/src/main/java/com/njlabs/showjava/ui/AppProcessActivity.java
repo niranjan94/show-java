@@ -139,7 +139,7 @@ public class AppProcessActivity extends BaseActivity {
             if (intent.hasExtra(Constants.PROCESS_STATUS_MESSAGE)) {
                 statusData = intent.getStringExtra(Constants.PROCESS_STATUS_MESSAGE);
             }
-            Ln.d("Received Intent "+statusKey);
+            Ln.d("Received Intent " + statusKey);
             switch (statusKey) {
                 case "optimise_dex_start":
                     CurrentStatus.setText("Optimising dex file");
@@ -156,17 +156,22 @@ public class AppProcessActivity extends BaseActivity {
                     break;
 
                 case "start_activity":
-                    Intent iOne = new Intent(getApplicationContext(), JavaExplorer.class);
-                    iOne.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
-                    iOne.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
-                    startActivityForResult(iOne, 1);
+                    if(intent.getStringExtra(Constants.PROCESS_DIR)!= null && intent.getStringExtra(Constants.PROCESS_PACKAGE_ID) != null){
+                        Intent iOne = new Intent(getApplicationContext(), JavaExplorer.class);
+                        iOne.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
+                        iOne.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
+                        startActivityForResult(iOne, 1);
+                    }
+
                     break;
 
                 case "start_activity_with_error":
-                    Intent iTwo = new Intent(getApplicationContext(), JavaExplorer.class);
-                    iTwo.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
-                    iTwo.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
-                    startActivityForResult(iTwo, 1);
+                    if(intent.getStringExtra(Constants.PROCESS_DIR)!= null && intent.getStringExtra(Constants.PROCESS_PACKAGE_ID) != null) {
+                        Intent iTwo = new Intent(getApplicationContext(), JavaExplorer.class);
+                        iTwo.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
+                        iTwo.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
+                        startActivityForResult(iTwo, 1);
+                    }
                     break;
 
                 case "exit_process_on_error":
@@ -198,7 +203,6 @@ public class AppProcessActivity extends BaseActivity {
 
     @SuppressWarnings("unused")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 String result = data.getStringExtra("result");

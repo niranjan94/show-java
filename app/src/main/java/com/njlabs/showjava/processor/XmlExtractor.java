@@ -27,6 +27,8 @@ public class XmlExtractor extends ProcessServiceHelper {
         this.packageName = processService.packageName;
         this.exceptionHandler = processService.exceptionHandler;
         this.apkParser = processService.apkParser;
+        this.sourceOutputDir = processService.sourceOutputDir;
+        this.javaSourceOutputDir = processService.javaSourceOutputDir;
     }
 
     public void extract() {
@@ -63,7 +65,7 @@ public class XmlExtractor extends ProcessServiceHelper {
     private void writeXML(String path) {
         try {
             String xml = apkParser.transBinaryXml(path);
-            String fileFolderPath = processService.sourceOutputDir + "/" + path.replace(FilenameUtils.getName(path), "");
+            String fileFolderPath = sourceOutputDir + "/" + path.replace(FilenameUtils.getName(path), "");
             File fileFolder = new File(fileFolderPath);
             if (!fileFolder.isDirectory()) {
                 fileFolder.mkdirs();
