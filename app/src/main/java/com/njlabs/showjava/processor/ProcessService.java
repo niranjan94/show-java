@@ -190,11 +190,9 @@ public class ProcessService extends IntentService {
             case "merging_classes":
                 processNotify.updateTitleText("Merging classes", "");
                 break;
-
             case "start_activity":
                 processNotify.cancel();
                 break;
-
             case "start_activity_with_error":
                 processNotify.cancel();
                 break;
@@ -202,6 +200,7 @@ public class ProcessService extends IntentService {
             case "exit_process_on_error":
                 processNotify.cancel();
                 break;
+
             case "finaldex":
                 processNotify.updateTitleText("Finishing optimisation", "");
                 break;

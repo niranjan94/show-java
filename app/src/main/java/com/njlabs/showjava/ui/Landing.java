@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class Landing extends BaseActivity {
 
 	ProgressDialog PackageLoadDialog;
@@ -189,7 +190,6 @@ public class Landing extends BaseActivity {
         protected void onPreExecute() {
 
         }
-
     }
 
 	@Override
@@ -231,11 +231,8 @@ public class Landing extends BaseActivity {
                     startActivity(i);
 
                 }
-
-
             }
         }
 
     }
-
 }
