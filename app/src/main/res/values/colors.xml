@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary">#3F51B5</color>
-    <color name="primary_dark">#1A237E</color>
+    <color name="primary_dark">#303F9F</color>
+    <color name="accent">#D32F2F</color>
 
     <color name="black">#000000</color>
     <color name="grey_900">#212121</color>
@@ -14,5 +15,4 @@
     <color name="grey_200">#EEEEEE</color>
     <color name="grey_100">#F5F5F5</color>
     <color name="white">#ffffff</color>
-
 </resources>
