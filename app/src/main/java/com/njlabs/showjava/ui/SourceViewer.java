@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,7 +58,7 @@ public class SourceViewer extends BaseActivity {
 
         if(actionBar!=null) {
             actionBar.setTitle(sourceFilename);
-            actionBar.setSubtitle(sourceFilePath);
+            actionBar.setSubtitle(sourceFilePath.replace(Environment.getExternalStorageDirectory()+"/ShowJava/sources/",""));
         }
 
     	FileInputStream fs;
