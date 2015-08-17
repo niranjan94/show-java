@@ -2,7 +2,7 @@
 
 ![ShowJava Banner v0.1](https://raw.githubusercontent.com/niranjan94/show-java/master/banner.png)
 
-An apk decompiler for android. Build on Android Studio 1.3 Preview with gradle 2.2.1.
+An apk decompiler for android. Build on Android Studio 1.4 Preview with gradle 2.4.
 
 > The current GitHub master branch is ahead of the Play Store version and maybe unstable/incomplete at some points.
 
