@@ -15,6 +15,8 @@ public class ProcessServiceHelper {
     Handler UIHandler;
     String packageFilePath;
     String packageName;
+    String sourceOutputDir;
+    String javaSourceOutputDir;
     ExceptionHandler exceptionHandler;
 
     public void broadcastStatus(String status){
@@ -47,7 +49,7 @@ public class ProcessServiceHelper {
         {
             String str = new String(data);
             str = str.replace("\n", "").replace("\r", "");
-            if(!str.equals("")&&str!=null&&!str.equals("")) {
+            if(!str.equals("") && !str.equals("")) {
                 broadcastStatus("progress_stream",str);
             }
         }
