@@ -193,8 +193,7 @@ public class Landing extends BaseActivity {
                             alreadyExists = true;
                         }
                     }
-
-                    if (alreadyExists == false) {
+                    if (!alreadyExists) {
                         DecompileHistoryItem newItem = new DecompileHistoryItem(directory, directory, DateFormat.getDateInstance().format(new Date()));
                         db.addHistoryItem(newItem);
                         listFromDb.add(newItem);
@@ -223,9 +222,8 @@ public class Landing extends BaseActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == FILEPICKER) {
             if (data != null) {
-                String fileSelected = data.getStringExtra("fileSelected");
+                String PackageDir = data.getStringExtra("fileSelected");
                 //Toast.makeText(this, fileSelected, Toast.LENGTH_SHORT).show();
-                String PackageDir = fileSelected;
                 String PackageName;
                 String PackageId;
 
@@ -240,9 +238,13 @@ public class Landing extends BaseActivity {
                             appInfo.sourceDir = PackageDir;
                             appInfo.publicSourceDir = PackageDir;
                         }
+						PackageName = info.applicationInfo.loadLabel(getPackageManager()).toString();
+						PackageId = info.packageName;
+
+					} else {
+                        PackageName = "";
+                        PackageId = "";
                     }
-                    PackageName = info.applicationInfo.loadLabel(getPackageManager()).toString();
-                    PackageId = info.packageName;
                 }
                 else
                 {
@@ -252,8 +254,8 @@ public class Landing extends BaseActivity {
 
                 Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
                 i.putExtra("package_id",PackageId);
-                i.putExtra("package_name",PackageName);
-                i.putExtra("package_dir",PackageDir);
+                i.putExtra("package_label",PackageName);
+                i.putExtra("package_file_path",PackageDir);
                 startActivity(i);
 
             }
