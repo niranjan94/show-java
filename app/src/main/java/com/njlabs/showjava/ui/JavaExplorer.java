@@ -26,6 +26,9 @@ public class JavaExplorer extends BaseActivity {
 
     private File currentDir;
     private FileArrayAdapter adapter;
+
+    private String rootDir;
+
     ListView lv;
     String PackageID;
     ActionBar actionBar;
@@ -45,8 +48,9 @@ public class JavaExplorer extends BaseActivity {
             PackageID = extras.getString("package_id");
 
             if(JavSourceDir != null){
-                lv=(ListView) findViewById(R.id.list);
+                lv = (ListView) findViewById(R.id.list);
                 currentDir = new File(JavSourceDir);
+                rootDir = currentDir.toString();
                 fill(currentDir);
             } else {
                 finish();
@@ -63,8 +67,7 @@ public class JavaExplorer extends BaseActivity {
             if(f.getName().equalsIgnoreCase("java_output")) {
                 actionBar.setTitle("Viewing the source of " + PackageID);
             }
-            else
-            {
+            else {
                 actionBar.setTitle(f.getName());
             }
         }
@@ -101,8 +104,10 @@ public class JavaExplorer extends BaseActivity {
     	Collections.sort(dir);
     	Collections.sort(fls);
     	dir.addAll(fls);
-    	if(!f.getName().equalsIgnoreCase("java_output"))
+
+    	if(!f.toString().equalsIgnoreCase(rootDir))
     		dir.add(0,new Item("..","Parent Directory","",f.getParent(),"directory_up"));
+
     	adapter = new FileArrayAdapter(JavaExplorer.this,R.layout.java_explorer_list_item,dir);
     	lv.setAdapter(adapter);
     	lv.setOnItemClickListener(new OnItemClickListener() {
@@ -129,7 +134,7 @@ public class JavaExplorer extends BaseActivity {
     }
     @Override
     public void onBackPressed() {
-    	if(!currentDir.getName().equalsIgnoreCase(PackageID)) {
+    	if(!currentDir.toString().equalsIgnoreCase(rootDir)) {
     		currentDir = new File(currentDir.getParent());
     		fill(currentDir);
     	} else {
@@ -140,7 +145,6 @@ public class JavaExplorer extends BaseActivity {
     }
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
