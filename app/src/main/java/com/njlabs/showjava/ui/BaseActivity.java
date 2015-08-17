@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -103,6 +104,10 @@ public class BaseActivity extends AppCompatActivity {
             status = true;
         }
         return status;
+    }
+
+    public boolean isLollipop(){
+        return Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP;
     }
 
     private void setupGoogleAds(){
