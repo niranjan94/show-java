@@ -37,12 +37,15 @@ android {
     }
     productFlavors {
         free {
+            resValue "string", "app_name", "Show Java"
+
             buildConfigField "boolean", "IS_FREE", "true"
             buildConfigField "boolean", "IS_PRO", "false"
         }
         pro {
             applicationId "com.njlabs.showjava.pro"
             resValue "string", "app_name", "Show Java Pro"
+
             buildConfigField "boolean", "IS_FREE", "false"
             buildConfigField "boolean", "IS_PRO", "true"
         }
