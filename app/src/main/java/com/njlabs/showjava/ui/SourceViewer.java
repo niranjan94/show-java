@@ -3,7 +3,9 @@ package com.njlabs.showjava.ui;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -22,6 +25,7 @@ import com.njlabs.showjava.R;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class SourceViewer extends BaseActivity {
 
@@ -88,10 +92,34 @@ public class SourceViewer extends BaseActivity {
             	ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
             	progress.setVisibility(View.GONE);
             }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                InputStream stream = inputStreamForAndroidResource(url);
+                if (stream != null) {
+                    return new WebResourceResponse("text/javascript", "utf-8", stream);
+                }
+                return super.shouldInterceptRequest(view, url);
+            }
+
+            private InputStream inputStreamForAndroidResource(String url) {
+                final String ANDROID_ASSET = "file:///android_asset/";
+
+                if (url.contains(ANDROID_ASSET)) {
+                    url = url.replaceFirst(ANDROID_ASSET, "");
+                    try {
+                        AssetManager assets = getAssets();
+                        Uri uri = Uri.parse(url);
+                        return assets.open(uri.getPath(), AssetManager.ACCESS_STREAMING);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
         });
 
-        webView.loadDataWithBaseURL("file:///android_asset/","<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/prettify.css\"><script src=\"file:///android_asset/run_prettify.js?skin=sons-of-obsidian\"></script></head><body bgcolor=\"#000000\"><pre class=\"prettyprint linenums\">"+sourceCodeText+"</pre></body></html>", "text/html", "UTF-8",null);
-	}
+        webView.loadDataWithBaseURL("file:///android_asset/","<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><script src=\"run_prettify.js?skin=sons-of-obsidian\"></script></head><body bgcolor=\"#000000\"><pre class=\"prettyprint linenums\">"+sourceCodeText+"</pre></body></html>", "text/html", "UTF-8",null);	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
