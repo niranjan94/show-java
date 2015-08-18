@@ -32,3 +32,5 @@ build/
 ShowJava.iml
 app/app.iml
 .iml
+
+crashlytics.properties
