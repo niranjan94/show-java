@@ -53,6 +53,15 @@ public class AppProcessActivity extends BaseActivity {
         if(getIntent().getDataString() == null || getIntent().getDataString().equals("")){
             appNameView.setText(getIntent().getStringExtra("package_label"));
             packageFilePath = getIntent().getStringExtra("package_file_path");
+
+            try {
+                ApkParser apkParser = new ApkParser(new File(packageFilePath));
+                appNameView.setText(apkParser.getApkMeta().getLabel());
+            } catch (IOException e) {
+                Ln.e(e);
+                exitWithError();
+            }
+            
         } else {
             packageFilePath = (new File(URI.create(getIntent().getDataString()))).getAbsolutePath();
             if (FilenameUtils.isExtension(packageFilePath, "apk")) {
