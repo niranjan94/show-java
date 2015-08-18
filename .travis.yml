@@ -8,7 +8,7 @@ android:
    
 env:
   global:
-    MALLOC_ARENA_MAX=1
+    MALLOC_ARENA_MAX=2
    
 jdk: oraclejdk7
 
