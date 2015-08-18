@@ -14,11 +14,11 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.R;
+import com.njlabs.showjava.modals.DecompileHistoryItem;
 import com.njlabs.showjava.ui.AppProcessActivity;
 import com.njlabs.showjava.ui.JavaExplorer;
 import com.njlabs.showjava.utils.ExceptionHandler;
@@ -29,6 +29,7 @@ import com.njlabs.showjava.utils.logging.Ln;
 import net.dongliu.apk.parser.ApkParser;
 
 import java.io.File;
+import java.util.List;
 
 @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
 public class ProcessService extends Service {
@@ -63,14 +64,12 @@ public class ProcessService extends Service {
 
     public void onCreate() {
         super.onCreate();
-
-        Log.d("Server", ">>>onCreate()");
     }
 
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Ln.d("onStartCommand ProcessService");
+        Ln.i("onStartCommand ProcessService");
 
         UIHandler = new Handler();
 
@@ -88,11 +87,11 @@ public class ProcessService extends Service {
     }
 
     protected void handleIntent(Intent workIntent) {
-        Ln.d("onHandleIntent ProcessService");
+        Ln.i("onHandleIntent ProcessService");
         Bundle extras = workIntent.getExtras();
         if (extras != null) {
             packageFilePath = extras.getString("package_file_path");
-            Ln.d("package_file_path :"+packageFilePath);
+            Ln.i("package_file_path :" + packageFilePath);
 
             (new Thread(new Runnable() {
                 @Override
@@ -101,7 +100,7 @@ public class ProcessService extends Service {
                         PackageInfo packageInfo = getPackageManager().getPackageArchiveInfo(packageFilePath, 0);
                         apkParser = new ApkParser(new File(packageFilePath));
 
-                        packageLabel = packageInfo.applicationInfo.loadLabel(getPackageManager()).toString();
+                        packageLabel = apkParser.getApkMeta().getLabel();
                         packageName = packageInfo.packageName;
 
                     } catch (Exception e) {
@@ -145,13 +144,13 @@ public class ProcessService extends Service {
     public void publishProgress(String progressText){
         switch (progressText) {
             case "start_activity": {
-                showCompletedNotification();
+                decompileDone();
                 broadcastStatusWithPackageInfo(progressText, sourceOutputDir, packageName);
                 kill();
                 break;
             }
             case "start_activity_with_error": {
-                showCompletedNotification();
+                decompileDone();
                 broadcastStatusWithPackageInfo(progressText, sourceOutputDir, packageName);
                 UIHandler.post(new ToastRunnable("Decompilation completed with errors. This incident has been reported to the developer."));
                 kill();
@@ -165,6 +164,28 @@ public class ProcessService extends Service {
             default:
                 break;
         }
+    }
+
+    private void decompileDone(){
+        showCompletedNotification();
+        (new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                List<DecompileHistoryItem> old = DecompileHistoryItem.find(DecompileHistoryItem.class, "packageID = ?", packageName);
+
+                if(old.size() > 0) {
+                    for (DecompileHistoryItem cursor : old) {
+                        cursor.delete();
+                    }
+                }
+
+                DecompileHistoryItem decompileHistoryItem = new DecompileHistoryItem();
+                decompileHistoryItem.setPackageID(packageName);
+                decompileHistoryItem.setPackageLabel(packageLabel);
+                decompileHistoryItem.save();
+            }
+        })).start();
     }
 
     private void showCompletedNotification(){
@@ -191,29 +212,25 @@ public class ProcessService extends Service {
         mNotifyManager.notify(2, mBuilder.build());
     }
 
-    public void broadcastStatus(String status){
+    public void broadcastStatus(String status) {
         sendNotification(status,"");
         Intent localIntent = new Intent(Constants.PROCESS_BROADCAST_ACTION)
                 .putExtra(Constants.PROCESS_STATUS_KEY, status);
-        Ln.d("Sending Intent "+status);
         sendBroadcast(localIntent);
     }
-    public void broadcastStatus(String statusKey, String statusData){
+    public void broadcastStatus(String statusKey, String statusData) {
         sendNotification(statusKey,statusData);
         Intent localIntent = new Intent(Constants.PROCESS_BROADCAST_ACTION)
                                     .putExtra(Constants.PROCESS_STATUS_KEY, statusKey)
                                     .putExtra(Constants.PROCESS_STATUS_MESSAGE, statusData);
-        Ln.d("Sending Intent "+statusKey);
         sendBroadcast(localIntent);
     }
-    public void broadcastStatusWithPackageInfo(String statusKey, String dir, String packId){
+    public void broadcastStatusWithPackageInfo(String statusKey, String dir, String packId) {
         sendNotification(statusKey,"");
-        Ln.d("DEBUGG " + dir);
         Intent localIntent = new Intent(Constants.PROCESS_BROADCAST_ACTION)
                 .putExtra(Constants.PROCESS_STATUS_KEY, statusKey)
                 .putExtra(Constants.PROCESS_DIR, dir)
                 .putExtra(Constants.PROCESS_PACKAGE_ID, packId);
-        Ln.d("Sending Intent "+statusKey);
         sendBroadcast(localIntent);
     }
 
@@ -292,7 +309,8 @@ public class ProcessService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        try{
+        try {
+            kill();
             processNotify.cancel();
         } catch (Exception e){
             Ln.e(e);
