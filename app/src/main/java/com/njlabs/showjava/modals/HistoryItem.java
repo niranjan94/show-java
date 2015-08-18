@@ -1,34 +1,42 @@
 package com.njlabs.showjava.modals;
 
-import com.orm.SugarRecord;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-@SuppressWarnings("unused")
-public class DecompileHistoryItem extends SugarRecord<DecompileHistoryItem>{
+import ollie.Model;
+import ollie.annotation.Column;
+import ollie.annotation.Table;
 
-    String packageID;
-    String packageLabel;
-    String date;
+@Table("notes")
+public class HistoryItem extends Model{
 
-    public DecompileHistoryItem() {
+    @Column("package_id")
+    public String packageID;
+
+    @Column("package_label")
+    public String packageLabel;
+
+    @Column("date")
+    public String date;
+
+    public HistoryItem() {
+
     }
 
-    public DecompileHistoryItem(String packageID, String packageLabel) {
+    public HistoryItem(String packageID, String packageLabel) {
         this.packageID = packageID;
         this.packageLabel = packageLabel;
         this.date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH).format(new Date());
     }
 
-    public DecompileHistoryItem(String packageID, String packageLabel, String date) {
+    public HistoryItem(String packageID, String packageLabel, String date) {
         this.packageID = packageID;
         this.packageLabel = packageLabel;
         this.date = date;
     }
 
-    public DecompileHistoryItem(String packageID) {
+    public HistoryItem(String packageID) {
         this.packageID = packageID;
         this.packageLabel = packageID;
         this.date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH).format(new Date());

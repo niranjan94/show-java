@@ -33,7 +33,7 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.njlabs.showjava.BuildConfig;
 import com.njlabs.showjava.R;
-import com.njlabs.showjava.modals.DecompileHistoryItem;
+import com.njlabs.showjava.modals.HistoryItem;
 import com.njlabs.showjava.utils.SourceInfo;
 import com.njlabs.showjava.utils.logging.Ln;
 import com.nononsenseapps.filepicker.FilePickerActivity;
@@ -44,12 +44,15 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.List;
 
+import ollie.query.Select;
+
+
 @SuppressWarnings("unused")
 public class Landing extends BaseActivity {
 
     private static final int FILE_PICKER = 0;
     ProgressDialog PackageLoadDialog;
-    List<DecompileHistoryItem> listFromDb;
+    List<HistoryItem> listFromDb;
 
     private LinearLayout welcomeLayout;
     private ListView listView;
@@ -118,7 +121,7 @@ public class Landing extends BaseActivity {
 
     }
 
-    public void SetupList(List<DecompileHistoryItem> AllPackages) {
+    public void SetupList(List<HistoryItem> AllPackages) {
 
         if(AllPackages.size()<1){
             listView.setVisibility(View.GONE);
@@ -126,7 +129,7 @@ public class Landing extends BaseActivity {
         } else {
             welcomeLayout.setVisibility(View.INVISIBLE);
 
-            ArrayAdapter<DecompileHistoryItem> decompileHistoryItemArrayAdapter = new ArrayAdapter<DecompileHistoryItem>(getBaseContext(), R.layout.history_list_item, AllPackages) {
+            ArrayAdapter<HistoryItem> decompileHistoryItemArrayAdapter = new ArrayAdapter<HistoryItem>(getBaseContext(), R.layout.history_list_item, AllPackages) {
                 @SuppressLint("InflateParams")
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -134,7 +137,7 @@ public class Landing extends BaseActivity {
                         convertView = getLayoutInflater().inflate(R.layout.history_list_item, null);
                     }
 
-                    DecompileHistoryItem pkg = getItem(position);
+                    HistoryItem pkg = getItem(position);
 
                     ViewHolder holder = new ViewHolder();
 
@@ -250,15 +253,15 @@ public class Landing extends BaseActivity {
         int position;
     }
 
-    private class HistoryLoader extends AsyncTask<String, String, List<DecompileHistoryItem>> {
+    private class HistoryLoader extends AsyncTask<String, String, List<HistoryItem>> {
 
         @Override
-        protected List<DecompileHistoryItem> doInBackground(String... params) {
-            return DecompileHistoryItem.listAll(DecompileHistoryItem.class);
+        protected List<HistoryItem> doInBackground(String... params) {
+            return Select.from(HistoryItem.class).fetch();
         }
 
         @Override
-        protected void onPostExecute(List<DecompileHistoryItem> AllPackages) {
+        protected void onPostExecute(List<HistoryItem> AllPackages) {
             listFromDb = AllPackages;
             SetupList(AllPackages);
             PackageLoadDialog.dismiss();
@@ -289,11 +292,10 @@ public class Landing extends BaseActivity {
         }
     }
 
-
-    private class ExistingHistoryLoader extends AsyncTask<String, String, List<DecompileHistoryItem>> {
+    private class ExistingHistoryLoader extends AsyncTask<String, String, List<HistoryItem>> {
 
         @Override
-        protected List<DecompileHistoryItem> doInBackground(String... params) {
+        protected List<HistoryItem> doInBackground(String... params) {
 
             cleanOldSources();
 
@@ -308,19 +310,19 @@ public class Landing extends BaseActivity {
             if (directories != null && directories.length > 0) {
                 for (String directory : directories) {
                     boolean alreadyExists = false;
-                    for (DecompileHistoryItem item : listFromDb) {
+                    for (HistoryItem item : listFromDb) {
                         if (directory.equalsIgnoreCase(item.getPackageID())) {
                             alreadyExists = true;
                         }
                     }
                     if (!alreadyExists) {
-                        DecompileHistoryItem newItem = new DecompileHistoryItem();
+                        HistoryItem newItem = new HistoryItem();
                         newItem.setPackageID(directory);
                         if ((new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + directory + "/info.json")).exists()) {
                             String label = SourceInfo.getLabel(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + directory);
                             newItem.setPackageLabel((label != null ? label : directory));
                         } else {
-                            newItem = new DecompileHistoryItem(directory, directory);
+                            newItem = new HistoryItem(directory, directory);
                         }
                         newItem.save();
                         listFromDb.add(newItem);
@@ -331,7 +333,7 @@ public class Landing extends BaseActivity {
         }
 
         @Override
-        protected void onPostExecute(List<DecompileHistoryItem> AllPackages) {
+        protected void onPostExecute(List<HistoryItem> AllPackages) {
             SetupList(AllPackages);
         }
 
