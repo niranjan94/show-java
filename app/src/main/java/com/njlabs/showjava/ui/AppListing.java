@@ -151,6 +151,7 @@ public class AppListing extends BaseActivity {
                                 i.putExtra("java_source_dir", sourceDir + "/");
                                 i.putExtra("package_id", holder.packageName.getText().toString());
                                 startActivity(i);
+                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                             }
                         });
 
@@ -165,6 +166,7 @@ public class AppListing extends BaseActivity {
                                 i.putExtra("package_label", holder.packageLabel.getText().toString());
                                 i.putExtra("package_file_path", holder.packageFilePath.getText().toString());
                                 startActivity(i);
+                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                             }
                         });
                         alertDialog.show();
@@ -174,6 +176,7 @@ public class AppListing extends BaseActivity {
                         i.putExtra("package_label", holder.packageLabel.getText().toString());
                         i.putExtra("package_file_path", holder.packageFilePath.getText().toString());
                         startActivity(i);
+                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
                 }
             }

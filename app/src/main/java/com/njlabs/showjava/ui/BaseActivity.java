@@ -67,11 +67,13 @@ public class BaseActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
 
             case R.id.about_option:
                 Intent i = new Intent(getBaseContext(),About.class);
                 startActivity(i);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
         }
 

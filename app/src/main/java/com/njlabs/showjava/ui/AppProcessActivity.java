@@ -172,6 +172,7 @@ public class AppProcessActivity extends BaseActivity {
                         iOne.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
                         iOne.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
                         startActivityForResult(iOne, 1);
+                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
 
                     break;
@@ -183,11 +184,13 @@ public class AppProcessActivity extends BaseActivity {
                         iTwo.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
                         iTwo.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
                         startActivityForResult(iTwo, 1);
+                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
                     break;
 
                 case "exit_process_on_error":
                     finish();
+                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     break;
 
                 case "finaldex":
@@ -206,6 +209,7 @@ public class AppProcessActivity extends BaseActivity {
                     break;
                 case "exit":
                     finish();
+                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     break;
                 default:
                     CurrentLine.setText(statusData);
@@ -225,6 +229,7 @@ public class AppProcessActivity extends BaseActivity {
             } else {
                 finish();
             }
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
     }
 
@@ -246,6 +251,7 @@ public class AppProcessActivity extends BaseActivity {
 
     private void exitWithError(){
         finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         Toast.makeText(baseContext,"There was an error initialising the decompiler with the app you selected.",Toast.LENGTH_LONG).show();
     }
 

@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import com.njlabs.showjava.R;
 import com.nononsenseapps.filepicker.AbstractFilePickerActivity;
 import com.nononsenseapps.filepicker.AbstractFilePickerFragment;
 
@@ -49,6 +50,7 @@ public class FilePicker extends AbstractFilePickerActivity<File> {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
         }
         return super.onOptionsItemSelected(item);

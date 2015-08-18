@@ -2,7 +2,6 @@ package com.njlabs.showjava.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -10,8 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -48,14 +45,14 @@ public class SourceViewer extends BaseActivity {
 
         if(Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH || Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 ){
             new AlertDialog.Builder(this)
-                    .setMessage("Source code cannot be displayed properly on devices running Android 4.0.x (Icecream Sandwich) due to a bug present in the operating system. But you can directly view the source code from the 'ShowJava' folder in your sdcard. Inconvenience is regretted.")
+                    .setMessage("Source code may not be displayed properly on devices running Android 4.0.x (Icecream Sandwich) due to a bug present in the operating system. But you can directly view the source code from the 'ShowJava' folder in your sdcard. Inconvenience is regretted.")
                     .setPositiveButton("Oh ! That Sucks !", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(getApplicationContext(), "yea ! I know :) Please update your phone.", Toast.LENGTH_SHORT).show();
-                            finish();
+                            Toast.makeText(getApplicationContext(), "yea ! I know :)", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
                         }
                     })
-                    .setCancelable(false)
+                    .setCancelable(true)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
@@ -121,23 +118,4 @@ public class SourceViewer extends BaseActivity {
 
         webView.loadDataWithBaseURL("file:///android_asset/","<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><script src=\"run_prettify.js?skin=sons-of-obsidian\"></script></head><body bgcolor=\"#000000\"><pre class=\"prettyprint linenums\">"+sourceCodeText+"</pre></body></html>", "text/html", "UTF-8",null);	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	        case android.R.id.home:
-	            finish();
-	            return true;
-	            
-	        case R.id.about_option:
-	        	Intent i=new Intent(getBaseContext(),About.class);
-	        	startActivity(i);
-	        	return true;
-	    }
-	    return super.onOptionsItemSelected(item);
-	}
 }

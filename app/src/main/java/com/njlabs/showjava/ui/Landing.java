@@ -173,6 +173,7 @@ public class Landing extends BaseActivity {
                     i.putExtra("java_source_dir", sourceDir + "/");
                     i.putExtra("package_id", holder.packageName.getText().toString());
                     startActivity(i);
+                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 }
             });
 
@@ -184,6 +185,7 @@ public class Landing extends BaseActivity {
     public void OpenAppListing(View v) {
         Intent i = new Intent(getApplicationContext(), AppListing.class);
         startActivity(i);
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     public void OpenFilePicker(View v) {
@@ -196,6 +198,7 @@ public class Landing extends BaseActivity {
         i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
 
         startActivityForResult(i, FILE_PICKER);
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     @Override
@@ -240,6 +243,7 @@ public class Landing extends BaseActivity {
                     i.putExtra("package_label", PackageName);
                     i.putExtra("package_file_path", PackageDir);
                     startActivity(i);
+                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
                 }
             }

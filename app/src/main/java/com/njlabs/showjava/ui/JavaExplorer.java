@@ -3,8 +3,6 @@ package com.njlabs.showjava.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -56,6 +54,7 @@ public class JavaExplorer extends BaseActivity {
                 fill(currentDir);
             } else {
                 finish();
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
         }
 
@@ -140,6 +139,7 @@ public class JavaExplorer extends BaseActivity {
 		i.putExtra("file_path",currentDir.toString());
 		i.putExtra("file_name",o.getName());
 		startActivity(i);
+		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
     @Override
     public void onBackPressed() {
@@ -150,27 +150,8 @@ public class JavaExplorer extends BaseActivity {
     		Intent returnIntent = new Intent();
     		setResult(RESULT_CANCELED, returnIntent);        
     		finish();
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     	}
     }
-    @Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent returnIntent = new Intent();
-                setResult(RESULT_CANCELED, returnIntent);
-                finish();
-                return true;
-            case R.id.about_option:
-	        	Intent i = new Intent(getBaseContext(),About.class);
-	        	startActivity(i);
-	        	return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }
