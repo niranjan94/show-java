@@ -12,6 +12,7 @@ public class Notify {
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
     int NOTIFICATION_ID;
+    long time = 0;
 
     public Notify(NotificationManager mNotifyManager, NotificationCompat.Builder mBuilder, int NOTIFICATION_ID) {
         this.mNotifyManager = mNotifyManager;
@@ -26,9 +27,13 @@ public class Notify {
     }
 
     public void updateText(String text){
-        mBuilder.setContentText(text);
-        mBuilder.setProgress(0,0,true);
-        mNotifyManager.notify(NOTIFICATION_ID,mBuilder.build());
+        long currentTime = System.currentTimeMillis();
+        if(currentTime - time >= 500){
+            mBuilder.setContentText(text);
+            mBuilder.setProgress(0,0,true);
+            mNotifyManager.notify(NOTIFICATION_ID,mBuilder.build());
+            time = currentTime;
+        }
     }
 
     public void updateTitleText(String title, String text){

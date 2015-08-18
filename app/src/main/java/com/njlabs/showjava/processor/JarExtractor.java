@@ -58,6 +58,7 @@ public class JarExtractor extends ProcessServiceHelper {
             UIHandler.post(new ToastRunnable("The app you selected cannot be decompiled. Please select another app."));
         }
         List<ClassDef> classes = new ArrayList<>();
+        broadcastStatus("optimising", "");
         for (ClassDef classDef : dexFile.getClasses()) {
             if (
                     classDef.getType().startsWith("Lcom/google/apps/")
@@ -84,9 +85,8 @@ public class JarExtractor extends ProcessServiceHelper {
                             &&!classDef.getType().startsWith("Landroid/")
                             &&!classDef.getType().startsWith("Lcom/google/android/gms/")
                             &&!classDef.getType().startsWith("Lcom/google/api/")) {
-
                 final String CurrentClass=classDef.getType();
-                broadcastStatus("optimising", CurrentClass.replaceAll("Processing ", ""));
+                broadcastStatus("optimising_class", CurrentClass.replaceAll("Processing ", ""));
                 classes.add(classDef);
             }
         }
