@@ -115,6 +115,7 @@ public class AppProcessActivity extends BaseActivity {
         killAllProcessorServices();
         Ln.d("startProcessorService AppProcessActivity");
         Intent mServiceIntent = new Intent(getContext(), ProcessService.class);
+        mServiceIntent.setAction(Constants.ACTION.START_PROCESS);
         mServiceIntent.putExtra("package_file_path", packageFilePath);
         startService(mServiceIntent);
     }
@@ -146,13 +147,14 @@ public class AppProcessActivity extends BaseActivity {
                     break;
                 case "optimising":
                     CurrentStatus.setText("Optimising dex file");
-                    CurrentLine.setText(statusData);
+                    CurrentLine.setText("");
                     break;
                 case "optimise_dex_finish":
                     CurrentStatus.setText("Finishing optimisation");
                     break;
                 case "merging_classes":
                     CurrentStatus.setText("Merging classes");
+                    CurrentLine.setText("");
                     break;
 
                 case "start_activity":
