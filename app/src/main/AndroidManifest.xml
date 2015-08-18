@@ -17,7 +17,7 @@
         tools:replace="android:icon"
         android:theme="@style/AppBaseTheme">
 
-        <meta-data android:name="DATABASE" android:value="show_java.db" />
+        <meta-data android:name="DATABASE" android:value="datastore.db" />
         <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="false" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.njlabs.showjava.modals" />
