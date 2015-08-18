@@ -166,6 +166,7 @@ public class AppProcessActivity extends BaseActivity {
                     break;
 
                 case "start_activity_with_error":
+                    Toast.makeText(baseContext,"An error occurred. Generated source may be incomplete.",Toast.LENGTH_SHORT).show();
                     if(intent.getStringExtra(Constants.PROCESS_DIR)!= null && intent.getStringExtra(Constants.PROCESS_PACKAGE_ID) != null) {
                         Intent iTwo = new Intent(getApplicationContext(), JavaExplorer.class);
                         iTwo.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
