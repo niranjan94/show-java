@@ -19,7 +19,7 @@
         android:layout_below="@id/toolbar"
         android:layout_above="@id/adView"
         android:layout_height="match_parent"
-        android:id="@+id/linearLayout">
+        android:id="@+id/welcome_layout">
 
         <ImageView
             android:layout_width="181dp"
@@ -68,10 +68,21 @@
         </android.support.v7.widget.CardView>
     </LinearLayout>
 
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/history_list"
+        android:scrollbarStyle="outsideOverlay"
+        android:divider="@null"
+        android:visibility="gone"
+        android:listSelector="@android:color/transparent"
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/adView" />
+
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menu"
 
-        android:layout_alignBottom="@+id/linearLayout"
+        android:layout_alignBottom="@+id/welcome_layout"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="6dp"
@@ -108,4 +119,7 @@
     </com.github.clans.fab.FloatingActionMenu>
 
     <include layout="@layout/adview" android:id="@+id/adView"/>
+
+
+
 </RelativeLayout>
