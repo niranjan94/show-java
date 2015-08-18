@@ -1,5 +1,6 @@
 package com.njlabs.showjava.processor;
 
+import com.crashlytics.android.Crashlytics;
 import com.njlabs.showjava.utils.SourceInfo;
 import com.njlabs.showjava.utils.logging.Ln;
 
@@ -48,7 +49,7 @@ public class JavaExtractor extends ProcessServiceHelper {
             options = getOptParser.parse(args, OptionsImpl.getFactory());
         }
         catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         }
 
         final DCCommonState dcCommonState = new DCCommonState(options);
@@ -66,7 +67,6 @@ public class JavaExtractor extends ProcessServiceHelper {
                     Ln.e(e);
                     processService.publishProgress("start_activity_with_error");
                 }
-                processService.publishProgress("start_activity");
             }
         }, "Jar to Java Thread", 20971520);
 
