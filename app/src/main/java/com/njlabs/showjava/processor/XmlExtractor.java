@@ -52,7 +52,7 @@ public class XmlExtractor extends ProcessServiceHelper {
                     zipFile.close();
                     writeManifest();
                     allDone();
-                } catch(Exception | StackOverflowError e) {
+                } catch (Exception | StackOverflowError e) {
                     processService.publishProgress("start_activity_with_error");
                 }
             }

@@ -51,8 +51,7 @@ public class JarExtractor extends ProcessServiceHelper {
 
     public void apkToDex(){
         DexFile dexFile = null;
-        try
-        {
+        try {
             dexFile = DexFileFactory.loadDexFile(packageFilePath, 19);
         } catch (Exception e){
             broadcastStatus("exit");
@@ -101,14 +100,12 @@ public class JarExtractor extends ProcessServiceHelper {
         broadcastStatus("merging_classes");
 
         dexFile = new ImmutableDexFile(classes);
-        try
-        {
+        try {
             Log.d("DEBUGGER","Start Writing");
             DexFileFactory.writeDexFile(PerAppWorkingDirectory+"/optimised_classes.dex", dexFile);
             Log.d("DEBUGGER","Writing done!");
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             broadcastStatus("exit");
             UIHandler.post(new ToastRunnable("The app you selected cannot be decompiled. Please select another app."));
         }
@@ -136,8 +133,7 @@ public class JarExtractor extends ProcessServiceHelper {
         File PerAppWorkingDirectory = new File(sourceOutputDir);
         File file = new File(PerAppWorkingDirectory+"/"+ packageName + ".jar");
 
-        try
-        {
+        try {
             DexFileReader reader = new DexFileReader(new File(PerAppWorkingDirectory+"/optimised_classes.dex"));
             Dex2jar.from(reader).reUseReg(reuseReg).topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
                     .optimizeSynchronized(optimizeSynchronized).printIR(printIR).verbose(verbose).to(file);
