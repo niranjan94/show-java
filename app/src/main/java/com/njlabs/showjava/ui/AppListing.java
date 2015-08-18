@@ -22,10 +22,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.njlabs.showjava.R;
 import com.njlabs.showjava.utils.logging.Ln;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -136,15 +140,15 @@ public class AppListing extends BaseActivity {
                 if (holder.packageName.getText().toString().toLowerCase().contains(myApp.toLowerCase())) {
                     Toast.makeText(getApplicationContext(), "The application " + holder.packageName.getText().toString() + " cannot be decompiled !", Toast.LENGTH_SHORT).show();
                 } else {
-                    final File JavaOutputDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + holder.packageName.getText().toString() + "");
-                    if (JavaOutputDir.isDirectory()) {
+                    final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + holder.packageName.getText().toString() + "");
+                    if (sourceDir.isDirectory()) {
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(AppListing.this, R.style.Theme_AppCompat_Dialog);
                         alertDialog.setTitle("This Package has already been decompiled");
                         alertDialog.setMessage("This application has already been decompiled once and the source exists on your sdcard. What would you like to do ?");
                         alertDialog.setPositiveButton("View Source", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
-                                i.putExtra("java_source_dir", JavaOutputDir + "/");
+                                i.putExtra("java_source_dir", sourceDir + "/");
                                 i.putExtra("package_id", holder.packageName.getText().toString());
                                 startActivity(i);
                             }
@@ -152,7 +156,11 @@ public class AppListing extends BaseActivity {
 
                         alertDialog.setNegativeButton("Decompile", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                JavaOutputDir.delete();
+                                try {
+                                    FileUtils.deleteDirectory(sourceDir);
+                                } catch (IOException e) {
+                                    Crashlytics.logException(e);
+                                }
                                 Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
                                 i.putExtra("package_label", holder.packageLabel.getText().toString());
                                 i.putExtra("package_file_path", holder.packageFilePath.getText().toString());
