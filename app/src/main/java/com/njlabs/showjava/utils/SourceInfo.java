@@ -58,4 +58,14 @@ public class SourceInfo {
             Ln.e(e);
         }
     }
+
+    public static String getLabel(String directory){
+        try{
+            File infoFile = new File(directory + "/info.json");
+            JSONObject json = new JSONObject(FileUtils.readFileToString(infoFile));
+            return json.getString("package_label");
+        } catch (IOException | JSONException e) {
+            return null;
+        }
+    }
 }
