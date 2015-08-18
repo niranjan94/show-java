@@ -15,6 +15,8 @@ import com.njlabs.showjava.R;
 import com.njlabs.showjava.modals.Item;
 import com.njlabs.showjava.utils.FileArrayAdapter;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.sql.Date;
 import java.text.DateFormat;
@@ -91,11 +93,21 @@ public class JavaExplorer extends BaseActivity {
     				String num_item = String.valueOf(buf);
     				if(buf == 0) num_item = num_item + " item";
     				else num_item = num_item + " items";
-    				dir.add(new Item(ff.getName(),num_item,date_modify,ff.getAbsolutePath(),"directory_icon"));
+    				dir.add(new Item(ff.getName(),num_item,date_modify,ff.getAbsolutePath(), "viewer_folder"));
     			}
-    			else
-    			{
-    				fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"file_icon"));
+    			else {
+                    String extension = FilenameUtils.getExtension(ff.getName());
+                    if(extension.equalsIgnoreCase("java")){
+                        fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"viewer_java"));
+                    } else if(extension.equalsIgnoreCase("xml")){
+                        fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"viewer_xml"));
+                    } else if(extension.equalsIgnoreCase("jar")){
+                        fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"viewer_jar"));
+                    } else if(extension.equalsIgnoreCase("json")){
+                        // DON'T ADD json
+                    } else {
+                        fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"viewer_summary"));
+                    }
     			}
     		}
     	} catch(Exception e) {
@@ -113,12 +125,11 @@ public class JavaExplorer extends BaseActivity {
     	lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Item o = adapter.getItem(position);
-		    	if(o.getImage().equalsIgnoreCase("directory_icon")||o.getImage().equalsIgnoreCase("directory_up")){
+		    	if(o.getImage().equalsIgnoreCase("viewer_folder")||o.getImage().equalsIgnoreCase("directory_up")){
 		    		currentDir = new File(o.getPath());
 		    		fill(currentDir);
 		    	}
-		    	else
-		    	{
+		    	else {
 		    		onFileClick(o);
 		    	}
 				
