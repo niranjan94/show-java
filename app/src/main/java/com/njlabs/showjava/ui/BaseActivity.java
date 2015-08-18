@@ -15,6 +15,7 @@ import android.view.View;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.njlabs.showjava.BuildConfig;
 import com.njlabs.showjava.R;
 
 @SuppressLint("Registered")
@@ -106,30 +107,40 @@ public class BaseActivity extends AppCompatActivity {
         return status;
     }
 
-    public boolean isLollipop(){
-        return Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP;
+    public boolean isLollipop() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    public boolean isPro() {
+        return BuildConfig.IS_PRO;
+    }
+
+    public boolean isFree() {
+        return BuildConfig.IS_FREE;
     }
 
     private void setupGoogleAds(){
         mAdView = (AdView) findViewById(R.id.adView);
-        if(mAdView != null){
+        if(mAdView != null) {
             mAdView.setVisibility(View.GONE);
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
-            mAdView.setAdListener(new AdListener() {
-                @Override
-                public void onAdFailedToLoad(int errorCode) {
-                    super.onAdFailedToLoad(errorCode);
+            if(isFree()){
+                AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+                mAdView.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        super.onAdFailedToLoad(errorCode);
+                        mAdView.setVisibility(View.GONE);
+                    }
+                    @Override
+                    public void onAdLoaded() {
+                        super.onAdLoaded();
+                        mAdView.setVisibility(View.VISIBLE);
+                    }
+                });
+                mAdView.loadAd(adRequest);
+                if(!checkDataConnection()){
                     mAdView.setVisibility(View.GONE);
                 }
-                @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                    mAdView.setVisibility(View.VISIBLE);
-                }
-            });
-            mAdView.loadAd(adRequest);
-            if(!checkDataConnection()){
-                mAdView.setVisibility(View.GONE);
             }
         }
     }

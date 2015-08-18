@@ -70,7 +70,7 @@ public class Landing extends BaseActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.navbar_header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName("Show Java").withEmail("Version " + BuildConfig.VERSION_NAME).setSelectable(false)
+                        new ProfileDrawerItem().withName(getResources().getString(R.string.app_name)).withEmail("Version " + BuildConfig.VERSION_NAME).setSelectable(false)
                 )
                 .withSelectionListEnabledForSingleProfile(false)
                 .build();

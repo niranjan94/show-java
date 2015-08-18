@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Show Java"
+                android:text="@string/app_name"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="25sp" />
 
@@ -98,7 +98,7 @@
                     android:id="@+id/ThirdPartySoftwaresList"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="• dex2jar\n• dexlib2\n• baksmali\n• smali\n• apache-commons-cli 1.3\n• apache-commons-io 2.4\n• guava 18.0\n• cfr 0.101\n• ANTLR 3.5.2\n• JSR-305 1.3.9"
+                    android:text="• dex2jar\n• dexlib2\n• baksmali\n• smali\n• apache-commons-cli 1.3\n• apache-commons-io 2.4\n• guava 18.0\n• cfr 0.102\n• ANTLR 3.5.2\n• JSR-305 1.3.9"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </LinearLayout>
