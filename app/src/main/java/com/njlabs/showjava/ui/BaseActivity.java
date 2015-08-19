@@ -85,6 +85,11 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+    }
+    @Override
     public void onResume() {
         super.onResume();
     }

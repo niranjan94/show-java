@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="android:windowAnimationStyle">@style/FadeAnimation.Activity</item>
     </style>
 
     <style name="SourceViewerTheme" parent="Theme.AppCompat.NoActionBar">
@@ -14,6 +15,7 @@
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/grey_900</item>
         <item name="android:typeface">sans</item>
+        <item name="android:windowAnimationStyle">@style/FadeAnimation.Activity</item>
     </style>
 
     <style name="FilePickerTheme" parent="NNF_BaseTheme.Light">
@@ -24,11 +26,18 @@
         <item name="alertDialogTheme">@style/FilePickerAlertDialogTheme</item>
 
         <item name="nnf_toolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:windowAnimationStyle">@style/FadeAnimation.Activity</item>
     </style>
 
     <style name="FilePickerAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="android:windowAnimationStyle">@style/FadeAnimation.Activity</item>
+    </style>
+
+    <style name="FadeAnimation.Activity" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/fadein</item>
+        <item name="android:windowExitAnimation">@anim/fadeout</item>
     </style>
 </resources>
