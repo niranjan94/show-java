@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/niranjan94/show-java.svg?branch=master)](https://travis-ci.org/niranjan94/show-java)
+[![Build Status](https://img.shields.io/travis/niranjan94/show-java.svg?style=flat-square)](https://travis-ci.org/niranjan94/show-java) [![License Info](https://img.shields.io/github/license/niranjan94/show-java.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store Info](https://img.shields.io/badge/Play_Store-v1.9.1-36B0C1.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava)
 
 ![ShowJava Banner v0.1](https://raw.githubusercontent.com/niranjan94/show-java/master/banner.png)
 
