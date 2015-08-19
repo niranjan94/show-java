@@ -13,7 +13,10 @@ public final class Constants {
     public static final int PROCESS_NOTIFICATION_ID = 1;
 
     public interface ACTION {
-        public static final String START_PROCESS = "com.njlabs.showjava.process.action.START";
-        public static final String STOP_PROCESS = "com.njlabs.showjava.process.action.STOP";
+        String START_PROCESS = "com.njlabs.showjava.process.action.START";
+        String STOP_PROCESS = "com.njlabs.showjava.process.action.STOP";
     }
+
+    public static final int STACK_SIZE = 20971520;
+
 }

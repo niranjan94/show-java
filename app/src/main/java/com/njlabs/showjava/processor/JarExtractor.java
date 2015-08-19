@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.googlecode.dex2jar.reader.DexFileReader;
 import com.googlecode.dex2jar.v3.Dex2jar;
+import com.njlabs.showjava.Constants;
 
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.iface.ClassDef;
@@ -43,7 +44,7 @@ public class JarExtractor extends ProcessServiceHelper {
                 startJavaExtractor();
             }
         };
-        Thread extractionThread = new Thread (group, runProcess, "DEX TO JAR EXTRACTION", 10485760);
+        Thread extractionThread = new Thread (group, runProcess, "DEX TO JAR EXTRACTION", Constants.STACK_SIZE);
         extractionThread.setPriority(Thread.MAX_PRIORITY);
         extractionThread.setUncaughtExceptionHandler(exceptionHandler);
         extractionThread.start();

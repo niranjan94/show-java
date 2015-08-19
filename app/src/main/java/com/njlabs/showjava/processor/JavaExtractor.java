@@ -1,6 +1,7 @@
 package com.njlabs.showjava.processor;
 
 import com.crashlytics.android.Crashlytics;
+import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.utils.SourceInfo;
 import com.njlabs.showjava.utils.logging.Ln;
 
@@ -68,7 +69,7 @@ public class JavaExtractor extends ProcessServiceHelper {
                     processService.publishProgress("start_activity_with_error");
                 }
             }
-        }, "Jar to Java Thread", 20971520);
+        }, "Jar to Java Thread", Constants.STACK_SIZE);
 
         javaExtractionThread.setPriority(Thread.MAX_PRIORITY);
         javaExtractionThread.setUncaughtExceptionHandler(exceptionHandler);

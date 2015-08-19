@@ -3,6 +3,7 @@ package com.njlabs.showjava.processor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.utils.SourceInfo;
 
 import net.dongliu.apk.parser.ApkParser;
@@ -61,7 +62,7 @@ public class XmlExtractor extends ProcessServiceHelper {
                     processService.publishProgress("start_activity_with_error");
                 }
             }
-        },"XML Extraction Thread", 20971520);
+        },"XML Extraction Thread", Constants.STACK_SIZE);
         xmlExtractionThread.setPriority(Thread.MAX_PRIORITY);
         xmlExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
         xmlExtractionThread.start();
