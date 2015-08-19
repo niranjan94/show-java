@@ -15,6 +15,7 @@ import java.io.StringWriter;
 /**
  * Created by Niranjan on 27-05-2015.
  */
+@SuppressWarnings({"FieldCanBeLocal", "StringBufferReplaceableByString"})
 public class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandler {
 
     private final Context myContext;
@@ -55,7 +56,7 @@ public class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandl
         errorReport.append(LINE_SEPARATOR);
         errorReport.append("\n************ FIRMWARE ************\n");
         errorReport.append("SDK: ");
-        errorReport.append(Build.VERSION.SDK);
+        errorReport.append(Build.VERSION.SDK_INT);
         errorReport.append(LINE_SEPARATOR);
         errorReport.append("Release: ");
         errorReport.append(Build.VERSION.RELEASE);

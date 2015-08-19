@@ -23,7 +23,7 @@ public final class FontsOverride {
 
     protected static void replaceFont(String staticTypefaceFieldName,  final Typeface newTypeface) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Map<String, Typeface> newMap = new HashMap<String, Typeface>();
+            Map<String, Typeface> newMap = new HashMap<>();
             newMap.put("sans-serif", newTypeface);
             try {
                 final Field staticField = Typeface.class

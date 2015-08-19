@@ -3,6 +3,7 @@ package com.njlabs.showjava.utils.logging;
 /**
  * Created by Niranjan on 12-07-2014.
  */
+@SuppressWarnings("unused")
 public final class Ln {
     /**
      * lnImpl is initially set to LnImpl() with sensible defaults, then replaced

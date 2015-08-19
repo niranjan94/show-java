@@ -9,6 +9,7 @@ import com.njlabs.showjava.utils.ExceptionHandler;
 import java.io.IOException;
 import java.io.OutputStream;
 
+@SuppressWarnings("unused")
 public class ProcessServiceHelper {
 
     ProcessService processService;

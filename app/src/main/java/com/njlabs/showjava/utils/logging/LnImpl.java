@@ -10,6 +10,7 @@ import java.util.Locale;
 /**
  * Created by Niranjan on 12-07-2014.
  */
+@SuppressWarnings("unused")
 public class LnImpl implements LnInterface {
     protected int minimumLogLevel = Log.VERBOSE;
     protected String packageName = "com.njlabs.showjava";

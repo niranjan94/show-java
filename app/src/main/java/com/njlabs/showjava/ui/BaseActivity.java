@@ -18,6 +18,7 @@ import com.google.android.gms.ads.AdView;
 import com.njlabs.showjava.BuildConfig;
 import com.njlabs.showjava.R;
 
+@SuppressWarnings("unused")
 @SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity {
 

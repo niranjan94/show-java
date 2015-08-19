@@ -116,6 +116,7 @@ public class AppListing extends BaseActivity {
                 holder.packageVersion = (TextView) convertView.findViewById(R.id.pkg_version);
                 holder.packageFilePath = (TextView) convertView.findViewById(R.id.pkg_dir);
                 holder.packageIcon = (ImageView) convertView.findViewById(R.id.pkg_img);
+                holder.position = position;
 
                 convertView.setTag(holder);
 
@@ -212,7 +213,7 @@ public class AppListing extends BaseActivity {
                     Ln.e(e);
                 }
                 int count = i + 1;
-                int progressVal = (count / totalPackages) * 100;
+
                 final PackageInfoHolder newInfo = new PackageInfoHolder();
                 newInfo.packageLabel = p.applicationInfo.loadLabel(getPackageManager()).toString();
 

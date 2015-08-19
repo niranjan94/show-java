@@ -2,6 +2,7 @@ package com.njlabs.showjava.modals;
 
 import android.support.annotation.NonNull;
 
+@SuppressWarnings("unused")
 public class Item implements Comparable<Item>{
     private String name;
     private String data;

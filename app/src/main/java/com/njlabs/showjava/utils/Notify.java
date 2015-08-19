@@ -7,6 +7,7 @@ import android.support.v4.app.NotificationCompat;
 /**
  * Created by Niranjan on 24-05-2015.
  */
+@SuppressWarnings("unused")
 public class Notify {
 
     NotificationManager mNotifyManager;

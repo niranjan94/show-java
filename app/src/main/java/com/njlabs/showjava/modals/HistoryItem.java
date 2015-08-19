@@ -8,6 +8,7 @@ import ollie.Model;
 import ollie.annotation.Column;
 import ollie.annotation.Table;
 
+@SuppressWarnings("unused")
 @Table("notes")
 public class HistoryItem extends Model{
 

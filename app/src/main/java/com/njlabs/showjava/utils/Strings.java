@@ -19,6 +19,7 @@ import java.util.Map;
 /**
  * Created by Niranjan on 12-07-2014.
  */
+@SuppressWarnings("unused")
 public final class Strings {
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
@@ -59,6 +60,7 @@ public final class Strings {
         return buffer.toString();
     }
 
+    @SafeVarargs
     public static <T> String joinAnd(final String delimiter, final String lastDelimiter, final T... objs) {
         return joinAnd(delimiter, lastDelimiter, Arrays.asList(objs));
     }
@@ -82,6 +84,7 @@ public final class Strings {
         return buffer.toString();
     }
 
+    @SafeVarargs
     public static <T> String join(final String delimiter, final T... objects) {
         return join(delimiter, Arrays.asList(objects));
     }
@@ -198,7 +201,7 @@ public final class Strings {
         if (nameValuePairs.length % 2 != 0)
             throw new InvalidParameterException("You must include one value for each parameter");
 
-        final HashMap<String, String> map = new HashMap<String, String>(nameValuePairs.length / 2);
+        final HashMap<String, String> map = new HashMap<>(nameValuePairs.length / 2);
         for (int i = 0; i < nameValuePairs.length; i += 2)
             map.put(Strings.toString(nameValuePairs[i]), Strings.toString(nameValuePairs[i + 1]));
 

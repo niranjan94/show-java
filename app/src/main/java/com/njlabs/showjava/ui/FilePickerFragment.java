@@ -39,7 +39,8 @@ public class FilePickerFragment extends com.nononsenseapps.filepicker.FilePicker
      */
     public File getBackTop() {
         if (getArguments().containsKey(KEY_START_PATH)) {
-            return getPath(getArguments().getString(KEY_START_PATH));
+            String keyStartPath = getArguments().getString(KEY_START_PATH);
+            return getPath((keyStartPath!=null?keyStartPath:"/"));
         } else {
             return new File("/");
         }

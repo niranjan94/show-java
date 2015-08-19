@@ -49,6 +49,7 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
             ImageView fileIconView = (ImageView) v.findViewById(R.id.file_icon);
             String uri = "drawable/" + o.getImage();
             int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
+            //noinspection deprecation
             Drawable image = context.getResources().getDrawable(imageResource);
             fileIconView.setImageDrawable(image);
 
