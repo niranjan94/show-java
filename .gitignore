@@ -30,6 +30,7 @@ Thumbs.db
 .gradle
 build/
 ShowJava.iml
+/app/src/pro
 app/app.iml
 .iml
 
