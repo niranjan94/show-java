@@ -60,14 +60,16 @@ public class JavaExtractor extends ProcessServiceHelper {
         Thread javaExtractionThread = new Thread(group, new Runnable(){
             @Override
             public void run(){
+                boolean javaError = false;
                 try {
                     Main.doJar(dcCommonState, path);
-                    startXMLExtractor();
                 }
                 catch(Exception | StackOverflowError e) {
                     Ln.e(e);
-                    processService.publishProgress("start_activity_with_error");
+                    javaError = true;
                 }
+                startXMLExtractor(!javaError);
+
             }
         }, "Jar to Java Thread", Constants.STACK_SIZE);
 
@@ -76,8 +78,8 @@ public class JavaExtractor extends ProcessServiceHelper {
         javaExtractionThread.start();
     }
 
-    private void startXMLExtractor(){
-        SourceInfo.setjavaSourceStatus(processService,true);
+    private void startXMLExtractor(boolean hasJava){
+        SourceInfo.setjavaSourceStatus(processService, hasJava);
         ((new XmlExtractor(processService))).extract();
     }
 }

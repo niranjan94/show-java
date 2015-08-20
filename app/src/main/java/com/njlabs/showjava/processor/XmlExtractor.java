@@ -3,6 +3,7 @@ package com.njlabs.showjava.processor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.crashlytics.android.Crashlytics;
 import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.utils.SourceInfo;
 
@@ -79,7 +80,7 @@ public class XmlExtractor extends ProcessServiceHelper {
             }
             FileUtils.writeStringToFile(new File(fileFolderPath + FilenameUtils.getName(path)), xml);
         } catch (IOException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
@@ -106,18 +107,18 @@ public class XmlExtractor extends ProcessServiceHelper {
                 out = new FileOutputStream(sourceOutputDir + "/icon.png");
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             } catch (Exception e) {
-                e.printStackTrace();
+                Crashlytics.logException(e);
             } finally {
                 try {
                     if (out != null) {
                         out.close();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Crashlytics.logException(e);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 }
