@@ -77,15 +77,21 @@ android {
 }
 
 dependencies {
+    // MULTI-DEX SUPPORT FOR PRE LOLLIPOP
     compile 'com.android.support:multidex:+'
+
+    // ANDROID SUPPORT LIBRARIES
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.android.support:cardview-v7:+'
+
+    // APACHE COMMONS LIBRARIES
+    compile 'commons-cli:commons-cli:1.2'
+    compile 'commons-io:commons-io:2.4'
+
+    // DEX2JAR AND IT's DEPENDENCIES
     compile 'com.google.guava:guava:18.0'
+    compile 'asm:asm-all:3.3.1'
     compile files('libs/antlr-3.1.1.jar')
-    compile files('libs/asm-all-3.3.1.jar')
-    compile files('libs/cfr_0_102.jar')
-    compile files('libs/commons-cli-1.2.jar')
-    compile files('libs/commons-io-2.4.jar')
     compile files('libs/dex-ir-1.12.jar')
     compile files('libs/dex-reader-1.15.jar')
     compile files('libs/dex-tools-0.0.9.15.jar')
@@ -94,17 +100,33 @@ dependencies {
     compile files('libs/jar-rename-1.6.jar')
     compile files('libs/jasmin-p2.5.jar')
     compile files('libs/jsr305-1.3.9.jar')
+
+    // CLASS FILE READER - JAVA DECOMPILER
+    compile files('libs/cfr_0_102.jar')
+
+    // APK PARSER AND BINARY XML DECODER
+    compile 'net.dongliu:apk-parser:2.0.15'
+
+    // GOOGLE PLAY SERVICES ADS SDK
     compile 'com.google.android.gms:play-services-ads:+'
+
+    // CRASHLYTICS BUG REPORTING SDK
     compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
         transitive = true;
     }
+
+    // FLOATING ACTION BUTTON SUPPORT LIBRARY
     compile 'com.github.clans:fab:1.5.5'
-    compile 'net.dongliu:apk-parser:2.0.15'
+
+    // MATERIAL DESIGN STYLED DRAWER
     compile('com.mikepenz:materialdrawer:3.1.2@aar') {
         transitive = true
     }
+
+    // FILE PICKER
     compile 'com.nononsenseapps:filepicker:2.2.3'
 
+    // OLLIE RX-JAVA BASED ORM LIBRARY
     compile 'com.michaelpardo:ollie:0.3.1'
     provided 'com.michaelpardo:ollie-compiler:0.3.1'
 }
