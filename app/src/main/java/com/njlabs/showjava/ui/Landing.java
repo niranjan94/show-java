@@ -85,8 +85,7 @@ public class Landing extends BaseActivity {
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName("Home").withIcon(R.drawable.ic_action_home).withCheckable(false),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName("About the app").withIcon(R.drawable.ic_action_info).withCheckable(false),
-                        new PrimaryDrawerItem().withName("Settings").withIcon(R.drawable.ic_action_settings).withCheckable(false)
+                        new PrimaryDrawerItem().withName("About the app").withIcon(R.drawable.ic_action_info).withCheckable(false)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -95,10 +94,6 @@ public class Landing extends BaseActivity {
                             case 2:
                                 startActivity(new Intent(baseContext, About.class));
                                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-                                break;
-                            case 3:
-                                //startActivity(new Intent(baseContext, SettingsActivity.class));
-                                //overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                                 break;
                         }
                         return false;
