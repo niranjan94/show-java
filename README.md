@@ -22,9 +22,8 @@ This is a Java Decompiler that extracts the .java source code from an APK( Andro
 - Each decompiled source file has commented references to classes that could not be decompiled
 
 ## Know Issues ##
-1. Does not display the source code properly on devices running 4.0.x (Icecream Sandwich) due to an internal bug in Android.
-1. Does not work with system applications in most of the phones (especially one's that are not de-odexed)
-1. java.lang.OutOfMemoryError crashes when decompiling large apps on a mobile phone with low ram and Java VM Heap space.
+1. Does not work with system applications in most of the phones (especially ones that are not de-odexed)
+2. java.lang.OutOfMemoryError crashes when decompiling large apps on a mobile phone with low ram and Java VM Heap space.
 
 ## Open Source License ##
 
