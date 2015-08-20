@@ -1,5 +1,6 @@
 package com.njlabs.showjava.processor;
 
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -81,8 +82,27 @@ public class ProcessService extends Service {
             handleIntent(intent);
         } else if (intent.getAction().equals(Constants.ACTION.STOP_PROCESS)) {
             Ln.i("Received Stop Foreground Intent");
+
             stopForeground(true);
+
+            try{
+                NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotifyManager.cancel(Constants.PROCESS_NOTIFICATION_ID);
+                ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+                List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
+                for (ActivityManager.RunningAppProcessInfo next : runningAppProcesses) {
+                    String processName = getPackageName() + ":service";
+                    if (next.processName.equals(processName)) {
+                        android.os.Process.killProcess(next.pid);
+                        break;
+                    }
+                }
+            } catch (Exception e){
+                Ln.e(e);
+            }
+
             stopSelf();
+
         }
 
         return START_NOT_STICKY;
@@ -205,7 +225,7 @@ public class ProcessService extends Service {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setContentTitle(packageLabel+" has been decompiled.")
                 .setContentText("Tap to browse source")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.stat_action_done)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentIntent(resultPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -284,6 +304,7 @@ public class ProcessService extends Service {
 
         Intent stopIntent = new Intent(this, ProcessService.class);
         stopIntent.setAction(Constants.ACTION.STOP_PROCESS);
+
         PendingIntent pendingStopIntent = PendingIntent.getService(this, 0, stopIntent, 0);
 
         NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -291,7 +312,7 @@ public class ProcessService extends Service {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setContentTitle("Decompiling")
                 .setContentText("Processing the apk")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.stat_action_running)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setOngoing(true)
                 .addAction(R.drawable.ic_action_kill, "Stop decompiler", pendingStopIntent)
