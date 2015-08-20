@@ -51,8 +51,9 @@ import ollie.query.Select;
 public class Landing extends BaseActivity {
 
     private static final int FILE_PICKER = 0;
-    ProgressDialog PackageLoadDialog;
-    List<HistoryItem> listFromDb;
+    private ProgressDialog PackageLoadDialog;
+    private List<HistoryItem> listFromDb;
+    private boolean needsToCheckExisting = true;
 
     private LinearLayout welcomeLayout;
     private ListView listView;
@@ -109,11 +110,8 @@ public class Landing extends BaseActivity {
         PackageLoadDialog.setCanceledOnTouchOutside(false);
         PackageLoadDialog.setMessage("Loading Decompile History ...");
 
-        HistoryLoader runner = new HistoryLoader();
-        runner.execute();
-
-
-
+        HistoryLoader historyLoader = new HistoryLoader();
+        historyLoader.execute();
     }
 
     public void SetupList(List<HistoryItem> AllPackages) {
@@ -197,11 +195,6 @@ public class Landing extends BaseActivity {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == FILE_PICKER) {
             if (data != null) {
@@ -232,6 +225,7 @@ public class Landing extends BaseActivity {
                         PackageName = "";
                         PackageId = "";
                     }
+
                     Ln.d(PackageName + " " + PackageId);
                     Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
                     i.putExtra("package_id", PackageId);
@@ -239,7 +233,6 @@ public class Landing extends BaseActivity {
                     i.putExtra("package_file_path", PackageDir);
                     startActivity(i);
                     overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-
                 }
             }
         }
@@ -264,8 +257,13 @@ public class Landing extends BaseActivity {
             listFromDb = AllPackages;
             SetupList(AllPackages);
             PackageLoadDialog.dismiss();
-            ExistingHistoryLoader runner = new ExistingHistoryLoader();
-            runner.execute();
+
+            if(needsToCheckExisting){
+                ExistingHistoryLoader runner = new ExistingHistoryLoader();
+                runner.execute();
+            } else {
+                needsToCheckExisting = true;
+            }
         }
 
         @Override
@@ -288,6 +286,8 @@ public class Landing extends BaseActivity {
                     file.delete();
                 }
             }
+        } else {
+            dir.mkdirs();
         }
     }
 
@@ -299,6 +299,9 @@ public class Landing extends BaseActivity {
             cleanOldSources();
 
             File file = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources");
+            if(!file.exists()){
+                file.mkdirs();
+            }
             String[] directories = file.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File current, String name) {
@@ -328,17 +331,51 @@ public class Landing extends BaseActivity {
                     }
                 }
             }
+
+            cleanupDatabase(directories);
+
             return listFromDb;
         }
 
         @Override
         protected void onPostExecute(List<HistoryItem> AllPackages) {
             SetupList(AllPackages);
+            rerunHistoryLoader();
         }
 
         @Override
         protected void onPreExecute() {
 
         }
+
+        private void cleanupDatabase(String[] directories) {
+            int[] positions;
+            for (HistoryItem item : listFromDb) {
+                boolean exists = false;
+                if (directories != null && directories.length > 0) {
+                    for (String directory : directories) {
+                        if (directory.equalsIgnoreCase(item.getPackageID())) {
+                            exists = true;
+                        }
+                    }
+                }
+                if (!exists) {
+                    item.delete();
+                }
+            }
+        }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        rerunHistoryLoader();
+    }
+
+    private void rerunHistoryLoader(){
+        needsToCheckExisting = false;
+        HistoryLoader historyLoaderTwo = new HistoryLoader();
+        historyLoaderTwo.execute();
+    }
+
 }
