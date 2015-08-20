@@ -23,6 +23,8 @@ import java.util.List;
 @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
 public class JarExtractor extends ProcessServiceHelper {
 
+    ArrayList<String> ignoredLibs;
+
     public JarExtractor(ProcessService processService) {
         this.processService = processService;
         this.UIHandler = processService.UIHandler;
@@ -31,62 +33,75 @@ public class JarExtractor extends ProcessServiceHelper {
         this.exceptionHandler = processService.exceptionHandler;
         this.sourceOutputDir = processService.sourceOutputDir;
         this.javaSourceOutputDir = processService.javaSourceOutputDir;
+        ignoredLibs = new ArrayList<>();
     }
 
-    public void extract(){
+    public void extract() {
         ThreadGroup group = new ThreadGroup("DEX TO JAR EXTRACTION");
         broadcastStatus("optimise_dex_start");
-        Runnable runProcess = new Runnable(){
+        Runnable runProcess = new Runnable() {
             @Override
-            public void run(){
+            public void run() {
                 apkToDex();
                 dexToJar();
                 startJavaExtractor();
             }
         };
-        Thread extractionThread = new Thread (group, runProcess, "DEX TO JAR EXTRACTION", Constants.STACK_SIZE);
+        Thread extractionThread = new Thread(group, runProcess, "DEX TO JAR EXTRACTION", Constants.STACK_SIZE);
         extractionThread.setPriority(Thread.MAX_PRIORITY);
         extractionThread.setUncaughtExceptionHandler(exceptionHandler);
         extractionThread.start();
     }
 
-    public void apkToDex(){
+    public void apkToDex() {
         DexFile dexFile = null;
         try {
             dexFile = DexFileFactory.loadDexFile(packageFilePath, 19);
-        } catch (Exception e){
+        } catch (Exception e) {
             broadcastStatus("exit");
             UIHandler.post(new ToastRunnable("The app you selected cannot be decompiled. Please select another app."));
         }
         List<ClassDef> classes = new ArrayList<>();
         broadcastStatus("optimising", "");
+
         for (ClassDef classDef : dexFile.getClasses()) {
             if (
-                    classDef.getType().startsWith("Lcom/google/apps/")
-                            ||!classDef.getType().startsWith("Landroid/support/")
-                            &&!classDef.getType().startsWith("Lcom/onemarker/")
-                            &&!classDef.getType().startsWith("Lcom/androidquery/")
-                            &&!classDef.getType().startsWith("Lcom/parse/")
-                            &&!classDef.getType().startsWith("Lcom/android/")
-                            &&!classDef.getType().startsWith("Lcom/actionbarsherlock/")
-                            &&!classDef.getType().startsWith("Lorg/apache/")
-                            &&!classDef.getType().startsWith("Lorg/acra/")
-                            &&!classDef.getType().startsWith("Ljavax/")
-                            &&!classDef.getType().startsWith("Lorg/joda/")
-                            &&!classDef.getType().startsWith("Lorg/antlr/")
-                            &&!classDef.getType().startsWith("Ljunit/")
-                            &&!classDef.getType().startsWith("Lorg/codehaus/jackson/")
-                            &&!classDef.getType().startsWith("Lcom/fasterxml/")
-                            &&!classDef.getType().startsWith("Lcom/google/")
-                            &&!classDef.getType().startsWith("Lnet/sourceforge/")
-                            &&!classDef.getType().startsWith("Lorg/achartengine/")
-                            &&!classDef.getType().startsWith("Lcom/bugsense/")
-                            &&!classDef.getType().startsWith("Lorg/andengine/")
-                            &&!classDef.getType().startsWith("Lcom/inmobi/")
-                            &&!classDef.getType().startsWith("Landroid/")
-                            &&!classDef.getType().startsWith("Lcom/google/android/gms/")
-                            &&!classDef.getType().startsWith("Lcom/google/api/")) {
-                final String CurrentClass=classDef.getType();
+                    !classDef.getType().startsWith("Lcom/google/apps/")
+                            && !classDef.getType().startsWith("Landroid/")
+                            && !classDef.getType().startsWith("Lcom/android/")
+                            && !classDef.getType().startsWith("Lcom/google/android/gms/")
+                            && !classDef.getType().startsWith("Lcom/google/common/")
+                            && !classDef.getType().startsWith("Lcom/google/auto/")
+                            && !classDef.getType().startsWith("Lcom/google/android/vending/")
+
+                            && !classDef.getType().startsWith("Lretrofit")
+                            && !classDef.getType().startsWith("Lorg/parceler/")
+                            && !classDef.getType().startsWith("Lbutterknife")
+                            && !classDef.getType().startsWith("Lcom/loopj/android/")
+                            && !classDef.getType().startsWith("Lorg/objectweb/asm/")
+                            && !classDef.getType().startsWith("Lcom/crashlytics/")
+                            && !classDef.getType().startsWith("Lio/fabric/sdk/")
+                            && !classDef.getType().startsWith("Lcom/androidquery/")
+                            && !classDef.getType().startsWith("Lcom/parse/")
+                            && !classDef.getType().startsWith("Lcom/actionbarsherlock/")
+                            && !classDef.getType().startsWith("Lorg/apache/")
+                            && !classDef.getType().startsWith("Lorg/acra/")
+                            && !classDef.getType().startsWith("Ljavax/")
+                            && !classDef.getType().startsWith("Lorg/joda/")
+                            && !classDef.getType().startsWith("Lorg/antlr/")
+                            && !classDef.getType().startsWith("Ljunit/")
+                            && !classDef.getType().startsWith("Lorg/codehaus/jackson/")
+                            && !classDef.getType().startsWith("Lcom/fasterxml/")
+                            && !classDef.getType().startsWith("Lnet/sourceforge/")
+                            && !classDef.getType().startsWith("Lorg/achartengine/")
+                            && !classDef.getType().startsWith("Lcom/bugsense/")
+                            && !classDef.getType().startsWith("Lorg/andengine/")
+                            && !classDef.getType().startsWith("Lcom/inmobi/")
+                    )
+
+            {
+
+                final String CurrentClass = classDef.getType();
                 broadcastStatus("optimising_class", CurrentClass.replaceAll("Processing ", ""));
                 classes.add(classDef);
             }
@@ -102,16 +117,16 @@ public class JarExtractor extends ProcessServiceHelper {
 
         dexFile = new ImmutableDexFile(classes);
         try {
-            Log.d("DEBUGGER","Start Writing");
-            DexFileFactory.writeDexFile(PerAppWorkingDirectory+"/optimised_classes.dex", dexFile);
-            Log.d("DEBUGGER","Writing done!");
-        }
-        catch (IOException e) {
+            Log.d("DEBUGGER", "Start Writing");
+            DexFileFactory.writeDexFile(PerAppWorkingDirectory + "/optimised_classes.dex", dexFile);
+            Log.d("DEBUGGER", "Writing done!");
+        } catch (IOException e) {
             broadcastStatus("exit");
             UIHandler.post(new ToastRunnable("The app you selected cannot be decompiled. Please select another app."));
         }
     }
-    public void dexToJar(){
+
+    public void dexToJar() {
         Log.i("STATUS", "Jar Extraction Started");
 
         broadcastStatus("dex2jar");
@@ -132,23 +147,25 @@ public class JarExtractor extends ProcessServiceHelper {
         //////
 
         File PerAppWorkingDirectory = new File(sourceOutputDir);
-        File file = new File(PerAppWorkingDirectory+"/"+ packageName + ".jar");
+        File file = new File(PerAppWorkingDirectory + "/" + packageName + ".jar");
 
         try {
-            DexFileReader reader = new DexFileReader(new File(PerAppWorkingDirectory+"/optimised_classes.dex"));
+            DexFileReader reader = new DexFileReader(new File(PerAppWorkingDirectory + "/optimised_classes.dex"));
             Dex2jar.from(reader).reUseReg(reuseReg).topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
                     .optimizeSynchronized(optimizeSynchronized).printIR(printIR).verbose(verbose).to(file);
         } catch (Exception e) {
             broadcastStatus("exit_process_on_error");
         }
 
-        Log.i("STATUS","Clearing cache");
-        File ClassDex = new File(PerAppWorkingDirectory+"/optimised_classes.dex");
+        Log.i("STATUS", "Clearing cache");
+        File ClassDex = new File(PerAppWorkingDirectory + "/optimised_classes.dex");
         ClassDex.delete();
     }
 
-    private void startJavaExtractor(){
+    private void startJavaExtractor() {
         JavaExtractor javaExtractor = new JavaExtractor(processService);
         javaExtractor.extract();
     }
+
+
 }
