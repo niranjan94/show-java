@@ -83,6 +83,8 @@ public class ProcessService extends Service {
         } else if (intent.getAction().equals(Constants.ACTION.STOP_PROCESS)) {
             Ln.i("Received Stop Foreground Intent");
 
+            broadcastStatus("exit");
+
             stopForeground(true);
 
             try{
