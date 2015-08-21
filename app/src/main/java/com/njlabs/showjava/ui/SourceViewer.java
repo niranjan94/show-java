@@ -39,9 +39,11 @@ public class SourceViewer extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
 
 		Bundle extras = getIntent().getExtras();
+        String packageID = "";
 		if (extras != null) {
             sourceFilePath = extras.getString("file_path");
             sourceFilename = extras.getString("file_name");
+            packageID = extras.getString("package_id");
         }
 
         if(Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH || Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 ){
@@ -60,7 +62,11 @@ public class SourceViewer extends BaseActivity {
 
         if(actionBar!=null) {
             actionBar.setTitle(sourceFilename);
-            actionBar.setSubtitle(sourceFilePath.replace(Environment.getExternalStorageDirectory()+"/ShowJava/sources/",""));
+            String subtitle = sourceFilePath.replace(Environment.getExternalStorageDirectory() + "/ShowJava/sources/"+packageID+"/", "").trim()+"/";
+            actionBar.setSubtitle(subtitle);
+            if(sourceFilename.trim().equalsIgnoreCase("AndroidManifest.xml")){
+                actionBar.setSubtitle(packageID);
+            }
         }
 
     	FileInputStream fs;
