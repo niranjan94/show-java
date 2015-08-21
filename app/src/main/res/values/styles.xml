@@ -40,4 +40,9 @@
         <item name="android:windowEnterAnimation">@anim/fadein</item>
         <item name="android:windowExitAnimation">@anim/fadeout</item>
     </style>
+
+    <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@color/grey_900</item>
+    </style>
 </resources>

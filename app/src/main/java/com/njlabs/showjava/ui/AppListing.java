@@ -143,7 +143,7 @@ public class AppListing extends BaseActivity {
                 } else {
                     final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + holder.packageName.getText().toString() + "");
                     if (sourceDir.isDirectory()) {
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(AppListing.this, R.style.Theme_AppCompat_Dialog);
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(AppListing.this, R.style.AlertDialog);
                         alertDialog.setTitle("This Package has already been decompiled");
                         alertDialog.setMessage("This application has already been decompiled once and the source exists on your sdcard. What would you like to do ?");
                         alertDialog.setPositiveButton("View Source", new DialogInterface.OnClickListener() {
@@ -212,6 +212,7 @@ public class AppListing extends BaseActivity {
                 } catch (PackageManager.NameNotFoundException e) {
                     Ln.e(e);
                 }
+
                 int count = i + 1;
 
                 final PackageInfoHolder newInfo = new PackageInfoHolder();
