@@ -14,6 +14,33 @@ import java.io.IOException;
  * Created by Niranjan on 30-05-2015.
  */
 public class SourceInfo {
+
+    public String packageLabel;
+    public String packageName;
+    public boolean hasSource;
+
+    public SourceInfo(String packageLabel, String packageName) {
+        this.packageLabel = packageLabel;
+        this.packageName = packageName;
+        this.hasSource = true;
+    }
+
+    public SourceInfo(boolean hasSource) {
+        this.hasSource = hasSource;
+    }
+
+    public String getPackageLabel() {
+        return packageLabel;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public boolean hasSource() {
+        return hasSource;
+    }
+
     public static void initialise(ProcessService processService){
         try {
             JSONObject json = new JSONObject();
@@ -64,6 +91,19 @@ public class SourceInfo {
             File infoFile = new File(directory + "/info.json");
             JSONObject json = new JSONObject(FileUtils.readFileToString(infoFile));
             return json.getString("package_label");
+        } catch (IOException | JSONException e) {
+            return null;
+        }
+    }
+
+    public static SourceInfo getSourceInfo(File infoFile){
+        try{
+            JSONObject json = new JSONObject(FileUtils.readFileToString(infoFile));
+            if(json.getBoolean("has_java_sources")||json.getBoolean("has_xml_sources")){
+                return new SourceInfo(json.getString("package_label"), json.getString("package_name"));
+            } else {
+                return null;
+            }
         } catch (IOException | JSONException e) {
             return null;
         }

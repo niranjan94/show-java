@@ -125,8 +125,4 @@ dependencies {
 
     // FILE PICKER
     compile 'com.nononsenseapps:filepicker:2.2.3'
-
-    // OLLIE RX-JAVA BASED ORM LIBRARY
-    compile 'com.michaelpardo:ollie:0.3.1'
-    provided 'com.michaelpardo:ollie-compiler:0.3.1'
 }

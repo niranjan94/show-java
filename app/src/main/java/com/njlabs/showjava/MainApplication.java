@@ -8,7 +8,6 @@ import com.crashlytics.android.Crashlytics;
 import com.njlabs.showjava.utils.FontsOverride;
 
 import io.fabric.sdk.android.Fabric;
-import ollie.Ollie;
 
 public class MainApplication extends Application {
 	
@@ -16,13 +15,6 @@ public class MainApplication extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         FontsOverride.with(this);
-
-        Ollie.with(this)
-                .setName("database.db")
-                .setVersion(1)
-                .setLogLevel(Ollie.LogLevel.FULL)
-                .setCacheSize(8 * 1024 * 1024)
-                .init();
     }
 
     @Override

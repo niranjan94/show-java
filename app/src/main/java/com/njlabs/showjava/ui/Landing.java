@@ -33,18 +33,17 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.njlabs.showjava.BuildConfig;
 import com.njlabs.showjava.R;
-import com.njlabs.showjava.modals.HistoryItem;
 import com.njlabs.showjava.utils.SourceInfo;
 import com.njlabs.showjava.utils.logging.Ln;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-
-import ollie.query.Select;
 
 
 @SuppressWarnings("unused")
@@ -52,8 +51,6 @@ public class Landing extends BaseActivity {
 
     private static final int FILE_PICKER = 0;
     private ProgressDialog PackageLoadDialog;
-    private List<HistoryItem> listFromDb;
-    private boolean needsToCheckExisting = true;
 
     private LinearLayout welcomeLayout;
     private ListView listView;
@@ -114,7 +111,7 @@ public class Landing extends BaseActivity {
         historyLoader.execute();
     }
 
-    public void SetupList(List<HistoryItem> AllPackages) {
+    public void SetupList(List<SourceInfo> AllPackages) {
 
         if(AllPackages.size()<1){
             listView.setVisibility(View.GONE);
@@ -122,7 +119,7 @@ public class Landing extends BaseActivity {
         } else {
             welcomeLayout.setVisibility(View.INVISIBLE);
 
-            ArrayAdapter<HistoryItem> decompileHistoryItemArrayAdapter = new ArrayAdapter<HistoryItem>(getBaseContext(), R.layout.history_list_item, AllPackages) {
+            ArrayAdapter<SourceInfo> decompileHistoryItemArrayAdapter = new ArrayAdapter<SourceInfo>(getBaseContext(), R.layout.history_list_item, AllPackages) {
                 @SuppressLint("InflateParams")
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -130,7 +127,7 @@ public class Landing extends BaseActivity {
                         convertView = getLayoutInflater().inflate(R.layout.history_list_item, null);
                     }
 
-                    HistoryItem pkg = getItem(position);
+                    SourceInfo pkg = getItem(position);
 
                     ViewHolder holder = new ViewHolder();
 
@@ -141,17 +138,19 @@ public class Landing extends BaseActivity {
                     convertView.setTag(holder);
 
                     holder.packageLabel.setText(pkg.getPackageLabel());
-                    holder.packageName.setText(pkg.getPackageID());
+                    holder.packageName.setText(pkg.getPackageName());
 
-                    if (pkg.getPackageLabel().equalsIgnoreCase(pkg.getPackageID())) {
+                    if (pkg.getPackageLabel().equalsIgnoreCase(pkg.getPackageName())) {
                         holder.packageName.setVisibility(View.INVISIBLE);
                     }
 
-                    String iconPath = Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + pkg.getPackageID() + "/icon.png";
+                    String iconPath = Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + pkg.getPackageName() + "/icon.png";
 
                     if (new File(iconPath).exists()) {
                         Bitmap iconBitmap = BitmapFactory.decodeFile(iconPath);
                         holder.packageIcon.setImageDrawable(new BitmapDrawable(getResources(), iconBitmap));
+                    } else {
+                        holder.packageIcon.setImageResource(R.drawable.generic_icon);
                     }
 
                     return convertView;
@@ -245,25 +244,47 @@ public class Landing extends BaseActivity {
         int position;
     }
 
-    private class HistoryLoader extends AsyncTask<String, String, List<HistoryItem>> {
+    private class HistoryLoader extends AsyncTask<String, String, List<SourceInfo>> {
 
         @Override
-        protected List<HistoryItem> doInBackground(String... params) {
-            return Select.from(HistoryItem.class).fetch();
+        protected List<SourceInfo> doInBackground(String... params) {
+
+            List<SourceInfo> historyItems = new ArrayList<>();
+
+            File dir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources");
+            if (dir.exists()) {
+                File[] files = dir.listFiles();
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        File infoFile = new File(file + "/info.json");
+                        if(infoFile.exists() && infoFile.isFile()){
+                            SourceInfo sourceInfo = SourceInfo.getSourceInfo(infoFile);
+                            if(sourceInfo != null) {
+                                historyItems.add(sourceInfo);
+                            } else {
+                                // DELETE IF INFO FILE IS MISSING
+                                try {
+                                    FileUtils.cleanDirectory(file);
+                                    file.delete();
+                                } catch (IOException e) {
+                                    Ln.d(e);
+                                }
+
+                            }
+                        }
+                    } else {
+                        file.delete();
+                    }
+                }
+            }
+
+            return historyItems;
         }
 
         @Override
-        protected void onPostExecute(List<HistoryItem> AllPackages) {
-            listFromDb = AllPackages;
+        protected void onPostExecute(List<SourceInfo> AllPackages) {
             SetupList(AllPackages);
             PackageLoadDialog.dismiss();
-
-            if(needsToCheckExisting){
-                ExistingHistoryLoader runner = new ExistingHistoryLoader();
-                runner.execute();
-            } else {
-                needsToCheckExisting = true;
-            }
         }
 
         @Override
@@ -291,80 +312,7 @@ public class Landing extends BaseActivity {
         }
     }
 
-    private class ExistingHistoryLoader extends AsyncTask<String, String, List<HistoryItem>> {
 
-        @Override
-        protected List<HistoryItem> doInBackground(String... params) {
-
-            cleanOldSources();
-
-            File file = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources");
-            if(!file.exists()){
-                file.mkdirs();
-            }
-            String[] directories = file.list(new FilenameFilter() {
-                @Override
-                public boolean accept(File current, String name) {
-                    return new File(current, name).isDirectory();
-                }
-            });
-
-            if (directories != null && directories.length > 0) {
-                for (String directory : directories) {
-                    boolean alreadyExists = false;
-                    for (HistoryItem item : listFromDb) {
-                        if (directory.equalsIgnoreCase(item.getPackageID())) {
-                            alreadyExists = true;
-                        }
-                    }
-                    if (!alreadyExists) {
-                        HistoryItem newItem = new HistoryItem();
-                        newItem.setPackageID(directory);
-                        if ((new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + directory + "/info.json")).exists()) {
-                            String label = SourceInfo.getLabel(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + directory);
-                            newItem.setPackageLabel((label != null ? label : directory));
-                        } else {
-                            newItem = new HistoryItem(directory, directory);
-                        }
-                        newItem.save();
-                        listFromDb.add(newItem);
-                    }
-                }
-            }
-
-            cleanupDatabase(directories);
-
-            return listFromDb;
-        }
-
-        @Override
-        protected void onPostExecute(List<HistoryItem> AllPackages) {
-            SetupList(AllPackages);
-            rerunHistoryLoader();
-        }
-
-        @Override
-        protected void onPreExecute() {
-
-        }
-
-        private void cleanupDatabase(String[] directories) {
-            int[] positions;
-            for (HistoryItem item : listFromDb) {
-                boolean exists = false;
-                if (directories != null && directories.length > 0) {
-                    for (String directory : directories) {
-                        if (directory.equalsIgnoreCase(item.getPackageID())) {
-                            exists = true;
-                        }
-                    }
-                }
-                if (!exists) {
-                    item.delete();
-                }
-            }
-        }
-    }
 
     @Override
     public void onResume() {
@@ -373,7 +321,6 @@ public class Landing extends BaseActivity {
     }
 
     private void rerunHistoryLoader(){
-        needsToCheckExisting = false;
         HistoryLoader historyLoaderTwo = new HistoryLoader();
         historyLoaderTwo.execute();
     }

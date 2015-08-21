@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.R;
-import com.njlabs.showjava.modals.HistoryItem;
 import com.njlabs.showjava.ui.AppProcessActivity;
 import com.njlabs.showjava.ui.JavaExplorer;
 import com.njlabs.showjava.utils.ExceptionHandler;
@@ -31,8 +30,6 @@ import net.dongliu.apk.parser.ApkParser;
 
 import java.io.File;
 import java.util.List;
-
-import ollie.query.Select;
 
 @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
 public class ProcessService extends Service {
@@ -192,24 +189,6 @@ public class ProcessService extends Service {
 
     private void decompileDone(){
         showCompletedNotification();
-        (new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                List<HistoryItem> old = Select.from(HistoryItem.class).where("package_id=?",packageName).fetch();
-
-                if(old.size() > 0) {
-                    for (HistoryItem cursor : old) {
-                        cursor.delete();
-                    }
-                }
-
-                HistoryItem decompileHistoryItem = new HistoryItem();
-                decompileHistoryItem.setPackageID(packageName);
-                decompileHistoryItem.setPackageLabel(packageLabel);
-                decompileHistoryItem.save();
-            }
-        })).start();
     }
 
     private void showCompletedNotification(){
