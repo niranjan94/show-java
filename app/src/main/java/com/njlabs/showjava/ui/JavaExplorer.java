@@ -12,6 +12,7 @@ import com.crashlytics.android.Crashlytics;
 import com.njlabs.showjava.R;
 import com.njlabs.showjava.modals.Item;
 import com.njlabs.showjava.utils.FileArrayAdapter;
+import com.njlabs.showjava.utils.StringUtils;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -96,12 +97,13 @@ public class JavaExplorer extends BaseActivity {
     			}
     			else {
                     String extension = FilenameUtils.getExtension(ff.getName());
+					String fileSize = StringUtils.humanReadableByteCount(ff.length(), true);
                     if(extension.equalsIgnoreCase("java")){
-                        fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"viewer_java"));
+                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(),"viewer_java"));
                     } else if(extension.equalsIgnoreCase("xml")){
-                        fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"viewer_xml"));
+                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(),"viewer_xml"));
                     }  else if(extension.equalsIgnoreCase("txt")){
-						fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"viewer_summary"));
+						fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(),"viewer_summary"));
                     }
     			}
     		}
@@ -136,6 +138,7 @@ public class JavaExplorer extends BaseActivity {
         Intent i = new Intent(getApplicationContext(), SourceViewer.class);
 		i.putExtra("file_path",currentDir.toString());
 		i.putExtra("file_name",o.getName());
+        i.putExtra("package_id",PackageID);
 		startActivity(i);
 		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
