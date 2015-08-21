@@ -100,9 +100,7 @@ public class JavaExplorer extends BaseActivity {
                         fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"viewer_java"));
                     } else if(extension.equalsIgnoreCase("xml")){
                         fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"viewer_xml"));
-                    } else if(extension.equalsIgnoreCase("jar")){
-                        fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"viewer_jar"));
-                    } else if(extension.equalsIgnoreCase("txt")){
+                    }  else if(extension.equalsIgnoreCase("txt")){
 						fls.add(new Item(ff.getName(),ff.length() + " Byte", date_modify, ff.getAbsolutePath(),"viewer_summary"));
                     }
     			}
