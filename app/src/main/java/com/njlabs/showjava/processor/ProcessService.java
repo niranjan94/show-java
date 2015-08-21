@@ -292,7 +292,11 @@ public class ProcessService extends Service {
                 processNotify.updateTitleText("Extracting XML Resources", "Processing ...");
                 break;
             case "exit":
-                processNotify.cancel();
+                try {
+                    processNotify.cancel();
+                } catch (Exception e){
+                    Ln.i(e);
+                }
                 break;
 
             default:
