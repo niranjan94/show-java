@@ -304,7 +304,12 @@ public class Landing extends BaseActivity {
             File[] files = dir.listFiles();
             for (File file : files) {
                 if (!file.getName().equalsIgnoreCase("sources")) {
-                    file.delete();
+                    try {
+                        FileUtils.cleanDirectory(file);
+                        file.delete();
+                    } catch (IOException e) {
+                        Ln.d(e);
+                    }
                 }
             }
         } else {
