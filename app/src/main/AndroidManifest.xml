@@ -42,6 +42,7 @@
         </activity>
         <activity
             android:name=".ui.AppProcessActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_app_process">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
