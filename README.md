@@ -9,7 +9,7 @@ An apk decompiler for android. Build on Android Studio 1.4 Preview with gradle 2
 [![Get Show Java on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=com.njlabs.showjava "Get Show Java on Google Play")
 
 ## About ##
-This is a Java Decompiler that extracts the .java source code from an APK( Android application) file. There are many such decompilers that run on a PC. But, everything either requires you to install some dependencies (or) are hard to use. 
+This is a Decompiler that extracts the source code of an Android application (including XML files). Works directly from your android device.
 
 ## Features ##
 
