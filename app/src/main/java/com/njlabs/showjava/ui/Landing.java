@@ -83,6 +83,7 @@ public class Landing extends BaseActivity {
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName("Home").withIcon(R.drawable.ic_action_home).withCheckable(false),
                         new DividerDrawerItem(),
+                        new PrimaryDrawerItem().withName("Report a Bug").withIcon(R.drawable.ic_action_bug_report).withCheckable(false),
                         new PrimaryDrawerItem().withName("About the app").withIcon(R.drawable.ic_action_info).withCheckable(false)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -90,6 +91,11 @@ public class Landing extends BaseActivity {
                     public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
                         switch (position) {
                             case 2:
+                                Uri uri = Uri.parse("https://github.com/niranjan94/show-java/issues/new");
+                                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                break;
+                            case 3:
                                 startActivity(new Intent(baseContext, About.class));
                                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                                 break;

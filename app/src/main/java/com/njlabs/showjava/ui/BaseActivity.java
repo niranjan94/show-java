@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -72,8 +73,13 @@ public class BaseActivity extends AppCompatActivity {
                 return true;
 
             case R.id.about_option:
-                Intent i = new Intent(getBaseContext(),About.class);
-                startActivity(i);
+                startActivity(new Intent(getBaseContext(),About.class));
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                return true;
+
+            case R.id.bug_report_option:
+                Uri uri = Uri.parse("https://github.com/niranjan94/show-java/issues/new");
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
         }

@@ -2,8 +2,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/bug_report_option"
+        android:orderInCategory="1"
+        app:showAsAction="never"
+        android:title="Report a Bug"/>
+
+    <item
         android:id="@+id/about_option"
-        android:orderInCategory="100"
+        android:orderInCategory="2"
         app:showAsAction="never"
         android:title="About"/>
 
