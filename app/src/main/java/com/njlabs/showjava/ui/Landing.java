@@ -1,7 +1,6 @@
 package com.njlabs.showjava.ui;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -50,7 +49,6 @@ import java.util.List;
 public class Landing extends BaseActivity {
 
     private static final int FILE_PICKER = 0;
-    private ProgressDialog PackageLoadDialog;
 
     private LinearLayout welcomeLayout;
     private ListView listView;
@@ -106,12 +104,6 @@ public class Landing extends BaseActivity {
                 .withCloseOnClick(true)
                 .build();
 
-        PackageLoadDialog = new ProgressDialog(this);
-        PackageLoadDialog.setIndeterminate(false);
-        PackageLoadDialog.setCancelable(false);
-        PackageLoadDialog.setInverseBackgroundForced(false);
-        PackageLoadDialog.setCanceledOnTouchOutside(false);
-        PackageLoadDialog.setMessage("Loading Decompile History ...");
 
         HistoryLoader historyLoader = new HistoryLoader();
         historyLoader.execute();
@@ -290,17 +282,14 @@ public class Landing extends BaseActivity {
         @Override
         protected void onPostExecute(List<SourceInfo> AllPackages) {
             SetupList(AllPackages);
-            PackageLoadDialog.dismiss();
         }
 
         @Override
         protected void onPreExecute() {
-            PackageLoadDialog.show();
         }
 
         @Override
         protected void onProgressUpdate(String... text) {
-            PackageLoadDialog.setMessage(text[0]);
         }
     }
 
