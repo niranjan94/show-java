@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
@@ -248,6 +249,15 @@ public class Landing extends BaseActivity {
         protected List<SourceInfo> doInBackground(String... params) {
 
             List<SourceInfo> historyItems = new ArrayList<>();
+
+            File nomedia = new File(Environment.getExternalStorageDirectory() + "/ShowJava/.nomedia");
+            if(!nomedia.exists()||!nomedia.isFile()) {
+                try {
+                    nomedia.createNewFile();
+                } catch (IOException e) {
+                    Crashlytics.logException(e);
+                }
+            }
 
             File dir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources");
             if (dir.exists()) {
