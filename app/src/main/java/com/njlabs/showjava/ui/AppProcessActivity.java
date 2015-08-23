@@ -24,7 +24,6 @@ import net.dongliu.apk.parser.ApkParser;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class AppProcessActivity extends BaseActivity {
             try {
                 ApkParser apkParser = new ApkParser(new File(packageFilePath));
                 appNameView.setText(apkParser.getApkMeta().getLabel());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Ln.e(e);
                 exitWithError();
             }
@@ -68,7 +67,7 @@ public class AppProcessActivity extends BaseActivity {
                 try {
                     ApkParser apkParser = new ApkParser(new File(packageFilePath));
                     appNameView.setText(apkParser.getApkMeta().getLabel());
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Ln.e(e);
                     exitWithError();
                 }
