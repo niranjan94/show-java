@@ -39,25 +39,36 @@ public class AppListing extends BaseActivity {
 
     ProgressDialog PackageLoadDialog;
     ListView listView = null;
+    private boolean isDestroyed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupLayout(R.layout.activity_app_listing, "Show Java");
 
-        PackageLoadDialog = new ProgressDialog(this);
-        PackageLoadDialog.setIndeterminate(false);
-        PackageLoadDialog.setCancelable(false);
-        PackageLoadDialog.setInverseBackgroundForced(false);
-        PackageLoadDialog.setCanceledOnTouchOutside(false);
-        PackageLoadDialog.setMessage("Loading installed applications...");
-
         listView = (ListView) findViewById(R.id.list);
-        PackageLoadDialog.show();
 
         ApplicationLoader runner = new ApplicationLoader();
         runner.execute();
 
+    }
+
+    private void showProgressDialog() {
+        if (PackageLoadDialog == null) {
+            PackageLoadDialog = new ProgressDialog(this);
+            PackageLoadDialog.setIndeterminate(false);
+            PackageLoadDialog.setCancelable(false);
+            PackageLoadDialog.setInverseBackgroundForced(false);
+            PackageLoadDialog.setCanceledOnTouchOutside(false);
+            PackageLoadDialog.setMessage("Loading installed applications...");
+        }
+        PackageLoadDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (PackageLoadDialog != null && PackageLoadDialog.isShowing()) {
+            PackageLoadDialog.dismiss();
+        }
     }
 
     private class ApplicationLoader extends AsyncTask<String, String, ArrayList<PackageInfoHolder>> {
@@ -71,7 +82,9 @@ public class AppListing extends BaseActivity {
         @Override
         protected void onPostExecute(ArrayList<PackageInfoHolder> AllPackages) {
             setupList(AllPackages);
-            PackageLoadDialog.dismiss();
+            if (!isDestroyed) {
+                dismissProgressDialog();
+            }
         }
 
         public void doProgress(String value) {
@@ -80,7 +93,7 @@ public class AppListing extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-
+            showProgressDialog();
         }
 
         @Override
@@ -242,5 +255,12 @@ public class AppListing extends BaseActivity {
 
     private boolean isSystemPackage(PackageInfo pkgInfo) {
         return ((pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        isDestroyed = true;
+        dismissProgressDialog();
+        super.onDestroy();
     }
 }
