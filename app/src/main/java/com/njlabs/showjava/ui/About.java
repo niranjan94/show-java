@@ -1,6 +1,7 @@
 package com.njlabs.showjava.ui;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.TextView;
 
 import com.njlabs.showjava.BuildConfig;
@@ -14,4 +15,9 @@ public class About extends BaseActivity {
 		setupLayout(R.layout.activity_about);
 		((TextView) findViewById(R.id.AppVersion)).setText("Version " + BuildConfig.VERSION_NAME);
 	}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
 }
