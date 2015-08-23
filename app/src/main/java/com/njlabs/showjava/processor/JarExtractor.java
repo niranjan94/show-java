@@ -2,6 +2,7 @@ package com.njlabs.showjava.processor;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.googlecode.dex2jar.reader.DexFileReader;
 import com.googlecode.dex2jar.v3.Dex2jar;
 import com.njlabs.showjava.Constants;
@@ -12,7 +13,6 @@ import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.immutable.ImmutableDexFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +72,15 @@ public class JarExtractor extends ProcessServiceHelper {
                             && !classDef.getType().startsWith("Lcom/google/android/gms/")
                             && !classDef.getType().startsWith("Lcom/google/common/")
                             && !classDef.getType().startsWith("Lcom/google/auto/")
+                            && !classDef.getType().startsWith("Lcom/google/ads/")
                             && !classDef.getType().startsWith("Lcom/google/android/vending/")
 
+                            && !classDef.getType().startsWith("Lcom/squareup/okhttp")
+                            && !classDef.getType().startsWith("Lcom/google/gson")
+                            && !classDef.getType().startsWith("Lcom/square/picasso")
+                            && !classDef.getType().startsWith("Lcom/nineoldandroids")
+                            && !classDef.getType().startsWith("Lbolts")
+                            && !classDef.getType().startsWith("Lcom/mikepenz/iconics")
                             && !classDef.getType().startsWith("Lretrofit")
                             && !classDef.getType().startsWith("Lorg/parceler/")
                             && !classDef.getType().startsWith("Lbutterknife")
@@ -116,11 +123,12 @@ public class JarExtractor extends ProcessServiceHelper {
         broadcastStatus("merging_classes");
 
         dexFile = new ImmutableDexFile(classes);
+
         try {
             Log.d("DEBUGGER", "Start Writing");
             DexFileFactory.writeDexFile(PerAppWorkingDirectory + "/optimised_classes.dex", dexFile);
             Log.d("DEBUGGER", "Writing done!");
-        } catch (IOException e) {
+        } catch (Exception e) {
             broadcastStatus("exit");
             UIHandler.post(new ToastRunnable("The app you selected cannot be decompiled. Please select another app."));
         }
@@ -154,6 +162,7 @@ public class JarExtractor extends ProcessServiceHelper {
             Dex2jar.from(reader).reUseReg(reuseReg).topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
                     .optimizeSynchronized(optimizeSynchronized).printIR(printIR).verbose(verbose).to(file);
         } catch (Exception e) {
+            Crashlytics.logException(e);
             broadcastStatus("exit_process_on_error");
         }
 
