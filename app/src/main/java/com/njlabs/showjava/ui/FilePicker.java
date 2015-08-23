@@ -37,7 +37,7 @@ public class FilePicker extends AbstractFilePickerActivity<File> {
     @Override
     public void onBackPressed() {
         // If at top most level, normal behaviour
-        if (currentFragment.isBackTop()) {
+        if (currentFragment == null || currentFragment.isBackTop()) {
             finish();
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         } else {
