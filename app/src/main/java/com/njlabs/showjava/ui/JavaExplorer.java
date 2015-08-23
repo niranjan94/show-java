@@ -2,11 +2,15 @@ package com.njlabs.showjava.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.njlabs.showjava.R;
@@ -14,9 +18,11 @@ import com.njlabs.showjava.modals.Item;
 import com.njlabs.showjava.utils.FileArrayAdapter;
 import com.njlabs.showjava.utils.StringUtils;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -136,12 +142,13 @@ public class JavaExplorer extends BaseActivity {
 
     private void onFileClick(Item o) {
         Intent i = new Intent(getApplicationContext(), SourceViewer.class);
-		i.putExtra("file_path",currentDir.toString());
-		i.putExtra("file_name",o.getName());
+		i.putExtra("file_path", currentDir.toString());
+		i.putExtra("file_name", o.getName());
         i.putExtra("package_id",PackageID);
 		startActivity(i);
 		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
+
     @Override
     public void onBackPressed() {
     	if(!currentDir.toString().equalsIgnoreCase(rootDir)) {
@@ -153,6 +160,37 @@ public class JavaExplorer extends BaseActivity {
     		finish();
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     	}
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.explorer, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                return true;
+
+            case R.id.action_delete:
+                try {
+                    final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + PackageID);
+                    FileUtils.cleanDirectory(sourceDir);
+                    sourceDir.delete();
+                } catch (IOException e) {
+                    Crashlytics.logException(e);
+                }
+                Toast.makeText(baseContext, "The source code has been deleted from sdcard", Toast.LENGTH_SHORT).show();
+                finish();
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }
