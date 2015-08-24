@@ -25,6 +25,10 @@ This is a Decompiler that extracts the source code of an Android application (in
 1. Does not work with system applications in most of the phones (especially ones that are not de-odexed)
 2. java.lang.OutOfMemoryError crashes when decompiling large apps on a mobile phone with low ram and Java VM Heap space.
 
+## Contributing to ShowJava ##
+
+Head over [here](https://github.com/niranjan94/show-java/blob/master/CONTRIBUTING.md) to know more about how to contribute, report bugs and request feature additions.
+
 ## Open Source License ##
 
 Unless explicitly stated otherwise all files in this repository are licensed under the [Apache Software License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html). All projects must properly attribute [The Original Source](https://github.com/niranjan94/show-java).
