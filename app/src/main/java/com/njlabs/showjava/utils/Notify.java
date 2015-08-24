@@ -49,7 +49,7 @@ public class Notify {
         mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
-    public void cancel(){
+    public void cancel() {
         mNotifyManager.cancel(NOTIFICATION_ID);
     }
 }
