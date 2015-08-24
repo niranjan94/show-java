@@ -1,6 +1,5 @@
 package com.njlabs.showjava.processor;
 
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -47,8 +46,6 @@ public class ProcessService extends Service {
     public Notify processNotify;
     public ApkParser apkParser;
 
-
-
     private class ToastRunnable implements Runnable {
 
         String mText;
@@ -69,16 +66,13 @@ public class ProcessService extends Service {
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Ln.i("onStartCommand ProcessService");
 
         UIHandler = new Handler();
 
         if (intent.getAction().equals(Constants.ACTION.START_PROCESS)) {
-            Ln.i("Received Start Foreground Intent ");
             startForeground(Constants.PROCESS_NOTIFICATION_ID, buildNotification());
             handleIntent(intent);
         } else if (intent.getAction().equals(Constants.ACTION.STOP_PROCESS)) {
-            Ln.i("Received Stop Foreground Intent");
             broadcastStatus("exit");
             stopForeground(true);
             try{
@@ -88,9 +82,7 @@ public class ProcessService extends Service {
             } catch (Exception e){
                 Ln.e(e);
             }
-
             stopSelf();
-
         }
 
         return START_NOT_STICKY;

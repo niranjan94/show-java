@@ -1,6 +1,5 @@
 package com.njlabs.showjava.ui;
 
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +25,6 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.net.URI;
-import java.util.List;
 
 public class AppProcessActivity extends BaseActivity {
 
@@ -40,7 +38,6 @@ public class AppProcessActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         processStatusReceiver = new ProcessStatus();
 
-        Ln.d("onCreate AppProcessActivity");
         setupLayoutNoActionBar(R.layout.activity_progress);
 
         CurrentStatus = (TextView) findViewById(R.id.current_status);
@@ -120,7 +117,6 @@ public class AppProcessActivity extends BaseActivity {
     }
 
     public void startProcessorService() {
-        Ln.d("startProcessorService AppProcessActivity");
         Utils.killAllProcessorServices(this);
         Intent mServiceIntent = new Intent(getContext(), ProcessService.class);
         mServiceIntent.setAction(Constants.ACTION.START_PROCESS);
@@ -148,7 +144,6 @@ public class AppProcessActivity extends BaseActivity {
             if (intent.hasExtra(Constants.PROCESS_STATUS_MESSAGE)) {
                 statusData = intent.getStringExtra(Constants.PROCESS_STATUS_MESSAGE);
             }
-            Ln.d("Received Intent " + statusKey);
             switch (statusKey) {
                 case "optimise_dex_start":
                     CurrentStatus.setText("Optimising dex file");
