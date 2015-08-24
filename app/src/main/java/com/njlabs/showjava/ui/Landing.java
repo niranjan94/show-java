@@ -271,12 +271,12 @@ public class Landing extends BaseActivity {
                                 historyItems.add(sourceInfo);
                             } else {
                                 // DELETE IF INFO FILE IS MISSING
-                                try {
+                                /*try {
                                     FileUtils.cleanDirectory(file);
                                     file.delete();
                                 } catch (IOException e) {
                                     Ln.d(e);
-                                }
+                                }*/
 
                             }
                         }
