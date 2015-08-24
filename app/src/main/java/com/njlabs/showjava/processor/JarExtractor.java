@@ -9,13 +9,19 @@ import com.googlecode.dex2jar.reader.DexFileReader;
 import com.googlecode.dex2jar.v3.Dex2jar;
 import com.googlecode.dex2jar.v3.DexExceptionHandler;
 import com.njlabs.showjava.Constants;
+import com.njlabs.showjava.utils.StringUtils;
+import com.njlabs.showjava.utils.logging.Ln;
 
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.immutable.ImmutableDexFile;
+import org.objectweb.asm.tree.MethodNode;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +32,7 @@ import java.util.List;
 @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
 public class JarExtractor extends ProcessServiceHelper {
 
-    ArrayList<String> ignoredLibs;
+    private ArrayList<String> ignoredLibs;
 
     public JarExtractor(ProcessService processService) {
         this.processService = processService;
@@ -45,6 +51,7 @@ public class JarExtractor extends ProcessServiceHelper {
         Runnable runProcess = new Runnable() {
             @Override
             public void run() {
+                loadIgnoredLibs();
                 apkToDex();
                 dexToJar();
                 startJavaExtractor();
@@ -68,49 +75,7 @@ public class JarExtractor extends ProcessServiceHelper {
         broadcastStatus("optimising", "");
 
         for (ClassDef classDef : dexFile.getClasses()) {
-            if (
-                    !classDef.getType().startsWith("Lcom/google/apps/")
-                            && !classDef.getType().startsWith("Landroid/")
-                            && !classDef.getType().startsWith("Lcom/android/")
-                            && !classDef.getType().startsWith("Lcom/google/android/gms/")
-                            && !classDef.getType().startsWith("Lcom/google/common/")
-                            && !classDef.getType().startsWith("Lcom/google/auto/")
-                            && !classDef.getType().startsWith("Lcom/google/ads/")
-                            && !classDef.getType().startsWith("Lcom/google/android/vending/")
-
-                            && !classDef.getType().startsWith("Lcom/squareup/okhttp")
-                            && !classDef.getType().startsWith("Lcom/google/gson")
-                            && !classDef.getType().startsWith("Lcom/square/picasso")
-                            && !classDef.getType().startsWith("Lcom/nineoldandroids")
-                            && !classDef.getType().startsWith("Lbolts")
-                            && !classDef.getType().startsWith("Lcom/mikepenz/iconics")
-                            && !classDef.getType().startsWith("Lretrofit")
-                            && !classDef.getType().startsWith("Lorg/parceler/")
-                            && !classDef.getType().startsWith("Lbutterknife")
-                            && !classDef.getType().startsWith("Lcom/loopj/android/")
-                            && !classDef.getType().startsWith("Lorg/objectweb/asm/")
-                            && !classDef.getType().startsWith("Lcom/crashlytics/")
-                            && !classDef.getType().startsWith("Lio/fabric/sdk/")
-                            && !classDef.getType().startsWith("Lcom/androidquery/")
-                            && !classDef.getType().startsWith("Lcom/parse/")
-                            && !classDef.getType().startsWith("Lcom/actionbarsherlock/")
-                            && !classDef.getType().startsWith("Lorg/apache/")
-                            && !classDef.getType().startsWith("Lorg/acra/")
-                            && !classDef.getType().startsWith("Ljavax/")
-                            && !classDef.getType().startsWith("Lorg/joda/")
-                            && !classDef.getType().startsWith("Lorg/antlr/")
-                            && !classDef.getType().startsWith("Ljunit/")
-                            && !classDef.getType().startsWith("Lorg/codehaus/jackson/")
-                            && !classDef.getType().startsWith("Lcom/fasterxml/")
-                            && !classDef.getType().startsWith("Lnet/sourceforge/")
-                            && !classDef.getType().startsWith("Lorg/achartengine/")
-                            && !classDef.getType().startsWith("Lcom/bugsense/")
-                            && !classDef.getType().startsWith("Lorg/andengine/")
-                            && !classDef.getType().startsWith("Lcom/inmobi/")
-                    )
-
-            {
-
+            if (!isIgnored(classDef.getType())) {
                 final String CurrentClass = classDef.getType();
                 broadcastStatus("optimising_class", CurrentClass.replaceAll("Processing ", ""));
                 classes.add(classDef);
@@ -194,6 +159,41 @@ public class JarExtractor extends ProcessServiceHelper {
     private void startJavaExtractor() {
         JavaExtractor javaExtractor = new JavaExtractor(processService);
         javaExtractor.extract();
+    }
+
+    private void loadIgnoredLibs(){
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(processService.getAssets().open("ignored.list")));
+            String mLine = reader.readLine().trim();
+            while (mLine != null) {
+                mLine = mLine.trim();
+                if(mLine.length()!=0){
+                    ignoredLibs.add(StringUtils.toClassName(mLine));
+                }
+                Ln.d(mLine);
+                mLine = reader.readLine();
+            }
+        } catch (IOException e) {
+            Crashlytics.logException(e);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    Crashlytics.logException(e);
+                }
+            }
+        }
+    }
+
+    private boolean isIgnored(String className){
+        for (String ignoredClass : ignoredLibs){
+            if(className.startsWith(ignoredClass)){
+                return true;
+            }
+        }
+        return false;
     }
 
 

@@ -38,6 +38,10 @@ public class StringUtils {
         return "".equals(testString);
     }
 
+    public static String toClassName(String packageName) {
+        return "L" + replace(packageName.trim(),".","/");
+    }
+
     public static String humanReadableByteCount(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
         if (bytes < unit) return bytes + " B";
