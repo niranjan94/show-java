@@ -76,6 +76,8 @@ public class AppProcessActivity extends BaseActivity {
 
         if(!fromNotification()){
             startProcessorService();
+        } else {
+            CurrentStatus.setText("Processing ...");
         }
 
         appNameView.setSingleLine(false);
