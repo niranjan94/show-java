@@ -24,12 +24,12 @@ import com.njlabs.showjava.ui.JavaExplorer;
 import com.njlabs.showjava.utils.ExceptionHandler;
 import com.njlabs.showjava.utils.Notify;
 import com.njlabs.showjava.utils.SourceInfo;
+import com.njlabs.showjava.utils.Utils;
 import com.njlabs.showjava.utils.logging.Ln;
 
 import net.dongliu.apk.parser.ApkParser;
 
 import java.io.File;
-import java.util.List;
 
 @SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
 public class ProcessService extends Service {
@@ -79,23 +79,12 @@ public class ProcessService extends Service {
             handleIntent(intent);
         } else if (intent.getAction().equals(Constants.ACTION.STOP_PROCESS)) {
             Ln.i("Received Stop Foreground Intent");
-
             broadcastStatus("exit");
-
             stopForeground(true);
-
             try{
                 NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotifyManager.cancel(Constants.PROCESS_NOTIFICATION_ID);
-                ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-                List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
-                for (ActivityManager.RunningAppProcessInfo next : runningAppProcesses) {
-                    String processName = getPackageName() + ":service";
-                    if (next.processName.equals(processName)) {
-                        android.os.Process.killProcess(next.pid);
-                        break;
-                    }
-                }
+                Utils.killAllProcessorServices(this);
             } catch (Exception e){
                 Ln.e(e);
             }

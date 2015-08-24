@@ -188,8 +188,9 @@ public class JavaExplorer extends BaseActivity {
             case R.id.action_delete:
                 try {
                     final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + PackageID);
-                    FileUtils.cleanDirectory(sourceDir);
-                    sourceDir.delete();
+                    if(sourceDir.exists()){
+                        FileUtils.deleteDirectory(sourceDir);
+                    }
                 } catch (IOException e) {
                     Crashlytics.logException(e);
                 }

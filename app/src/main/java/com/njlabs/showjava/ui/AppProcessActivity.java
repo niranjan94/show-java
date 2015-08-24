@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.R;
 import com.njlabs.showjava.processor.ProcessService;
+import com.njlabs.showjava.utils.Utils;
 import com.njlabs.showjava.utils.logging.Ln;
 
 import net.dongliu.apk.parser.ApkParser;
@@ -119,8 +120,8 @@ public class AppProcessActivity extends BaseActivity {
     }
 
     public void startProcessorService() {
-        killAllProcessorServices();
         Ln.d("startProcessorService AppProcessActivity");
+        Utils.killAllProcessorServices(this);
         Intent mServiceIntent = new Intent(getContext(), ProcessService.class);
         mServiceIntent.setAction(Constants.ACTION.START_PROCESS);
         mServiceIntent.putExtra("package_file_path", packageFilePath);
@@ -235,17 +236,7 @@ public class AppProcessActivity extends BaseActivity {
         return getIntent().hasExtra("from_notification") && getIntent().getBooleanExtra("from_notification", false);
     }
 
-    private void killAllProcessorServices(){
-        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo next : runningAppProcesses) {
-            String processName = getPackageName() + ":service";
-            if (next.processName.equals(processName)) {
-                android.os.Process.killProcess(next.pid);
-                break;
-            }
-        }
-    }
+
 
     private void exitWithError(){
         finish();

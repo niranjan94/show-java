@@ -34,6 +34,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.njlabs.showjava.BuildConfig;
 import com.njlabs.showjava.R;
 import com.njlabs.showjava.utils.SourceInfo;
+import com.njlabs.showjava.utils.Utils;
 import com.njlabs.showjava.utils.logging.Ln;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 
@@ -260,28 +261,23 @@ public class Landing extends BaseActivity {
             }
 
             File dir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources");
+
             if (dir.exists()) {
                 File[] files = dir.listFiles();
                 for (File file : files) {
-                    if (file.isDirectory()) {
-                        File infoFile = new File(file + "/info.json");
-                        if(infoFile.exists() && infoFile.isFile()){
-                            SourceInfo sourceInfo = SourceInfo.getSourceInfo(infoFile);
-                            if(sourceInfo != null) {
-                                historyItems.add(sourceInfo);
-                            } else {
-                                // DELETE IF INFO FILE IS MISSING
-                                /*try {
-                                    FileUtils.cleanDirectory(file);
-                                    file.delete();
-                                } catch (IOException e) {
-                                    Ln.d(e);
-                                }*/
-
+                    if(Utils.sourceExists(file)){
+                        historyItems.add(Utils.getSourceInfoFromSourcePath(file));
+                    } else {
+                        if(!Utils.isProcessorServiceRunning(baseContext)){
+                            try {
+                                FileUtils.deleteDirectory(file);
+                            } catch (IOException e) {
+                                Ln.d(e);
                             }
                         }
-                    } else {
-                        file.delete();
+                        if(!file.isDirectory()){
+                            file.delete();
+                        }
                     }
                 }
             }
