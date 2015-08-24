@@ -3,8 +3,11 @@ package com.njlabs.showjava.processor;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.googlecode.dex2jar.Method;
+import com.googlecode.dex2jar.ir.IrMethod;
 import com.googlecode.dex2jar.reader.DexFileReader;
 import com.googlecode.dex2jar.v3.Dex2jar;
+import com.googlecode.dex2jar.v3.DexExceptionHandler;
 import com.njlabs.showjava.Constants;
 
 import org.jf.dexlib2.DexFileFactory;
@@ -154,13 +157,18 @@ public class JarExtractor extends ProcessServiceHelper {
         System.setOut(printStream);
         //////
 
+
+
         File PerAppWorkingDirectory = new File(sourceOutputDir);
         File file = new File(PerAppWorkingDirectory + "/" + packageName + ".jar");
 
+        DexExceptionHandlerMod dexExceptionHandlerMod = new DexExceptionHandlerMod();
         try {
             DexFileReader reader = new DexFileReader(new File(PerAppWorkingDirectory + "/optimised_classes.dex"));
-            Dex2jar.from(reader).reUseReg(reuseReg).topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
-                    .optimizeSynchronized(optimizeSynchronized).printIR(printIR).verbose(verbose).to(file);
+            Dex2jar dex2jar = Dex2jar.from(reader).reUseReg(reuseReg).topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
+                    .optimizeSynchronized(optimizeSynchronized).printIR(printIR).verbose(verbose);
+            dex2jar.setExceptionHandler(dexExceptionHandlerMod);
+            dex2jar.to(file);
         } catch (Exception e) {
             Crashlytics.logException(e);
             broadcastStatus("exit_process_on_error");
@@ -169,6 +177,18 @@ public class JarExtractor extends ProcessServiceHelper {
         Log.i("STATUS", "Clearing cache");
         File ClassDex = new File(PerAppWorkingDirectory + "/optimised_classes.dex");
         ClassDex.delete();
+    }
+
+    class DexExceptionHandlerMod implements DexExceptionHandler {
+        @Override
+        public void handleFileException(Exception e) {
+            Ln.e("Dex2Jar Exception " + e);
+        }
+
+        @Override
+        public void handleMethodTranslateException(Method method, IrMethod irMethod, MethodNode methodNode, Exception e) {
+            Ln.e("Dex2Jar Exception " + e);
+        }
     }
 
     private void startJavaExtractor() {
