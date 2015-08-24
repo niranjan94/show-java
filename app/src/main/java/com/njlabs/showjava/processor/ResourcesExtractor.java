@@ -15,6 +15,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -22,11 +23,11 @@ import java.util.zip.ZipFile;
 /**
  * Created by Niranjan on 30-05-2015.
  */
-public class XmlExtractor extends ProcessServiceHelper {
+public class ResourcesExtractor extends ProcessServiceHelper {
 
     ApkParser apkParser;
 
-    public XmlExtractor(ProcessService processService) {
+    public ResourcesExtractor(ProcessService processService) {
         this.processService = processService;
         this.UIHandler = processService.UIHandler;
         this.packageFilePath = processService.packageFilePath;
@@ -39,7 +40,7 @@ public class XmlExtractor extends ProcessServiceHelper {
 
     public void extract() {
 
-        broadcastStatus("xml");
+        broadcastStatus("res");
         ThreadGroup group = new ThreadGroup("XML Extraction Group");
         Thread xmlExtractionThread = new Thread(group, new Runnable(){
             @Override
@@ -47,12 +48,14 @@ public class XmlExtractor extends ProcessServiceHelper {
                 try {
                     ZipFile zipFile = new ZipFile(packageFilePath);
                     Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
                     while (entries.hasMoreElements()) {
                         ZipEntry zipEntry = entries.nextElement();
                         if(!zipEntry.isDirectory()&&!zipEntry.getName().equals("AndroidManifest.xml")&&FilenameUtils.getExtension(zipEntry.getName()).equals("xml")){
                             broadcastStatus("progress_stream",zipEntry.getName());
                             writeXML(zipEntry.getName());
+                        } else if(!zipEntry.isDirectory()&&(FilenameUtils.getExtension(zipEntry.getName()).equals("png")||FilenameUtils.getExtension(zipEntry.getName()).equals("jpg"))){
+                            broadcastStatus("progress_stream",zipEntry.getName());
+                            writeFile(zipFile.getInputStream(zipEntry),zipEntry.getName());
                         }
                     }
                     zipFile.close();
@@ -68,6 +71,46 @@ public class XmlExtractor extends ProcessServiceHelper {
         xmlExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
         xmlExtractionThread.start();
 
+    }
+
+    private void writeFile(InputStream fileStream, String path){
+        FileOutputStream outputStream = null;
+        try {
+            String fileFolderPath = sourceOutputDir + "/" + path.replace(FilenameUtils.getName(path), "");
+            File fileFolder = new File(fileFolderPath);
+            if (!fileFolder.isDirectory()) {
+                fileFolder.mkdirs();
+            }
+
+            outputStream =  new FileOutputStream(new File(fileFolderPath + FilenameUtils.getName(path)));
+
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = fileStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+
+            System.out.println("Done!");
+
+        } catch (IOException e) {
+            Crashlytics.logException(e);
+        } finally {
+            if (fileStream != null) {
+                try {
+                    fileStream.close();
+                } catch (IOException e) {
+                    Crashlytics.logException(e);
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    Crashlytics.logException(e);
+                }
+            }
+        }
     }
 
     private void writeXML(String path) {

@@ -64,6 +64,13 @@
             android:label="@string/title_activity_source_viewer"
             android:theme="@style/SourceViewerTheme" >
         </activity>
+
+        <activity
+            android:name=".ui.ImageResourceViewer"
+            android:label="@string/title_activity_image_resource_viewer"
+            android:theme="@style/SourceViewerTheme" >
+        </activity>
+
         <activity
             android:name=".ui.About"
             android:label="@string/title_activity_about" >

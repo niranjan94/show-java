@@ -1,11 +1,8 @@
 package com.njlabs.showjava.ui;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
@@ -14,10 +11,11 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.common.html.HtmlEscapers;
 import com.njlabs.showjava.R;
+
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,63 +25,49 @@ import java.io.InputStream;
 @SuppressWarnings("deprecation")
 public class SourceViewer extends BaseActivity {
 
-	String sourceFilePath;
-	String sourceFilename;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setupLayout(R.layout.activity_source_viewer);
-		getWindow().getDecorView().setBackgroundColor(Color.BLACK);
+    String sourceFilePath;
+    String sourceFilename;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupLayout(R.layout.activity_source_viewer);
+        getWindow().getDecorView().setBackgroundColor(Color.BLACK);
 
         ActionBar actionBar = getSupportActionBar();
 
-		Bundle extras = getIntent().getExtras();
+        Bundle extras = getIntent().getExtras();
         String packageID = "";
-		if (extras != null) {
+        if (extras != null) {
             sourceFilePath = extras.getString("file_path");
-            sourceFilename = extras.getString("file_name");
+            sourceFilename = FilenameUtils.getName(sourceFilePath);
             packageID = extras.getString("package_id");
         }
 
-        if(Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH || Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 ){
-            new AlertDialog.Builder(this)
-                    .setMessage("Source code may not be displayed properly on devices running Android 4.0.x (Icecream Sandwich) due to a bug present in the operating system. But you can directly view the source code from the 'ShowJava' folder in your sdcard. Inconvenience is regretted.")
-                    .setPositiveButton("Oh ! That Sucks !", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(getApplicationContext(), "yea ! I know :)", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        }
-                    })
-                    .setCancelable(true)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        }
 
         if(actionBar!=null) {
             actionBar.setTitle(sourceFilename);
-            String subtitle = sourceFilePath.replace(Environment.getExternalStorageDirectory() + "/ShowJava/sources/"+packageID+"/", "").trim()+"/";
+            String subtitle = FilenameUtils.getFullPath(sourceFilePath).replace(Environment.getExternalStorageDirectory() + "/ShowJava/sources/"+packageID+"/", "");
             actionBar.setSubtitle(subtitle);
             if(sourceFilename.trim().equalsIgnoreCase("AndroidManifest.xml")){
                 actionBar.setSubtitle(packageID);
             }
         }
 
-    	FileInputStream fs;
-    	int ch;
-    	StringBuilder str = new StringBuilder();
-    	String sourceCodeText = "";
-    	try
-    	{
-    		fs = new FileInputStream(new File(sourceFilePath, sourceFilename));
-    		while ((ch = fs.read()) != -1) {
-				str.append((char) ch);
-			}
-			sourceCodeText = str.toString();
-			fs.close();
-		} catch (IOException ignored) {
+        FileInputStream fs;
+        int ch;
+        StringBuilder str = new StringBuilder();
+        String sourceCodeText = "";
+        try {
+            fs = new FileInputStream(new File(sourceFilePath));
+            while ((ch = fs.read()) != -1) {
+                str.append((char) ch);
+            }
+            sourceCodeText = str.toString();
+            fs.close();
+        } catch (IOException ignored) {
 
-    	}
+        }
 
         sourceCodeText = HtmlEscapers.htmlEscaper().escape(sourceCodeText);
 
@@ -93,8 +77,8 @@ public class SourceViewer extends BaseActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-            	ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
-            	progress.setVisibility(View.GONE);
+                ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
+                progress.setVisibility(View.GONE);
             }
 
             @Override

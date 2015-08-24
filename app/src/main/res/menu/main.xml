@@ -13,4 +13,12 @@
         app:showAsAction="never"
         android:title="About"/>
 
+    <item
+        android:id="@+id/invert_colors"
+        android:orderInCategory="2"
+        android:icon="@drawable/ic_action_invert_colors"
+        android:visible="false"
+        app:showAsAction="always"
+        android:title="Invert Background Color"/>
+
 </menu>

@@ -12,4 +12,5 @@
     <string name="parentDirectory">Parent Directory</string>
     <string name="fileSize">File Size</string>
     <string name="currentDir">Current Dir</string>
+    <string name="title_activity_image_resource_viewer">Image Resource Viewer</string>
 </resources>

@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.njlabs.showjava.R;
 import com.njlabs.showjava.modals.Item;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.util.List;
 
 public class FileArrayAdapter extends ArrayAdapter<Item> {
@@ -51,6 +53,11 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
             int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
             //noinspection deprecation
             Drawable image = context.getResources().getDrawable(imageResource);
+
+            if(FilenameUtils.getExtension(o.getPath()).equals("png")||FilenameUtils.getExtension(o.getPath()).equals("jpg")){
+                image = Drawable.createFromPath(o.getPath());
+            }
+
             fileIconView.setImageDrawable(image);
 
             filenameView.setText(o.getName());

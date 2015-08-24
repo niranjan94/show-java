@@ -203,8 +203,8 @@ public class AppProcessActivity extends BaseActivity {
                 case "jar2java":
                     CurrentStatus.setText("Decompiling to java");
                     break;
-                case "xml":
-                    CurrentStatus.setText("Extracting XML Resources");
+                case "res":
+                    CurrentStatus.setText("Extracting Resources");
                     break;
                 case "exit":
                     finish();

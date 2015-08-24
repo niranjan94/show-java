@@ -80,6 +80,6 @@ public class JavaExtractor extends ProcessServiceHelper {
 
     private void startXMLExtractor(boolean hasJava){
         SourceInfo.setjavaSourceStatus(processService, hasJava);
-        ((new XmlExtractor(processService))).extract();
+        ((new ResourcesExtractor(processService))).extract();
     }
 }

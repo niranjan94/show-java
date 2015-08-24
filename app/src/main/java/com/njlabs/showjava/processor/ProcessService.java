@@ -269,8 +269,8 @@ public class ProcessService extends Service {
             case "jar2java":
                 processNotify.updateTitleText("Decompiling to java", "Processing ...");
                 break;
-            case "xml":
-                processNotify.updateTitleText("Extracting XML Resources", "Processing ...");
+            case "res":
+                processNotify.updateTitleText("Extracting Resources", "Processing ...");
                 break;
             case "exit":
                 try {

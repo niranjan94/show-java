@@ -108,8 +108,10 @@ public class JavaExplorer extends BaseActivity {
                         fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(),"viewer_java"));
                     } else if(extension.equalsIgnoreCase("xml")){
                         fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(),"viewer_xml"));
-                    }  else if(extension.equalsIgnoreCase("txt")){
+                    } else if(extension.equalsIgnoreCase("txt")){
 						fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(),"viewer_summary"));
+                    } else if(extension.equalsIgnoreCase("png")|extension.equalsIgnoreCase("jpg")){
+                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(),"viewer_image"));
                     }
     			}
     		}
@@ -123,7 +125,7 @@ public class JavaExplorer extends BaseActivity {
     	if(!f.toString().equalsIgnoreCase(rootDir))
     		dir.add(0,new Item("..","Parent Directory","",f.getParent(),"directory_up"));
 
-    	adapter = new FileArrayAdapter(JavaExplorer.this,R.layout.java_explorer_list_item,dir);
+    	adapter = new FileArrayAdapter(JavaExplorer.this, R.layout.java_explorer_list_item,dir);
     	lv.setAdapter(adapter);
     	lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -141,12 +143,19 @@ public class JavaExplorer extends BaseActivity {
     }
 
     private void onFileClick(Item o) {
-        Intent i = new Intent(getApplicationContext(), SourceViewer.class);
-		i.putExtra("file_path", currentDir.toString());
-		i.putExtra("file_name", o.getName());
-        i.putExtra("package_id",PackageID);
-		startActivity(i);
-		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        if (FilenameUtils.getExtension(o.getPath()).equals("png")||FilenameUtils.getExtension(o.getPath()).equals("jpg")){
+            Intent i = new Intent(getApplicationContext(), ImageResourceViewer.class);
+            i.putExtra("file_path", o.getPath());
+            i.putExtra("package_id",PackageID);
+            startActivity(i);
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        } else {
+            Intent i = new Intent(getApplicationContext(), SourceViewer.class);
+            i.putExtra("file_path", o.getPath());
+            i.putExtra("package_id",PackageID);
+            startActivity(i);
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        }
     }
 
     @Override
