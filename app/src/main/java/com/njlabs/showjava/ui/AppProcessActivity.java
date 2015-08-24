@@ -78,6 +78,7 @@ public class AppProcessActivity extends BaseActivity {
             startProcessorService();
         } else {
             CurrentStatus.setText("Processing ...");
+            CurrentLine.setText("");
         }
 
         appNameView.setSingleLine(false);
@@ -87,10 +88,6 @@ public class AppProcessActivity extends BaseActivity {
         CurrentStatus.setSingleLine(false);
         CurrentStatus.setEllipsize(TextUtils.TruncateAt.END);
         CurrentStatus.setLines(1);
-
-        CurrentLine.setSingleLine(false);
-        CurrentLine.setEllipsize(TextUtils.TruncateAt.END);
-        CurrentLine.setLines(1);
 
         final ImageView GearProgressLeft = (ImageView) findViewById(R.id.gear_progress_left);
         final ImageView GearProgressRight = (ImageView) findViewById(R.id.gear_progress_right);
