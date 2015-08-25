@@ -69,7 +69,6 @@ public class JavaExtractor extends ProcessServiceHelper {
                     javaError = true;
                 }
                 startXMLExtractor(!javaError);
-
             }
         }, "Jar to Java Thread", Constants.STACK_SIZE);
 

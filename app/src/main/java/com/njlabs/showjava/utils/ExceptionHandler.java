@@ -6,7 +6,6 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.njlabs.showjava.ui.JavaExplorer;
 
 import java.io.PrintWriter;
@@ -30,7 +29,6 @@ public class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandl
     }
 
     public void uncaughtException(Thread thread, Throwable exception) {
-        Crashlytics.logException(exception);
 
         StringWriter stackTrace = new StringWriter();
         exception.printStackTrace(new PrintWriter(stackTrace));
