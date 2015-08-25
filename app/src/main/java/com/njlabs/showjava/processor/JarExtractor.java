@@ -122,37 +122,39 @@ public class JarExtractor extends ProcessServiceHelper {
         System.setOut(printStream);
         //////
 
-
-
         File PerAppWorkingDirectory = new File(sourceOutputDir);
         File file = new File(PerAppWorkingDirectory + "/" + packageName + ".jar");
 
-        DexExceptionHandlerMod dexExceptionHandlerMod = new DexExceptionHandlerMod();
-        try {
-            DexFileReader reader = new DexFileReader(new File(PerAppWorkingDirectory + "/optimised_classes.dex"));
-            Dex2jar dex2jar = Dex2jar.from(reader).reUseReg(reuseReg).topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
-                    .optimizeSynchronized(optimizeSynchronized).printIR(printIR).verbose(verbose);
-            dex2jar.setExceptionHandler(dexExceptionHandlerMod);
-            dex2jar.to(file);
-        } catch (Exception e) {
-            Crashlytics.logException(e);
-            broadcastStatus("exit_process_on_error");
+        File dexFile = new File(PerAppWorkingDirectory + "/optimised_classes.dex");
+
+        if(dexFile.exists() && dexFile.isFile()){
+            DexExceptionHandlerMod dexExceptionHandlerMod = new DexExceptionHandlerMod();
+            try {
+                DexFileReader reader = new DexFileReader(dexFile);
+                Dex2jar dex2jar = Dex2jar.from(reader).reUseReg(reuseReg).topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
+                        .optimizeSynchronized(optimizeSynchronized).printIR(printIR).verbose(verbose);
+                dex2jar.setExceptionHandler(dexExceptionHandlerMod);
+                dex2jar.to(file);
+            } catch (Exception e) {
+                broadcastStatus("exit_process_on_error");
+            }
+
+            Log.i("STATUS", "Clearing cache");
+            File ClassDex = new File(PerAppWorkingDirectory + "/optimised_classes.dex");
+            ClassDex.delete();
         }
 
-        Log.i("STATUS", "Clearing cache");
-        File ClassDex = new File(PerAppWorkingDirectory + "/optimised_classes.dex");
-        ClassDex.delete();
     }
 
     class DexExceptionHandlerMod implements DexExceptionHandler {
         @Override
         public void handleFileException(Exception e) {
-            Ln.e("Dex2Jar Exception " + e);
+            Ln.d("Dex2Jar Exception " + e);
         }
 
         @Override
         public void handleMethodTranslateException(Method method, IrMethod irMethod, MethodNode methodNode, Exception e) {
-            Ln.e("Dex2Jar Exception " + e);
+            Ln.d("Dex2Jar Exception " + e);
         }
     }
 
