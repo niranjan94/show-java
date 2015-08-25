@@ -118,7 +118,7 @@ public class ResourcesExtractor extends ProcessServiceHelper {
             String xml = apkParser.transBinaryXml(path);
             String fileFolderPath = sourceOutputDir + "/" + path.replace(FilenameUtils.getName(path), "");
             File fileFolder = new File(fileFolderPath);
-            if (!fileFolder.isDirectory()) {
+            if (!fileFolder.exists() || !fileFolder.isDirectory()) {
                 fileFolder.mkdirs();
             }
             FileUtils.writeStringToFile(new File(fileFolderPath + FilenameUtils.getName(path)), xml);
