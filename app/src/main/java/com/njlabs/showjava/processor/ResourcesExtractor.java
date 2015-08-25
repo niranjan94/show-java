@@ -78,7 +78,7 @@ public class ResourcesExtractor extends ProcessServiceHelper {
         try {
             String fileFolderPath = sourceOutputDir + "/" + path.replace(FilenameUtils.getName(path), "");
             File fileFolder = new File(fileFolderPath);
-            if (!fileFolder.isDirectory()) {
+            if (!fileFolder.exists() || !fileFolder.isDirectory()) {
                 fileFolder.mkdirs();
             }
 
@@ -90,8 +90,6 @@ public class ResourcesExtractor extends ProcessServiceHelper {
             while ((read = fileStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
-
-            System.out.println("Done!");
 
         } catch (IOException e) {
             Crashlytics.logException(e);
