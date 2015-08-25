@@ -17,6 +17,7 @@ import com.njlabs.showjava.R;
 import com.njlabs.showjava.modals.Item;
 import com.njlabs.showjava.utils.FileArrayAdapter;
 import com.njlabs.showjava.utils.StringUtils;
+import com.njlabs.showjava.utils.logging.Ln;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -116,7 +117,7 @@ public class JavaExplorer extends BaseActivity {
     			}
     		}
     	} catch(Exception e) {
-            Crashlytics.logException(e);
+            Ln.d(e);
     	}
     	Collections.sort(dir);
     	Collections.sort(fls);
