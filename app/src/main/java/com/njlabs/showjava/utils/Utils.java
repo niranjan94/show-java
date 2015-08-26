@@ -54,4 +54,16 @@ public class Utils {
         }
         return null;
     }
+
+    public static long getFolderSize(File f) {
+        long size = 0;
+        if (f.isDirectory()) {
+            for (File file : f.listFiles()) {
+                size += getFolderSize(file);
+            }
+        } else {
+            size=f.length();
+        }
+        return size;
+    }
 }
