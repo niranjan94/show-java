@@ -21,12 +21,10 @@
 3. Include system details like Android version, total RAM, etc.
 4. If possible, include the link to the app that you were trying to decompile
 5. Paste stacktrace (if possible) in your issue or in a Gist. If pasting them in the issue, wrap it in three backticks: <code>```</code> so that it renders nicely.
-6. Label the issue as a **bug**.
-7. Submit it and wait for one of the project maintainers to review it. (Please be patient)
+6. Submit it and wait for one of the project maintainers to review it. (Please be patient)
 
 ## Requesting a Feature/Enhancement ([over here](https://github.com/niranjan94/show-java/issues/new))
 
 1. Check [existing issues](https://github.com/niranjan94/show-java/issues) for your issue. Duplicating an issue is slower for both parties so search through open and closed issues to see if what you’re running into has been addressed already.
 2. Give a clear and a consise description about the feature/enhancement that you'd love to see in ShowJava
-6. Label the issue as an **enhancement**.
-7. Submit it and wait for one of the project maintainers to review it. (Please be patient)
+3. Submit it and wait for one of the project maintainers to review it. (Please be patient)
