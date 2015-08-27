@@ -52,4 +52,5 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 
 1. A Big-Huge Thanks to Lee Benfield ([lee@benf.org](mailto:lee@benf.org)) for his awesome CFR - Class File Reader
 2. Panxiaobo ([pxb1988@gmail.com](mailto:pxb1988@gmail.com)) for dex2jar
-3. Liu Dong ([github.com/xiaxiaocao](https://github.com/xiaxiaocao)) for apk-parser
+3. [Liu Dong](https://github.com/xiaxiaocao) for apk-parser
+4. [Ben Gruver](https://github.com/JesusFreke/) for dexlib2
