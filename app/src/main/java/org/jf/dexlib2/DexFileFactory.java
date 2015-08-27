@@ -31,6 +31,15 @@
 
 package org.jf.dexlib2;
 
+
+import com.google.common.io.ByteStreams;
+
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.dexbacked.DexBackedOdexFile;
+import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.writer.pool.DexPool;
+import org.jf.util.ExceptionWithContext;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,15 +50,8 @@ import java.util.zip.ZipFile;
 
 import javax.annotation.Nonnull;
 
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.dexbacked.DexBackedOdexFile;
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.writer.pool.DexPool;
-import org.jf.util.ExceptionWithContext;
-
-import com.google.common.io.ByteStreams;
-
 public final class DexFileFactory {
+
     @Nonnull
     public static DexBackedDexFile loadDexFile(String path, int api) throws IOException {
         return loadDexFile(new File(path), new Opcodes(api));
