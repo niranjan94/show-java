@@ -39,5 +39,8 @@ public class BuilderEpilogueBegin extends BuilderDebugItem implements EpilogueBe
     public BuilderEpilogueBegin() {
     }
 
-    @Override public int getDebugItemType() { return DebugItemType.EPILOGUE_BEGIN; }
+    @Override
+    public int getDebugItemType() {
+        return DebugItemType.EPILOGUE_BEGIN;
+    }
 }

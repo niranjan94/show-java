@@ -36,9 +36,9 @@ import org.jf.dexlib2.dexbacked.BaseDexBuffer;
 public class OdexHeaderItem {
     public static final int ITEM_SIZE = 40;
 
-    public static final byte[][] MAGIC_VALUES= new byte[][] {
-            new byte[] {0x64, 0x65, 0x79, 0x0A, 0x30, 0x33, 0x35, 0x00}, // "dey\n035\0"
-            new byte[] {0x64, 0x65, 0x79, 0x0A, 0x30, 0x33, 0x36, 0x00}  // "dey\n036\0"
+    public static final byte[][] MAGIC_VALUES = new byte[][]{
+            new byte[]{0x64, 0x65, 0x79, 0x0A, 0x30, 0x33, 0x35, 0x00}, // "dey\n035\0"
+            new byte[]{0x64, 0x65, 0x79, 0x0A, 0x30, 0x33, 0x36, 0x00}  // "dey\n036\0"
     };
 
     public static final int MAGIC_OFFSET = 0;
@@ -57,17 +57,17 @@ public class OdexHeaderItem {
         }
 
         boolean matches = true;
-        for (int i=0; i<MAGIC_VALUES.length; i++) {
+        for (int i = 0; i < MAGIC_VALUES.length; i++) {
             byte[] expected = MAGIC_VALUES[i];
             matches = true;
-            for (int j=0; j<8; j++) {
+            for (int j = 0; j < 8; j++) {
                 if (magic[j] != expected[j]) {
                     matches = false;
                     break;
                 }
             }
             if (matches) {
-                return i==0?35:36;
+                return i == 0 ? 35 : 36;
             }
         }
         return 0;

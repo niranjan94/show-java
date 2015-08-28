@@ -35,5 +35,6 @@ import org.jf.dexlib2.iface.reference.Reference;
 
 public interface BuilderReference extends Reference {
     int getIndex();
+
     void setIndex(int index);
 }

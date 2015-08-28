@@ -45,7 +45,7 @@ public abstract class BaseStringReference implements StringReference {
     @Override
     public boolean equals(@Nullable Object o) {
         if (o != null && o instanceof StringReference) {
-            return getString().equals(((StringReference)o).getString());
+            return getString().equals(((StringReference) o).getString());
         }
         return false;
     }
@@ -55,8 +55,23 @@ public abstract class BaseStringReference implements StringReference {
         return getString().compareTo(o.toString());
     }
 
-    @Override public int length() { return getString().length(); }
-    @Override public char charAt(int index) { return getString().charAt(index); }
-    @Override public CharSequence subSequence(int start, int end) { return getString().subSequence(start, end); }
-    @Override public String toString() { return getString(); }
+    @Override
+    public int length() {
+        return getString().length();
+    }
+
+    @Override
+    public char charAt(int index) {
+        return getString().charAt(index);
+    }
+
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        return getString().subSequence(start, end);
+    }
+
+    @Override
+    public String toString() {
+        return getString();
+    }
 }

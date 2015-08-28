@@ -81,6 +81,13 @@ public class DexBuilder extends DexWriter<BuilderStringReference, BuilderStringR
 
     private final BuilderContext context;
 
+    private DexBuilder(int api, @Nonnull BuilderContext context) {
+        super(api, context.stringPool, context.typePool, context.protoPool,
+                context.fieldPool, context.methodPool, context.classPool, context.typeListPool, context.annotationPool,
+                context.annotationSetPool);
+        this.context = context;
+    }
+
     public static DexBuilder makeDexBuilder() {
         BuilderContext context = new BuilderContext();
         return new DexBuilder(15, context);
@@ -91,32 +98,27 @@ public class DexBuilder extends DexWriter<BuilderStringReference, BuilderStringR
         return new DexBuilder(api, context);
     }
 
-    private DexBuilder(int api, @Nonnull BuilderContext context) {
-        super(api, context.stringPool, context.typePool, context.protoPool,
-                context.fieldPool, context.methodPool, context.classPool, context.typeListPool, context.annotationPool,
-                context.annotationSetPool);
-        this.context = context;
-    }
-
-    @Nonnull public BuilderField internField(@Nonnull String definingClass,
-                                             @Nonnull String name,
-                                             @Nonnull String type,
-                                             int accessFlags,
-                                             @Nullable EncodedValue initialValue,
-                                             @Nonnull Set<? extends Annotation> annotations) {
+    @Nonnull
+    public BuilderField internField(@Nonnull String definingClass,
+                                    @Nonnull String name,
+                                    @Nonnull String type,
+                                    int accessFlags,
+                                    @Nullable EncodedValue initialValue,
+                                    @Nonnull Set<? extends Annotation> annotations) {
         return new BuilderField(context.fieldPool.internField(definingClass, name, type),
                 accessFlags,
                 context.internNullableEncodedValue(initialValue),
                 context.annotationSetPool.internAnnotationSet(annotations));
     }
 
-    @Nonnull public BuilderMethod internMethod(@Nonnull String definingClass,
-                                               @Nonnull String name,
-                                               @Nullable List<? extends MethodParameter> parameters,
-                                               @Nonnull String returnType,
-                                               int accessFlags,
-                                               @Nonnull Set<? extends Annotation> annotations,
-                                               @Nullable MethodImplementation methodImplementation) {
+    @Nonnull
+    public BuilderMethod internMethod(@Nonnull String definingClass,
+                                      @Nonnull String name,
+                                      @Nullable List<? extends MethodParameter> parameters,
+                                      @Nonnull String returnType,
+                                      int accessFlags,
+                                      @Nonnull Set<? extends Annotation> annotations,
+                                      @Nullable MethodImplementation methodImplementation) {
         if (parameters == null) {
             parameters = ImmutableList.of();
         }
@@ -127,14 +129,15 @@ public class DexBuilder extends DexWriter<BuilderStringReference, BuilderStringR
                 methodImplementation);
     }
 
-    @Nonnull public BuilderClassDef internClassDef(@Nonnull String type,
-                                                   int accessFlags,
-                                                   @Nullable String superclass,
-                                                   @Nullable List<String> interfaces,
-                                                   @Nullable String sourceFile,
-                                                   @Nonnull Set<? extends Annotation> annotations,
-                                                   @Nullable Iterable<? extends BuilderField> fields,
-                                                   @Nullable Iterable<? extends BuilderMethod> methods) {
+    @Nonnull
+    public BuilderClassDef internClassDef(@Nonnull String type,
+                                          int accessFlags,
+                                          @Nullable String superclass,
+                                          @Nullable List<String> interfaces,
+                                          @Nullable String sourceFile,
+                                          @Nonnull Set<? extends Annotation> annotations,
+                                          @Nullable Iterable<? extends BuilderField> fields,
+                                          @Nullable Iterable<? extends BuilderMethod> methods) {
         if (interfaces == null) {
             interfaces = ImmutableList.of();
         } else {
@@ -161,124 +164,136 @@ public class DexBuilder extends DexWriter<BuilderStringReference, BuilderStringR
                 methods));
     }
 
-    @Nonnull public BuilderStringReference internStringReference(@Nonnull String string) {
+    @Nonnull
+    public BuilderStringReference internStringReference(@Nonnull String string) {
         return context.stringPool.internString(string);
     }
 
-    @Nullable public BuilderStringReference internNullableStringReference(@Nullable String string) {
+    @Nullable
+    public BuilderStringReference internNullableStringReference(@Nullable String string) {
         if (string != null) {
             return internStringReference(string);
         }
         return null;
     }
 
-    @Nonnull public BuilderTypeReference internTypeReference(@Nonnull String type) {
+    @Nonnull
+    public BuilderTypeReference internTypeReference(@Nonnull String type) {
         return context.typePool.internType(type);
     }
 
-    @Nullable public BuilderTypeReference internNullableTypeReference(@Nullable String type) {
+    @Nullable
+    public BuilderTypeReference internNullableTypeReference(@Nullable String type) {
         if (type != null) {
             return internTypeReference(type);
         }
         return null;
     }
 
-    @Nonnull public BuilderFieldReference internFieldReference(@Nonnull FieldReference field) {
+    @Nonnull
+    public BuilderFieldReference internFieldReference(@Nonnull FieldReference field) {
         return context.fieldPool.internField(field);
     }
 
-    @Nonnull public BuilderMethodReference internMethodReference(@Nonnull MethodReference method) {
+    @Nonnull
+    public BuilderMethodReference internMethodReference(@Nonnull MethodReference method) {
         return context.methodPool.internMethod(method);
     }
 
-    @Nonnull public BuilderReference internReference(@Nonnull Reference reference) {
+    @Nonnull
+    public BuilderReference internReference(@Nonnull Reference reference) {
         if (reference instanceof StringReference) {
-            return internStringReference(((StringReference)reference).getString());
+            return internStringReference(((StringReference) reference).getString());
         }
         if (reference instanceof TypeReference) {
-            return internTypeReference(((TypeReference)reference).getType());
+            return internTypeReference(((TypeReference) reference).getType());
         }
         if (reference instanceof MethodReference) {
-            return internMethodReference((MethodReference)reference);
+            return internMethodReference((MethodReference) reference);
         }
         if (reference instanceof FieldReference) {
-            return internFieldReference((FieldReference)reference);
+            return internFieldReference((FieldReference) reference);
         }
         throw new IllegalArgumentException("Could not determine type of reference");
     }
 
-    @Nonnull private List<BuilderMethodParameter> internMethodParameters(
+    @Nonnull
+    private List<BuilderMethodParameter> internMethodParameters(
             @Nullable List<? extends MethodParameter> methodParameters) {
         if (methodParameters == null) {
             return ImmutableList.of();
         }
         return ImmutableList.copyOf(Iterators.transform(methodParameters.iterator(),
                 new Function<MethodParameter, BuilderMethodParameter>() {
-                    @Nullable @Override public BuilderMethodParameter apply(MethodParameter input) {
+                    @Nullable
+                    @Override
+                    public BuilderMethodParameter apply(MethodParameter input) {
                         return internMethodParameter(input);
                     }
                 }));
     }
 
-    @Nonnull private BuilderMethodParameter internMethodParameter(@Nonnull MethodParameter methodParameter) {
+    @Nonnull
+    private BuilderMethodParameter internMethodParameter(@Nonnull MethodParameter methodParameter) {
         return new BuilderMethodParameter(
                 context.typePool.internType(methodParameter.getType()),
                 context.stringPool.internNullableString(methodParameter.getName()),
                 context.annotationSetPool.internAnnotationSet(methodParameter.getAnnotations()));
     }
 
-    @Override protected void writeEncodedValue(@Nonnull InternalEncodedValueWriter writer,
-                                               @Nonnull BuilderEncodedValue encodedValue) throws IOException {
+    @Override
+    protected void writeEncodedValue(@Nonnull InternalEncodedValueWriter writer,
+                                     @Nonnull BuilderEncodedValue encodedValue) throws IOException {
         switch (encodedValue.getValueType()) {
             case ValueType.ANNOTATION:
-                BuilderAnnotationEncodedValue annotationEncodedValue = (BuilderAnnotationEncodedValue)encodedValue;
+                BuilderAnnotationEncodedValue annotationEncodedValue = (BuilderAnnotationEncodedValue) encodedValue;
                 writer.writeAnnotation(annotationEncodedValue.typeReference, annotationEncodedValue.elements);
                 break;
             case ValueType.ARRAY:
-                BuilderArrayEncodedValue arrayEncodedValue = (BuilderArrayEncodedValue)encodedValue;
+                BuilderArrayEncodedValue arrayEncodedValue = (BuilderArrayEncodedValue) encodedValue;
                 writer.writeArray(arrayEncodedValue.elements);
                 break;
             case ValueType.BOOLEAN:
-                writer.writeBoolean(((BooleanEncodedValue)encodedValue).getValue());
+                writer.writeBoolean(((BooleanEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.BYTE:
-                writer.writeByte(((ByteEncodedValue)encodedValue).getValue());
+                writer.writeByte(((ByteEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.CHAR:
-                writer.writeChar(((CharEncodedValue)encodedValue).getValue());
+                writer.writeChar(((CharEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.DOUBLE:
-                writer.writeDouble(((DoubleEncodedValue)encodedValue).getValue());
+                writer.writeDouble(((DoubleEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.ENUM:
-                writer.writeEnum(((BuilderEnumEncodedValue)encodedValue).getValue());
+                writer.writeEnum(((BuilderEnumEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.FIELD:
-                writer.writeField(((BuilderFieldEncodedValue)encodedValue).fieldReference);
+                writer.writeField(((BuilderFieldEncodedValue) encodedValue).fieldReference);
                 break;
             case ValueType.FLOAT:
-                writer.writeFloat(((FloatEncodedValue)encodedValue).getValue());
+                writer.writeFloat(((FloatEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.INT:
-                writer.writeInt(((IntEncodedValue)encodedValue).getValue());
+                writer.writeInt(((IntEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.LONG:
-                writer.writeLong(((LongEncodedValue)encodedValue).getValue());
+                writer.writeLong(((LongEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.METHOD:
-                writer.writeMethod(((BuilderMethodEncodedValue)encodedValue).methodReference);
+                writer.writeMethod(((BuilderMethodEncodedValue) encodedValue).methodReference);
                 break;
             case ValueType.NULL:
                 writer.writeNull();
                 break;
             case ValueType.SHORT:
-                writer.writeShort(((ShortEncodedValue)encodedValue).getValue());
+                writer.writeShort(((ShortEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.STRING:
-                writer.writeString(((BuilderStringEncodedValue)encodedValue).stringReference);
+                writer.writeString(((BuilderStringEncodedValue) encodedValue).stringReference);
                 break;
             case ValueType.TYPE:
-                writer.writeType(((BuilderTypeEncodedValue)encodedValue).typeReference);
+                writer.writeType(((BuilderTypeEncodedValue) encodedValue).typeReference);
                 break;
             default:
                 throw new ExceptionWithContext("Unrecognized value type: %d", encodedValue.getValueType());

@@ -72,46 +72,6 @@ public class AppListing extends BaseActivity {
         }
     }
 
-    private class ApplicationLoader extends AsyncTask<String, String, ArrayList<PackageInfoHolder>> {
-
-        @Override
-        protected ArrayList<PackageInfoHolder> doInBackground(String... params) {
-            publishProgress("Retrieving installed application");
-            return getInstalledApps(this);
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<PackageInfoHolder> AllPackages) {
-            setupList(AllPackages);
-            if (!isDestroyed) {
-                dismissProgressDialog();
-            }
-        }
-
-        public void doProgress(String value) {
-            publishProgress(value);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        protected void onProgressUpdate(String... text) {
-            PackageLoadDialog.setMessage(text[0]);
-        }
-    }
-
-    private static class ViewHolder {
-        TextView packageLabel;
-        TextView packageName;
-        TextView packageVersion;
-        TextView packageFilePath;
-        ImageView packageIcon;
-        int position;
-    }
-
     public void setupList(ArrayList<PackageInfoHolder> AllPackages) {
         ArrayAdapter<PackageInfoHolder> aa = new ArrayAdapter<PackageInfoHolder>(getBaseContext(), R.layout.package_list_item, AllPackages) {
             @SuppressLint("InflateParams")
@@ -158,7 +118,7 @@ public class AppListing extends BaseActivity {
 
                     final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + holder.packageName.getText().toString() + "");
 
-                    if (Utils.sourceExists(sourceDir)){
+                    if (Utils.sourceExists(sourceDir)) {
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(AppListing.this, R.style.AlertDialog);
                         alertDialog.setTitle("This Package has already been decompiled");
                         alertDialog.setMessage("This application has already been decompiled once and the source exists on your sdcard. What would you like to do ?");
@@ -188,7 +148,7 @@ public class AppListing extends BaseActivity {
                         });
                         alertDialog.show();
 
-                    }else{
+                    } else {
                         Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
                         i.putExtra("package_label", holder.packageLabel.getText().toString());
                         i.putExtra("package_file_path", holder.packageFilePath.getText().toString());
@@ -199,19 +159,6 @@ public class AppListing extends BaseActivity {
             }
         });
     }
-
-    class PackageInfoHolder {
-        private String packageLabel = "";
-        private String packageName = "";
-        private String packageVersion = "";
-        private String packageFilePath = "";
-        private Drawable packageIcon;
-
-        public String getPackageLabel() {
-            return packageLabel;
-        }
-    }
-
 
     private ArrayList<PackageInfoHolder> getInstalledApps(ApplicationLoader task) {
         ArrayList<PackageInfoHolder> res = new ArrayList<>();
@@ -265,6 +212,58 @@ public class AppListing extends BaseActivity {
         isDestroyed = true;
         dismissProgressDialog();
         super.onDestroy();
+    }
+
+    private static class ViewHolder {
+        TextView packageLabel;
+        TextView packageName;
+        TextView packageVersion;
+        TextView packageFilePath;
+        ImageView packageIcon;
+        int position;
+    }
+
+    private class ApplicationLoader extends AsyncTask<String, String, ArrayList<PackageInfoHolder>> {
+
+        @Override
+        protected ArrayList<PackageInfoHolder> doInBackground(String... params) {
+            publishProgress("Retrieving installed application");
+            return getInstalledApps(this);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<PackageInfoHolder> AllPackages) {
+            setupList(AllPackages);
+            if (!isDestroyed) {
+                dismissProgressDialog();
+            }
+        }
+
+        public void doProgress(String value) {
+            publishProgress(value);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        protected void onProgressUpdate(String... text) {
+            PackageLoadDialog.setMessage(text[0]);
+        }
+    }
+
+    class PackageInfoHolder {
+        private String packageLabel = "";
+        private String packageName = "";
+        private String packageVersion = "";
+        private String packageFilePath = "";
+        private Drawable packageIcon;
+
+        public String getPackageLabel() {
+            return packageLabel;
+        }
     }
 
 

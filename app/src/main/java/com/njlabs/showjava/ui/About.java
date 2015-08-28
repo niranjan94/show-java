@@ -9,12 +9,12 @@ import com.njlabs.showjava.R;
 
 public class About extends BaseActivity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setupLayout(R.layout.activity_about);
-		((TextView) findViewById(R.id.AppVersion)).setText("Version " + BuildConfig.VERSION_NAME);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupLayout(R.layout.activity_about);
+        ((TextView) findViewById(R.id.AppVersion)).setText("Version " + BuildConfig.VERSION_NAME);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

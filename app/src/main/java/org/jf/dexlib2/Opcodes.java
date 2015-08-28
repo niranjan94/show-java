@@ -45,7 +45,7 @@ public class Opcodes {
         opcodesByValue = new Opcode[256];
         opcodesByName = Maps.newHashMap();
 
-        for (Opcode opcode: Opcode.values()) {
+        for (Opcode opcode : Opcode.values()) {
             if (!opcode.format.isPayloadFormat) {
                 if (api <= opcode.getMaxApi() && api >= opcode.getMinApi()) {
                     opcodesByValue[opcode.value] = opcode;

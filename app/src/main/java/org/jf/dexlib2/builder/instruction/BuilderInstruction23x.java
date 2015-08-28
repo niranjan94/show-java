@@ -56,9 +56,23 @@ public class BuilderInstruction23x extends BuilderInstruction implements Instruc
         this.registerC = Preconditions.checkByteRegister(registerC);
     }
 
-    @Override public int getRegisterA() { return registerA; }
-    @Override public int getRegisterB() { return registerB; }
-    @Override public int getRegisterC() { return registerC; }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getRegisterB() {
+        return registerB;
+    }
+
+    @Override
+    public int getRegisterC() {
+        return registerC;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

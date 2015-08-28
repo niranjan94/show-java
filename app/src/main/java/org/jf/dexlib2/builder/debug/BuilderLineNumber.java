@@ -42,7 +42,13 @@ public class BuilderLineNumber extends BuilderDebugItem implements LineNumber {
         this.lineNumber = lineNumber;
     }
 
-    @Override public int getLineNumber() { return lineNumber; }
+    @Override
+    public int getLineNumber() {
+        return lineNumber;
+    }
 
-    @Override public int getDebugItemType() { return DebugItemType.LINE_NUMBER; }
+    @Override
+    public int getDebugItemType() {
+        return DebugItemType.LINE_NUMBER;
+    }
 }

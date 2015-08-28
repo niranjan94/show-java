@@ -4,21 +4,21 @@
     <item
         android:id="@+id/bug_report_option"
         android:orderInCategory="1"
-        app:showAsAction="never"
-        android:title="Report a Bug"/>
+        android:title="Report a Bug"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/about_option"
         android:orderInCategory="2"
-        app:showAsAction="never"
-        android:title="About"/>
+        android:title="About"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/invert_colors"
-        android:orderInCategory="2"
         android:icon="@drawable/ic_action_invert_colors"
+        android:orderInCategory="2"
+        android:title="Invert Background Color"
         android:visible="false"
-        app:showAsAction="always"
-        android:title="Invert Background Color"/>
+        app:showAsAction="always" />
 
 </menu>

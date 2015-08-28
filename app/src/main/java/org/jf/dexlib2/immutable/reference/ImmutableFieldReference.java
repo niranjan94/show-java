@@ -37,9 +37,12 @@ import org.jf.dexlib2.iface.reference.FieldReference;
 import javax.annotation.Nonnull;
 
 public class ImmutableFieldReference extends BaseFieldReference implements ImmutableReference {
-    @Nonnull protected final String definingClass;
-    @Nonnull protected final String name;
-    @Nonnull protected final String type;
+    @Nonnull
+    protected final String definingClass;
+    @Nonnull
+    protected final String name;
+    @Nonnull
+    protected final String type;
 
     public ImmutableFieldReference(@Nonnull String definingClass,
                                    @Nonnull String name,
@@ -52,7 +55,7 @@ public class ImmutableFieldReference extends BaseFieldReference implements Immut
     @Nonnull
     public static ImmutableFieldReference of(@Nonnull FieldReference fieldReference) {
         if (fieldReference instanceof ImmutableFieldReference) {
-            return (ImmutableFieldReference)fieldReference;
+            return (ImmutableFieldReference) fieldReference;
         }
         return new ImmutableFieldReference(
                 fieldReference.getDefiningClass(),
@@ -60,7 +63,18 @@ public class ImmutableFieldReference extends BaseFieldReference implements Immut
                 fieldReference.getType());
     }
 
-    @Nonnull public String getDefiningClass() { return definingClass; }
-    @Nonnull public String getName() { return name; }
-    @Nonnull public String getType() { return type; }
+    @Nonnull
+    public String getDefiningClass() {
+        return definingClass;
+    }
+
+    @Nonnull
+    public String getName() {
+        return name;
+    }
+
+    @Nonnull
+    public String getType() {
+        return type;
+    }
 }

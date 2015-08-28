@@ -59,17 +59,17 @@ public class ImmutableInstruction35mi extends ImmutableInstruction implements In
                                     int inlineIndex) {
         super(opcode);
         this.registerCount = Preconditions.check35cRegisterCount(registerCount);
-        this.registerC = (registerCount>0) ? Preconditions.checkNibbleRegister(registerC) : 0;
-        this.registerD = (registerCount>1) ? Preconditions.checkNibbleRegister(registerD) : 0;
-        this.registerE = (registerCount>2) ? Preconditions.checkNibbleRegister(registerE) : 0;
-        this.registerF = (registerCount>3) ? Preconditions.checkNibbleRegister(registerF) : 0;
-        this.registerG = (registerCount>4) ? Preconditions.checkNibbleRegister(registerG) : 0;
+        this.registerC = (registerCount > 0) ? Preconditions.checkNibbleRegister(registerC) : 0;
+        this.registerD = (registerCount > 1) ? Preconditions.checkNibbleRegister(registerD) : 0;
+        this.registerE = (registerCount > 2) ? Preconditions.checkNibbleRegister(registerE) : 0;
+        this.registerF = (registerCount > 3) ? Preconditions.checkNibbleRegister(registerF) : 0;
+        this.registerG = (registerCount > 4) ? Preconditions.checkNibbleRegister(registerG) : 0;
         this.inlineIndex = Preconditions.checkInlineIndex(inlineIndex);
     }
 
     public static ImmutableInstruction35mi of(Instruction35mi instruction) {
         if (instruction instanceof ImmutableInstruction35mi) {
-            return (ImmutableInstruction35mi)instruction;
+            return (ImmutableInstruction35mi) instruction;
         }
         return new ImmutableInstruction35mi(
                 instruction.getOpcode(),
@@ -82,13 +82,43 @@ public class ImmutableInstruction35mi extends ImmutableInstruction implements In
                 instruction.getInlineIndex());
     }
 
-    @Override public int getRegisterCount() { return registerCount; }
-    @Override public int getRegisterC() { return registerC; }
-    @Override public int getRegisterD() { return registerD; }
-    @Override public int getRegisterE() { return registerE; }
-    @Override public int getRegisterF() { return registerF; }
-    @Override public int getRegisterG() { return registerG; }
-    @Override public int getInlineIndex() { return inlineIndex; }
+    @Override
+    public int getRegisterCount() {
+        return registerCount;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getRegisterC() {
+        return registerC;
+    }
+
+    @Override
+    public int getRegisterD() {
+        return registerD;
+    }
+
+    @Override
+    public int getRegisterE() {
+        return registerE;
+    }
+
+    @Override
+    public int getRegisterF() {
+        return registerF;
+    }
+
+    @Override
+    public int getRegisterG() {
+        return registerG;
+    }
+
+    @Override
+    public int getInlineIndex() {
+        return inlineIndex;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

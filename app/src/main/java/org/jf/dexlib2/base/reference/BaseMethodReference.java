@@ -44,19 +44,19 @@ public abstract class BaseMethodReference implements MethodReference {
     @Override
     public int hashCode() {
         int hashCode = getDefiningClass().hashCode();
-        hashCode = hashCode*31 + getName().hashCode();
-        hashCode = hashCode*31 + getReturnType().hashCode();
-        return hashCode*31 + getParameterTypes().hashCode();
+        hashCode = hashCode * 31 + getName().hashCode();
+        hashCode = hashCode * 31 + getReturnType().hashCode();
+        return hashCode * 31 + getParameterTypes().hashCode();
     }
 
     @Override
     public boolean equals(@Nullable Object o) {
         if (o != null && o instanceof MethodReference) {
-            MethodReference other = (MethodReference)o;
+            MethodReference other = (MethodReference) o;
             return getDefiningClass().equals(other.getDefiningClass()) &&
-                   getName().equals(other.getName()) &&
-                   getReturnType().equals(other.getReturnType()) &&
-                   CharSequenceUtils.listEquals(getParameterTypes(), other.getParameterTypes());
+                    getName().equals(other.getName()) &&
+                    getReturnType().equals(other.getReturnType()) &&
+                    CharSequenceUtils.listEquals(getParameterTypes(), other.getParameterTypes());
         }
         return false;
     }

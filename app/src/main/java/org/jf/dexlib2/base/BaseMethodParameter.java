@@ -47,7 +47,7 @@ public abstract class BaseMethodParameter extends BaseTypeReference implements M
     @Override
     public String getSignature() {
         Annotation signatureAnnotation = null;
-        for (Annotation annotation: getAnnotations()) {
+        for (Annotation annotation : getAnnotations()) {
             if (annotation.getType().equals("Ldalvik/annotation/Signature;")) {
                 signatureAnnotation = annotation;
                 break;
@@ -58,13 +58,13 @@ public abstract class BaseMethodParameter extends BaseTypeReference implements M
         }
 
         ArrayEncodedValue signatureValues = null;
-        for (AnnotationElement annotationElement: signatureAnnotation.getElements()) {
+        for (AnnotationElement annotationElement : signatureAnnotation.getElements()) {
             if (annotationElement.getName().equals("value")) {
                 EncodedValue encodedValue = annotationElement.getValue();
                 if (encodedValue.getValueType() != ValueType.ARRAY) {
                     return null;
                 }
-                signatureValues = (ArrayEncodedValue)encodedValue;
+                signatureValues = (ArrayEncodedValue) encodedValue;
                 break;
             }
         }
@@ -73,11 +73,11 @@ public abstract class BaseMethodParameter extends BaseTypeReference implements M
         }
 
         StringBuilder sb = new StringBuilder();
-        for (EncodedValue signatureValue: signatureValues.getValue()) {
+        for (EncodedValue signatureValue : signatureValues.getValue()) {
             if (signatureValue.getValueType() != ValueType.STRING) {
                 return null;
             }
-            sb.append(((StringEncodedValue)signatureValue).getValue());
+            sb.append(((StringEncodedValue) signatureValue).getValue());
         }
         return sb.toString();
     }

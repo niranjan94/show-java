@@ -49,11 +49,13 @@ public class UnresolvedOdexInstruction implements Instruction {
         this.objectRegisterNum = objectRegisterNumber;
     }
 
-    @Override public Opcode getOpcode() {
+    @Override
+    public Opcode getOpcode() {
         return originalInstruction.getOpcode();
     }
 
-    @Override public int getCodeUnits() {
+    @Override
+    public int getCodeUnits() {
         return originalInstruction.getCodeUnits();
     }
 }

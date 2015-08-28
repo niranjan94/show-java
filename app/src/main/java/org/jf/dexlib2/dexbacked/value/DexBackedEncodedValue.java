@@ -61,13 +61,13 @@ public abstract class DexBackedEncodedValue {
             switch (valueType) {
                 case ValueType.BYTE:
                     Preconditions.checkValueArg(valueArg, 0);
-                    return new ImmutableByteEncodedValue((byte)reader.readByte());
+                    return new ImmutableByteEncodedValue((byte) reader.readByte());
                 case ValueType.SHORT:
                     Preconditions.checkValueArg(valueArg, 1);
-                    return new ImmutableShortEncodedValue((short)reader.readSizedInt(valueArg + 1));
+                    return new ImmutableShortEncodedValue((short) reader.readSizedInt(valueArg + 1));
                 case ValueType.CHAR:
                     Preconditions.checkValueArg(valueArg, 1);
-                    return new ImmutableCharEncodedValue((char)reader.readSizedSmallUint(valueArg + 1));
+                    return new ImmutableCharEncodedValue((char) reader.readSizedSmallUint(valueArg + 1));
                 case ValueType.INT:
                     Preconditions.checkValueArg(valueArg, 3);
                     return new ImmutableIntEncodedValue(reader.readSizedInt(valueArg + 1));
@@ -140,7 +140,7 @@ public abstract class DexBackedEncodedValue {
                 case ValueType.METHOD:
                 case ValueType.ENUM:
                     int valueArg = b >>> 5;
-                    reader.moveRelative(valueArg+1);
+                    reader.moveRelative(valueArg + 1);
                     break;
                 case ValueType.ARRAY:
                     DexBackedArrayEncodedValue.skipFrom(reader);

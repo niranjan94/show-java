@@ -45,7 +45,8 @@ public interface ExceptionHandler extends Comparable<ExceptionHandler> {
      *
      * @return The type of exception that is handled by this handler, or null if this is a catch-all handler.
      */
-    @Nullable String getExceptionType();
+    @Nullable
+    String getExceptionType();
 
     /**
      * Gets the type of exception that is handled by this handler.
@@ -53,7 +54,8 @@ public interface ExceptionHandler extends Comparable<ExceptionHandler> {
      * @return A TypeReference to the type of exception that is handled by this handler, or null if this is a
      * catch-all handler.
      */
-    @Nullable TypeReference getExceptionTypeReference();
+    @Nullable
+    TypeReference getExceptionTypeReference();
 
     /**
      * Gets the code offset of the handler.
@@ -65,9 +67,9 @@ public interface ExceptionHandler extends Comparable<ExceptionHandler> {
 
     /**
      * Returns a hashcode for this ExceptionHandler.
-     *
+     * <p/>
      * This hashCode is defined to be the following:
-     *
+     * <p/>
      * <pre>
      * {@code
      * String exceptionType = getExceptionType();
@@ -77,27 +79,30 @@ public interface ExceptionHandler extends Comparable<ExceptionHandler> {
      *
      * @return The hash code value for this ExceptionHandler
      */
-    @Override int hashCode();
+    @Override
+    int hashCode();
 
     /**
      * Compares this ExceptionHandler to another ExceptionHandler for equality.
-     *
+     * <p/>
      * This ExceptionHandler is equal to another ExceptionHandler if all of it's "fields" are equal. That is, if
      * the return values of getExceptionType() and getHandlerCodeAddress() are both equal.
      *
      * @param o The object to be compared for equality with this ExceptionHandler
      * @return true if the specified object is equal to this ExceptionHandler
      */
-    @Override boolean equals(@Nullable Object o);
+    @Override
+    boolean equals(@Nullable Object o);
 
     /**
      * Compare this ExceptionHandler to another ExceptionHandler.
-     *
+     * <p/>
      * The comparison is based on the comparison of the return values of getExceptionType() and
      * getHandlerCodeAddress() in that order. A null value for getExceptionType() compares after a non-null value.
      *
      * @param o The ExceptionHandler to compare with this ExceptionHandler
      * @return An integer representing the result of the comparison
      */
-    @Override int compareTo(@Nonnull ExceptionHandler o);
+    @Override
+    int compareTo(@Nonnull ExceptionHandler o);
 }

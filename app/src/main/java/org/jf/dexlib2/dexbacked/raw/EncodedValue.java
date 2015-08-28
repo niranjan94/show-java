@@ -52,59 +52,59 @@ public class EncodedValue {
                 break;
             case 0x02:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: short", valueArg, valueType);
-                intValue = reader.readSizedInt(valueArg+1);
+                intValue = reader.readSizedInt(valueArg + 1);
                 out.annotate(valueArg + 1, "value = 0x%x", intValue);
                 break;
             case 0x03:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: char", valueArg, valueType);
-                intValue = reader.readSizedSmallUint(valueArg+1);
-                out.annotate(valueArg+1, "value = 0x%x", intValue);
+                intValue = reader.readSizedSmallUint(valueArg + 1);
+                out.annotate(valueArg + 1, "value = 0x%x", intValue);
                 break;
             case 0x04:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: int", valueArg, valueType);
-                intValue = reader.readSizedInt(valueArg+1);
-                out.annotate(valueArg+1, "value = 0x%x", intValue);
+                intValue = reader.readSizedInt(valueArg + 1);
+                out.annotate(valueArg + 1, "value = 0x%x", intValue);
                 break;
             case 0x06:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: long", valueArg, valueType);
-                long longValue = reader.readSizedLong(valueArg+1);
-                out.annotate(valueArg+1, "value = 0x%x", longValue);
+                long longValue = reader.readSizedLong(valueArg + 1);
+                out.annotate(valueArg + 1, "value = 0x%x", longValue);
                 break;
             case 0x10:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: float", valueArg, valueType);
                 float floatValue = Float.intBitsToFloat(reader.readSizedRightExtendedInt(valueArg + 1));
-                out.annotate(valueArg+1, "value = %f", floatValue);
+                out.annotate(valueArg + 1, "value = %f", floatValue);
                 break;
             case 0x11:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: double", valueArg, valueType);
                 double doubleValue = Double.longBitsToDouble(reader.readSizedRightExtendedLong(valueArg + 1));
-                out.annotate(valueArg+1, "value = %f", doubleValue);
+                out.annotate(valueArg + 1, "value = %f", doubleValue);
                 break;
             case 0x17:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: string", valueArg, valueType);
                 int stringIndex = reader.readSizedSmallUint(valueArg + 1);
-                out.annotate(valueArg+1, "value = %s",
+                out.annotate(valueArg + 1, "value = %s",
                         StringIdItem.getReferenceAnnotation(reader.dexBuf, stringIndex, true));
                 break;
             case 0x18:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: type", valueArg, valueType);
-                int typeIndex = reader.readSizedSmallUint(valueArg+1);
-                out.annotate(valueArg+1, "value = %s", TypeIdItem.getReferenceAnnotation(reader.dexBuf, typeIndex));
+                int typeIndex = reader.readSizedSmallUint(valueArg + 1);
+                out.annotate(valueArg + 1, "value = %s", TypeIdItem.getReferenceAnnotation(reader.dexBuf, typeIndex));
                 break;
             case 0x19:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: field", valueArg, valueType);
-                int fieldIndex = reader.readSizedSmallUint(valueArg+1);
-                out.annotate(valueArg+1, "value = %s", FieldIdItem.getReferenceAnnotation(reader.dexBuf, fieldIndex));
+                int fieldIndex = reader.readSizedSmallUint(valueArg + 1);
+                out.annotate(valueArg + 1, "value = %s", FieldIdItem.getReferenceAnnotation(reader.dexBuf, fieldIndex));
                 break;
             case 0x1a:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: method", valueArg, valueType);
-                int methodIndex = reader.readSizedSmallUint(valueArg+1);
-                out.annotate(valueArg+1, "value = %s", MethodIdItem.getReferenceAnnotation(reader.dexBuf, methodIndex));
+                int methodIndex = reader.readSizedSmallUint(valueArg + 1);
+                out.annotate(valueArg + 1, "value = %s", MethodIdItem.getReferenceAnnotation(reader.dexBuf, methodIndex));
                 break;
             case 0x1b:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: enum", valueArg, valueType);
-                fieldIndex = reader.readSizedSmallUint(valueArg+1);
-                out.annotate(valueArg+1, "value = %s", FieldIdItem.getReferenceAnnotation(reader.dexBuf, fieldIndex));
+                fieldIndex = reader.readSizedSmallUint(valueArg + 1);
+                out.annotate(valueArg + 1, "value = %s", FieldIdItem.getReferenceAnnotation(reader.dexBuf, fieldIndex));
                 break;
             case 0x1c:
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: array", valueArg, valueType);
@@ -118,7 +118,7 @@ public class EncodedValue {
                 out.annotate(1, "valueArg = %d, valueType = 0x%x: null", valueArg, valueType);
                 break;
             case 0x1f:
-                out.annotate(1, "valueArg = %d, valueType = 0x%x: boolean, value=%s", valueArg, valueType, valueArg==1);
+                out.annotate(1, "valueArg = %d, valueType = 0x%x: boolean, value=%s", valueArg, valueType, valueArg == 1);
                 break;
             default:
                 throw new ExceptionWithContext("Invalid encoded value type 0x%x at offset 0x%x", valueType,
@@ -135,7 +135,7 @@ public class EncodedValue {
         int size = reader.readSmallUleb128();
         out.annotateTo(reader.getOffset(), "size: %d", size);
 
-        for (int i=0; i<size; i++) {
+        for (int i = 0; i < size; i++) {
             out.annotate(0, "element[%d]", i);
             out.indent();
 
@@ -155,7 +155,7 @@ public class EncodedValue {
         int size = reader.readSmallUleb128();
         out.annotateTo(reader.getOffset(), "size: %d", size);
 
-        for (int i=0; i<size; i++) {
+        for (int i = 0; i < size; i++) {
             out.annotate(0, "element[%d]", i);
             out.indent();
 

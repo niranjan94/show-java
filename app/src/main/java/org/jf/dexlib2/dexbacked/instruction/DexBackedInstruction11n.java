@@ -55,5 +55,8 @@ public class DexBackedInstruction11n extends DexBackedInstruction implements Ins
         return NibbleUtils.extractHighSignedNibble(dexFile.readByte(instructionStart + 1));
     }
 
-    @Override public long getWideLiteral() { return getNarrowLiteral(); }
+    @Override
+    public long getWideLiteral() {
+        return getNarrowLiteral();
+    }
 }

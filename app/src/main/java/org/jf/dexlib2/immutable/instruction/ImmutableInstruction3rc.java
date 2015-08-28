@@ -47,7 +47,8 @@ public class ImmutableInstruction3rc extends ImmutableInstruction implements Ins
     protected final int startRegister;
     protected final int registerCount;
 
-    @Nonnull protected final ImmutableReference reference;
+    @Nonnull
+    protected final ImmutableReference reference;
 
     public ImmutableInstruction3rc(@Nonnull Opcode opcode,
                                    int startRegister,
@@ -61,7 +62,7 @@ public class ImmutableInstruction3rc extends ImmutableInstruction implements Ins
 
     public static ImmutableInstruction3rc of(Instruction3rc instruction) {
         if (instruction instanceof ImmutableInstruction3rc) {
-            return (ImmutableInstruction3rc)instruction;
+            return (ImmutableInstruction3rc) instruction;
         }
         return new ImmutableInstruction3rc(
                 instruction.getOpcode(),
@@ -70,11 +71,30 @@ public class ImmutableInstruction3rc extends ImmutableInstruction implements Ins
                 instruction.getReference());
     }
 
-    @Override public int getStartRegister() { return startRegister; }
-    @Override public int getRegisterCount() { return registerCount; }
-    @Nonnull @Override public ImmutableReference getReference() { return reference; }
-    @Override public int getReferenceType() { return opcode.referenceType; }
+    @Override
+    public int getStartRegister() {
+        return startRegister;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getRegisterCount() {
+        return registerCount;
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableReference getReference() {
+        return reference;
+    }
+
+    @Override
+    public int getReferenceType() {
+        return opcode.referenceType;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }
 

@@ -51,28 +51,31 @@ import javax.annotation.Nullable;
 /**
  * Collects/presents a set of textual annotations, each associated with a range of bytes or a specific point
  * between bytes.
- *
+ * <p/>
  * Point annotations cannot occur within the middle of a range annotation, only at the endpoints, or some other area
  * with no range annotation.
- *
+ * <p/>
  * Multiple point annotations can be defined for a given point. They will be printed in insertion order.
- *
+ * <p/>
  * Only a single range annotation may exist for any given range of bytes. Range annotations may not overlap.
  */
 public class AnnotatedBytes {
     /**
      * This defines the bytes ranges and their associated range and point annotations.
-     *
+     * <p/>
      * A range is defined by 2 consecutive keys in the map. The first key is the inclusive start point, the second key
      * is the exclusive end point. The range annotation for a range is associated with the first key for that range.
      * The point annotations for a point are associated with the key at that point.
      */
-    @Nonnull private TreeMap<Integer, AnnotationEndpoint> annotatations = Maps.newTreeMap();
+    @Nonnull
+    private TreeMap<Integer, AnnotationEndpoint> annotatations = Maps.newTreeMap();
 
     private int cursor;
     private int indentLevel;
 
-    /** &gt;= 40 (if used); the desired maximum output width */
+    /**
+     * &gt;= 40 (if used); the desired maximum output width
+     */
     private int outputWidth;
 
     /**
@@ -112,12 +115,11 @@ public class AnnotatedBytes {
 
     /**
      * Add an annotation of the given length at the current location.
-     *
+     * <p/>
      * The location
      *
-     *
-     * @param length the length of data being annotated
-     * @param msg the annotation message
+     * @param length     the length of data being annotated
+     * @param msg        the annotation message
      * @param formatArgs format arguments to pass to String.format
      */
     public void annotate(int length, @Nonnull String msg, Object... formatArgs) {
@@ -148,7 +150,7 @@ public class AnnotatedBytes {
                             "Cannot add annotation %s, due to existing annotation %s",
                             formatAnnotation(cursor, cursor + length, formattedMsg),
                             formatAnnotation(previousEntry.getKey(),
-                                previousRangeAnnotation.annotation));
+                                    previousRangeAnnotation.annotation));
                 }
             }
         } else if (length > 0) {
@@ -156,8 +158,8 @@ public class AnnotatedBytes {
             if (existingRangeAnnotation != null) {
                 throw new ExceptionWithContext(
                         "Cannot add annotation %s, due to existing annotation %s",
-                                formatAnnotation(cursor, cursor + length, formattedMsg),
-                                formatAnnotation(cursor, existingRangeAnnotation.annotation));
+                        formatAnnotation(cursor, cursor + length, formattedMsg),
+                        formatAnnotation(cursor, existingRangeAnnotation.annotation));
             }
         }
 
@@ -174,21 +176,21 @@ public class AnnotatedBytes {
                     if (nextRangeAnnotation != null) {
                         throw new ExceptionWithContext(
                                 "Cannot add annotation %s, due to existing annotation %s",
-                                        formatAnnotation(cursor, cursor + length, formattedMsg),
-                                        formatAnnotation(nextKey, nextRangeAnnotation.annotation));
+                                formatAnnotation(cursor, cursor + length, formattedMsg),
+                                formatAnnotation(nextKey, nextRangeAnnotation.annotation));
                     }
                     if (nextEndpoint.pointAnnotations.size() > 0) {
                         throw new ExceptionWithContext(
                                 "Cannot add annotation %s, due to existing annotation %s",
-                                        formatAnnotation(cursor, cursor + length, formattedMsg),
-                                        formatAnnotation(nextKey, nextKey,
-                                            nextEndpoint.pointAnnotations.get(0).annotation));
+                                formatAnnotation(cursor, cursor + length, formattedMsg),
+                                formatAnnotation(nextKey, nextKey,
+                                        nextEndpoint.pointAnnotations.get(0).annotation));
                     }
                     // There are no annotations on this endpoint. This "shouldn't" happen. We can still throw an exception.
                     throw new ExceptionWithContext(
                             "Cannot add annotation %s, due to existing annotation endpoint at %d",
-                                    formatAnnotation(cursor, cursor + length, formattedMsg),
-                                    nextKey);
+                            formatAnnotation(cursor, cursor + length, formattedMsg),
+                            nextKey);
                 }
 
                 if (nextKey == exclusiveEndOffset) {
@@ -249,27 +251,9 @@ public class AnnotatedBytes {
         return cursor;
     }
 
-    private static class AnnotationEndpoint {
-        /** Annotations that are associated with a specific point between bytes */
-        @Nonnull
-        public final List<AnnotationItem> pointAnnotations = Lists.newArrayList();
-        /** Annotations that are associated with a range of bytes */
-        @Nullable
-        public AnnotationItem rangeAnnotation = null;
-    }
-
-    private static class AnnotationItem {
-        public final int indentLevel;
-        public final String annotation;
-
-        public AnnotationItem(int  indentLevel, String annotation) {
-            this.indentLevel = indentLevel;
-            this.annotation = annotation;
-        }
-    }
-
     /**
      * Gets the width of the right side containing the annotations
+     *
      * @return
      */
     public int getAnnotationWidth() {
@@ -297,21 +281,21 @@ public class AnnotatedBytes {
         AnnotationEndpoint[] values = new AnnotationEndpoint[annotatations.size()];
         values = annotatations.values().toArray(values);
 
-        for (int i=0; i<keys.length-1; i++) {
+        for (int i = 0; i < keys.length - 1; i++) {
             int rangeStart = keys[i];
-            int rangeEnd = keys[i+1];
+            int rangeEnd = keys[i + 1];
 
             AnnotationEndpoint annotations = values[i];
 
-            for (AnnotationItem pointAnnotation: annotations.pointAnnotations) {
-                String paddingSub = padding.substring(0, pointAnnotation.indentLevel*2);
+            for (AnnotationItem pointAnnotation : annotations.pointAnnotations) {
+                String paddingSub = padding.substring(0, pointAnnotation.indentLevel * 2);
                 twoc.write("", paddingSub + pointAnnotation.annotation);
             }
 
             String right;
             AnnotationItem rangeAnnotation = annotations.rangeAnnotation;
             if (rangeAnnotation != null) {
-                right = padding.substring(0, rangeAnnotation.indentLevel*2);
+                right = padding.substring(0, rangeAnnotation.indentLevel * 2);
                 right += rangeAnnotation.annotation;
             } else {
                 right = "";
@@ -322,7 +306,7 @@ public class AnnotatedBytes {
             twoc.write(left, right);
         }
 
-        int lastKey = keys[keys.length-1];
+        int lastKey = keys[keys.length - 1];
         if (lastKey < data.length) {
             String left = Hex.dump(data, lastKey, data.length - lastKey, lastKey, hexCols, 6);
             twoc.write(left, "");
@@ -337,5 +321,28 @@ public class AnnotatedBytes {
     public void clearLimit() {
         this.startLimit = -1;
         this.endLimit = -1;
+    }
+
+    private static class AnnotationEndpoint {
+        /**
+         * Annotations that are associated with a specific point between bytes
+         */
+        @Nonnull
+        public final List<AnnotationItem> pointAnnotations = Lists.newArrayList();
+        /**
+         * Annotations that are associated with a range of bytes
+         */
+        @Nullable
+        public AnnotationItem rangeAnnotation = null;
+    }
+
+    private static class AnnotationItem {
+        public final int indentLevel;
+        public final String annotation;
+
+        public AnnotationItem(int indentLevel, String annotation) {
+            this.indentLevel = indentLevel;
+            this.annotation = annotation;
+        }
     }
 }

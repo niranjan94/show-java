@@ -49,7 +49,7 @@ public abstract class BaseEnumEncodedValue implements EnumEncodedValue {
     @Override
     public boolean equals(@Nullable Object o) {
         if (o instanceof EnumEncodedValue) {
-            return getValue().equals(((EnumEncodedValue)o).getValue());
+            return getValue().equals(((EnumEncodedValue) o).getValue());
         }
         return false;
     }
@@ -58,8 +58,10 @@ public abstract class BaseEnumEncodedValue implements EnumEncodedValue {
     public int compareTo(@Nonnull EncodedValue o) {
         int res = Ints.compare(getValueType(), o.getValueType());
         if (res != 0) return res;
-        return getValue().compareTo(((EnumEncodedValue)o).getValue());
+        return getValue().compareTo(((EnumEncodedValue) o).getValue());
     }
 
-    public int getValueType() { return ValueType.ENUM; }
+    public int getValueType() {
+        return ValueType.ENUM;
+    }
 }

@@ -58,12 +58,15 @@ public class ClassDefItem {
         return new SectionAnnotator(annotator, mapItem) {
             private SectionAnnotator classDataAnnotator = null;
 
-            @Override public void annotateSection(@Nonnull AnnotatedBytes out) {
+            @Override
+            public void annotateSection(@Nonnull AnnotatedBytes out) {
                 classDataAnnotator = annotator.getAnnotator(ItemType.CLASS_DATA_ITEM);
                 super.annotateSection(out);
             }
 
-            @Nonnull @Override public String getItemName() {
+            @Nonnull
+            @Override
+            public String getItemName() {
                 return "class_def_item";
             }
 
@@ -133,7 +136,7 @@ public class ClassDefItem {
 
         int classCount = mapItem.getItemCount();
         String[] ret = new String[classCount];
-        for (int i=0; i<classCount; i++) {
+        for (int i = 0; i < classCount; i++) {
             ret[i] = asString(dexFile, i);
         }
         return ret;

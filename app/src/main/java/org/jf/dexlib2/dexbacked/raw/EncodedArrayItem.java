@@ -42,7 +42,9 @@ public class EncodedArrayItem {
     @Nonnull
     public static SectionAnnotator makeAnnotator(@Nonnull DexAnnotator annotator, @Nonnull MapItem mapItem) {
         return new SectionAnnotator(annotator, mapItem) {
-            @Nonnull @Override public String getItemName() {
+            @Nonnull
+            @Override
+            public String getItemName() {
                 return "encoded_array_item";
             }
 

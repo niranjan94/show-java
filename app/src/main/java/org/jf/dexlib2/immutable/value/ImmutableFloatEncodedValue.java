@@ -43,10 +43,13 @@ public class ImmutableFloatEncodedValue extends BaseFloatEncodedValue implements
 
     public static ImmutableFloatEncodedValue of(FloatEncodedValue floatEncodedValue) {
         if (floatEncodedValue instanceof ImmutableFloatEncodedValue) {
-            return (ImmutableFloatEncodedValue)floatEncodedValue;
+            return (ImmutableFloatEncodedValue) floatEncodedValue;
         }
         return new ImmutableFloatEncodedValue(floatEncodedValue.getValue());
     }
 
-    @Override public float getValue() { return value; }
+    @Override
+    public float getValue() {
+        return value;
+    }
 }

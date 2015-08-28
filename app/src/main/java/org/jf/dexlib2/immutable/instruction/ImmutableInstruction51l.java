@@ -54,7 +54,7 @@ public class ImmutableInstruction51l extends ImmutableInstruction implements Ins
 
     public static ImmutableInstruction51l of(Instruction51l instruction) {
         if (instruction instanceof ImmutableInstruction51l) {
-            return (ImmutableInstruction51l)instruction;
+            return (ImmutableInstruction51l) instruction;
         }
         return new ImmutableInstruction51l(
                 instruction.getOpcode(),
@@ -62,8 +62,18 @@ public class ImmutableInstruction51l extends ImmutableInstruction implements Ins
                 instruction.getWideLiteral());
     }
 
-    @Override public int getRegisterA() { return registerA; }
-    @Override public long getWideLiteral() { return literal; }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public long getWideLiteral() {
+        return literal;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

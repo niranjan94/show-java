@@ -42,32 +42,42 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class FieldRewriter implements Rewriter<Field> {
-    @Nonnull protected final Rewriters rewriters;
+    @Nonnull
+    protected final Rewriters rewriters;
 
     public FieldRewriter(@Nonnull Rewriters rewriters) {
         this.rewriters = rewriters;
     }
 
-    @Nonnull @Override public Field rewrite(@Nonnull Field field) {
+    @Nonnull
+    @Override
+    public Field rewrite(@Nonnull Field field) {
         return new RewrittenField(field);
     }
 
     protected class RewrittenField extends BaseFieldReference implements Field {
-        @Nonnull protected Field field;
+        @Nonnull
+        protected Field field;
 
         public RewrittenField(@Nonnull Field field) {
             this.field = field;
         }
 
-        @Override @Nonnull public String getDefiningClass() {
+        @Override
+        @Nonnull
+        public String getDefiningClass() {
             return rewriters.getFieldReferenceRewriter().rewrite(field).getDefiningClass();
         }
 
-        @Override @Nonnull public String getName() {
+        @Override
+        @Nonnull
+        public String getName() {
             return rewriters.getFieldReferenceRewriter().rewrite(field).getName();
         }
 
-        @Override @Nonnull public String getType() {
+        @Override
+        @Nonnull
+        public String getType() {
             return rewriters.getFieldReferenceRewriter().rewrite(field).getType();
         }
 
@@ -75,11 +85,13 @@ public class FieldRewriter implements Rewriter<Field> {
             return field.getAccessFlags();
         }
 
-        @Nullable public EncodedValue getInitialValue() {
+        @Nullable
+        public EncodedValue getInitialValue() {
             return RewriterUtils.rewriteNullable(rewriters.getEncodedValueRewriter(), field.getInitialValue());
         }
 
-        @Nonnull public Set<? extends Annotation> getAnnotations() {
+        @Nonnull
+        public Set<? extends Annotation> getAnnotations() {
             return RewriterUtils.rewriteSet(rewriters.getAnnotationRewriter(), field.getAnnotations());
         }
     }

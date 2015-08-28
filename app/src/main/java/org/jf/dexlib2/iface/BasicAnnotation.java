@@ -10,19 +10,21 @@ import javax.annotation.Nonnull;
 public interface BasicAnnotation {
     /**
      * Gets the type of this annotation.
-     *
+     * <p/>
      * This will be the type descriptor of the class that defines this annotation.
      *
      * @return The type of this annotation
      */
-    @Nonnull String getType();
+    @Nonnull
+    String getType();
 
     /**
      * Gets a set of the name/value elements associated with this annotation.
-     *
+     * <p/>
      * The elements in the returned set will be unique with respect to the element name.
      *
      * @return A set of AnnotationElements
      */
-    @Nonnull Set<? extends AnnotationElement> getElements();
+    @Nonnull
+    Set<? extends AnnotationElement> getElements();
 }

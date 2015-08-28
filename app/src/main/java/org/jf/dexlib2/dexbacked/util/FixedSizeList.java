@@ -37,6 +37,7 @@ import javax.annotation.Nonnull;
 
 /**
  * This provides a thin facade over AbstractList, to take care of bounds checking.
+ *
  * @param <T> The type of the item that this list contains
  */
 public abstract class FixedSizeList<T> extends AbstractList<T> {
@@ -50,6 +51,7 @@ public abstract class FixedSizeList<T> extends AbstractList<T> {
 
     /**
      * Reads the item at {@code index}
+     *
      * @param index The index of the item. This is guaranteed to be in [0, size)
      * @return The item at the given index
      */

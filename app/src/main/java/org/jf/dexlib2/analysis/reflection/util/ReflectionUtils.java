@@ -34,7 +34,7 @@ package org.jf.dexlib2.analysis.reflection.util;
 public class ReflectionUtils {
     public static String javaToDexName(String javaName) {
         javaName = javaName.replace('.', '/');
-        if (javaName.length() > 1 && javaName.charAt(javaName.length()-1) != ';') {
+        if (javaName.length() > 1 && javaName.charAt(javaName.length() - 1) != ';') {
             javaName = 'L' + javaName + ';';
         }
         return javaName;

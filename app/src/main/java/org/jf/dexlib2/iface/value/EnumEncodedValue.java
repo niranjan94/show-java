@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 
 /**
  * This class represents an encoded enum value.
- *
+ * <p/>
  * The enum value is represented as a FieldReference to the field on an enum class that holds the enum value.
  */
 public interface EnumEncodedValue extends EncodedValue {
@@ -47,13 +47,14 @@ public interface EnumEncodedValue extends EncodedValue {
      *
      * @return a reference to the field on the enum class that holds the enum value, as a FieldReference
      */
-    @Nonnull FieldReference getValue();
+    @Nonnull
+    FieldReference getValue();
 
     /**
      * Returns a hashcode for this EncodedEnumValue.
-     *
+     * <p/>
      * This hashCode is defined to be the following:
-     *
+     * <p/>
      * <pre>
      * {@code
      * int hashCode = getValue.hashCode();
@@ -61,26 +62,29 @@ public interface EnumEncodedValue extends EncodedValue {
      *
      * @return The hash code value for this EncodedEnumValue
      */
-    @Override int hashCode();
+    @Override
+    int hashCode();
 
     /**
      * Compares this EnumEncodedValue to another EnumEncodedValue for equality.
-     *
+     * <p/>
      * This EnumEncodedValue is equal to another EnumEncodedValue if the values returned by getValue() are equal.
      *
      * @param o The object to be compared for equality with this EnumEncodedValue
      * @return true if the specified object is equal to this EnumEncodedValue
      */
-    @Override boolean equals(@Nullable Object o);
+    @Override
+    boolean equals(@Nullable Object o);
 
     /**
      * Compare this EnumEncodedValue to another EncodedValue.
-     *
+     * <p/>
      * The comparison is first done on the return values of getValueType(). If the other value is another
      * EnumEncodedValue, the return values of getValue() are compared.
      *
      * @param o The EncodedValue to compare with this EnumEncodedValue
      * @return An integer representing the result of the comparison
      */
-    @Override int compareTo(@Nonnull EncodedValue o);
+    @Override
+    int compareTo(@Nonnull EncodedValue o);
 }

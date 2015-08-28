@@ -16,12 +16,12 @@ import java.util.Map;
 public final class FontsOverride {
 
     public static void with(Context context) {
-        final Typeface regular = Typeface.createFromAsset(context.getAssets(),"roboto_light.ttf");
+        final Typeface regular = Typeface.createFromAsset(context.getAssets(), "roboto_light.ttf");
         replaceFont("DEFAULT", regular);
         replaceFont("SANS_SERIF", regular);
     }
 
-    protected static void replaceFont(String staticTypefaceFieldName,  final Typeface newTypeface) {
+    protected static void replaceFont(String staticTypefaceFieldName, final Typeface newTypeface) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Map<String, Typeface> newMap = new HashMap<>();
             newMap.put("sans-serif", newTypeface);
@@ -31,7 +31,7 @@ public final class FontsOverride {
                 staticField.setAccessible(true);
                 staticField.set(null, newMap);
             } catch (Exception e) {
-                Log.e("com.njlabs.showjava",e.toString());
+                Log.e("com.njlabs.showjava", e.toString());
             }
         } else {
             try {

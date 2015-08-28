@@ -38,5 +38,7 @@ import javax.annotation.Nonnull;
 
 public interface IndexSection<Key> {
     int getItemIndex(@Nonnull Key key);
-    @Nonnull Collection<? extends Map.Entry<? extends Key, Integer>> getItems();
+
+    @Nonnull
+    Collection<? extends Map.Entry<? extends Key, Integer>> getItems();
 }

@@ -44,49 +44,61 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class DebugItemRewriter implements Rewriter<DebugItem> {
-    @Nonnull protected final Rewriters rewriters;
+    @Nonnull
+    protected final Rewriters rewriters;
 
     public DebugItemRewriter(@Nonnull Rewriters rewriters) {
         this.rewriters = rewriters;
     }
 
-    @Nonnull @Override public DebugItem rewrite(@Nonnull DebugItem value) {
+    @Nonnull
+    @Override
+    public DebugItem rewrite(@Nonnull DebugItem value) {
         switch (value.getDebugItemType()) {
             case DebugItemType.START_LOCAL:
-                return new RewrittenStartLocal((StartLocal)value);
+                return new RewrittenStartLocal((StartLocal) value);
             case DebugItemType.END_LOCAL:
-                return new RewrittenEndLocal((EndLocal)value);
+                return new RewrittenEndLocal((EndLocal) value);
             case DebugItemType.RESTART_LOCAL:
-                return new RewrittenRestartLocal((RestartLocal)value);
+                return new RewrittenRestartLocal((RestartLocal) value);
             default:
                 return value;
         }
     }
 
     protected class BaseRewrittenLocalInfoDebugItem<T extends DebugItem & LocalInfo> implements DebugItem, LocalInfo {
-        @Nonnull protected T debugItem;
+        @Nonnull
+        protected T debugItem;
 
-        public BaseRewrittenLocalInfoDebugItem (@Nonnull T debugItem) {
+        public BaseRewrittenLocalInfoDebugItem(@Nonnull T debugItem) {
             this.debugItem = debugItem;
         }
 
-        @Override public int getDebugItemType() {
+        @Override
+        public int getDebugItemType() {
             return debugItem.getDebugItemType();
         }
 
-        @Override public int getCodeAddress() {
+        @Override
+        public int getCodeAddress() {
             return debugItem.getCodeAddress();
         }
 
-        @Override @Nullable public String getName() {
+        @Override
+        @Nullable
+        public String getName() {
             return debugItem.getName();
         }
 
-        @Override @Nullable public String getType() {
+        @Override
+        @Nullable
+        public String getType() {
             return RewriterUtils.rewriteNullable(rewriters.getTypeRewriter(), debugItem.getType());
         }
 
-        @Override @Nullable public String getSignature() {
+        @Override
+        @Nullable
+        public String getSignature() {
             return debugItem.getSignature();
         }
     }
@@ -96,15 +108,20 @@ public class DebugItemRewriter implements Rewriter<DebugItem> {
             super(debugItem);
         }
 
-        @Override public int getRegister() {
+        @Override
+        public int getRegister() {
             return debugItem.getRegister();
         }
 
-        @Override @Nullable public StringReference getNameReference() {
+        @Override
+        @Nullable
+        public StringReference getNameReference() {
             return debugItem.getNameReference();
         }
 
-        @Override @Nullable public TypeReference getTypeReference() {
+        @Override
+        @Nullable
+        public TypeReference getTypeReference() {
             TypeReference typeReference = debugItem.getTypeReference();
             if (typeReference == null) {
                 return null;
@@ -113,7 +130,9 @@ public class DebugItemRewriter implements Rewriter<DebugItem> {
             return RewriterUtils.rewriteTypeReference(rewriters.getTypeRewriter(), typeReference);
         }
 
-        @Override @Nullable public StringReference getSignatureReference() {
+        @Override
+        @Nullable
+        public StringReference getSignatureReference() {
             return debugItem.getSignatureReference();
         }
     }

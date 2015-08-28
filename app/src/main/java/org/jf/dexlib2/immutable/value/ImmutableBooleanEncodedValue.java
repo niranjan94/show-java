@@ -45,12 +45,15 @@ public class ImmutableBooleanEncodedValue extends BaseBooleanEncodedValue implem
     }
 
     public static ImmutableBooleanEncodedValue forBoolean(boolean value) {
-        return value?TRUE_VALUE:FALSE_VALUE;
+        return value ? TRUE_VALUE : FALSE_VALUE;
     }
 
     public static ImmutableBooleanEncodedValue of(BooleanEncodedValue booleanEncodedValue) {
         return forBoolean(booleanEncodedValue.getValue());
     }
 
-    @Override public boolean getValue() { return value; }
+    @Override
+    public boolean getValue() {
+        return value;
+    }
 }

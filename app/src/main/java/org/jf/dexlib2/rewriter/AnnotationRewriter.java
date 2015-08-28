@@ -40,32 +40,41 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 public class AnnotationRewriter implements Rewriter<Annotation> {
-    @Nonnull protected final Rewriters rewriters;
+    @Nonnull
+    protected final Rewriters rewriters;
 
     public AnnotationRewriter(@Nonnull Rewriters rewriters) {
         this.rewriters = rewriters;
     }
 
-    @Nonnull @Override public Annotation rewrite(@Nonnull Annotation value) {
+    @Nonnull
+    @Override
+    public Annotation rewrite(@Nonnull Annotation value) {
         return new RewrittenAnnotation(value);
     }
 
     protected class RewrittenAnnotation extends BaseAnnotation {
-        @Nonnull protected Annotation annotation;
+        @Nonnull
+        protected Annotation annotation;
 
         public RewrittenAnnotation(@Nonnull Annotation annotation) {
             this.annotation = annotation;
         }
 
-        @Override public int getVisibility() {
+        @Override
+        public int getVisibility() {
             return annotation.getVisibility();
         }
 
-        @Override @Nonnull public String getType() {
+        @Override
+        @Nonnull
+        public String getType() {
             return rewriters.getTypeRewriter().rewrite(annotation.getType());
         }
 
-        @Override @Nonnull public Set<? extends AnnotationElement> getElements() {
+        @Override
+        @Nonnull
+        public Set<? extends AnnotationElement> getElements() {
             return RewriterUtils.rewriteSet(rewriters.getAnnotationElementRewriter(), annotation.getElements());
         }
     }

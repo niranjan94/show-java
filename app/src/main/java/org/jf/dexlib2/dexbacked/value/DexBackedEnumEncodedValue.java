@@ -40,7 +40,8 @@ import org.jf.dexlib2.iface.reference.FieldReference;
 import javax.annotation.Nonnull;
 
 public class DexBackedEnumEncodedValue extends BaseEnumEncodedValue {
-    @Nonnull public final DexBackedDexFile dexFile;
+    @Nonnull
+    public final DexBackedDexFile dexFile;
     private final int fieldIndex;
 
     public DexBackedEnumEncodedValue(@Nonnull DexReader reader, int valueArg) {
@@ -48,7 +49,9 @@ public class DexBackedEnumEncodedValue extends BaseEnumEncodedValue {
         fieldIndex = reader.readSizedSmallUint(valueArg + 1);
     }
 
-    @Nonnull @Override public FieldReference getValue() {
+    @Nonnull
+    @Override
+    public FieldReference getValue() {
         return new DexBackedFieldReference(dexFile, fieldIndex);
     }
 }

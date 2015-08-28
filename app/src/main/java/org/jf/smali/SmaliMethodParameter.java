@@ -44,10 +44,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class SmaliMethodParameter extends BaseMethodParameter implements WithRegister {
+    public static final Comparator<WithRegister> COMPARATOR = new Comparator<WithRegister>() {
+        @Override
+        public int compare(WithRegister o1, WithRegister o2) {
+            return Ints.compare(o1.getRegister(), o2.getRegister());
+        }
+    };
     public final int register;
-    @Nonnull public final String type;
-    @Nonnull public Set<? extends Annotation> annotations;
-    @Nullable public String name;
+    @Nonnull
+    public final String type;
+    @Nonnull
+    public Set<? extends Annotation> annotations;
+    @Nullable
+    public String name;
 
     public SmaliMethodParameter(int register, @Nonnull String type) {
         this.register = register;
@@ -55,15 +64,32 @@ public class SmaliMethodParameter extends BaseMethodParameter implements WithReg
         this.annotations = ImmutableSet.of();
     }
 
-    @Override public int getRegister() { return register; }
-    @Nonnull @Override public String getType() { return type; }
-    @Nonnull @Override public Set<? extends Annotation> getAnnotations() { return annotations; }
-    @Nullable @Override public String getName() { return name; }
-    @Nullable @Override public String getSignature() { return null; }
+    @Override
+    public int getRegister() {
+        return register;
+    }
 
-    public static final Comparator<WithRegister> COMPARATOR = new Comparator<WithRegister>() {
-        @Override public int compare(WithRegister o1, WithRegister o2) {
-            return Ints.compare(o1.getRegister(), o2.getRegister());
-        }
-    };
+    @Nonnull
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Nonnull
+    @Override
+    public Set<? extends Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    @Nullable
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Nullable
+    @Override
+    public String getSignature() {
+        return null;
+    }
 }

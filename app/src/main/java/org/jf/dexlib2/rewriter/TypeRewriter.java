@@ -34,7 +34,9 @@ package org.jf.dexlib2.rewriter;
 import javax.annotation.Nonnull;
 
 public class TypeRewriter implements Rewriter<String> {
-    @Nonnull @Override public String rewrite(@Nonnull String value) {
+    @Nonnull
+    @Override
+    public String rewrite(@Nonnull String value) {
         return value;
     }
 }

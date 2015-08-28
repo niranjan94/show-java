@@ -44,9 +44,15 @@ public class StringUtils {
             return;
         } else if (c <= 0x7f) {
             switch (c) {
-                case '\n': writer.write("\\n"); return;
-                case '\r': writer.write("\\r"); return;
-                case '\t': writer.write("\\t"); return;
+                case '\n':
+                    writer.write("\\n");
+                    return;
+                case '\r':
+                    writer.write("\\r");
+                    return;
+                case '\t':
+                    writer.write("\\t");
+                    return;
             }
         }
 
@@ -69,9 +75,15 @@ public class StringUtils {
                 continue;
             } else if (c <= 0x7f) {
                 switch (c) {
-                    case '\n': writer.write("\\n"); continue;
-                    case '\r': writer.write("\\r"); continue;
-                    case '\t': writer.write("\\t"); continue;
+                    case '\n':
+                        writer.write("\\n");
+                        continue;
+                    case '\r':
+                        writer.write("\\r");
+                        continue;
+                    case '\t':
+                        writer.write("\\t");
+                        continue;
                 }
             }
 
@@ -98,9 +110,15 @@ public class StringUtils {
                 continue;
             } else if (c <= 0x7f) {
                 switch (c) {
-                    case '\n': sb.append("\\n"); continue;
-                    case '\r': sb.append("\\r"); continue;
-                    case '\t': sb.append("\\t"); continue;
+                    case '\n':
+                        sb.append("\\n");
+                        continue;
+                    case '\r':
+                        sb.append("\\r");
+                        continue;
+                    case '\t':
+                        sb.append("\\t");
+                        continue;
                 }
             }
 

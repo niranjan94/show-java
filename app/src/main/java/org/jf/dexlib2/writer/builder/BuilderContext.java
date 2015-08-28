@@ -80,16 +80,25 @@ import javax.annotation.Nullable;
 
 class BuilderContext {
     // keep our own local references to the various pools, using the Builder specific pool type;
-    @Nonnull final BuilderStringPool stringPool;
-    @Nonnull final BuilderTypePool typePool;
-    @Nonnull final BuilderFieldPool fieldPool;
-    @Nonnull final BuilderMethodPool methodPool;
-    @Nonnull final BuilderProtoPool protoPool;
-    @Nonnull final BuilderClassPool classPool;
+    @Nonnull
+    final BuilderStringPool stringPool;
+    @Nonnull
+    final BuilderTypePool typePool;
+    @Nonnull
+    final BuilderFieldPool fieldPool;
+    @Nonnull
+    final BuilderMethodPool methodPool;
+    @Nonnull
+    final BuilderProtoPool protoPool;
+    @Nonnull
+    final BuilderClassPool classPool;
 
-    @Nonnull final BuilderTypeListPool typeListPool;
-    @Nonnull final BuilderAnnotationPool annotationPool;
-    @Nonnull final BuilderAnnotationSetPool annotationSetPool;
+    @Nonnull
+    final BuilderTypeListPool typeListPool;
+    @Nonnull
+    final BuilderAnnotationPool annotationPool;
+    @Nonnull
+    final BuilderAnnotationSetPool annotationSetPool;
 
 
     BuilderContext() {
@@ -105,104 +114,118 @@ class BuilderContext {
         this.annotationSetPool = new BuilderAnnotationSetPool(this);
     }
 
-    @Nonnull Set<? extends BuilderAnnotationElement> internAnnotationElements(
+    @Nonnull
+    Set<? extends BuilderAnnotationElement> internAnnotationElements(
             @Nonnull Set<? extends AnnotationElement> elements) {
         return ImmutableSet.copyOf(
                 Iterators.transform(elements.iterator(),
                         new Function<AnnotationElement, BuilderAnnotationElement>() {
-                            @Nullable @Override
+                            @Nullable
+                            @Override
                             public BuilderAnnotationElement apply(AnnotationElement input) {
                                 return internAnnotationElement(input);
                             }
                         }));
     }
 
-    @Nonnull private BuilderAnnotationElement internAnnotationElement(@Nonnull AnnotationElement annotationElement) {
+    @Nonnull
+    private BuilderAnnotationElement internAnnotationElement(@Nonnull AnnotationElement annotationElement) {
         return new BuilderAnnotationElement(stringPool.internString(annotationElement.getName()),
                 internEncodedValue(annotationElement.getValue()));
     }
 
-    @Nullable BuilderEncodedValue internNullableEncodedValue(@Nullable EncodedValue encodedValue) {
+    @Nullable
+    BuilderEncodedValue internNullableEncodedValue(@Nullable EncodedValue encodedValue) {
         if (encodedValue == null) {
             return null;
         }
         return internEncodedValue(encodedValue);
     }
 
-    @Nonnull private BuilderEncodedValue internEncodedValue(@Nonnull EncodedValue encodedValue) {
+    @Nonnull
+    private BuilderEncodedValue internEncodedValue(@Nonnull EncodedValue encodedValue) {
         switch (encodedValue.getValueType()) {
             case ValueType.ANNOTATION:
-                return internAnnotationEncodedValue((AnnotationEncodedValue)encodedValue);
+                return internAnnotationEncodedValue((AnnotationEncodedValue) encodedValue);
             case ValueType.ARRAY:
-                return internArrayEncodedValue((ArrayEncodedValue)encodedValue);
+                return internArrayEncodedValue((ArrayEncodedValue) encodedValue);
             case ValueType.BOOLEAN:
-                boolean value = ((BooleanEncodedValue)encodedValue).getValue();
-                return value?BuilderBooleanEncodedValue.TRUE_VALUE:BuilderBooleanEncodedValue.FALSE_VALUE;
+                boolean value = ((BooleanEncodedValue) encodedValue).getValue();
+                return value ? BuilderBooleanEncodedValue.TRUE_VALUE : BuilderBooleanEncodedValue.FALSE_VALUE;
             case ValueType.BYTE:
-                return new BuilderByteEncodedValue(((ByteEncodedValue)encodedValue).getValue());
+                return new BuilderByteEncodedValue(((ByteEncodedValue) encodedValue).getValue());
             case ValueType.CHAR:
-                return new BuilderCharEncodedValue(((CharEncodedValue)encodedValue).getValue());
+                return new BuilderCharEncodedValue(((CharEncodedValue) encodedValue).getValue());
             case ValueType.DOUBLE:
-                return new BuilderDoubleEncodedValue(((DoubleEncodedValue)encodedValue).getValue());
+                return new BuilderDoubleEncodedValue(((DoubleEncodedValue) encodedValue).getValue());
             case ValueType.ENUM:
-                return internEnumEncodedValue((EnumEncodedValue)encodedValue);
+                return internEnumEncodedValue((EnumEncodedValue) encodedValue);
             case ValueType.FIELD:
-                return internFieldEncodedValue((FieldEncodedValue)encodedValue);
+                return internFieldEncodedValue((FieldEncodedValue) encodedValue);
             case ValueType.FLOAT:
-                return new BuilderFloatEncodedValue(((FloatEncodedValue)encodedValue).getValue());
+                return new BuilderFloatEncodedValue(((FloatEncodedValue) encodedValue).getValue());
             case ValueType.INT:
-                return new BuilderIntEncodedValue(((IntEncodedValue)encodedValue).getValue());
+                return new BuilderIntEncodedValue(((IntEncodedValue) encodedValue).getValue());
             case ValueType.LONG:
-                return new BuilderLongEncodedValue(((LongEncodedValue)encodedValue).getValue());
+                return new BuilderLongEncodedValue(((LongEncodedValue) encodedValue).getValue());
             case ValueType.METHOD:
-                return internMethodEncodedValue((MethodEncodedValue)encodedValue);
+                return internMethodEncodedValue((MethodEncodedValue) encodedValue);
             case ValueType.NULL:
                 return BuilderNullEncodedValue.INSTANCE;
             case ValueType.SHORT:
-                return new BuilderShortEncodedValue(((ShortEncodedValue)encodedValue).getValue());
+                return new BuilderShortEncodedValue(((ShortEncodedValue) encodedValue).getValue());
             case ValueType.STRING:
-                return internStringEncodedValue((StringEncodedValue)encodedValue);
+                return internStringEncodedValue((StringEncodedValue) encodedValue);
             case ValueType.TYPE:
-                return internTypeEncodedValue((TypeEncodedValue)encodedValue);
+                return internTypeEncodedValue((TypeEncodedValue) encodedValue);
             default:
                 throw new ExceptionWithContext("Unexpected encoded value type: %d", encodedValue.getValueType());
         }
     }
 
-    @Nonnull private BuilderAnnotationEncodedValue internAnnotationEncodedValue(@Nonnull AnnotationEncodedValue value) {
+    @Nonnull
+    private BuilderAnnotationEncodedValue internAnnotationEncodedValue(@Nonnull AnnotationEncodedValue value) {
         return new BuilderAnnotationEncodedValue(
                 typePool.internType(value.getType()),
                 internAnnotationElements(value.getElements()));
     }
 
-    @Nonnull private BuilderArrayEncodedValue internArrayEncodedValue(@Nonnull ArrayEncodedValue value) {
+    @Nonnull
+    private BuilderArrayEncodedValue internArrayEncodedValue(@Nonnull ArrayEncodedValue value) {
         return new BuilderArrayEncodedValue(
                 ImmutableList.copyOf(
                         Iterators.transform(value.getValue().iterator(),
                                 new Function<EncodedValue, BuilderEncodedValue>() {
-                                    @Nullable @Override public BuilderEncodedValue apply(EncodedValue input) {
+                                    @Nullable
+                                    @Override
+                                    public BuilderEncodedValue apply(EncodedValue input) {
                                         return internEncodedValue(input);
                                     }
                                 })));
     }
 
-    @Nonnull private BuilderEnumEncodedValue internEnumEncodedValue(@Nonnull EnumEncodedValue value) {
+    @Nonnull
+    private BuilderEnumEncodedValue internEnumEncodedValue(@Nonnull EnumEncodedValue value) {
         return new BuilderEnumEncodedValue(fieldPool.internField(value.getValue()));
     }
 
-    @Nonnull private BuilderFieldEncodedValue internFieldEncodedValue(@Nonnull FieldEncodedValue value) {
+    @Nonnull
+    private BuilderFieldEncodedValue internFieldEncodedValue(@Nonnull FieldEncodedValue value) {
         return new BuilderFieldEncodedValue(fieldPool.internField(value.getValue()));
     }
 
-    @Nonnull private BuilderMethodEncodedValue internMethodEncodedValue(@Nonnull MethodEncodedValue value) {
+    @Nonnull
+    private BuilderMethodEncodedValue internMethodEncodedValue(@Nonnull MethodEncodedValue value) {
         return new BuilderMethodEncodedValue(methodPool.internMethod(value.getValue()));
     }
 
-    @Nonnull private BuilderStringEncodedValue internStringEncodedValue(@Nonnull StringEncodedValue string) {
+    @Nonnull
+    private BuilderStringEncodedValue internStringEncodedValue(@Nonnull StringEncodedValue string) {
         return new BuilderStringEncodedValue(stringPool.internString(string.getValue()));
     }
 
-    @Nonnull private BuilderTypeEncodedValue internTypeEncodedValue(@Nonnull TypeEncodedValue type) {
+    @Nonnull
+    private BuilderTypeEncodedValue internTypeEncodedValue(@Nonnull TypeEncodedValue type) {
         return new BuilderTypeEncodedValue(typePool.internType(type.getValue()));
     }
 }

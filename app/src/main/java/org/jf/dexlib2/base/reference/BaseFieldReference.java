@@ -40,17 +40,17 @@ public abstract class BaseFieldReference implements FieldReference {
     @Override
     public int hashCode() {
         int hashCode = getDefiningClass().hashCode();
-        hashCode = hashCode*31 + getName().hashCode();
-        return hashCode*31 + getType().hashCode();
+        hashCode = hashCode * 31 + getName().hashCode();
+        return hashCode * 31 + getType().hashCode();
     }
 
     @Override
     public boolean equals(@Nullable Object o) {
         if (o instanceof FieldReference) {
-            FieldReference other = (FieldReference)o;
+            FieldReference other = (FieldReference) o;
             return getDefiningClass().equals(other.getDefiningClass()) &&
-                   getName().equals(other.getName()) &&
-                   getType().equals(other.getType());
+                    getName().equals(other.getName()) &&
+                    getType().equals(other.getType());
 
         }
         return false;

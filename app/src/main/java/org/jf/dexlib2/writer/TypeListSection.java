@@ -38,5 +38,7 @@ import javax.annotation.Nullable;
 
 public interface TypeListSection<TypeKey, TypeListKey> extends NullableOffsetSection<TypeListKey> {
     int getNullableItemOffset(@Nullable TypeListKey index);
-    @Nonnull Collection<? extends TypeKey> getTypes(@Nullable TypeListKey key);
+
+    @Nonnull
+    Collection<? extends TypeKey> getTypes(@Nullable TypeListKey key);
 }

@@ -45,11 +45,11 @@ public class SourceViewer extends BaseActivity {
         }
 
 
-        if(actionBar!=null) {
+        if (actionBar != null) {
             actionBar.setTitle(sourceFilename);
-            String subtitle = FilenameUtils.getFullPath(sourceFilePath).replace(Environment.getExternalStorageDirectory() + "/ShowJava/sources/"+packageID+"/", "");
+            String subtitle = FilenameUtils.getFullPath(sourceFilePath).replace(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + packageID + "/", "");
             actionBar.setSubtitle(subtitle);
-            if(sourceFilename.trim().equalsIgnoreCase("AndroidManifest.xml")){
+            if (sourceFilename.trim().equalsIgnoreCase("AndroidManifest.xml")) {
                 actionBar.setSubtitle(packageID);
             }
         }
@@ -107,6 +107,7 @@ public class SourceViewer extends BaseActivity {
             }
         });
 
-        webView.loadDataWithBaseURL("file:///android_asset/","<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><script src=\"run_prettify.js?skin=sons-of-obsidian\"></script></head><body bgcolor=\"#000000\"><pre class=\"prettyprint linenums\">"+sourceCodeText+"</pre></body></html>", "text/html", "UTF-8",null);	}
+        webView.loadDataWithBaseURL("file:///android_asset/", "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><script src=\"run_prettify.js?skin=sons-of-obsidian\"></script></head><body bgcolor=\"#000000\"><pre class=\"prettyprint linenums\">" + sourceCodeText + "</pre></body></html>", "text/html", "UTF-8", null);
+    }
 
 }

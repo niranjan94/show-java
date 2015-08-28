@@ -44,23 +44,29 @@ import javax.annotation.Nonnull;
  * one which goes on the right.
  */
 public final class TwoColumnOutput {
-    /** non-null; underlying writer for final output */
+    /**
+     * non-null; underlying writer for final output
+     */
     private final Writer out;
 
-    /** &gt; 0; the left column width */
+    /**
+     * &gt; 0; the left column width
+     */
     private final int leftWidth;
 
     private final int rightWidth;
 
     private final String spacer;
+    private String[] leftLines = null;
+    private String[] rightLines = null;
 
     /**
      * Constructs an instance.
      *
-     * @param out non-null; writer to send final output to
-     * @param leftWidth &gt; 0; width of the left column, in characters
+     * @param out        non-null; writer to send final output to
+     * @param leftWidth  &gt; 0; width of the left column, in characters
      * @param rightWidth &gt; 0; width of the right column, in characters
-     * @param spacer non-null; spacer string to sit between the two columns
+     * @param spacer     non-null; spacer string to sit between the two columns
      */
     public TwoColumnOutput(@Nonnull Writer out, int leftWidth, int rightWidth,
                            @Nonnull String spacer) {
@@ -78,29 +84,39 @@ public final class TwoColumnOutput {
         this.rightWidth = rightWidth;
         this.spacer = spacer;
     }
-
     /**
      * Constructs an instance.
      *
-     * @param out non-null; stream to send final output to
-     * @param leftWidth &gt;= 1; width of the left column, in characters
+     * @param out        non-null; stream to send final output to
+     * @param leftWidth  &gt;= 1; width of the left column, in characters
      * @param rightWidth &gt;= 1; width of the right column, in characters
-     * @param spacer non-null; spacer string to sit between the two columns
+     * @param spacer     non-null; spacer string to sit between the two columns
      */
     public TwoColumnOutput(OutputStream out, int leftWidth, int rightWidth,
                            String spacer) {
         this(new OutputStreamWriter(out), leftWidth, rightWidth, spacer);
     }
 
-    private String[] leftLines = null;
-    private String[] rightLines = null;
+    /**
+     * Writes the given number of spaces to the given writer.
+     *
+     * @param out non-null; where to write
+     * @param amt &gt;= 0; the number of spaces to write
+     */
+    private static void writeSpaces(Writer out, int amt) throws IOException {
+        while (amt > 0) {
+            out.write(' ');
+            amt--;
+        }
+    }
+
     public void write(String left, String right) throws IOException {
         leftLines = StringWrapper.wrapString(left, leftWidth, leftLines);
         rightLines = StringWrapper.wrapString(right, rightWidth, rightLines);
         int leftCount = leftLines.length;
         int rightCount = rightLines.length;
 
-        for (int i=0; i<leftCount || i <rightCount; i++) {
+        for (int i = 0; i < leftCount || i < rightCount; i++) {
             String leftLine = null;
             String rightLine = null;
 
@@ -138,19 +154,6 @@ public final class TwoColumnOutput {
 
                 out.write('\n');
             }
-        }
-    }
-
-    /**
-     * Writes the given number of spaces to the given writer.
-     *
-     * @param out non-null; where to write
-     * @param amt &gt;= 0; the number of spaces to write
-     */
-    private static void writeSpaces(Writer out, int amt) throws IOException {
-        while (amt > 0) {
-            out.write(' ');
-            amt--;
         }
     }
 }

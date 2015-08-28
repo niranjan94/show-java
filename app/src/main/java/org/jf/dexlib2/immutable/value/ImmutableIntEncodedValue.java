@@ -43,10 +43,13 @@ public class ImmutableIntEncodedValue extends BaseIntEncodedValue implements Imm
 
     public static ImmutableIntEncodedValue of(IntEncodedValue intEncodedValue) {
         if (intEncodedValue instanceof ImmutableIntEncodedValue) {
-            return (ImmutableIntEncodedValue)intEncodedValue;
+            return (ImmutableIntEncodedValue) intEncodedValue;
         }
         return new ImmutableIntEncodedValue(intEncodedValue.getValue());
     }
 
-    @Override public int getValue() { return value; }
+    @Override
+    public int getValue() {
+        return value;
+    }
 }

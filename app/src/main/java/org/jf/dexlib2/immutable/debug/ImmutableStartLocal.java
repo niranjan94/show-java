@@ -43,9 +43,12 @@ import javax.annotation.Nullable;
 
 public class ImmutableStartLocal extends ImmutableDebugItem implements StartLocal {
     protected final int register;
-    @Nullable protected final String name;
-    @Nullable protected final String type;
-    @Nullable protected final String signature;
+    @Nullable
+    protected final String name;
+    @Nullable
+    protected final String type;
+    @Nullable
+    protected final String signature;
 
     public ImmutableStartLocal(int codeAddress,
                                int register,
@@ -61,8 +64,8 @@ public class ImmutableStartLocal extends ImmutableDebugItem implements StartLoca
 
     @Nonnull
     public static ImmutableStartLocal of(@Nonnull StartLocal startLocal) {
-        if (startLocal instanceof  ImmutableStartLocal) {
-            return (ImmutableStartLocal)startLocal;
+        if (startLocal instanceof ImmutableStartLocal) {
+            return (ImmutableStartLocal) startLocal;
         }
         return new ImmutableStartLocal(
                 startLocal.getCodeAddress(),
@@ -72,35 +75,67 @@ public class ImmutableStartLocal extends ImmutableDebugItem implements StartLoca
                 startLocal.getSignature());
     }
 
-    @Override public int getRegister() { return register; }
+    @Override
+    public int getRegister() {
+        return register;
+    }
 
-    @Nullable @Override public StringReference getNameReference() {
-        return name==null?null:new BaseStringReference() {
-            @Nonnull @Override public String getString() {
+    @Nullable
+    @Override
+    public StringReference getNameReference() {
+        return name == null ? null : new BaseStringReference() {
+            @Nonnull
+            @Override
+            public String getString() {
                 return name;
             }
         };
     }
 
-    @Nullable @Override public TypeReference getTypeReference() {
-        return type==null?null:new BaseTypeReference() {
-            @Nonnull @Override public String getType() {
+    @Nullable
+    @Override
+    public TypeReference getTypeReference() {
+        return type == null ? null : new BaseTypeReference() {
+            @Nonnull
+            @Override
+            public String getType() {
                 return type;
             }
         };
     }
 
-    @Nullable @Override public StringReference getSignatureReference() {
-        return signature==null?null:new BaseStringReference() {
-            @Nonnull @Override public String getString() {
+    @Nullable
+    @Override
+    public StringReference getSignatureReference() {
+        return signature == null ? null : new BaseStringReference() {
+            @Nonnull
+            @Override
+            public String getString() {
                 return signature;
             }
         };
     }
 
-    @Nullable @Override public String getName() { return name; }
-    @Nullable @Override public String getType() { return type; }
-    @Nullable @Override public String getSignature() { return signature; }
+    @Nullable
+    @Override
+    public String getName() {
+        return name;
+    }
 
-    @Override public int getDebugItemType() { return DebugItemType.START_LOCAL; }
+    @Nullable
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Nullable
+    @Override
+    public String getSignature() {
+        return signature;
+    }
+
+    @Override
+    public int getDebugItemType() {
+        return DebugItemType.START_LOCAL;
+    }
 }

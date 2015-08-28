@@ -54,7 +54,7 @@ public class SemanticException extends RecognitionException {
         this.token = tree.getToken();
         this.index = tree.getTokenStartIndex();
         this.line = token.getLine();
-	    this.charPositionInLine = token.getCharPositionInLine();
+        this.charPositionInLine = token.getCharPositionInLine();
         this.errorMessage = String.format(errorMessage, messageArguments);
     }
 
@@ -62,9 +62,9 @@ public class SemanticException extends RecognitionException {
         super();
         this.input = input;
         this.token = token;
-        this.index = ((CommonToken)token).getStartIndex();
+        this.index = ((CommonToken) token).getStartIndex();
         this.line = token.getLine();
-	    this.charPositionInLine = token.getCharPositionInLine();
+        this.charPositionInLine = token.getCharPositionInLine();
         this.errorMessage = String.format(errorMessage, messageArguments);
     }
 

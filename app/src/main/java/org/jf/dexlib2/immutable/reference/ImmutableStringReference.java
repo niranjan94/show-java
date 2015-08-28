@@ -37,7 +37,8 @@ import org.jf.dexlib2.iface.reference.StringReference;
 import javax.annotation.Nonnull;
 
 public class ImmutableStringReference extends BaseStringReference implements ImmutableReference {
-    @Nonnull protected final String str;
+    @Nonnull
+    protected final String str;
 
     public ImmutableStringReference(String str) {
         this.str = str;
@@ -46,10 +47,14 @@ public class ImmutableStringReference extends BaseStringReference implements Imm
     @Nonnull
     public static ImmutableStringReference of(@Nonnull StringReference stringReference) {
         if (stringReference instanceof ImmutableStringReference) {
-            return (ImmutableStringReference)stringReference;
+            return (ImmutableStringReference) stringReference;
         }
         return new ImmutableStringReference(stringReference.getString());
     }
 
-    @Nonnull @Override public String getString() { return str; }
+    @Nonnull
+    @Override
+    public String getString() {
+        return str;
+    }
 }

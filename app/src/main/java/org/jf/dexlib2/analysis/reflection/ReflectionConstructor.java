@@ -56,68 +56,93 @@ public class ReflectionConstructor extends BaseMethodReference implements Method
         this.constructor = constructor;
     }
 
-    @Nonnull @Override public List<? extends MethodParameter> getParameters() {
+    @Nonnull
+    @Override
+    public List<? extends MethodParameter> getParameters() {
         final Constructor method = this.constructor;
         return new AbstractList<MethodParameter>() {
             private final Class[] parameters = method.getParameterTypes();
 
-            @Override public MethodParameter get(final int index) {
+            @Override
+            public MethodParameter get(final int index) {
                 return new BaseMethodParameter() {
-                    @Nonnull @Override public Set<? extends Annotation> getAnnotations() {
+                    @Nonnull
+                    @Override
+                    public Set<? extends Annotation> getAnnotations() {
                         return ImmutableSet.of();
                     }
 
-                    @Nullable @Override public String getName() {
+                    @Nullable
+                    @Override
+                    public String getName() {
                         return null;
                     }
 
-                    @Nonnull @Override public String getType() {
+                    @Nonnull
+                    @Override
+                    public String getType() {
                         return ReflectionUtils.javaToDexName(parameters[index].getName());
                     }
                 };
             }
 
-            @Override public int size() {
+            @Override
+            public int size() {
                 return parameters.length;
             }
         };
     }
 
-    @Override public int getAccessFlags() {
+    @Override
+    public int getAccessFlags() {
         return constructor.getModifiers();
     }
 
-    @Nonnull @Override public Set<? extends Annotation> getAnnotations() {
+    @Nonnull
+    @Override
+    public Set<? extends Annotation> getAnnotations() {
         return ImmutableSet.of();
     }
 
-    @Nullable @Override public MethodImplementation getImplementation() {
+    @Nullable
+    @Override
+    public MethodImplementation getImplementation() {
         return null;
     }
 
-    @Nonnull @Override public String getDefiningClass() {
+    @Nonnull
+    @Override
+    public String getDefiningClass() {
         return ReflectionUtils.javaToDexName(constructor.getDeclaringClass().getName());
     }
 
-    @Nonnull @Override public String getName() {
+    @Nonnull
+    @Override
+    public String getName() {
         return constructor.getName();
     }
 
-    @Nonnull @Override public List<String> getParameterTypes() {
+    @Nonnull
+    @Override
+    public List<String> getParameterTypes() {
         return new AbstractList<String>() {
             private final List<? extends MethodParameter> parameters = getParameters();
 
-            @Override public String get(int index) {
+            @Override
+            public String get(int index) {
                 return parameters.get(index).getType();
             }
 
-            @Override public int size() {
+            @Override
+            public int size() {
                 return parameters.size();
             }
         };
     }
 
-    @Nonnull @Override public String getReturnType() {
+    @Nonnull
+    @Override
+    public String getReturnType() {
         return "V";
     }
 }

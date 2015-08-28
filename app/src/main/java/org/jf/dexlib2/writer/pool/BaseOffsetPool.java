@@ -42,13 +42,17 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 public abstract class BaseOffsetPool<Key> implements OffsetSection<Key> {
-    @Nonnull protected final Map<Key, Integer> internedItems = Maps.newHashMap();
+    @Nonnull
+    protected final Map<Key, Integer> internedItems = Maps.newHashMap();
 
-    @Nonnull @Override public Collection<? extends Map.Entry<? extends Key, Integer>> getItems() {
+    @Nonnull
+    @Override
+    public Collection<? extends Map.Entry<? extends Key, Integer>> getItems() {
         return internedItems.entrySet();
     }
 
-    @Override public int getItemOffset(@Nonnull Key key) {
+    @Override
+    public int getItemOffset(@Nonnull Key key) {
         Integer offset = internedItems.get(key);
         if (offset == null) {
             throw new ExceptionWithContext("Item not found.: %s", getItemString(key));
@@ -56,7 +60,8 @@ public abstract class BaseOffsetPool<Key> implements OffsetSection<Key> {
         return offset;
     }
 
-    @Nonnull protected String getItemString(@Nonnull Key key) {
+    @Nonnull
+    protected String getItemString(@Nonnull Key key) {
         return key.toString();
     }
 }

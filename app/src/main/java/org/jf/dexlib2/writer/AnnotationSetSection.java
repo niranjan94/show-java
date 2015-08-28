@@ -39,5 +39,6 @@ import javax.annotation.Nonnull;
 
 public interface AnnotationSetSection<AnnotationKey extends Annotation, AnnotationSetKey>
         extends NullableOffsetSection<AnnotationSetKey> {
-    @Nonnull Collection<? extends AnnotationKey> getAnnotations(@Nonnull AnnotationSetKey key);
+    @Nonnull
+    Collection<? extends AnnotationKey> getAnnotations(@Nonnull AnnotationSetKey key);
 }

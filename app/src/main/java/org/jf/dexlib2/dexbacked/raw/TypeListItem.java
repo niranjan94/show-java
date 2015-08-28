@@ -45,7 +45,9 @@ public class TypeListItem {
     @Nonnull
     public static SectionAnnotator makeAnnotator(@Nonnull DexAnnotator annotator, @Nonnull MapItem mapItem) {
         return new SectionAnnotator(annotator, mapItem) {
-            @Nonnull @Override public String getItemName() {
+            @Nonnull
+            @Override
+            public String getItemName() {
                 return "type_list";
             }
 
@@ -54,13 +56,14 @@ public class TypeListItem {
                 int size = dexFile.readSmallUint(out.getCursor());
                 out.annotate(4, "size: %d", size);
 
-                for (int i=0; i<size; i++) {
+                for (int i = 0; i < size; i++) {
                     int typeIndex = dexFile.readUshort(out.getCursor());
                     out.annotate(2, TypeIdItem.getReferenceAnnotation(dexFile, typeIndex));
                 }
             }
 
-            @Override public int getItemAlignment() {
+            @Override
+            public int getItemAlignment() {
                 return 4;
             }
         };
@@ -90,8 +93,8 @@ public class TypeListItem {
         StringBuilder sb = new StringBuilder();
 
         int size = dexFile.readSmallUint(typeListOffset);
-        for (int i=0; i<size; i++) {
-            int typeIndex = dexFile.readUshort(typeListOffset + 4 + i*2);
+        for (int i = 0; i < size; i++) {
+            int typeIndex = dexFile.readUshort(typeListOffset + 4 + i * 2);
             String type = dexFile.getType(typeIndex);
             sb.append(type);
         }

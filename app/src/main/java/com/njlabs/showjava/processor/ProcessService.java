@@ -46,23 +46,9 @@ public class ProcessService extends Service {
     public Notify processNotify;
     public ApkParser apkParser;
 
-    private class ToastRunnable implements Runnable {
-
-        String mText;
-        public ToastRunnable(String text) {
-            mText = text;
-        }
-        @Override
-        public void run(){
-            Toast.makeText(getApplicationContext(), mText, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
     public void onCreate() {
         super.onCreate();
     }
-
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
@@ -75,11 +61,11 @@ public class ProcessService extends Service {
         } else if (intent.getAction().equals(Constants.ACTION.STOP_PROCESS)) {
             broadcastStatus("exit");
             stopForeground(true);
-            try{
+            try {
                 NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotifyManager.cancel(Constants.PROCESS_NOTIFICATION_ID);
                 Utils.killAllProcessorServices(this);
-            } catch (Exception e){
+            } catch (Exception e) {
                 Ln.e(e);
             }
             stopSelf();
@@ -123,7 +109,7 @@ public class ProcessService extends Service {
                             processNotify.updateIntent(resultPendingIntent);
                         }
                     });
-                    sourceOutputDir = Environment.getExternalStorageDirectory()+"/ShowJava/sources/"+ packageName;
+                    sourceOutputDir = Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + packageName;
                     javaSourceOutputDir = sourceOutputDir + "/java";
 
                     Ln.d(sourceOutputDir);
@@ -143,7 +129,7 @@ public class ProcessService extends Service {
         }
     }
 
-    public void publishProgress(String progressText){
+    public void publishProgress(String progressText) {
         switch (progressText) {
             case "start_activity": {
                 decompileDone();
@@ -168,11 +154,11 @@ public class ProcessService extends Service {
         }
     }
 
-    private void decompileDone(){
+    private void decompileDone() {
         showCompletedNotification();
     }
 
-    private void showCompletedNotification(){
+    private void showCompletedNotification() {
 
         Intent resultIntent = new Intent(getApplicationContext(), JavaExplorer.class);
         resultIntent.putExtra("from_notification", true);
@@ -185,7 +171,7 @@ public class ProcessService extends Service {
         NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setContentTitle(packageLabel+" has been decompiled.")
+        mBuilder.setContentTitle(packageLabel + " has been decompiled.")
                 .setContentText("Tap to browse source")
                 .setSmallIcon(R.drawable.stat_action_done)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
@@ -197,20 +183,22 @@ public class ProcessService extends Service {
     }
 
     public void broadcastStatus(String status) {
-        sendNotification(status,"");
+        sendNotification(status, "");
         Intent localIntent = new Intent(Constants.PROCESS_BROADCAST_ACTION)
                 .putExtra(Constants.PROCESS_STATUS_KEY, status);
         sendBroadcast(localIntent);
     }
+
     public void broadcastStatus(String statusKey, String statusData) {
-        sendNotification(statusKey,statusData);
+        sendNotification(statusKey, statusData);
         Intent localIntent = new Intent(Constants.PROCESS_BROADCAST_ACTION)
-                                    .putExtra(Constants.PROCESS_STATUS_KEY, statusKey)
-                                    .putExtra(Constants.PROCESS_STATUS_MESSAGE, statusData);
+                .putExtra(Constants.PROCESS_STATUS_KEY, statusKey)
+                .putExtra(Constants.PROCESS_STATUS_MESSAGE, statusData);
         sendBroadcast(localIntent);
     }
+
     public void broadcastStatusWithPackageInfo(String statusKey, String dir, String packId) {
-        sendNotification(statusKey,"");
+        sendNotification(statusKey, "");
         Intent localIntent = new Intent(Constants.PROCESS_BROADCAST_ACTION)
                 .putExtra(Constants.PROCESS_STATUS_KEY, statusKey)
                 .putExtra(Constants.PROCESS_DIR, dir)
@@ -218,8 +206,8 @@ public class ProcessService extends Service {
         sendBroadcast(localIntent);
     }
 
-    private void sendNotification(String statusKey, String statusData){
-        switch(statusKey){
+    private void sendNotification(String statusKey, String statusData) {
+        switch (statusKey) {
             case "optimise_dex_start":
                 processNotify.updateTitleText("Optimising dex file", "Processing ...");
                 break;
@@ -256,7 +244,7 @@ public class ProcessService extends Service {
             case "exit":
                 try {
                     processNotify.cancel();
-                } catch (Exception e){
+                } catch (Exception e) {
                     Ln.i(e);
                 }
                 break;
@@ -266,7 +254,7 @@ public class ProcessService extends Service {
         }
     }
 
-    private Notification buildNotification(){
+    private Notification buildNotification() {
 
         Intent stopIntent = new Intent(this, ProcessService.class);
         stopIntent.setAction(Constants.ACTION.STOP_PROCESS);
@@ -290,7 +278,7 @@ public class ProcessService extends Service {
 
         mNotifyManager.notify(Constants.PROCESS_NOTIFICATION_ID, notification);
 
-        processNotify = new Notify(mNotifyManager,mBuilder,Constants.PROCESS_NOTIFICATION_ID);
+        processNotify = new Notify(mNotifyManager, mBuilder, Constants.PROCESS_NOTIFICATION_ID);
 
         return notification;
     }
@@ -301,7 +289,7 @@ public class ProcessService extends Service {
         try {
             kill();
             processNotify.cancel();
-        } catch (Exception e){
+        } catch (Exception e) {
             Ln.e(e);
         }
     }
@@ -312,8 +300,22 @@ public class ProcessService extends Service {
         return null;
     }
 
-    public void kill(){
+    public void kill() {
         stopForeground(true);
         stopSelf();
+    }
+
+    private class ToastRunnable implements Runnable {
+
+        String mText;
+
+        public ToastRunnable(String text) {
+            mText = text;
+        }
+
+        @Override
+        public void run() {
+            Toast.makeText(getApplicationContext(), mText, Toast.LENGTH_SHORT).show();
+        }
     }
 }

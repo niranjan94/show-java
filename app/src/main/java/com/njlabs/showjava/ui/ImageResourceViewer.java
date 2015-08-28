@@ -35,11 +35,11 @@ public class ImageResourceViewer extends BaseActivity {
             packageID = extras.getString("package_id");
         }
 
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setTitle(sourceFilename);
-            String subtitle = FilenameUtils.getFullPath(sourceFilePath).replace(Environment.getExternalStorageDirectory() + "/ShowJava/sources/"+packageID+"/", "");
+            String subtitle = FilenameUtils.getFullPath(sourceFilePath).replace(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + packageID + "/", "");
             actionBar.setSubtitle(subtitle);
-            if(sourceFilename.trim().equalsIgnoreCase("icon.png")){
+            if (sourceFilename.trim().equalsIgnoreCase("icon.png")) {
                 actionBar.setSubtitle(packageID);
             }
         }
@@ -65,7 +65,7 @@ public class ImageResourceViewer extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.invert_colors:
-                if(isBlack){
+                if (isBlack) {
                     getWindow().getDecorView().setBackgroundColor(Color.WHITE);
                 } else {
                     getWindow().getDecorView().setBackgroundColor(Color.BLACK);

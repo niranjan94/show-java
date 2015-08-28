@@ -56,5 +56,7 @@ public abstract class BaseNullEncodedValue implements NullEncodedValue {
         return Ints.compare(getValueType(), o.getValueType());
     }
 
-    public int getValueType() { return ValueType.NULL; }
+    public int getValueType() {
+        return ValueType.NULL;
+    }
 }

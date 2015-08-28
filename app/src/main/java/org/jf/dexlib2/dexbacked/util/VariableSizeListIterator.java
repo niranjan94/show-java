@@ -40,10 +40,10 @@ import java.util.NoSuchElementException;
 import javax.annotation.Nonnull;
 
 public abstract class VariableSizeListIterator<T> implements ListIterator<T> {
-    @Nonnull private DexReader reader;
     protected final int size;
     private final int startOffset;
-
+    @Nonnull
+    private DexReader reader;
     private int index;
 
     protected VariableSizeListIterator(@Nonnull DexBackedDexFile dexFile, int offset, int size) {
@@ -56,7 +56,7 @@ public abstract class VariableSizeListIterator<T> implements ListIterator<T> {
      * Reads the next item from reader.
      *
      * @param reader The {@code DexReader} to read the next item from
-     * @param index The index of the item being read. This is guaranteed to be less than {@code size}
+     * @param index  The index of the item being read. This is guaranteed to be less than {@code size}
      * @return The item that was read
      */
     protected abstract T readNextItem(@Nonnull DexReader reader, int index);
@@ -85,7 +85,7 @@ public abstract class VariableSizeListIterator<T> implements ListIterator<T> {
 
     @Override
     public T previous() {
-        int targetIndex = index-1;
+        int targetIndex = index - 1;
         reader.setOffset(startOffset);
         index = 0;
         while (index < targetIndex) {
@@ -104,7 +104,18 @@ public abstract class VariableSizeListIterator<T> implements ListIterator<T> {
         return index - 1;
     }
 
-    @Override public void remove() { throw new UnsupportedOperationException(); }
-    @Override public void set(T t) { throw new UnsupportedOperationException(); }
-    @Override public void add(T t) { throw new UnsupportedOperationException(); }
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void set(T t) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void add(T t) {
+        throw new UnsupportedOperationException();
+    }
 }

@@ -36,6 +36,9 @@ import org.jf.dexlib2.iface.reference.TypeReference;
 import javax.annotation.Nonnull;
 
 public final class TypeUtils {
+    private TypeUtils() {
+    }
+
     public static boolean isWideType(@Nonnull String type) {
         char c = type.charAt(0);
         return c == 'J' || c == 'D';
@@ -48,6 +51,4 @@ public final class TypeUtils {
     public static boolean isPrimitiveType(String type) {
         return type.length() == 1;
     }
-
-    private TypeUtils() {}
 }

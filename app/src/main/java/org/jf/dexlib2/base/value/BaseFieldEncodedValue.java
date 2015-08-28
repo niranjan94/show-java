@@ -49,7 +49,7 @@ public abstract class BaseFieldEncodedValue implements FieldEncodedValue {
     @Override
     public boolean equals(@Nullable Object o) {
         if (o instanceof FieldEncodedValue) {
-            return getValue().equals(((FieldEncodedValue)o).getValue());
+            return getValue().equals(((FieldEncodedValue) o).getValue());
         }
         return false;
     }
@@ -58,8 +58,10 @@ public abstract class BaseFieldEncodedValue implements FieldEncodedValue {
     public int compareTo(@Nonnull EncodedValue o) {
         int res = Ints.compare(getValueType(), o.getValueType());
         if (res != 0) return res;
-        return getValue().compareTo(((FieldEncodedValue)o).getValue());
+        return getValue().compareTo(((FieldEncodedValue) o).getValue());
     }
 
-    public int getValueType() { return ValueType.FIELD; }
+    public int getValueType() {
+        return ValueType.FIELD;
+    }
 }

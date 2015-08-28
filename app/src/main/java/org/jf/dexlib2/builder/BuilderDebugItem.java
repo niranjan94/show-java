@@ -36,12 +36,14 @@ import org.jf.dexlib2.iface.debug.DebugItem;
 import javax.annotation.Nullable;
 
 public abstract class BuilderDebugItem implements DebugItem {
-    @Nullable MethodLocation location;
+    @Nullable
+    MethodLocation location;
 
     public BuilderDebugItem() {
     }
 
-    @Override public int getCodeAddress() {
+    @Override
+    public int getCodeAddress() {
         if (location == null) {
             throw new IllegalStateException("Cannot get the address of a BuilderDebugItem that isn't associated with " +
                     "a method.");

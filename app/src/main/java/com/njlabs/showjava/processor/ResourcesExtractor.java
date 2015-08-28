@@ -42,20 +42,20 @@ public class ResourcesExtractor extends ProcessServiceHelper {
 
         broadcastStatus("res");
         ThreadGroup group = new ThreadGroup("XML Extraction Group");
-        Thread xmlExtractionThread = new Thread(group, new Runnable(){
+        Thread xmlExtractionThread = new Thread(group, new Runnable() {
             @Override
-            public void run(){
+            public void run() {
                 try {
                     ZipFile zipFile = new ZipFile(packageFilePath);
                     Enumeration<? extends ZipEntry> entries = zipFile.entries();
                     while (entries.hasMoreElements()) {
                         ZipEntry zipEntry = entries.nextElement();
-                        if(!zipEntry.isDirectory()&&!zipEntry.getName().equals("AndroidManifest.xml")&&FilenameUtils.getExtension(zipEntry.getName()).equals("xml")){
-                            broadcastStatus("progress_stream",zipEntry.getName());
+                        if (!zipEntry.isDirectory() && !zipEntry.getName().equals("AndroidManifest.xml") && FilenameUtils.getExtension(zipEntry.getName()).equals("xml")) {
+                            broadcastStatus("progress_stream", zipEntry.getName());
                             writeXML(zipEntry.getName());
-                        } else if(!zipEntry.isDirectory()&&(FilenameUtils.getExtension(zipEntry.getName()).equals("png")||FilenameUtils.getExtension(zipEntry.getName()).equals("jpg"))){
-                            broadcastStatus("progress_stream",zipEntry.getName());
-                            writeFile(zipFile.getInputStream(zipEntry),zipEntry.getName());
+                        } else if (!zipEntry.isDirectory() && (FilenameUtils.getExtension(zipEntry.getName()).equals("png") || FilenameUtils.getExtension(zipEntry.getName()).equals("jpg"))) {
+                            broadcastStatus("progress_stream", zipEntry.getName());
+                            writeFile(zipFile.getInputStream(zipEntry), zipEntry.getName());
                         }
                     }
                     zipFile.close();
@@ -66,14 +66,14 @@ public class ResourcesExtractor extends ProcessServiceHelper {
                     processService.publishProgress("start_activity_with_error");
                 }
             }
-        },"XML Extraction Thread", Constants.STACK_SIZE);
+        }, "XML Extraction Thread", Constants.STACK_SIZE);
         xmlExtractionThread.setPriority(Thread.MAX_PRIORITY);
         xmlExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
         xmlExtractionThread.start();
 
     }
 
-    private void writeFile(InputStream fileStream, String path){
+    private void writeFile(InputStream fileStream, String path) {
         FileOutputStream outputStream = null;
         try {
             String fileFolderPath = sourceOutputDir + "/" + path.replace(FilenameUtils.getName(path), "");
@@ -82,7 +82,7 @@ public class ResourcesExtractor extends ProcessServiceHelper {
                 fileFolder.mkdirs();
             }
 
-            outputStream =  new FileOutputStream(new File(fileFolderPath + FilenameUtils.getName(path)));
+            outputStream = new FileOutputStream(new File(fileFolderPath + FilenameUtils.getName(path)));
 
             int read = 0;
             byte[] bytes = new byte[1024];
@@ -125,12 +125,12 @@ public class ResourcesExtractor extends ProcessServiceHelper {
         }
     }
 
-    private void allDone(){
+    private void allDone() {
         SourceInfo.setXmlSourceStatus(processService, true);
         processService.publishProgress("start_activity");
     }
 
-    private void writeManifest(){
+    private void writeManifest() {
         try {
             String manifestXml = apkParser.getManifestXml();
             FileUtils.writeStringToFile(new File(sourceOutputDir + "/AndroidManifest.xml"), manifestXml);
@@ -139,7 +139,7 @@ public class ResourcesExtractor extends ProcessServiceHelper {
         }
     }
 
-    private void saveIcon(){
+    private void saveIcon() {
         try {
             byte[] icon = apkParser.getIconFile().getData();
             Bitmap bitmap = BitmapFactory.decodeByteArray(icon, 0, icon.length);

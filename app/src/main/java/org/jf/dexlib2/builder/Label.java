@@ -35,7 +35,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class Label {
-    @Nullable MethodLocation location;
+    @Nullable
+    MethodLocation location;
 
     Label() {
     }

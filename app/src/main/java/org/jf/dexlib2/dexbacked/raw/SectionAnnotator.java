@@ -43,8 +43,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class SectionAnnotator {
-    @Nonnull public final DexAnnotator annotator;
-    @Nonnull public final RawDexFile dexFile;
+    @Nonnull
+    public final DexAnnotator annotator;
+    @Nonnull
+    public final RawDexFile dexFile;
     public final int itemType;
     public final int sectionOffset;
     public final int itemCount;
@@ -60,7 +62,9 @@ public abstract class SectionAnnotator {
         this.itemCount = mapItem.getItemCount();
     }
 
-    @Nonnull public abstract String getItemName();
+    @Nonnull
+    public abstract String getItemName();
+
     protected abstract void annotateItem(@Nonnull AnnotatedBytes out, int itemIndex, @Nullable String itemIdentity);
 
     /**
@@ -83,7 +87,7 @@ public abstract class SectionAnnotator {
             out.annotate(0, "-----------------------------");
             out.annotate(0, "");
 
-            for (int i=0; i<itemCount; i++) {
+            for (int i = 0; i < itemCount; i++) {
                 out.moveTo(AlignmentUtils.alignOffset(out.getCursor(), itemAlignment));
 
                 String itemIdentity = getItemIdentity(out.getCursor());
@@ -99,7 +103,8 @@ public abstract class SectionAnnotator {
         }
     }
 
-    @Nullable private String getItemIdentity(int itemOffset) {
+    @Nullable
+    private String getItemIdentity(int itemOffset) {
         return itemIdentities.get(itemOffset);
     }
 

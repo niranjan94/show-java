@@ -43,10 +43,13 @@ public class ImmutableByteEncodedValue extends BaseByteEncodedValue implements I
 
     public static ImmutableByteEncodedValue of(ByteEncodedValue byteEncodedValue) {
         if (byteEncodedValue instanceof ImmutableByteEncodedValue) {
-            return (ImmutableByteEncodedValue)byteEncodedValue;
+            return (ImmutableByteEncodedValue) byteEncodedValue;
         }
         return new ImmutableByteEncodedValue(byteEncodedValue.getValue());
     }
 
-    @Override public byte getValue() { return value; }
+    @Override
+    public byte getValue() {
+        return value;
+    }
 }

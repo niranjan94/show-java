@@ -127,7 +127,7 @@ public class JarExtractor extends ProcessServiceHelper {
 
         File dexFile = new File(PerAppWorkingDirectory + "/optimised_classes.dex");
 
-        if(dexFile.exists() && dexFile.isFile()){
+        if (dexFile.exists() && dexFile.isFile()) {
             DexExceptionHandlerMod dexExceptionHandlerMod = new DexExceptionHandlerMod();
             try {
                 DexFileReader reader = new DexFileReader(dexFile);
@@ -146,31 +146,19 @@ public class JarExtractor extends ProcessServiceHelper {
 
     }
 
-    class DexExceptionHandlerMod implements DexExceptionHandler {
-        @Override
-        public void handleFileException(Exception e) {
-            Ln.d("Dex2Jar Exception " + e);
-        }
-
-        @Override
-        public void handleMethodTranslateException(Method method, IrMethod irMethod, MethodNode methodNode, Exception e) {
-            Ln.d("Dex2Jar Exception " + e);
-        }
-    }
-
     private void startJavaExtractor() {
         JavaExtractor javaExtractor = new JavaExtractor(processService);
         javaExtractor.extract();
     }
 
-    private void loadIgnoredLibs(){
+    private void loadIgnoredLibs() {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(processService.getAssets().open("ignored.list")));
             String mLine = reader.readLine().trim();
             while (mLine != null) {
                 mLine = mLine.trim();
-                if(mLine.length()!=0){
+                if (mLine.length() != 0) {
                     ignoredLibs.add(StringUtils.toClassName(mLine));
                 }
                 Ln.d(mLine);
@@ -189,13 +177,25 @@ public class JarExtractor extends ProcessServiceHelper {
         }
     }
 
-    private boolean isIgnored(String className){
-        for (String ignoredClass : ignoredLibs){
-            if(className.startsWith(ignoredClass)){
+    private boolean isIgnored(String className) {
+        for (String ignoredClass : ignoredLibs) {
+            if (className.startsWith(ignoredClass)) {
                 return true;
             }
         }
         return false;
+    }
+
+    class DexExceptionHandlerMod implements DexExceptionHandler {
+        @Override
+        public void handleFileException(Exception e) {
+            Ln.d("Dex2Jar Exception " + e);
+        }
+
+        @Override
+        public void handleMethodTranslateException(Method method, IrMethod irMethod, MethodNode methodNode, Exception e) {
+            Ln.d("Dex2Jar Exception " + e);
+        }
     }
 
 

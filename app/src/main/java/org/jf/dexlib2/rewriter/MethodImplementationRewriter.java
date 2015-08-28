@@ -42,38 +42,49 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class MethodImplementationRewriter implements Rewriter<MethodImplementation> {
-    @Nonnull protected final Rewriters rewriters;
+    @Nonnull
+    protected final Rewriters rewriters;
 
     public MethodImplementationRewriter(@Nonnull Rewriters rewriters) {
         this.rewriters = rewriters;
     }
 
-    @Nonnull @Override public MethodImplementation rewrite(@Nonnull MethodImplementation methodImplementation) {
+    @Nonnull
+    @Override
+    public MethodImplementation rewrite(@Nonnull MethodImplementation methodImplementation) {
         return new RewrittenMethodImplementation(methodImplementation);
     }
 
     protected class RewrittenMethodImplementation implements MethodImplementation {
-        @Nonnull protected MethodImplementation methodImplementation;
+        @Nonnull
+        protected MethodImplementation methodImplementation;
 
         public RewrittenMethodImplementation(@Nonnull MethodImplementation methodImplementation) {
             this.methodImplementation = methodImplementation;
         }
 
-        @Override public int getRegisterCount() {
+        @Override
+        public int getRegisterCount() {
             return methodImplementation.getRegisterCount();
         }
 
-        @Override @Nonnull public Iterable<? extends Instruction> getInstructions() {
+        @Override
+        @Nonnull
+        public Iterable<? extends Instruction> getInstructions() {
             return RewriterUtils.rewriteIterable(rewriters.getInstructionRewriter(),
                     methodImplementation.getInstructions());
         }
 
-        @Override @Nonnull public List<? extends TryBlock<? extends ExceptionHandler>> getTryBlocks() {
+        @Override
+        @Nonnull
+        public List<? extends TryBlock<? extends ExceptionHandler>> getTryBlocks() {
             return RewriterUtils.rewriteList(rewriters.getTryBlockRewriter(),
                     methodImplementation.getTryBlocks());
         }
 
-        @Override @Nonnull public Iterable<? extends DebugItem> getDebugItems() {
+        @Override
+        @Nonnull
+        public Iterable<? extends DebugItem> getDebugItems() {
             return RewriterUtils.rewriteIterable(rewriters.getDebugItemRewriter(),
                     methodImplementation.getDebugItems());
         }

@@ -57,7 +57,7 @@ public class ImmutableInstruction3rms extends ImmutableInstruction implements In
 
     public static ImmutableInstruction3rms of(Instruction3rms instruction) {
         if (instruction instanceof ImmutableInstruction3rms) {
-            return (ImmutableInstruction3rms)instruction;
+            return (ImmutableInstruction3rms) instruction;
         }
         return new ImmutableInstruction3rms(
                 instruction.getOpcode(),
@@ -66,10 +66,24 @@ public class ImmutableInstruction3rms extends ImmutableInstruction implements In
                 instruction.getVtableIndex());
     }
 
-    @Override public int getStartRegister() { return startRegister; }
-    @Override public int getRegisterCount() { return registerCount; }
-    @Override public int getVtableIndex() { return vtableIndex; }
+    @Override
+    public int getStartRegister() {
+        return startRegister;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getRegisterCount() {
+        return registerCount;
+    }
+
+    @Override
+    public int getVtableIndex() {
+        return vtableIndex;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }
 

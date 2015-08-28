@@ -34,9 +34,10 @@ package org.jf.dexlib2.util;
 import org.jf.dexlib2.Opcode;
 
 public final class InstructionUtil {
+    private InstructionUtil() {
+    }
+
     public static boolean isInvokeStatic(Opcode opcode) {
         return opcode == Opcode.INVOKE_STATIC || opcode == Opcode.INVOKE_STATIC_RANGE;
     }
-
-    private InstructionUtil() {}
 }

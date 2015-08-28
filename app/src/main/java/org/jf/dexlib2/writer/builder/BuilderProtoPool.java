@@ -48,16 +48,19 @@ import javax.annotation.Nullable;
 
 class BuilderProtoPool
         implements ProtoSection<BuilderStringReference, BuilderTypeReference, BuilderProtoReference, BuilderTypeList> {
-    @Nonnull private final BuilderContext context;
-    @Nonnull private final ConcurrentMap<ProtoKey, BuilderProtoReference> internedItems =
+    @Nonnull
+    private final BuilderContext context;
+    @Nonnull
+    private final ConcurrentMap<ProtoKey, BuilderProtoReference> internedItems =
             Maps.newConcurrentMap();
 
     BuilderProtoPool(@Nonnull BuilderContext context) {
         this.context = context;
     }
 
-    @Nonnull public BuilderProtoReference internProto(@Nonnull List<? extends CharSequence> parameters,
-                                                      @Nonnull String returnType) {
+    @Nonnull
+    public BuilderProtoReference internProto(@Nonnull List<? extends CharSequence> parameters,
+                                             @Nonnull String returnType) {
         ProtoKey key = new Key(parameters, returnType);
         BuilderProtoReference ret = internedItems.get(key);
         if (ret != null) {
@@ -69,36 +72,48 @@ class BuilderProtoPool
                 context.typeListPool.internTypeList(parameters),
                 context.typePool.internType(returnType));
         ret = internedItems.putIfAbsent(protoReference, protoReference);
-        return ret==null?protoReference:ret;
+        return ret == null ? protoReference : ret;
     }
 
-    @Nonnull public BuilderProtoReference internProto(@Nonnull MethodReference methodReference) {
+    @Nonnull
+    public BuilderProtoReference internProto(@Nonnull MethodReference methodReference) {
         return internProto(methodReference.getParameterTypes(), methodReference.getReturnType());
     }
 
-    @Nonnull @Override public BuilderStringReference getShorty(@Nonnull BuilderProtoReference key) {
+    @Nonnull
+    @Override
+    public BuilderStringReference getShorty(@Nonnull BuilderProtoReference key) {
         return key.shorty;
     }
 
-    @Nonnull @Override public BuilderTypeReference getReturnType(@Nonnull BuilderProtoReference key) {
+    @Nonnull
+    @Override
+    public BuilderTypeReference getReturnType(@Nonnull BuilderProtoReference key) {
         return key.returnType;
     }
 
-    @Nullable @Override public BuilderTypeList getParameters(@Nonnull BuilderProtoReference key) {
+    @Nullable
+    @Override
+    public BuilderTypeList getParameters(@Nonnull BuilderProtoReference key) {
         return key.parameterTypes;
     }
 
-    @Override public int getItemIndex(@Nonnull BuilderProtoReference key) {
+    @Override
+    public int getItemIndex(@Nonnull BuilderProtoReference key) {
         return key.index;
     }
 
-    @Nonnull @Override public Collection<? extends Entry<? extends BuilderProtoReference, Integer>> getItems() {
+    @Nonnull
+    @Override
+    public Collection<? extends Entry<? extends BuilderProtoReference, Integer>> getItems() {
         return new BuilderMapEntryCollection<BuilderProtoReference>(internedItems.values()) {
-            @Override protected int getValue(@Nonnull BuilderProtoReference key) {
+            @Override
+            protected int getValue(@Nonnull BuilderProtoReference key) {
                 return key.index;
             }
 
-            @Override protected int setValue(@Nonnull BuilderProtoReference key, int value) {
+            @Override
+            protected int setValue(@Nonnull BuilderProtoReference key, int value) {
                 int prev = key.index;
                 key.index = value;
                 return prev;
@@ -108,36 +123,45 @@ class BuilderProtoPool
 
     // a placeholder interface to unify the temporary probing key and the BuilderProtoReference class
     interface ProtoKey {
-        @Nonnull List<? extends CharSequence> getParameterTypes();
-        @Nonnull String getReturnType();
+        @Nonnull
+        List<? extends CharSequence> getParameterTypes();
+
+        @Nonnull
+        String getReturnType();
     }
 
     // a temporary lightweight class to allow a quick probe if the given prototype has already been interned
     private static class Key implements ProtoKey {
-        @Nonnull private final List<? extends CharSequence> parameters;
-        @Nonnull private final String returnType;
+        @Nonnull
+        private final List<? extends CharSequence> parameters;
+        @Nonnull
+        private final String returnType;
 
         public Key(@Nonnull List<? extends CharSequence> parameters, @Nonnull String returnType) {
             this.parameters = parameters;
             this.returnType = returnType;
         }
 
-        @Nonnull public List<? extends CharSequence> getParameterTypes() {
+        @Nonnull
+        public List<? extends CharSequence> getParameterTypes() {
             return parameters;
         }
 
-        @Nonnull public String getReturnType() {
+        @Nonnull
+        public String getReturnType() {
             return returnType;
         }
 
-        @Override public int hashCode() {
+        @Override
+        public int hashCode() {
             int hashCode = returnType.hashCode();
-            return hashCode*31 + parameters.hashCode();
+            return hashCode * 31 + parameters.hashCode();
         }
 
-        @Override public boolean equals(Object o) {
+        @Override
+        public boolean equals(Object o) {
             if (o != null && o instanceof ProtoKey) {
-                ProtoKey other = (ProtoKey)o;
+                ProtoKey other = (ProtoKey) o;
                 return getReturnType().equals(other.getReturnType()) &&
                         CharSequenceUtils.listEquals(getParameterTypes(), other.getParameterTypes());
             }

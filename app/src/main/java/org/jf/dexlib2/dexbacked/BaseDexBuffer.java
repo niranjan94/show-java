@@ -45,9 +45,9 @@ public class BaseDexBuffer {
     public int readSmallUint(int offset) {
         byte[] buf = this.buf;
         int result = (buf[offset] & 0xff) |
-                ((buf[offset+1] & 0xff) << 8) |
-                ((buf[offset+2] & 0xff) << 16) |
-                ((buf[offset+3]) << 24);
+                ((buf[offset + 1] & 0xff) << 8) |
+                ((buf[offset + 2] & 0xff) << 16) |
+                ((buf[offset + 3]) << 24);
         if (result < 0) {
             throw new ExceptionWithContext("Encountered small uint that is out of range at offset 0x%x", offset);
         }
@@ -57,9 +57,9 @@ public class BaseDexBuffer {
     public int readOptionalUint(int offset) {
         byte[] buf = this.buf;
         int result = (buf[offset] & 0xff) |
-                ((buf[offset+1] & 0xff) << 8) |
-                ((buf[offset+2] & 0xff) << 16) |
-                ((buf[offset+3]) << 24);
+                ((buf[offset + 1] & 0xff) << 8) |
+                ((buf[offset + 2] & 0xff) << 16) |
+                ((buf[offset + 3]) << 24);
         if (result < -1) {
             throw new ExceptionWithContext("Encountered optional uint that is out of range at offset 0x%x", offset);
         }
@@ -69,7 +69,7 @@ public class BaseDexBuffer {
     public int readUshort(int offset) {
         byte[] buf = this.buf;
         return (buf[offset] & 0xff) |
-                ((buf[offset+1] & 0xff) << 8);
+                ((buf[offset + 1] & 0xff) << 8);
     }
 
     public int readUbyte(int offset) {
@@ -79,27 +79,27 @@ public class BaseDexBuffer {
     public long readLong(int offset) {
         byte[] buf = this.buf;
         return (buf[offset] & 0xff) |
-                ((buf[offset+1] & 0xff) << 8) |
-                ((buf[offset+2] & 0xff) << 16) |
-                ((buf[offset+3] & 0xffL) << 24) |
-                ((buf[offset+4] & 0xffL) << 32) |
-                ((buf[offset+5] & 0xffL) << 40) |
-                ((buf[offset+6] & 0xffL) << 48) |
-                (((long)buf[offset+7]) << 56);
+                ((buf[offset + 1] & 0xff) << 8) |
+                ((buf[offset + 2] & 0xff) << 16) |
+                ((buf[offset + 3] & 0xffL) << 24) |
+                ((buf[offset + 4] & 0xffL) << 32) |
+                ((buf[offset + 5] & 0xffL) << 40) |
+                ((buf[offset + 6] & 0xffL) << 48) |
+                (((long) buf[offset + 7]) << 56);
     }
 
     public int readInt(int offset) {
         byte[] buf = this.buf;
         return (buf[offset] & 0xff) |
-                ((buf[offset+1] & 0xff) << 8) |
-                ((buf[offset+2] & 0xff) << 16) |
-                (buf[offset+3] << 24);
+                ((buf[offset + 1] & 0xff) << 8) |
+                ((buf[offset + 2] & 0xff) << 16) |
+                (buf[offset + 3] << 24);
     }
 
     public int readShort(int offset) {
         byte[] buf = this.buf;
         return (buf[offset] & 0xff) |
-                (buf[offset+1] << 8);
+                (buf[offset + 1] << 8);
     }
 
     public int readByte(int offset) {

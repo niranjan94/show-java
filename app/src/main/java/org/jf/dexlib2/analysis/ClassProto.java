@@ -63,307 +63,22 @@ import javax.annotation.Nullable;
  * and their offsets.
  */
 public class ClassProto implements TypeProto {
-    @Nonnull protected final ClassPath classPath;
-    @Nonnull protected final String type;
-
-    protected boolean vtableFullyResolved = true;
-    protected boolean interfacesFullyResolved = true;
-
-    public ClassProto(@Nonnull ClassPath classPath, @Nonnull String type) {
-        if (type.charAt(0) != 'L') {
-            throw new ExceptionWithContext("Cannot construct ClassProto for non reference type: %s", type);
-        }
-        this.classPath = classPath;
-        this.type = type;
-    }
-
-    @Override public String toString() { return type; }
-    @Nonnull @Override public ClassPath getClassPath() { return classPath; }
-    @Nonnull @Override public String getType() { return type; }
-
     @Nonnull
-    public ClassDef getClassDef() {
-        return classDefSupplier.get();
-    }
-
-
-    @Nonnull private final Supplier<ClassDef> classDefSupplier = Suppliers.memoize(new Supplier<ClassDef>() {
-        @Override public ClassDef get() {
+    protected final ClassPath classPath;
+    @Nonnull
+    protected final String type;
+    @Nonnull
+    private final Supplier<ClassDef> classDefSupplier = Suppliers.memoize(new Supplier<ClassDef>() {
+        @Override
+        public ClassDef get() {
             return classPath.getClassDef(type);
         }
     });
-
-    /**
-     * Returns true if this class is an interface.
-     *
-     * If this class is not defined, then this will throw an UnresolvedClassException
-     *
-     * @return True if this class is an interface
-     */
-    public boolean isInterface() {
-        ClassDef classDef = getClassDef();
-        return (classDef.getAccessFlags() & AccessFlags.INTERFACE.getValue()) != 0;
-    }
-
-    /**
-     * Returns the set of interfaces that this class implements as a Map<String, ClassDef>.
-     *
-     * The ClassDef value will be present only for the interfaces that this class directly implements (including any
-     * interfaces transitively implemented), but not for any interfaces that are only implemented by a superclass of
-     * this class
-     *
-     * For any interfaces that are only implemented by a superclass (or the class itself, if the class is an interface),
-     * the value will be null.
-     *
-     * If any interface couldn't be resolved, then the interfacesFullyResolved field will be set to false upon return.
-     *
-     * @return the set of interfaces that this class implements as a Map<String, ClassDef>.
-     */
     @Nonnull
-    protected LinkedHashMap<String, ClassDef> getInterfaces() {
-        return interfacesSupplier.get();
-    }
-
-    @Nonnull
-    private final Supplier<LinkedHashMap<String, ClassDef>> interfacesSupplier =
-            Suppliers.memoize(new Supplier<LinkedHashMap<String, ClassDef>>() {
-                @Override public LinkedHashMap<String, ClassDef> get() {
-                    LinkedHashMap<String, ClassDef> interfaces = Maps.newLinkedHashMap();
-
-                    try {
-                        for (String interfaceType: getClassDef().getInterfaces()) {
-                            if (!interfaces.containsKey(interfaceType)) {
-                                ClassDef interfaceDef;
-                                try {
-                                    interfaceDef = classPath.getClassDef(interfaceType);
-                                    interfaces.put(interfaceType, interfaceDef);
-                                } catch (UnresolvedClassException ex) {
-                                    interfaces.put(interfaceType, null);
-                                    interfacesFullyResolved = false;
-                                }
-
-                                ClassProto interfaceProto = (ClassProto) classPath.getClass(interfaceType);
-                                for (String superInterface: interfaceProto.getInterfaces().keySet()) {
-                                    if (!interfaces.containsKey(superInterface)) {
-                                        interfaces.put(superInterface, interfaceProto.getInterfaces().get(superInterface));
-                                    }
-                                }
-                                if (!interfaceProto.interfacesFullyResolved) {
-                                    interfacesFullyResolved = false;
-                                }
-                            }
-                        }
-                    } catch (UnresolvedClassException ex) {
-                        interfacesFullyResolved = false;
-                    }
-
-                    // now add self and super class interfaces, required for common super class lookup
-                    // we don't really need ClassDef's for that, so let's just use null
-
-                    if (isInterface() && !interfaces.containsKey(getType())) {
-                        interfaces.put(getType(), null);
-                    }
-
-                    try {
-                        String superclass = getSuperclass();
-                        if (superclass != null) {
-                            ClassProto superclassProto = (ClassProto) classPath.getClass(superclass);
-                            for (String superclassInterface: superclassProto.getInterfaces().keySet()) {
-                                if (!interfaces.containsKey(superclassInterface)) {
-                                    interfaces.put(superclassInterface, null);
-                                }
-                            }
-                            if (!superclassProto.interfacesFullyResolved) {
-                                interfacesFullyResolved = false;
-                            }
-                        }
-                    } catch (UnresolvedClassException ex) {
-                        interfacesFullyResolved = false;
-                    }
-
-                    return interfaces;
-                }
-            });
-
-    /**
-     * Gets the interfaces directly implemented by this class, or the interfaces they transitively implement.
-     *
-     * This does not include any interfaces that are only implemented by a superclass
-     *
-     * @return An iterables of ClassDefs representing the directly or transitively implemented interfaces
-     * @throws UnresolvedClassException if interfaces could not be fully resolved
-     */
-    @Nonnull
-    protected Iterable<ClassDef> getDirectInterfaces() {
-        Iterable<ClassDef> directInterfaces =
-                FluentIterable.from(getInterfaces().values()).filter(Predicates.notNull());
-
-        if (!interfacesFullyResolved) {
-            throw new UnresolvedClassException("Interfaces for class %s not fully resolved", getType());
-        }
-
-        return directInterfaces;
-    }
-
-    /**
-     * Checks if this class implements the given interface.
-     *
-     * If the interfaces of this class cannot be fully resolved then this
-     * method will either return true or throw an UnresolvedClassException
-     *
-     * @param iface The interface to check for
-     * @return true if this class implements the given interface, otherwise false
-     * @throws UnresolvedClassException if the interfaces for this class could not be fully resolved, and the interface
-     * is not one of the interfaces that were successfully resolved
-     */
-    @Override
-    public boolean implementsInterface(@Nonnull String iface) {
-        if (getInterfaces().containsKey(iface)) {
-            return true;
-        }
-        if (!interfacesFullyResolved) {
-            throw new UnresolvedClassException("Interfaces for class %s not fully resolved", getType());
-        }
-        return false;
-    }
-
-    @Nullable @Override
-    public String getSuperclass() {
-        return getClassDef().getSuperclass();
-    }
-
-    /**
-     * This is a helper method for getCommonSuperclass
-     *
-     * It checks if this class is an interface, and if so, if other implements it.
-     *
-     * If this class is undefined, we go ahead and check if it is listed in other's interfaces. If not, we throw an
-     * UndefinedClassException
-     *
-     * If the interfaces of other cannot be fully resolved, we check the interfaces that can be resolved. If not found,
-     * we throw an UndefinedClassException
-     *
-     * @param other The class to check the interfaces of
-     * @return true if this class is an interface (or is undefined) other implements this class
-     *
-     */
-    private boolean checkInterface(@Nonnull ClassProto other) {
-        boolean isResolved = true;
-        boolean isInterface = true;
-        try {
-            isInterface = isInterface();
-        } catch (UnresolvedClassException ex) {
-            isResolved = false;
-            // if we don't know if this class is an interface or not,
-            // we can still try to call other.implementsInterface(this)
-        }
-        if (isInterface) {
-            try {
-                if (other.implementsInterface(getType())) {
-                    return true;
-                }
-            } catch (UnresolvedClassException ex) {
-                // There are 2 possibilities here, depending on whether we were able to resolve this class.
-                // 1. If this class is resolved, then we know it is an interface class. The other class either
-                //    isn't defined, or its interfaces couldn't be fully resolved.
-                //    In this case, we throw an UnresolvedClassException
-                // 2. If this class is not resolved, we had tried to call implementsInterface anyway. We don't
-                //    know for sure if this class is an interface or not. We return false, and let processing
-                //    continue in getCommonSuperclass
-                if (isResolved) {
-                    throw ex;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override @Nonnull
-    public TypeProto getCommonSuperclass(@Nonnull TypeProto other) {
-        // use the other type's more specific implementation
-        if (!(other instanceof ClassProto)) {
-            return other.getCommonSuperclass(this);
-        }
-
-        if (this == other || getType().equals(other.getType())) {
-            return this;
-        }
-
-        if (this.getType().equals("Ljava/lang/Object;")) {
-            return this;
-        }
-
-        if (other.getType().equals("Ljava/lang/Object;")) {
-            return other;
-        }
-
-        boolean gotException = false;
-        try {
-            if (checkInterface((ClassProto)other)) {
-                return this;
-            }
-        } catch (UnresolvedClassException ex) {
-            gotException = true;
-        }
-
-        try {
-            if (((ClassProto)other).checkInterface(this)) {
-                return other;
-            }
-        } catch (UnresolvedClassException ex) {
-            gotException = true;
-        }
-        if (gotException) {
-            return classPath.getUnknownClass();
-        }
-
-        List<TypeProto> thisChain = Lists.<TypeProto>newArrayList(this);
-        Iterables.addAll(thisChain, TypeProtoUtils.getSuperclassChain(this));
-
-        List<TypeProto> otherChain = Lists.newArrayList(other);
-        Iterables.addAll(otherChain, TypeProtoUtils.getSuperclassChain(other));
-
-        // reverse them, so that the first entry is either Ljava/lang/Object; or Ujava/lang/Object;
-        thisChain = Lists.reverse(thisChain);
-        otherChain = Lists.reverse(otherChain);
-
-        for (int i=Math.min(thisChain.size(), otherChain.size())-1; i>=0; i--) {
-            TypeProto typeProto = thisChain.get(i);
-            if (typeProto.getType().equals(otherChain.get(i).getType())) {
-                return typeProto;
-            }
-        }
-
-        return classPath.getUnknownClass();
-    }
-
-    @Override
-    @Nullable
-    public FieldReference getFieldByOffset(int fieldOffset) {
-        if (getInstanceFields().size() == 0) {
-            return null;
-        }
-        return getInstanceFields().get(fieldOffset);
-    }
-
-    @Override
-    @Nullable
-    public MethodReference getMethodByVtableIndex(int vtableIndex) {
-        List<Method> vtable = getVtable();
-        if (vtableIndex < 0 || vtableIndex >= vtable.size()) {
-            return null;
-        }
-
-        return vtable.get(vtableIndex);
-    }
-
-    @Nonnull SparseArray<FieldReference> getInstanceFields() {
-        return instanceFieldsSupplier.get();
-    }
-
-    @Nonnull private final Supplier<SparseArray<FieldReference>> instanceFieldsSupplier =
+    private final Supplier<SparseArray<FieldReference>> instanceFieldsSupplier =
             Suppliers.memoize(new Supplier<SparseArray<FieldReference>>() {
-                @Override public SparseArray<FieldReference> get() {
+                @Override
+                public SparseArray<FieldReference> get() {
                     //This is a bit of an "involved" operation. We need to follow the same algorithm that dalvik uses to
                     //arrange fields, so that we end up with the same field offsets (which is needed for deodexing).
                     //See mydroid/dalvik/vm/oo/Class.c - computeFieldOffsets()
@@ -376,7 +91,7 @@ public class ClassProto implements TypeProto {
                     final int fieldCount = fields.size();
                     //the "type" for each field in fields. 0=reference,1=wide,2=other
                     byte[] fieldTypes = new byte[fields.size()];
-                    for (int i=0; i<fieldCount; i++) {
+                    for (int i = 0; i < fieldCount; i++) {
                         fieldTypes[i] = getFieldType(fields.get(i));
                     }
 
@@ -384,7 +99,7 @@ public class ClassProto implements TypeProto {
                     //non-reference field, then find the last reference field, swap them and repeat
                     int back = fields.size() - 1;
                     int front;
-                    for (front = 0; front<fieldCount; front++) {
+                    for (front = 0; front < fieldCount; front++) {
                         if (fieldTypes[front] != REFERENCE) {
                             while (back > front) {
                                 if (fieldTypes[back] == REFERENCE) {
@@ -440,7 +155,7 @@ public class ClassProto implements TypeProto {
 
                     //do the swap thing for wide fields
                     back = fieldCount - 1;
-                    for (; front<fieldCount; front++) {
+                    for (; front < fieldCount; front++) {
                         if (fieldTypes[front] != WIDE) {
                             while (back > front) {
                                 if (fieldTypes[back] == WIDE) {
@@ -471,13 +186,13 @@ public class ClassProto implements TypeProto {
                     int fieldOffset;
 
                     if (superclass != null && superFieldCount > 0) {
-                        for (int i=0; i<superFieldCount; i++) {
+                        for (int i = 0; i < superFieldCount; i++) {
                             instanceFields.append(superFields.keyAt(i), superFields.valueAt(i));
                         }
 
-                        fieldOffset = instanceFields.keyAt(superFieldCount-1);
+                        fieldOffset = instanceFields.keyAt(superFieldCount - 1);
 
-                        FieldReference lastSuperField = superFields.valueAt(superFieldCount-1);
+                        FieldReference lastSuperField = superFields.valueAt(superFieldCount - 1);
                         char fieldType = lastSuperField.getType().charAt(0);
                         if (fieldType == 'J' || fieldType == 'D') {
                             fieldOffset += 8;
@@ -490,7 +205,7 @@ public class ClassProto implements TypeProto {
                     }
 
                     boolean gotDouble = false;
-                    for (int i=0; i<fieldCount; i++) {
+                    for (int i = 0; i < fieldCount; i++) {
                         FieldReference field = fields.get(i);
 
                         //add padding to align the wide fields, if needed
@@ -544,33 +259,74 @@ public class ClassProto implements TypeProto {
                     fields.set(position2, tempField);
                 }
             });
+    protected boolean vtableFullyResolved = true;
+    protected boolean interfacesFullyResolved = true;
+    @Nonnull
+    private final Supplier<LinkedHashMap<String, ClassDef>> interfacesSupplier =
+            Suppliers.memoize(new Supplier<LinkedHashMap<String, ClassDef>>() {
+                @Override
+                public LinkedHashMap<String, ClassDef> get() {
+                    LinkedHashMap<String, ClassDef> interfaces = Maps.newLinkedHashMap();
 
-    private int getNextFieldOffset() {
-        SparseArray<FieldReference> instanceFields = getInstanceFields();
-        if (instanceFields.size() == 0) {
-            return 8;
-        }
+                    try {
+                        for (String interfaceType : getClassDef().getInterfaces()) {
+                            if (!interfaces.containsKey(interfaceType)) {
+                                ClassDef interfaceDef;
+                                try {
+                                    interfaceDef = classPath.getClassDef(interfaceType);
+                                    interfaces.put(interfaceType, interfaceDef);
+                                } catch (UnresolvedClassException ex) {
+                                    interfaces.put(interfaceType, null);
+                                    interfacesFullyResolved = false;
+                                }
 
-        int lastItemIndex = instanceFields.size()-1;
-        int fieldOffset = instanceFields.keyAt(lastItemIndex);
-        FieldReference lastField = instanceFields.valueAt(lastItemIndex);
+                                ClassProto interfaceProto = (ClassProto) classPath.getClass(interfaceType);
+                                for (String superInterface : interfaceProto.getInterfaces().keySet()) {
+                                    if (!interfaces.containsKey(superInterface)) {
+                                        interfaces.put(superInterface, interfaceProto.getInterfaces().get(superInterface));
+                                    }
+                                }
+                                if (!interfaceProto.interfacesFullyResolved) {
+                                    interfacesFullyResolved = false;
+                                }
+                            }
+                        }
+                    } catch (UnresolvedClassException ex) {
+                        interfacesFullyResolved = false;
+                    }
 
-        switch (lastField.getType().charAt(0)) {
-            case 'J':
-            case 'D':
-                return fieldOffset + 8;
-            default:
-                return fieldOffset + 4;
-        }
-    }
+                    // now add self and super class interfaces, required for common super class lookup
+                    // we don't really need ClassDef's for that, so let's just use null
 
-    @Nonnull List<Method> getVtable() {
-        return vtableSupplier.get();
-    }
+                    if (isInterface() && !interfaces.containsKey(getType())) {
+                        interfaces.put(getType(), null);
+                    }
 
+                    try {
+                        String superclass = getSuperclass();
+                        if (superclass != null) {
+                            ClassProto superclassProto = (ClassProto) classPath.getClass(superclass);
+                            for (String superclassInterface : superclassProto.getInterfaces().keySet()) {
+                                if (!interfaces.containsKey(superclassInterface)) {
+                                    interfaces.put(superclassInterface, null);
+                                }
+                            }
+                            if (!superclassProto.interfacesFullyResolved) {
+                                interfacesFullyResolved = false;
+                            }
+                        }
+                    } catch (UnresolvedClassException ex) {
+                        interfacesFullyResolved = false;
+                    }
+
+                    return interfaces;
+                }
+            });
     //TODO: check the case when we have a package private method that overrides an interface method
-    @Nonnull private final Supplier<List<Method>> vtableSupplier = Suppliers.memoize(new Supplier<List<Method>>() {
-        @Override public List<Method> get() {
+    @Nonnull
+    private final Supplier<List<Method>> vtableSupplier = Suppliers.memoize(new Supplier<List<Method>>() {
+        @Override
+        public List<Method> get() {
             List<Method> vtable = Lists.newArrayList();
 
             //copy the virtual methods from the superclass
@@ -578,7 +334,7 @@ public class ClassProto implements TypeProto {
             try {
                 superclassType = getSuperclass();
             } catch (UnresolvedClassException ex) {
-                vtable.addAll(((ClassProto)classPath.getClass("Ljava/lang/Object;")).getVtable());
+                vtable.addAll(((ClassProto) classPath.getClass("Ljava/lang/Object;")).getVtable());
                 vtableFullyResolved = false;
                 return vtable;
             }
@@ -602,9 +358,9 @@ public class ClassProto implements TypeProto {
 
                 // assume that interface method is implemented in the current class, when adding it to vtable
                 // otherwise it looks like that method is invoked on an interface, which fails Dalvik's optimization checks
-                for (ClassDef interfaceDef: getDirectInterfaces()) {
+                for (ClassDef interfaceDef : getDirectInterfaces()) {
                     List<Method> interfaceMethods = Lists.newArrayList();
-                    for (Method interfaceMethod: interfaceDef.getVirtualMethods()) {
+                    for (Method interfaceMethod : interfaceDef.getVirtualMethods()) {
                         ImmutableMethod method = new ImmutableMethod(
                                 type,
                                 interfaceMethod.getName(),
@@ -626,8 +382,9 @@ public class ClassProto implements TypeProto {
             List<? extends Method> methods = Lists.newArrayList(localMethods);
             Collections.sort(methods);
 
-            outer: for (Method virtualMethod: methods) {
-                for (int i=0; i<vtable.size(); i++) {
+            outer:
+            for (Method virtualMethod : methods) {
+                for (int i = 0; i < vtable.size(); i++) {
                     Method superMethod = vtable.get(i);
                     if (methodSignaturesMatch(superMethod, virtualMethod)) {
                         if (classPath.getApi() < 17 || canAccess(superMethod)) {
@@ -674,4 +431,267 @@ public class ClassProto implements TypeProto {
                     AccessFlags.PUBLIC.getValue())) == 0;
         }
     });
+
+    public ClassProto(@Nonnull ClassPath classPath, @Nonnull String type) {
+        if (type.charAt(0) != 'L') {
+            throw new ExceptionWithContext("Cannot construct ClassProto for non reference type: %s", type);
+        }
+        this.classPath = classPath;
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return type;
+    }
+
+    @Nonnull
+    @Override
+    public ClassPath getClassPath() {
+        return classPath;
+    }
+
+    @Nonnull
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Nonnull
+    public ClassDef getClassDef() {
+        return classDefSupplier.get();
+    }
+
+    /**
+     * Returns true if this class is an interface.
+     * <p/>
+     * If this class is not defined, then this will throw an UnresolvedClassException
+     *
+     * @return True if this class is an interface
+     */
+    public boolean isInterface() {
+        ClassDef classDef = getClassDef();
+        return (classDef.getAccessFlags() & AccessFlags.INTERFACE.getValue()) != 0;
+    }
+
+    /**
+     * Returns the set of interfaces that this class implements as a Map<String, ClassDef>.
+     * <p/>
+     * The ClassDef value will be present only for the interfaces that this class directly implements (including any
+     * interfaces transitively implemented), but not for any interfaces that are only implemented by a superclass of
+     * this class
+     * <p/>
+     * For any interfaces that are only implemented by a superclass (or the class itself, if the class is an interface),
+     * the value will be null.
+     * <p/>
+     * If any interface couldn't be resolved, then the interfacesFullyResolved field will be set to false upon return.
+     *
+     * @return the set of interfaces that this class implements as a Map<String, ClassDef>.
+     */
+    @Nonnull
+    protected LinkedHashMap<String, ClassDef> getInterfaces() {
+        return interfacesSupplier.get();
+    }
+
+    /**
+     * Gets the interfaces directly implemented by this class, or the interfaces they transitively implement.
+     * <p/>
+     * This does not include any interfaces that are only implemented by a superclass
+     *
+     * @return An iterables of ClassDefs representing the directly or transitively implemented interfaces
+     * @throws UnresolvedClassException if interfaces could not be fully resolved
+     */
+    @Nonnull
+    protected Iterable<ClassDef> getDirectInterfaces() {
+        Iterable<ClassDef> directInterfaces =
+                FluentIterable.from(getInterfaces().values()).filter(Predicates.notNull());
+
+        if (!interfacesFullyResolved) {
+            throw new UnresolvedClassException("Interfaces for class %s not fully resolved", getType());
+        }
+
+        return directInterfaces;
+    }
+
+    /**
+     * Checks if this class implements the given interface.
+     * <p/>
+     * If the interfaces of this class cannot be fully resolved then this
+     * method will either return true or throw an UnresolvedClassException
+     *
+     * @param iface The interface to check for
+     * @return true if this class implements the given interface, otherwise false
+     * @throws UnresolvedClassException if the interfaces for this class could not be fully resolved, and the interface
+     *                                  is not one of the interfaces that were successfully resolved
+     */
+    @Override
+    public boolean implementsInterface(@Nonnull String iface) {
+        if (getInterfaces().containsKey(iface)) {
+            return true;
+        }
+        if (!interfacesFullyResolved) {
+            throw new UnresolvedClassException("Interfaces for class %s not fully resolved", getType());
+        }
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public String getSuperclass() {
+        return getClassDef().getSuperclass();
+    }
+
+    /**
+     * This is a helper method for getCommonSuperclass
+     * <p/>
+     * It checks if this class is an interface, and if so, if other implements it.
+     * <p/>
+     * If this class is undefined, we go ahead and check if it is listed in other's interfaces. If not, we throw an
+     * UndefinedClassException
+     * <p/>
+     * If the interfaces of other cannot be fully resolved, we check the interfaces that can be resolved. If not found,
+     * we throw an UndefinedClassException
+     *
+     * @param other The class to check the interfaces of
+     * @return true if this class is an interface (or is undefined) other implements this class
+     */
+    private boolean checkInterface(@Nonnull ClassProto other) {
+        boolean isResolved = true;
+        boolean isInterface = true;
+        try {
+            isInterface = isInterface();
+        } catch (UnresolvedClassException ex) {
+            isResolved = false;
+            // if we don't know if this class is an interface or not,
+            // we can still try to call other.implementsInterface(this)
+        }
+        if (isInterface) {
+            try {
+                if (other.implementsInterface(getType())) {
+                    return true;
+                }
+            } catch (UnresolvedClassException ex) {
+                // There are 2 possibilities here, depending on whether we were able to resolve this class.
+                // 1. If this class is resolved, then we know it is an interface class. The other class either
+                //    isn't defined, or its interfaces couldn't be fully resolved.
+                //    In this case, we throw an UnresolvedClassException
+                // 2. If this class is not resolved, we had tried to call implementsInterface anyway. We don't
+                //    know for sure if this class is an interface or not. We return false, and let processing
+                //    continue in getCommonSuperclass
+                if (isResolved) {
+                    throw ex;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    @Nonnull
+    public TypeProto getCommonSuperclass(@Nonnull TypeProto other) {
+        // use the other type's more specific implementation
+        if (!(other instanceof ClassProto)) {
+            return other.getCommonSuperclass(this);
+        }
+
+        if (this == other || getType().equals(other.getType())) {
+            return this;
+        }
+
+        if (this.getType().equals("Ljava/lang/Object;")) {
+            return this;
+        }
+
+        if (other.getType().equals("Ljava/lang/Object;")) {
+            return other;
+        }
+
+        boolean gotException = false;
+        try {
+            if (checkInterface((ClassProto) other)) {
+                return this;
+            }
+        } catch (UnresolvedClassException ex) {
+            gotException = true;
+        }
+
+        try {
+            if (((ClassProto) other).checkInterface(this)) {
+                return other;
+            }
+        } catch (UnresolvedClassException ex) {
+            gotException = true;
+        }
+        if (gotException) {
+            return classPath.getUnknownClass();
+        }
+
+        List<TypeProto> thisChain = Lists.<TypeProto>newArrayList(this);
+        Iterables.addAll(thisChain, TypeProtoUtils.getSuperclassChain(this));
+
+        List<TypeProto> otherChain = Lists.newArrayList(other);
+        Iterables.addAll(otherChain, TypeProtoUtils.getSuperclassChain(other));
+
+        // reverse them, so that the first entry is either Ljava/lang/Object; or Ujava/lang/Object;
+        thisChain = Lists.reverse(thisChain);
+        otherChain = Lists.reverse(otherChain);
+
+        for (int i = Math.min(thisChain.size(), otherChain.size()) - 1; i >= 0; i--) {
+            TypeProto typeProto = thisChain.get(i);
+            if (typeProto.getType().equals(otherChain.get(i).getType())) {
+                return typeProto;
+            }
+        }
+
+        return classPath.getUnknownClass();
+    }
+
+    @Override
+    @Nullable
+    public FieldReference getFieldByOffset(int fieldOffset) {
+        if (getInstanceFields().size() == 0) {
+            return null;
+        }
+        return getInstanceFields().get(fieldOffset);
+    }
+
+    @Override
+    @Nullable
+    public MethodReference getMethodByVtableIndex(int vtableIndex) {
+        List<Method> vtable = getVtable();
+        if (vtableIndex < 0 || vtableIndex >= vtable.size()) {
+            return null;
+        }
+
+        return vtable.get(vtableIndex);
+    }
+
+    @Nonnull
+    SparseArray<FieldReference> getInstanceFields() {
+        return instanceFieldsSupplier.get();
+    }
+
+    private int getNextFieldOffset() {
+        SparseArray<FieldReference> instanceFields = getInstanceFields();
+        if (instanceFields.size() == 0) {
+            return 8;
+        }
+
+        int lastItemIndex = instanceFields.size() - 1;
+        int fieldOffset = instanceFields.keyAt(lastItemIndex);
+        FieldReference lastField = instanceFields.valueAt(lastItemIndex);
+
+        switch (lastField.getType().charAt(0)) {
+            case 'J':
+            case 'D':
+                return fieldOffset + 8;
+            default:
+                return fieldOffset + 4;
+        }
+    }
+
+    @Nonnull
+    List<Method> getVtable() {
+        return vtableSupplier.get();
+    }
 }

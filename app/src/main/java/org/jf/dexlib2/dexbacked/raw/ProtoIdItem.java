@@ -48,7 +48,9 @@ public class ProtoIdItem {
     @Nonnull
     public static SectionAnnotator makeAnnotator(@Nonnull DexAnnotator annotator, @Nonnull MapItem mapItem) {
         return new SectionAnnotator(annotator, mapItem) {
-            @Nonnull @Override public String getItemName() {
+            @Nonnull
+            @Override
+            public String getItemName() {
                 return "proto_id_item";
             }
 
@@ -103,7 +105,7 @@ public class ProtoIdItem {
 
         int protoCount = mapItem.getItemCount();
         String[] ret = new String[protoCount];
-        for (int i=0; i<protoCount; i++) {
+        for (int i = 0; i < protoCount; i++) {
             ret[i] = asString(dexFile, i);
         }
         return ret;

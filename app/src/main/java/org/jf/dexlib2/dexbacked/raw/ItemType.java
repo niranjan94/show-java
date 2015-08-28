@@ -56,25 +56,44 @@ public class ItemType {
     @Nonnull
     public static String getItemTypeName(int itemType) {
         switch (itemType) {
-            case HEADER_ITEM: return "header_item";
-            case STRING_ID_ITEM: return "string_id_item";
-            case TYPE_ID_ITEM: return "type_id_item";
-            case PROTO_ID_ITEM: return "proto_id_item";
-            case FIELD_ID_ITEM: return "field_id_item";
-            case METHOD_ID_ITEM: return "method_id_item";
-            case CLASS_DEF_ITEM: return "class_def_item";
-            case MAP_LIST: return "map_list";
-            case TYPE_LIST: return "type_list";
-            case ANNOTATION_SET_REF_LIST: return "annotation_set_ref_list";
-            case ANNOTATION_SET_ITEM: return "annotation_set_item";
-            case CLASS_DATA_ITEM: return "class_data_item";
-            case CODE_ITEM: return "code_item";
-            case STRING_DATA_ITEM: return "string_data_item";
-            case DEBUG_INFO_ITEM: return "debug_info_item";
-            case ANNOTATION_ITEM: return "annotation_item";
-            case ENCODED_ARRAY_ITEM: return "encoded_array_item";
-            case ANNOTATION_DIRECTORY_ITEM: return "annotation_directory_item";
-            default: return "unknown dex item type";
+            case HEADER_ITEM:
+                return "header_item";
+            case STRING_ID_ITEM:
+                return "string_id_item";
+            case TYPE_ID_ITEM:
+                return "type_id_item";
+            case PROTO_ID_ITEM:
+                return "proto_id_item";
+            case FIELD_ID_ITEM:
+                return "field_id_item";
+            case METHOD_ID_ITEM:
+                return "method_id_item";
+            case CLASS_DEF_ITEM:
+                return "class_def_item";
+            case MAP_LIST:
+                return "map_list";
+            case TYPE_LIST:
+                return "type_list";
+            case ANNOTATION_SET_REF_LIST:
+                return "annotation_set_ref_list";
+            case ANNOTATION_SET_ITEM:
+                return "annotation_set_item";
+            case CLASS_DATA_ITEM:
+                return "class_data_item";
+            case CODE_ITEM:
+                return "code_item";
+            case STRING_DATA_ITEM:
+                return "string_data_item";
+            case DEBUG_INFO_ITEM:
+                return "debug_info_item";
+            case ANNOTATION_ITEM:
+                return "annotation_item";
+            case ENCODED_ARRAY_ITEM:
+                return "encoded_array_item";
+            case ANNOTATION_DIRECTORY_ITEM:
+                return "annotation_directory_item";
+            default:
+                return "unknown dex item type";
         }
     }
 }

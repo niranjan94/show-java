@@ -37,32 +37,42 @@ import org.jf.dexlib2.iface.reference.FieldReference;
 import javax.annotation.Nonnull;
 
 public class FieldReferenceRewriter implements Rewriter<FieldReference> {
-    @Nonnull protected final Rewriters rewriters;
+    @Nonnull
+    protected final Rewriters rewriters;
 
     public FieldReferenceRewriter(@Nonnull Rewriters rewriters) {
         this.rewriters = rewriters;
     }
 
-    @Nonnull @Override public FieldReference rewrite(@Nonnull FieldReference fieldReference) {
+    @Nonnull
+    @Override
+    public FieldReference rewrite(@Nonnull FieldReference fieldReference) {
         return new RewrittenFieldReference(fieldReference);
     }
 
     protected class RewrittenFieldReference extends BaseFieldReference {
-        @Nonnull protected FieldReference fieldReference;
+        @Nonnull
+        protected FieldReference fieldReference;
 
         public RewrittenFieldReference(@Nonnull FieldReference fieldReference) {
             this.fieldReference = fieldReference;
         }
 
-        @Override @Nonnull public String getDefiningClass() {
+        @Override
+        @Nonnull
+        public String getDefiningClass() {
             return rewriters.getTypeRewriter().rewrite(fieldReference.getDefiningClass());
         }
 
-        @Override @Nonnull public String getName() {
+        @Override
+        @Nonnull
+        public String getName() {
             return fieldReference.getName();
         }
 
-        @Override @Nonnull public String getType() {
+        @Override
+        @Nonnull
+        public String getType() {
             return rewriters.getTypeRewriter().rewrite(fieldReference.getType());
         }
     }

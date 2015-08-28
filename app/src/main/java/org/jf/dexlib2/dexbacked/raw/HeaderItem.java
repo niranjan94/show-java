@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
 public class HeaderItem {
     public static final int ITEM_SIZE = 0x70;
 
-    public static final byte[][] MAGIC_VALUES= new byte[][] {
+    public static final byte[][] MAGIC_VALUES = new byte[][]{
             new byte[]{0x64, 0x65, 0x78, 0x0a, 0x30, 0x33, 0x35, 0x00},
             new byte[]{0x64, 0x65, 0x78, 0x0a, 0x30, 0x33, 0x36, 0x00}};
 
@@ -84,80 +84,19 @@ public class HeaderItem {
     public static final int CLASS_COUNT_OFFSET = 96;
     public static final int CLASS_START_OFFSET = 100;
 
-    @Nonnull private RawDexFile dexFile;
+    @Nonnull
+    private RawDexFile dexFile;
 
     public HeaderItem(@Nonnull RawDexFile dexFile) {
         this.dexFile = dexFile;
     }
 
-    public int getChecksum() {
-        return dexFile.readSmallUint(CHECKSUM_OFFSET);
-    }
-
-    @Nonnull public byte[] getSignature() {
-        return dexFile.readByteRange(SIGNATURE_OFFSET, SIGNATURE_SIZE);
-    }
-
-    public int getMapOffset() {
-        return dexFile.readSmallUint(MAP_OFFSET);
-    }
-
-    public int getHeaderSize() {
-        return dexFile.readSmallUint(HEADER_SIZE_OFFSET);
-    }
-
-    public int getStringCount() {
-        return dexFile.readSmallUint(STRING_COUNT_OFFSET);
-    }
-
-    public int getStringOffset() {
-        return dexFile.readSmallUint(STRING_START_OFFSET);
-    }
-
-    public int getTypeCount() {
-        return dexFile.readSmallUint(TYPE_COUNT_OFFSET);
-    }
-
-    public int getTypeOffset() {
-        return dexFile.readSmallUint(TYPE_START_OFFSET);
-    }
-
-    public int getProtoCount() {
-        return dexFile.readSmallUint(PROTO_COUNT_OFFSET);
-    }
-
-    public int getProtoOffset() {
-        return dexFile.readSmallUint(PROTO_START_OFFSET);
-    }
-
-    public int getFieldCount() {
-        return dexFile.readSmallUint(FIELD_COUNT_OFFSET);
-    }
-
-    public int getFieldOffset() {
-        return dexFile.readSmallUint(FIELD_START_OFFSET);
-    }
-
-    public int getMethodCount() {
-        return dexFile.readSmallUint(METHOD_COUNT_OFFSET);
-    }
-
-    public int getMethodOffset() {
-        return dexFile.readSmallUint(METHOD_START_OFFSET);
-    }
-
-    public int getClassCount() {
-        return dexFile.readSmallUint(CLASS_COUNT_OFFSET);
-    }
-
-    public int getClassOffset() {
-        return dexFile.readSmallUint(CLASS_START_OFFSET);
-    }
-
     @Nonnull
     public static SectionAnnotator makeAnnotator(@Nonnull DexAnnotator annotator, @Nonnull MapItem mapItem) {
         return new SectionAnnotator(annotator, mapItem) {
-            @Nonnull @Override public String getItemName() {
+            @Nonnull
+            @Override
+            public String getItemName() {
                 return "header_item";
             }
 
@@ -167,8 +106,8 @@ public class HeaderItem {
                 int headerSize;
 
                 StringBuilder magicBuilder = new StringBuilder();
-                for (int i=0; i<8; i++) {
-                    magicBuilder.append((char)dexFile.readUbyte(startOffset + i));
+                for (int i = 0; i < 8; i++) {
+                    magicBuilder.append((char) dexFile.readUbyte(startOffset + i));
                 }
 
                 out.annotate(8, "magic: %s", StringUtils.escapeString(magicBuilder.toString()));
@@ -231,17 +170,17 @@ public class HeaderItem {
         }
 
         boolean matches = true;
-        for (int i=0; i<MAGIC_VALUES.length; i++) {
+        for (int i = 0; i < MAGIC_VALUES.length; i++) {
             byte[] expected = MAGIC_VALUES[i];
             matches = true;
-            for (int j=0; j<8; j++) {
+            for (int j = 0; j < 8; j++) {
                 if (buf[offset + j] != expected[j]) {
                     matches = false;
                     break;
                 }
             }
             if (matches) {
-                return i==0?35:36;
+                return i == 0 ? 35 : 36;
             }
         }
         return 0;
@@ -252,9 +191,73 @@ public class HeaderItem {
         return getVersion(buf, offset) != 0;
     }
 
-
     public static int getEndian(byte[] buf, int offset) {
         BaseDexBuffer bdb = new BaseDexBuffer(buf);
         return bdb.readInt(offset + ENDIAN_TAG_OFFSET);
+    }
+
+    public int getChecksum() {
+        return dexFile.readSmallUint(CHECKSUM_OFFSET);
+    }
+
+    @Nonnull
+    public byte[] getSignature() {
+        return dexFile.readByteRange(SIGNATURE_OFFSET, SIGNATURE_SIZE);
+    }
+
+    public int getMapOffset() {
+        return dexFile.readSmallUint(MAP_OFFSET);
+    }
+
+    public int getHeaderSize() {
+        return dexFile.readSmallUint(HEADER_SIZE_OFFSET);
+    }
+
+    public int getStringCount() {
+        return dexFile.readSmallUint(STRING_COUNT_OFFSET);
+    }
+
+    public int getStringOffset() {
+        return dexFile.readSmallUint(STRING_START_OFFSET);
+    }
+
+    public int getTypeCount() {
+        return dexFile.readSmallUint(TYPE_COUNT_OFFSET);
+    }
+
+    public int getTypeOffset() {
+        return dexFile.readSmallUint(TYPE_START_OFFSET);
+    }
+
+    public int getProtoCount() {
+        return dexFile.readSmallUint(PROTO_COUNT_OFFSET);
+    }
+
+    public int getProtoOffset() {
+        return dexFile.readSmallUint(PROTO_START_OFFSET);
+    }
+
+    public int getFieldCount() {
+        return dexFile.readSmallUint(FIELD_COUNT_OFFSET);
+    }
+
+    public int getFieldOffset() {
+        return dexFile.readSmallUint(FIELD_START_OFFSET);
+    }
+
+    public int getMethodCount() {
+        return dexFile.readSmallUint(METHOD_COUNT_OFFSET);
+    }
+
+    public int getMethodOffset() {
+        return dexFile.readSmallUint(METHOD_START_OFFSET);
+    }
+
+    public int getClassCount() {
+        return dexFile.readSmallUint(CLASS_COUNT_OFFSET);
+    }
+
+    public int getClassOffset() {
+        return dexFile.readSmallUint(CLASS_START_OFFSET);
     }
 }

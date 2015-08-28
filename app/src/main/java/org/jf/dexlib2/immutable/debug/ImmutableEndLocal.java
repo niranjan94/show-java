@@ -39,9 +39,12 @@ import javax.annotation.Nullable;
 
 public class ImmutableEndLocal extends ImmutableDebugItem implements EndLocal {
     protected final int register;
-    @Nullable protected final String name;
-    @Nullable protected final String type;
-    @Nullable protected final String signature;
+    @Nullable
+    protected final String name;
+    @Nullable
+    protected final String type;
+    @Nullable
+    protected final String signature;
 
     public ImmutableEndLocal(int codeAddress,
                              int register) {
@@ -66,8 +69,8 @@ public class ImmutableEndLocal extends ImmutableDebugItem implements EndLocal {
 
     @Nonnull
     public static ImmutableEndLocal of(@Nonnull EndLocal endLocal) {
-        if (endLocal instanceof  ImmutableEndLocal) {
-            return (ImmutableEndLocal)endLocal;
+        if (endLocal instanceof ImmutableEndLocal) {
+            return (ImmutableEndLocal) endLocal;
         }
         return new ImmutableEndLocal(
                 endLocal.getCodeAddress(),
@@ -77,10 +80,31 @@ public class ImmutableEndLocal extends ImmutableDebugItem implements EndLocal {
                 endLocal.getSignature());
     }
 
-    @Override public int getRegister() { return register; }
-    @Nullable @Override public String getName() { return name; }
-    @Nullable @Override public String getType() { return type; }
-    @Nullable @Override public String getSignature() { return signature; }
+    @Override
+    public int getRegister() {
+        return register;
+    }
 
-    @Override public int getDebugItemType() { return DebugItemType.END_LOCAL; }
+    @Nullable
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Nullable
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Nullable
+    @Override
+    public String getSignature() {
+        return signature;
+    }
+
+    @Override
+    public int getDebugItemType() {
+        return DebugItemType.END_LOCAL;
+    }
 }

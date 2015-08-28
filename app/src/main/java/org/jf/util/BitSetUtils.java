@@ -36,7 +36,7 @@ import java.util.BitSet;
 public class BitSetUtils {
     public static BitSet bitSetOfIndexes(int... indexes) {
         BitSet bitSet = new BitSet();
-        for (int index: indexes) {
+        for (int index : indexes) {
             bitSet.set(index);
         }
         return bitSet;

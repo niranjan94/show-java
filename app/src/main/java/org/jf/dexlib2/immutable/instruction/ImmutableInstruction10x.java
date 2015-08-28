@@ -46,10 +46,13 @@ public class ImmutableInstruction10x extends ImmutableInstruction implements Ins
 
     public static ImmutableInstruction10x of(Instruction10x instruction) {
         if (instruction instanceof ImmutableInstruction10x) {
-            return (ImmutableInstruction10x)instruction;
+            return (ImmutableInstruction10x) instruction;
         }
         return new ImmutableInstruction10x(instruction.getOpcode());
     }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

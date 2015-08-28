@@ -128,8 +128,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class MutableMethodImplementation implements MethodImplementation {
-    private final int registerCount;
     final ArrayList<MethodLocation> instructionList = Lists.newArrayList(new MethodLocation(null, 0, 0));
+    private final int registerCount;
     private final ArrayList<BuilderTryBlock> tryBlocks = Lists.newArrayList();
     private boolean fixInstructions = true;
 
@@ -139,28 +139,29 @@ public class MutableMethodImplementation implements MethodImplementation {
         int codeAddress = 0;
         int index = 0;
 
-        for (Instruction instruction: methodImplementation.getInstructions()) {
+        for (Instruction instruction : methodImplementation.getInstructions()) {
             codeAddress += instruction.getCodeUnits();
             index++;
 
             instructionList.add(new MethodLocation(null, codeAddress, index));
         }
 
-        final int[] codeAddressToIndex = new int[codeAddress+1];
+        final int[] codeAddressToIndex = new int[codeAddress + 1];
         Arrays.fill(codeAddressToIndex, -1);
 
-        for (int i=0; i<instructionList.size(); i++) {
+        for (int i = 0; i < instructionList.size(); i++) {
             codeAddressToIndex[instructionList.get(i).codeAddress] = i;
         }
 
         List<Task> switchPayloadTasks = Lists.newArrayList();
         index = 0;
-        for (final Instruction instruction: methodImplementation.getInstructions()) {
+        for (final Instruction instruction : methodImplementation.getInstructions()) {
             final MethodLocation location = instructionList.get(index);
             final Opcode opcode = instruction.getOpcode();
             if (opcode == Opcode.PACKED_SWITCH_PAYLOAD || opcode == Opcode.SPARSE_SWITCH_PAYLOAD) {
                 switchPayloadTasks.add(new Task() {
-                    @Override public void perform() {
+                    @Override
+                    public void perform() {
                         convertAndSetInstruction(location, codeAddressToIndex, instruction);
                     }
                 });
@@ -172,11 +173,11 @@ public class MutableMethodImplementation implements MethodImplementation {
 
         // the switch payload instructions must be converted last, so that any switch statements that refer to them
         // have created the referring labels that we look for
-        for (Task switchPayloadTask: switchPayloadTasks) {
+        for (Task switchPayloadTask : switchPayloadTasks) {
             switchPayloadTask.perform();
         }
 
-        for (DebugItem debugItem: methodImplementation.getDebugItems()) {
+        for (DebugItem debugItem : methodImplementation.getDebugItems()) {
             int debugCodeAddress = debugItem.getCodeAddress();
             int locationIndex = mapCodeAddressToIndex(codeAddressToIndex, debugCodeAddress);
             MethodLocation debugLocation = instructionList.get(locationIndex);
@@ -185,11 +186,11 @@ public class MutableMethodImplementation implements MethodImplementation {
             builderDebugItem.location = debugLocation;
         }
 
-        for (TryBlock<? extends ExceptionHandler> tryBlock: methodImplementation.getTryBlocks()) {
+        for (TryBlock<? extends ExceptionHandler> tryBlock : methodImplementation.getTryBlocks()) {
             Label startLabel = newLabel(codeAddressToIndex, tryBlock.getStartCodeAddress());
             Label endLabel = newLabel(codeAddressToIndex, tryBlock.getStartCodeAddress() + tryBlock.getCodeUnitCount());
 
-            for (ExceptionHandler exceptionHandler: tryBlock.getExceptionHandlers()) {
+            for (ExceptionHandler exceptionHandler : tryBlock.getExceptionHandlers()) {
                 tryBlocks.add(new BuilderTryBlock(startLabel, endLabel,
                         exceptionHandler.getExceptionTypeReference(),
                         newLabel(codeAddressToIndex, exceptionHandler.getHandlerCodeAddress())));
@@ -197,15 +198,12 @@ public class MutableMethodImplementation implements MethodImplementation {
         }
     }
 
-    private interface Task {
-        void perform();
-    }
-
     public MutableMethodImplementation(int registerCount) {
         this.registerCount = registerCount;
     }
 
-    @Override public int getRegisterCount() {
+    @Override
+    public int getRegisterCount() {
         return registerCount;
     }
 
@@ -216,7 +214,8 @@ public class MutableMethodImplementation implements MethodImplementation {
         }
 
         return new AbstractList<BuilderInstruction>() {
-            @Override public BuilderInstruction get(int i) {
+            @Override
+            public BuilderInstruction get(int i) {
                 if (i >= size()) {
                     throw new IndexOutOfBoundsException();
                 }
@@ -226,7 +225,8 @@ public class MutableMethodImplementation implements MethodImplementation {
                 return instructionList.get(i).instruction;
             }
 
-            @Override public int size() {
+            @Override
+            public int size() {
                 if (fixInstructions) {
                     fixInstructions();
                 }
@@ -236,20 +236,26 @@ public class MutableMethodImplementation implements MethodImplementation {
         };
     }
 
-    @Nonnull @Override public List<BuilderTryBlock> getTryBlocks() {
+    @Nonnull
+    @Override
+    public List<BuilderTryBlock> getTryBlocks() {
         if (fixInstructions) {
             fixInstructions();
         }
         return Collections.unmodifiableList(tryBlocks);
     }
 
-    @Nonnull @Override public Iterable<? extends DebugItem> getDebugItems() {
+    @Nonnull
+    @Override
+    public Iterable<? extends DebugItem> getDebugItems() {
         if (fixInstructions) {
             fixInstructions();
         }
         return Iterables.concat(
                 Iterables.transform(instructionList, new Function<MethodLocation, Iterable<? extends DebugItem>>() {
-                    @Nullable @Override public Iterable<? extends DebugItem> apply(@Nullable MethodLocation input) {
+                    @Nullable
+                    @Override
+                    public Iterable<? extends DebugItem> apply(@Nullable MethodLocation input) {
                         assert input != null;
                         if (fixInstructions) {
                             throw new IllegalStateException("This iterator was invalidated by a change to" +
@@ -291,7 +297,7 @@ public class MutableMethodImplementation implements MethodImplementation {
         instructionList.add(index, new MethodLocation(instruction, codeAddress, index));
         codeAddress += instruction.getCodeUnits();
 
-        for (int i=index+1; i<instructionList.size(); i++) {
+        for (int i = index + 1; i < instructionList.size(); i++) {
             MethodLocation location = instructionList.get(i);
             location.index++;
             location.codeAddress = codeAddress;
@@ -299,7 +305,7 @@ public class MutableMethodImplementation implements MethodImplementation {
                 codeAddress += location.instruction.getCodeUnits();
             } else {
                 // only the last MethodLocation should have a null instruction
-                assert i == instructionList.size()-1;
+                assert i == instructionList.size() - 1;
             }
         }
 
@@ -307,7 +313,7 @@ public class MutableMethodImplementation implements MethodImplementation {
     }
 
     public void addInstruction(@Nonnull BuilderInstruction instruction) {
-        MethodLocation last = instructionList.get(instructionList.size()-1);
+        MethodLocation last = instructionList.get(instructionList.size() - 1);
         last.instruction = instruction;
         instruction.location = last;
 
@@ -331,7 +337,7 @@ public class MutableMethodImplementation implements MethodImplementation {
 
         // TODO: factor out index/address fix up loop
         int codeAddress = replaceLocation.codeAddress + replaceLocation.instruction.getCodeUnits();
-        for (int i=index+1; i<instructionList.size(); i++) {
+        for (int i = index + 1; i < instructionList.size(); i++) {
             MethodLocation location = instructionList.get(i);
             location.codeAddress = codeAddress;
 
@@ -353,12 +359,12 @@ public class MutableMethodImplementation implements MethodImplementation {
 
         MethodLocation toRemove = instructionList.get(index);
         toRemove.instruction = null;
-        MethodLocation next = instructionList.get(index+1);
+        MethodLocation next = instructionList.get(index + 1);
         toRemove.mergeInto(next);
 
         instructionList.remove(index);
         int codeAddress = toRemove.codeAddress;
-        for (int i=index; i<instructionList.size(); i++) {
+        for (int i = index; i < instructionList.size(); i++) {
             MethodLocation location = instructionList.get(i);
             location.index = i;
             location.codeAddress = codeAddress;
@@ -401,7 +407,7 @@ public class MutableMethodImplementation implements MethodImplementation {
         }
 
         int codeAddress = first.codeAddress + first.instruction.getCodeUnits();
-        for (int i=index1+1; i<=index2; i++) {
+        for (int i = index1 + 1; i <= index2; i++) {
             MethodLocation location = instructionList.get(i);
             location.codeAddress = codeAddress;
 
@@ -416,7 +422,7 @@ public class MutableMethodImplementation implements MethodImplementation {
     @Nullable
     private BuilderInstruction getFirstNonNop(int startIndex) {
 
-        for (int i=startIndex; i<instructionList.size()-1; i++) {
+        for (int i = startIndex; i < instructionList.size() - 1; i++) {
             BuilderInstruction instruction = instructionList.get(i).instruction;
             assert instruction != null;
             if (instruction.getOpcode() != Opcode.NOP) {
@@ -429,14 +435,14 @@ public class MutableMethodImplementation implements MethodImplementation {
     private void fixInstructions() {
         HashSet<MethodLocation> payloadLocations = Sets.newHashSet();
 
-        for (MethodLocation location: instructionList) {
+        for (MethodLocation location : instructionList) {
             BuilderInstruction instruction = location.instruction;
             if (instruction != null) {
                 switch (instruction.getOpcode()) {
                     case SPARSE_SWITCH:
                     case PACKED_SWITCH: {
                         MethodLocation targetLocation =
-                                ((BuilderOffsetInstruction)instruction).getTarget().getLocation();
+                                ((BuilderOffsetInstruction) instruction).getTarget().getLocation();
                         BuilderInstruction targetInstruction = targetLocation.instruction;
                         if (targetInstruction == null) {
                             throw new IllegalStateException(String.format("Switch instruction at address/index " +
@@ -444,19 +450,19 @@ public class MutableMethodImplementation implements MethodImplementation {
                         }
 
                         if (targetInstruction.getOpcode() == Opcode.NOP) {
-                            targetInstruction = getFirstNonNop(targetLocation.index+1);
+                            targetInstruction = getFirstNonNop(targetLocation.index + 1);
                         }
                         if (targetInstruction == null || !(targetInstruction instanceof BuilderSwitchPayload)) {
                             throw new IllegalStateException(String.format("Switch instruction at address/index " +
-                                    "0x%x/%d does not refer to a payload instruction.",
+                                            "0x%x/%d does not refer to a payload instruction.",
                                     location.codeAddress, location.index));
                         }
                         if ((instruction.opcode == Opcode.PACKED_SWITCH &&
                                 targetInstruction.getOpcode() != Opcode.PACKED_SWITCH_PAYLOAD) ||
-                            (instruction.opcode == Opcode.SPARSE_SWITCH &&
-                                targetInstruction.getOpcode() != Opcode.SPARSE_SWITCH_PAYLOAD)) {
+                                (instruction.opcode == Opcode.SPARSE_SWITCH &&
+                                        targetInstruction.getOpcode() != Opcode.SPARSE_SWITCH_PAYLOAD)) {
                             throw new IllegalStateException(String.format("Switch instruction at address/index " +
-                                    "0x%x/%d refers to the wrong type of payload instruction.",
+                                            "0x%x/%d refers to the wrong type of payload instruction.",
                                     location.codeAddress, location.index));
                         }
 
@@ -465,7 +471,7 @@ public class MutableMethodImplementation implements MethodImplementation {
                                     "This is not currently supported. Please file a bug :)");
                         }
 
-                        ((BuilderSwitchPayload)targetInstruction).referrer = location;
+                        ((BuilderSwitchPayload) targetInstruction).referrer = location;
                         break;
                     }
                 }
@@ -476,21 +482,21 @@ public class MutableMethodImplementation implements MethodImplementation {
         do {
             madeChanges = false;
 
-            for (int index=0; index<instructionList.size(); index++) {
+            for (int index = 0; index < instructionList.size(); index++) {
                 MethodLocation location = instructionList.get(index);
                 BuilderInstruction instruction = location.instruction;
                 if (instruction != null) {
                     switch (instruction.getOpcode()) {
                         case GOTO: {
-                            int offset = ((BuilderOffsetInstruction)instruction).internalGetCodeOffset();
+                            int offset = ((BuilderOffsetInstruction) instruction).internalGetCodeOffset();
                             if (offset < Byte.MIN_VALUE || offset > Byte.MAX_VALUE) {
                                 BuilderOffsetInstruction replacement;
                                 if (offset < Short.MIN_VALUE || offset > Short.MAX_VALUE) {
                                     replacement = new BuilderInstruction30t(Opcode.GOTO_32,
-                                            ((BuilderOffsetInstruction)instruction).getTarget());
+                                            ((BuilderOffsetInstruction) instruction).getTarget());
                                 } else {
                                     replacement = new BuilderInstruction20t(Opcode.GOTO_16,
-                                            ((BuilderOffsetInstruction)instruction).getTarget());
+                                            ((BuilderOffsetInstruction) instruction).getTarget());
                                 }
                                 replaceInstruction(location.index, replacement);
                                 madeChanges = true;
@@ -498,10 +504,10 @@ public class MutableMethodImplementation implements MethodImplementation {
                             break;
                         }
                         case GOTO_16: {
-                            int offset = ((BuilderOffsetInstruction)instruction).internalGetCodeOffset();
+                            int offset = ((BuilderOffsetInstruction) instruction).internalGetCodeOffset();
                             if (offset < Short.MIN_VALUE || offset > Short.MAX_VALUE) {
-                                BuilderOffsetInstruction replacement =  new BuilderInstruction30t(Opcode.GOTO_32,
-                                            ((BuilderOffsetInstruction)instruction).getTarget());
+                                BuilderOffsetInstruction replacement = new BuilderInstruction30t(Opcode.GOTO_32,
+                                        ((BuilderOffsetInstruction) instruction).getTarget());
                                 replaceInstruction(location.index, replacement);
                                 madeChanges = true;
                             }
@@ -509,7 +515,7 @@ public class MutableMethodImplementation implements MethodImplementation {
                         }
                         case SPARSE_SWITCH_PAYLOAD:
                         case PACKED_SWITCH_PAYLOAD:
-                            if (((BuilderSwitchPayload)instruction).referrer == null) {
+                            if (((BuilderSwitchPayload) instruction).referrer == null) {
                                 // if the switch payload isn't referenced, just remove it
                                 removeInstruction(index);
                                 index--;
@@ -560,10 +566,6 @@ public class MutableMethodImplementation implements MethodImplementation {
         return referent.addNewLabel();
     }
 
-    private static class SwitchPayloadReferenceLabel extends Label {
-        @Nonnull public MethodLocation switchLocation;
-    }
-
     @Nonnull
     public Label newSwitchPayloadReferenceLabel(@Nonnull MethodLocation switchLocation,
                                                 @Nonnull int[] codeAddressToIndex, int codeAddress) {
@@ -584,98 +586,98 @@ public class MutableMethodImplementation implements MethodImplementation {
         switch (instruction.getOpcode().format) {
             case Format10t:
                 setInstruction(location, newBuilderInstruction10t(location.codeAddress, codeAddressToIndex,
-                        (Instruction10t)instruction));
+                        (Instruction10t) instruction));
                 return;
             case Format10x:
-                setInstruction(location, newBuilderInstruction10x((Instruction10x)instruction));
+                setInstruction(location, newBuilderInstruction10x((Instruction10x) instruction));
                 return;
             case Format11n:
-                setInstruction(location, newBuilderInstruction11n((Instruction11n)instruction));
+                setInstruction(location, newBuilderInstruction11n((Instruction11n) instruction));
                 return;
             case Format11x:
-                setInstruction(location, newBuilderInstruction11x((Instruction11x)instruction));
+                setInstruction(location, newBuilderInstruction11x((Instruction11x) instruction));
                 return;
             case Format12x:
-                setInstruction(location, newBuilderInstruction12x((Instruction12x)instruction));
+                setInstruction(location, newBuilderInstruction12x((Instruction12x) instruction));
                 return;
             case Format20bc:
-                setInstruction(location, newBuilderInstruction20bc((Instruction20bc)instruction));
+                setInstruction(location, newBuilderInstruction20bc((Instruction20bc) instruction));
                 return;
             case Format20t:
                 setInstruction(location, newBuilderInstruction20t(location.codeAddress, codeAddressToIndex,
-                        (Instruction20t)instruction));
+                        (Instruction20t) instruction));
                 return;
             case Format21c:
-                setInstruction(location, newBuilderInstruction21c((Instruction21c)instruction));
+                setInstruction(location, newBuilderInstruction21c((Instruction21c) instruction));
                 return;
             case Format21ih:
-                setInstruction(location, newBuilderInstruction21ih((Instruction21ih)instruction));
+                setInstruction(location, newBuilderInstruction21ih((Instruction21ih) instruction));
                 return;
             case Format21lh:
-                setInstruction(location, newBuilderInstruction21lh((Instruction21lh)instruction));
+                setInstruction(location, newBuilderInstruction21lh((Instruction21lh) instruction));
                 return;
             case Format21s:
-                setInstruction(location, newBuilderInstruction21s((Instruction21s)instruction));
+                setInstruction(location, newBuilderInstruction21s((Instruction21s) instruction));
                 return;
             case Format21t:
                 setInstruction(location, newBuilderInstruction21t(location.codeAddress, codeAddressToIndex,
-                        (Instruction21t)instruction));
+                        (Instruction21t) instruction));
                 return;
             case Format22b:
-                setInstruction(location, newBuilderInstruction22b((Instruction22b)instruction));
+                setInstruction(location, newBuilderInstruction22b((Instruction22b) instruction));
                 return;
             case Format22c:
-                setInstruction(location, newBuilderInstruction22c((Instruction22c)instruction));
+                setInstruction(location, newBuilderInstruction22c((Instruction22c) instruction));
                 return;
             case Format22s:
-                setInstruction(location, newBuilderInstruction22s((Instruction22s)instruction));
+                setInstruction(location, newBuilderInstruction22s((Instruction22s) instruction));
                 return;
             case Format22t:
                 setInstruction(location, newBuilderInstruction22t(location.codeAddress, codeAddressToIndex,
-                        (Instruction22t)instruction));
+                        (Instruction22t) instruction));
                 return;
             case Format22x:
-                setInstruction(location, newBuilderInstruction22x((Instruction22x)instruction));
+                setInstruction(location, newBuilderInstruction22x((Instruction22x) instruction));
                 return;
             case Format23x:
-                setInstruction(location, newBuilderInstruction23x((Instruction23x)instruction));
+                setInstruction(location, newBuilderInstruction23x((Instruction23x) instruction));
                 return;
             case Format30t:
                 setInstruction(location, newBuilderInstruction30t(location.codeAddress, codeAddressToIndex,
-                        (Instruction30t)instruction));
+                        (Instruction30t) instruction));
                 return;
             case Format31c:
-                setInstruction(location, newBuilderInstruction31c((Instruction31c)instruction));
+                setInstruction(location, newBuilderInstruction31c((Instruction31c) instruction));
                 return;
             case Format31i:
-                setInstruction(location, newBuilderInstruction31i((Instruction31i)instruction));
+                setInstruction(location, newBuilderInstruction31i((Instruction31i) instruction));
                 return;
             case Format31t:
                 setInstruction(location, newBuilderInstruction31t(location, codeAddressToIndex,
-                        (Instruction31t)instruction));
+                        (Instruction31t) instruction));
                 return;
             case Format32x:
-                setInstruction(location, newBuilderInstruction32x((Instruction32x)instruction));
+                setInstruction(location, newBuilderInstruction32x((Instruction32x) instruction));
                 return;
             case Format35c:
-                setInstruction(location, newBuilderInstruction35c((Instruction35c)instruction));
+                setInstruction(location, newBuilderInstruction35c((Instruction35c) instruction));
                 return;
             case Format3rc:
-                setInstruction(location, newBuilderInstruction3rc((Instruction3rc)instruction));
+                setInstruction(location, newBuilderInstruction3rc((Instruction3rc) instruction));
                 return;
             case Format51l:
-                setInstruction(location, newBuilderInstruction51l((Instruction51l)instruction));
+                setInstruction(location, newBuilderInstruction51l((Instruction51l) instruction));
                 return;
             case PackedSwitchPayload:
                 setInstruction(location,
-                        newBuilderPackedSwitchPayload(location, codeAddressToIndex, (PackedSwitchPayload)instruction));
+                        newBuilderPackedSwitchPayload(location, codeAddressToIndex, (PackedSwitchPayload) instruction));
                 return;
             case SparseSwitchPayload:
                 setInstruction(location,
-                        newBuilderSparseSwitchPayload(location, codeAddressToIndex, (SparseSwitchPayload)instruction));
+                        newBuilderSparseSwitchPayload(location, codeAddressToIndex, (SparseSwitchPayload) instruction));
                 return;
             case ArrayPayload:
-                setInstruction(location, newBuilderArrayPayload((ArrayPayload)instruction));
+                setInstruction(location, newBuilderArrayPayload((ArrayPayload) instruction));
                 return;
             default:
                 throw new ExceptionWithContext("Instruction format %s not supported", instruction.getOpcode().format);
@@ -855,7 +857,7 @@ public class MutableMethodImplementation implements MethodImplementation {
     }
 
     @Nonnull
-    private BuilderInstruction31t newBuilderInstruction31t(@Nonnull MethodLocation location , int[] codeAddressToIndex,
+    private BuilderInstruction31t newBuilderInstruction31t(@Nonnull MethodLocation location, int[] codeAddressToIndex,
                                                            @Nonnull Instruction31t instruction) {
         int codeAddress = location.getCodeAddress();
         Label newLabel;
@@ -914,13 +916,13 @@ public class MutableMethodImplementation implements MethodImplementation {
         MethodLocation location = payloadLocation;
         MethodLocation switchLocation = null;
         do {
-            for (Label label: location.getLabels()) {
+            for (Label label : location.getLabels()) {
                 if (label instanceof SwitchPayloadReferenceLabel) {
                     if (switchLocation != null) {
                         throw new IllegalStateException("Multiple switch instructions refer to the same payload. " +
                                 "This is not currently supported. Please file a bug :)");
                     }
-                    switchLocation = ((SwitchPayloadReferenceLabel)label).switchLocation;
+                    switchLocation = ((SwitchPayloadReferenceLabel) label).switchLocation;
                 }
             }
 
@@ -957,7 +959,7 @@ public class MutableMethodImplementation implements MethodImplementation {
         }
 
         List<Label> labels = Lists.newArrayList();
-        for (SwitchElement element: switchElements) {
+        for (SwitchElement element : switchElements) {
             labels.add(newLabel(codeAddressToIndex, element.getOffset() + baseAddress));
         }
 
@@ -982,7 +984,7 @@ public class MutableMethodImplementation implements MethodImplementation {
         }
 
         List<SwitchLabelElement> labelElements = Lists.newArrayList();
-        for (SwitchElement element: switchElements) {
+        for (SwitchElement element : switchElements) {
             labelElements.add(new SwitchLabelElement(element.getKey(),
                     newLabel(codeAddressToIndex, element.getOffset() + baseAddress)));
         }
@@ -999,16 +1001,16 @@ public class MutableMethodImplementation implements MethodImplementation {
     private BuilderDebugItem convertDebugItem(@Nonnull DebugItem debugItem) {
         switch (debugItem.getDebugItemType()) {
             case DebugItemType.START_LOCAL: {
-                StartLocal startLocal = (StartLocal)debugItem;
+                StartLocal startLocal = (StartLocal) debugItem;
                 return new BuilderStartLocal(startLocal.getRegister(), startLocal.getNameReference(),
                         startLocal.getTypeReference(), startLocal.getSignatureReference());
             }
             case DebugItemType.END_LOCAL: {
-                EndLocal endLocal = (EndLocal)debugItem;
+                EndLocal endLocal = (EndLocal) debugItem;
                 return new BuilderEndLocal(endLocal.getRegister());
             }
             case DebugItemType.RESTART_LOCAL: {
-                RestartLocal restartLocal = (RestartLocal)debugItem;
+                RestartLocal restartLocal = (RestartLocal) debugItem;
                 return new BuilderRestartLocal(restartLocal.getRegister());
             }
             case DebugItemType.PROLOGUE_END:
@@ -1016,15 +1018,24 @@ public class MutableMethodImplementation implements MethodImplementation {
             case DebugItemType.EPILOGUE_BEGIN:
                 return new BuilderEpilogueBegin();
             case DebugItemType.LINE_NUMBER: {
-                LineNumber lineNumber = (LineNumber)debugItem;
+                LineNumber lineNumber = (LineNumber) debugItem;
                 return new BuilderLineNumber(lineNumber.getLineNumber());
             }
             case DebugItemType.SET_SOURCE_FILE: {
-                SetSourceFile setSourceFile = (SetSourceFile)debugItem;
+                SetSourceFile setSourceFile = (SetSourceFile) debugItem;
                 return new BuilderSetSourceFile(setSourceFile.getSourceFileReference());
             }
             default:
                 throw new ExceptionWithContext("Invalid debug item type: " + debugItem.getDebugItemType());
         }
+    }
+
+    private interface Task {
+        void perform();
+    }
+
+    private static class SwitchPayloadReferenceLabel extends Label {
+        @Nonnull
+        public MethodLocation switchLocation;
     }
 }

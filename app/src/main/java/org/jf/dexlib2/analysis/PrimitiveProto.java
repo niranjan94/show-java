@@ -47,13 +47,42 @@ public class PrimitiveProto implements TypeProto {
         this.type = type;
     }
 
-    @Override public String toString() { return type; }
-    @Nonnull @Override public ClassPath getClassPath() { return classPath; }
-    @Nonnull @Override public String getType() { return type; }
-    @Override public boolean isInterface() { return false; }
-    @Override public boolean implementsInterface(@Nonnull String iface) { return false; }
-    @Nullable @Override public String getSuperclass() { return null; }
-    @Nonnull @Override public TypeProto getCommonSuperclass(@Nonnull TypeProto other) {
+    @Override
+    public String toString() {
+        return type;
+    }
+
+    @Nonnull
+    @Override
+    public ClassPath getClassPath() {
+        return classPath;
+    }
+
+    @Nonnull
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public boolean isInterface() {
+        return false;
+    }
+
+    @Override
+    public boolean implementsInterface(@Nonnull String iface) {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public String getSuperclass() {
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public TypeProto getCommonSuperclass(@Nonnull TypeProto other) {
         throw new ExceptionWithContext("Cannot call getCommonSuperclass on PrimitiveProto");
     }
 

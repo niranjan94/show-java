@@ -43,10 +43,13 @@ public class ImmutableShortEncodedValue extends BaseShortEncodedValue implements
 
     public static ImmutableShortEncodedValue of(ShortEncodedValue shortEncodedValue) {
         if (shortEncodedValue instanceof ImmutableShortEncodedValue) {
-            return (ImmutableShortEncodedValue)shortEncodedValue;
+            return (ImmutableShortEncodedValue) shortEncodedValue;
         }
         return new ImmutableShortEncodedValue(shortEncodedValue.getValue());
     }
 
-    @Override public short getValue() { return value; }
+    @Override
+    public short getValue() {
+        return value;
+    }
 }

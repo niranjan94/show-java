@@ -42,10 +42,14 @@ import javax.annotation.Nonnull;
 
 public class AnnotationPool extends BaseOffsetPool<Annotation>
         implements AnnotationSection<CharSequence, CharSequence, Annotation, AnnotationElement, EncodedValue> {
-    @Nonnull StringPool stringPool;
-    @Nonnull TypePool typePool;
-    @Nonnull FieldPool fieldPool;
-    @Nonnull MethodPool methodPool;
+    @Nonnull
+    StringPool stringPool;
+    @Nonnull
+    TypePool typePool;
+    @Nonnull
+    FieldPool fieldPool;
+    @Nonnull
+    MethodPool methodPool;
 
     public AnnotationPool(@Nonnull StringPool stringPool, @Nonnull TypePool typePool,
                           @Nonnull FieldPool fieldPool, @Nonnull MethodPool methodPool) {
@@ -59,30 +63,39 @@ public class AnnotationPool extends BaseOffsetPool<Annotation>
         Integer prev = internedItems.put(annotation, 0);
         if (prev == null) {
             typePool.intern(annotation.getType());
-            for (AnnotationElement element: annotation.getElements()) {
+            for (AnnotationElement element : annotation.getElements()) {
                 stringPool.intern(element.getName());
                 DexPool.internEncodedValue(element.getValue(), stringPool, typePool, fieldPool, methodPool);
             }
         }
     }
 
-    @Override public int getVisibility(@Nonnull Annotation annotation) {
+    @Override
+    public int getVisibility(@Nonnull Annotation annotation) {
         return annotation.getVisibility();
     }
 
-    @Nonnull @Override public CharSequence getType(@Nonnull Annotation annotation) {
+    @Nonnull
+    @Override
+    public CharSequence getType(@Nonnull Annotation annotation) {
         return annotation.getType();
     }
 
-    @Nonnull @Override public Collection<? extends AnnotationElement> getElements(@Nonnull Annotation annotation) {
+    @Nonnull
+    @Override
+    public Collection<? extends AnnotationElement> getElements(@Nonnull Annotation annotation) {
         return annotation.getElements();
     }
 
-    @Nonnull @Override public CharSequence getElementName(@Nonnull AnnotationElement annotationElement) {
+    @Nonnull
+    @Override
+    public CharSequence getElementName(@Nonnull AnnotationElement annotationElement) {
         return annotationElement.getName();
     }
 
-    @Nonnull @Override public EncodedValue getElementValue(@Nonnull AnnotationElement annotationElement) {
+    @Nonnull
+    @Override
+    public EncodedValue getElementValue(@Nonnull AnnotationElement annotationElement) {
         return annotationElement.getValue();
     }
 }

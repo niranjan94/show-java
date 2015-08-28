@@ -218,7 +218,7 @@ public class ImmutableInstructionFactory implements InstructionFactory<Reference
     }
 
     public ImmutableArrayPayload makeArrayPayload(int elementWidth,
-                                                @Nullable List<Number> arrayElements) {
+                                                  @Nullable List<Number> arrayElements) {
         return new ImmutableArrayPayload(elementWidth, arrayElements);
     }
 }

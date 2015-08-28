@@ -112,7 +112,7 @@ public class Landing extends BaseActivity {
 
     public void SetupList(List<SourceInfo> AllPackages) {
 
-        if(AllPackages.size()<1){
+        if (AllPackages.size() < 1) {
             listView.setVisibility(View.GONE);
             welcomeLayout.setVisibility(View.VISIBLE);
         } else {
@@ -236,6 +236,36 @@ public class Landing extends BaseActivity {
         }
     }
 
+    private void cleanOldSources() {
+        File dir = new File(Environment.getExternalStorageDirectory() + "/ShowJava");
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            for (File file : files) {
+                if (!file.getName().equalsIgnoreCase("sources")) {
+                    try {
+                        FileUtils.cleanDirectory(file);
+                        file.delete();
+                    } catch (IOException e) {
+                        Ln.d(e);
+                    }
+                }
+            }
+        } else {
+            dir.mkdirs();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        rerunHistoryLoader();
+    }
+
+    private void rerunHistoryLoader() {
+        HistoryLoader historyLoaderTwo = new HistoryLoader();
+        historyLoaderTwo.execute();
+    }
+
     private static class ViewHolder {
         TextView packageLabel;
         TextView packageName;
@@ -252,7 +282,7 @@ public class Landing extends BaseActivity {
 
             File nomedia = new File(Environment.getExternalStorageDirectory() + "/ShowJava/.nomedia");
             nomedia.mkdirs();
-            if(!nomedia.exists()||!nomedia.isFile()) {
+            if (!nomedia.exists() || !nomedia.isFile()) {
                 try {
                     nomedia.createNewFile();
                 } catch (IOException e) {
@@ -265,17 +295,17 @@ public class Landing extends BaseActivity {
             if (dir.exists()) {
                 File[] files = dir.listFiles();
                 for (File file : files) {
-                    if(Utils.sourceExists(file)){
+                    if (Utils.sourceExists(file)) {
                         historyItems.add(Utils.getSourceInfoFromSourcePath(file));
                     } else {
-                        if(!Utils.isProcessorServiceRunning(baseContext)){
+                        if (!Utils.isProcessorServiceRunning(baseContext)) {
                             try {
                                 FileUtils.deleteDirectory(file);
                             } catch (IOException e) {
                                 Ln.d(e);
                             }
                         }
-                        if(!file.isDirectory()){
+                        if (!file.isDirectory()) {
                             file.delete();
                         }
                     }
@@ -297,38 +327,6 @@ public class Landing extends BaseActivity {
         @Override
         protected void onProgressUpdate(String... text) {
         }
-    }
-
-    private void cleanOldSources(){
-        File dir = new File(Environment.getExternalStorageDirectory() + "/ShowJava");
-        if (dir.exists()) {
-            File[] files = dir.listFiles();
-            for (File file : files) {
-                if (!file.getName().equalsIgnoreCase("sources")) {
-                    try {
-                        FileUtils.cleanDirectory(file);
-                        file.delete();
-                    } catch (IOException e) {
-                        Ln.d(e);
-                    }
-                }
-            }
-        } else {
-            dir.mkdirs();
-        }
-    }
-
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        rerunHistoryLoader();
-    }
-
-    private void rerunHistoryLoader(){
-        HistoryLoader historyLoaderTwo = new HistoryLoader();
-        historyLoaderTwo.execute();
     }
 
 }

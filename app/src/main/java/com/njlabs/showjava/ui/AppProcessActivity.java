@@ -47,7 +47,7 @@ public class AppProcessActivity extends BaseActivity {
 
         CurrentStatus.setText("Starting Decompiler");
 
-        if(getIntent().getDataString() == null || getIntent().getDataString().equals("")){
+        if (getIntent().getDataString() == null || getIntent().getDataString().equals("")) {
             appNameView.setText(getIntent().getStringExtra("package_label"));
             packageFilePath = getIntent().getStringExtra("package_file_path");
 
@@ -58,7 +58,7 @@ public class AppProcessActivity extends BaseActivity {
                 Ln.e(e);
                 exitWithError();
             }
-            
+
         } else {
             packageFilePath = (new File(URI.create(getIntent().getDataString()))).getAbsolutePath();
             if (FilenameUtils.isExtension(packageFilePath, "apk")) {
@@ -72,7 +72,7 @@ public class AppProcessActivity extends BaseActivity {
             }
         }
 
-        if(!fromNotification()){
+        if (!fromNotification()) {
             startProcessorService();
         } else {
             CurrentStatus.setText("Processing ...");
@@ -126,7 +126,39 @@ public class AppProcessActivity extends BaseActivity {
 
     public void registerBroadcastReceiver() {
         IntentFilter statusIntentFilter = new IntentFilter(Constants.PROCESS_BROADCAST_ACTION);
-        registerReceiver(processStatusReceiver,statusIntentFilter);
+        registerReceiver(processStatusReceiver, statusIntentFilter);
+    }
+
+    @SuppressWarnings("unused")
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                String result = data.getStringExtra("result");
+                finish();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                finish();
+            } else {
+                finish();
+            }
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        }
+    }
+
+    private boolean fromNotification() {
+        return getIntent().hasExtra("from_notification") && getIntent().getBooleanExtra("from_notification", false);
+    }
+
+    private void exitWithError() {
+        finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        Toast.makeText(baseContext, "There was an error initialising the decompiler with the app you selected.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(processStatusReceiver);
     }
 
     private class ProcessStatus extends BroadcastReceiver {
@@ -161,7 +193,7 @@ public class AppProcessActivity extends BaseActivity {
                     break;
 
                 case "start_activity":
-                    if(intent.getStringExtra(Constants.PROCESS_DIR)!= null && intent.getStringExtra(Constants.PROCESS_PACKAGE_ID) != null){
+                    if (intent.getStringExtra(Constants.PROCESS_DIR) != null && intent.getStringExtra(Constants.PROCESS_PACKAGE_ID) != null) {
                         Intent iOne = new Intent(getApplicationContext(), JavaExplorer.class);
                         iOne.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
                         iOne.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
@@ -172,8 +204,8 @@ public class AppProcessActivity extends BaseActivity {
                     break;
 
                 case "start_activity_with_error":
-                    Toast.makeText(baseContext,"An error occurred. Generated source may be incomplete.",Toast.LENGTH_SHORT).show();
-                    if(intent.getStringExtra(Constants.PROCESS_DIR)!= null && intent.getStringExtra(Constants.PROCESS_PACKAGE_ID) != null) {
+                    Toast.makeText(baseContext, "An error occurred. Generated source may be incomplete.", Toast.LENGTH_SHORT).show();
+                    if (intent.getStringExtra(Constants.PROCESS_DIR) != null && intent.getStringExtra(Constants.PROCESS_PACKAGE_ID) != null) {
                         Intent iTwo = new Intent(getApplicationContext(), JavaExplorer.class);
                         iTwo.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
                         iTwo.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
@@ -209,39 +241,5 @@ public class AppProcessActivity extends BaseActivity {
                     CurrentLine.setText(statusData);
             }
         }
-    }
-
-    @SuppressWarnings("unused")
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                String result = data.getStringExtra("result");
-                finish();
-            }
-            if (resultCode == RESULT_CANCELED) {
-                finish();
-            } else {
-                finish();
-            }
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-        }
-    }
-
-    private boolean fromNotification() {
-        return getIntent().hasExtra("from_notification") && getIntent().getBooleanExtra("from_notification", false);
-    }
-
-
-
-    private void exitWithError(){
-        finish();
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-        Toast.makeText(baseContext,"There was an error initialising the decompiler with the app you selected.",Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(processStatusReceiver);
     }
 }

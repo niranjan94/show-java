@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Utils {
 
-    public static void killAllProcessorServices(Context context){
+    public static void killAllProcessorServices(Context context) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
         for (ActivityManager.RunningAppProcessInfo next : runningAppProcesses) {
@@ -20,7 +20,7 @@ public class Utils {
         }
     }
 
-    public static boolean isProcessorServiceRunning(Context context){
+    public static boolean isProcessorServiceRunning(Context context) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
         for (ActivityManager.RunningAppProcessInfo next : runningAppProcesses) {
@@ -32,12 +32,12 @@ public class Utils {
         return false;
     }
 
-    public static boolean sourceExists(File sourceDir){
-        if (sourceDir.exists()&&sourceDir.isDirectory()) {
+    public static boolean sourceExists(File sourceDir) {
+        if (sourceDir.exists() && sourceDir.isDirectory()) {
             File infoFile = new File(sourceDir + "/info.json");
-            if(infoFile.exists() && infoFile.isFile()){
+            if (infoFile.exists() && infoFile.isFile()) {
                 SourceInfo sourceInfo = SourceInfo.getSourceInfo(infoFile);
-                if(sourceInfo != null) {
+                if (sourceInfo != null) {
                     return true;
                 }
             }
@@ -45,10 +45,10 @@ public class Utils {
         return false;
     }
 
-    public static SourceInfo getSourceInfoFromSourcePath(File sourceDir){
+    public static SourceInfo getSourceInfoFromSourcePath(File sourceDir) {
         if (sourceDir.isDirectory()) {
             File infoFile = new File(sourceDir + "/info.json");
-            if(infoFile.exists() && infoFile.isFile()){
+            if (infoFile.exists() && infoFile.isFile()) {
                 return SourceInfo.getSourceInfo(infoFile);
             }
         }
@@ -62,7 +62,7 @@ public class Utils {
                 size += getFolderSize(file);
             }
         } else {
-            size=f.length();
+            size = f.length();
         }
         return size;
     }

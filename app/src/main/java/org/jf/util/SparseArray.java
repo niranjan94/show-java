@@ -43,6 +43,9 @@ import java.util.List;
 public class SparseArray<E> {
     private static final Object DELETED = new Object();
     private boolean mGarbage = false;
+    private int[] mKeys;
+    private Object[] mValues;
+    private int mSize;
 
     /**
      * Creates a new SparseArray containing no mappings.
@@ -60,6 +63,26 @@ public class SparseArray<E> {
         mKeys = new int[initialCapacity];
         mValues = new Object[initialCapacity];
         mSize = 0;
+    }
+
+    private static int binarySearch(int[] a, int start, int len, int key) {
+        int high = start + len, low = start - 1, guess;
+
+        while (high - low > 1) {
+            guess = (high + low) / 2;
+
+            if (a[guess] < key)
+                low = guess;
+            else
+                high = guess;
+        }
+
+        if (high == start + len)
+            return ~(start + len);
+        else if (a[high] == key)
+            return high;
+        else
+            return ~high;
     }
 
     /**
@@ -320,6 +343,7 @@ public class SparseArray<E> {
     /**
      * Increases the size of the underlying storage if needed, to ensure that it can
      * hold the specified number of items without having to allocate additional memory
+     *
      * @param capacity the number of items
      */
     public void ensureCapacity(int capacity) {
@@ -339,35 +363,11 @@ public class SparseArray<E> {
         }
     }
 
-    private static int binarySearch(int[] a, int start, int len, int key) {
-        int high = start + len, low = start - 1, guess;
-
-        while (high - low > 1) {
-            guess = (high + low) / 2;
-
-            if (a[guess] < key)
-                low = guess;
-            else
-                high = guess;
-        }
-
-        if (high == start + len)
-            return ~(start + len);
-        else if (a[high] == key)
-            return high;
-        else
-            return ~high;
-    }
-
     /**
      * @return a read-only list of the values in this SparseArray which are in ascending order, based on their
      * associated key
      */
     public List<E> getValues() {
-        return Collections.unmodifiableList(Arrays.asList((E[])mValues));
+        return Collections.unmodifiableList(Arrays.asList((E[]) mValues));
     }
-
-    private int[] mKeys;
-    private Object[] mValues;
-    private int mSize;
 }

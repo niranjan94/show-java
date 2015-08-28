@@ -48,14 +48,20 @@ public class ImmutableLineNumber extends ImmutableDebugItem implements LineNumbe
     @Nonnull
     public static ImmutableLineNumber of(@Nonnull LineNumber lineNumber) {
         if (lineNumber instanceof ImmutableLineNumber) {
-            return (ImmutableLineNumber)lineNumber;
+            return (ImmutableLineNumber) lineNumber;
         }
         return new ImmutableLineNumber(
                 lineNumber.getCodeAddress(),
                 lineNumber.getLineNumber());
     }
 
-    @Override public int getLineNumber() { return lineNumber; }
+    @Override
+    public int getLineNumber() {
+        return lineNumber;
+    }
 
-    @Override public int getDebugItemType() { return DebugItemType.LINE_NUMBER; }
+    @Override
+    public int getDebugItemType() {
+        return DebugItemType.LINE_NUMBER;
+    }
 }

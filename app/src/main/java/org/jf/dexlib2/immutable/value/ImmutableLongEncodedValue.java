@@ -43,10 +43,13 @@ public class ImmutableLongEncodedValue extends BaseLongEncodedValue implements I
 
     public static ImmutableLongEncodedValue of(LongEncodedValue longEncodedValue) {
         if (longEncodedValue instanceof ImmutableLongEncodedValue) {
-            return (ImmutableLongEncodedValue)longEncodedValue;
+            return (ImmutableLongEncodedValue) longEncodedValue;
         }
         return new ImmutableLongEncodedValue(longEncodedValue.getValue());
     }
 
-    @Override public long getValue() { return value; }
+    @Override
+    public long getValue() {
+        return value;
+    }
 }

@@ -37,9 +37,12 @@ import org.jf.dexlib2.writer.DexWriter;
 import javax.annotation.Nonnull;
 
 public class BuilderMethodReference extends BaseMethodReference implements BuilderReference {
-    @Nonnull final BuilderTypeReference definingClass;
-    @Nonnull final BuilderStringReference name;
-    @Nonnull final BuilderProtoReference proto;
+    @Nonnull
+    final BuilderTypeReference definingClass;
+    @Nonnull
+    final BuilderStringReference name;
+    @Nonnull
+    final BuilderProtoReference proto;
     int index = DexWriter.NO_INDEX;
 
     BuilderMethodReference(@Nonnull BuilderTypeReference definingClass,
@@ -50,27 +53,37 @@ public class BuilderMethodReference extends BaseMethodReference implements Build
         this.proto = proto;
     }
 
-    @Nonnull @Override public String getDefiningClass() {
+    @Nonnull
+    @Override
+    public String getDefiningClass() {
         return definingClass.getType();
     }
 
-    @Nonnull @Override public String getName() {
+    @Nonnull
+    @Override
+    public String getName() {
         return this.name.getString();
     }
 
-    @Nonnull @Override public BuilderTypeList getParameterTypes() {
+    @Nonnull
+    @Override
+    public BuilderTypeList getParameterTypes() {
         return proto.parameterTypes;
     }
 
-    @Nonnull @Override public String getReturnType() {
+    @Nonnull
+    @Override
+    public String getReturnType() {
         return proto.returnType.getType();
     }
 
-    @Override public int getIndex() {
+    @Override
+    public int getIndex() {
         return index;
     }
 
-    @Override public void setIndex(int index) {
+    @Override
+    public void setIndex(int index) {
         this.index = index;
     }
 }

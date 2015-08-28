@@ -45,7 +45,9 @@ public class AnnotationSetRefList {
     @Nonnull
     public static SectionAnnotator makeAnnotator(@Nonnull DexAnnotator annotator, @Nonnull MapItem mapItem) {
         return new SectionAnnotator(annotator, mapItem) {
-            @Nonnull @Override public String getItemName() {
+            @Nonnull
+            @Override
+            public String getItemName() {
                 return "annotation_set_ref_list";
             }
 
@@ -54,13 +56,14 @@ public class AnnotationSetRefList {
                 int size = dexFile.readSmallUint(out.getCursor());
                 out.annotate(4, "size = %d", size);
 
-                for (int i=0; i<size; i++) {
+                for (int i = 0; i < size; i++) {
                     int annotationSetOffset = dexFile.readSmallUint(out.getCursor());
                     out.annotate(4, "annotation_set_item[0x%x]", annotationSetOffset);
                 }
             }
 
-            @Override public int getItemAlignment() {
+            @Override
+            public int getItemAlignment() {
                 return 4;
             }
         };

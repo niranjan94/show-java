@@ -32,18 +32,18 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class IndentingWriter extends Writer {
+    private static final String newLine = System.getProperty("line.separator");
     protected final Writer writer;
     protected final char[] buffer = new char[24];
     protected int indentLevel = 0;
     private boolean beginningOfLine = true;
-    private static final String newLine = System.getProperty("line.separator");
 
     public IndentingWriter(Writer writer) {
         this.writer = writer;
     }
 
     protected void writeIndent() throws IOException {
-        for (int i=0; i<indentLevel; i++) {
+        for (int i = 0; i < indentLevel; i++) {
             writer.write(' ');
         }
     }
@@ -92,11 +92,11 @@ public class IndentingWriter extends Writer {
 
     @Override
     public void write(char[] chars, int start, int len) throws IOException {
-        final int end = start+len;
+        final int end = start + len;
         int pos = start;
         while (pos < end) {
             if (chars[pos] == '\n') {
-                writeLine(chars, start, pos-start);
+                writeLine(chars, start, pos - start);
 
                 writer.write(newLine);
                 beginningOfLine = true;
@@ -106,7 +106,7 @@ public class IndentingWriter extends Writer {
                 pos++;
             }
         }
-        writeLine(chars, start, pos-start);
+        writeLine(chars, start, pos - start);
     }
 
     @Override
@@ -116,18 +116,18 @@ public class IndentingWriter extends Writer {
 
     @Override
     public void write(String str, int start, int len) throws IOException {
-        final int end = start+len;
+        final int end = start + len;
         int pos = start;
         while (pos < end) {
             pos = str.indexOf('\n', start);
             if (pos == -1) {
-                writeLine(str, start, end-start);
+                writeLine(str, start, end - start);
                 return;
             } else {
-                writeLine(str, start, pos-start);
+                writeLine(str, start, pos - start);
                 writer.write(newLine);
                 beginningOfLine = true;
-                start = pos+1;
+                start = pos + 1;
             }
         }
     }
@@ -177,11 +177,11 @@ public class IndentingWriter extends Writer {
     public void printUnsignedLongAsHex(long value) throws IOException {
         int bufferIndex = 23;
         do {
-            int digit = (int)(value & 15);
+            int digit = (int) (value & 15);
             if (digit < 10) {
-                buffer[bufferIndex--] = (char)(digit + '0');
+                buffer[bufferIndex--] = (char) (digit + '0');
             } else {
-                buffer[bufferIndex--] = (char)((digit - 10) + 'a');
+                buffer[bufferIndex--] = (char) ((digit - 10) + 'a');
             }
 
             value >>>= 4;
@@ -189,7 +189,7 @@ public class IndentingWriter extends Writer {
 
         bufferIndex++;
 
-        writeLine(buffer, bufferIndex, 24-bufferIndex);
+        writeLine(buffer, bufferIndex, 24 - bufferIndex);
     }
 
     public void printSignedLongAsDec(long value) throws IOException {
@@ -202,14 +202,14 @@ public class IndentingWriter extends Writer {
 
         do {
             long digit = value % 10;
-            buffer[bufferIndex--] = (char)(digit + '0');
+            buffer[bufferIndex--] = (char) (digit + '0');
 
             value = value / 10;
         } while (value != 0);
 
         bufferIndex++;
 
-        writeLine(buffer, bufferIndex, 24-bufferIndex);
+        writeLine(buffer, bufferIndex, 24 - bufferIndex);
     }
 
     public void printSignedIntAsDec(int value) throws IOException {
@@ -222,14 +222,14 @@ public class IndentingWriter extends Writer {
 
         do {
             int digit = value % 10;
-            buffer[bufferIndex--] = (char)(digit + '0');
+            buffer[bufferIndex--] = (char) (digit + '0');
 
             value = value / 10;
         } while (value != 0);
 
         bufferIndex++;
 
-        writeLine(buffer, bufferIndex, 16-bufferIndex);
+        writeLine(buffer, bufferIndex, 16 - bufferIndex);
     }
 
     public void printUnsignedIntAsDec(int value) throws IOException {

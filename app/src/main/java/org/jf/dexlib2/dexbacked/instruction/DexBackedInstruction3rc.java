@@ -46,7 +46,8 @@ public class DexBackedInstruction3rc extends DexBackedInstruction implements Ins
         super(dexFile, opcode, instructionStart);
     }
 
-    @Override public int getRegisterCount() {
+    @Override
+    public int getRegisterCount() {
         return dexFile.readUbyte(instructionStart + 1);
     }
 

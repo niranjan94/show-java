@@ -43,9 +43,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BuilderProtoReference implements BuilderProtoPool.ProtoKey, Comparable<BuilderProtoReference> {
-    @Nonnull final BuilderStringReference shorty;
-    @Nonnull final BuilderTypeList parameterTypes;
-    @Nonnull final BuilderTypeReference returnType;
+    @Nonnull
+    final BuilderStringReference shorty;
+    @Nonnull
+    final BuilderTypeList parameterTypes;
+    @Nonnull
+    final BuilderTypeReference returnType;
     int index = DexWriter.NO_INDEX;
 
     public BuilderProtoReference(@Nonnull BuilderStringReference shorty, @Nonnull BuilderTypeList parameterTypes,
@@ -55,26 +58,30 @@ public class BuilderProtoReference implements BuilderProtoPool.ProtoKey, Compara
         this.returnType = returnType;
     }
 
-    @Nonnull @Override public List<? extends CharSequence> getParameterTypes() {
+    @Nonnull
+    @Override
+    public List<? extends CharSequence> getParameterTypes() {
         return parameterTypes;
     }
 
-    @Nonnull @Override public String getReturnType() {
+    @Nonnull
+    @Override
+    public String getReturnType() {
         return returnType.getType();
     }
 
     @Override
     public int hashCode() {
         int hashCode = getReturnType().hashCode();
-        return hashCode*31 + getParameterTypes().hashCode();
+        return hashCode * 31 + getParameterTypes().hashCode();
     }
 
     @Override
     public boolean equals(@Nullable Object o) {
         if (o != null && o instanceof BuilderProtoReference) {
-            BuilderProtoReference other = (BuilderProtoReference)o;
+            BuilderProtoReference other = (BuilderProtoReference) o;
             return returnType.equals(other.returnType) &&
-                   CharSequenceUtils.listEquals(parameterTypes, other.parameterTypes);
+                    CharSequenceUtils.listEquals(parameterTypes, other.parameterTypes);
         }
         return false;
     }

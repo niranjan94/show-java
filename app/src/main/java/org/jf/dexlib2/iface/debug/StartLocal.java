@@ -39,7 +39,12 @@ import javax.annotation.Nullable;
 public interface StartLocal extends DebugItem, LocalInfo {
     int getRegister();
 
-    @Nullable StringReference getNameReference();
-    @Nullable TypeReference getTypeReference();
-    @Nullable StringReference getSignatureReference();
+    @Nullable
+    StringReference getNameReference();
+
+    @Nullable
+    TypeReference getTypeReference();
+
+    @Nullable
+    StringReference getSignatureReference();
 }

@@ -45,6 +45,9 @@ public final class ReferenceType {
     public static final int METHOD = 3;
     public static final int NONE = 4;
 
+    private ReferenceType() {
+    }
+
     public static String toString(int referenceType) {
         switch (referenceType) {
             case STRING:
@@ -102,6 +105,4 @@ public final class ReferenceType {
             return referenceType;
         }
     }
-
-    private ReferenceType() {}
 }

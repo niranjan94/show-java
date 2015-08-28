@@ -32,31 +32,10 @@ import java.io.PrintWriter;
  */
 public class ExceptionWithContext
         extends RuntimeException {
-    /** non-null; human-oriented context of the exception */
-    private StringBuffer context;
-
     /**
-     * Augments the given exception with the given context, and return the
-     * result. The result is either the given exception if it was an
-     * {@link ExceptionWithContext}, or a newly-constructed exception if it
-     * was not.
-     *
-     * @param ex non-null; the exception to augment
-     * @param str non-null; context to add
-     * @return non-null; an appropriate instance
+     * non-null; human-oriented context of the exception
      */
-    public static ExceptionWithContext withContext(Throwable ex, String str, Object... formatArgs) {
-        ExceptionWithContext ewc;
-
-        if (ex instanceof ExceptionWithContext) {
-            ewc = (ExceptionWithContext) ex;
-        } else {
-            ewc = new ExceptionWithContext(ex);
-        }
-
-        ewc.addContext(String.format(str, formatArgs));
-        return ewc;
-    }
+    private StringBuffer context;
 
     /**
      * Constructs an instance.
@@ -80,12 +59,12 @@ public class ExceptionWithContext
      * Constructs an instance.
      *
      * @param message human-oriented message
-     * @param cause null-ok; exception that caused this one
+     * @param cause   null-ok; exception that caused this one
      */
     public ExceptionWithContext(Throwable cause, String message, Object... formatArgs) {
         super((message != null) ? formatMessage(message, formatArgs) :
-              (cause != null) ? cause.getMessage() : null,
-              cause);
+                        (cause != null) ? cause.getMessage() : null,
+                cause);
 
         if (cause instanceof ExceptionWithContext) {
             String ctx = ((ExceptionWithContext) cause).context.toString();
@@ -96,6 +75,29 @@ public class ExceptionWithContext
         }
     }
 
+    /**
+     * Augments the given exception with the given context, and return the
+     * result. The result is either the given exception if it was an
+     * {@link ExceptionWithContext}, or a newly-constructed exception if it
+     * was not.
+     *
+     * @param ex  non-null; the exception to augment
+     * @param str non-null; context to add
+     * @return non-null; an appropriate instance
+     */
+    public static ExceptionWithContext withContext(Throwable ex, String str, Object... formatArgs) {
+        ExceptionWithContext ewc;
+
+        if (ex instanceof ExceptionWithContext) {
+            ewc = (ExceptionWithContext) ex;
+        } else {
+            ewc = new ExceptionWithContext(ex);
+        }
+
+        ewc.addContext(String.format(str, formatArgs));
+        return ewc;
+    }
+
     private static String formatMessage(String message, Object... formatArgs) {
         if (message == null) {
             return null;
@@ -103,14 +105,18 @@ public class ExceptionWithContext
         return String.format(message, formatArgs);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void printStackTrace(PrintStream out) {
         super.printStackTrace(out);
         out.println(context);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void printStackTrace(PrintWriter out) {
         super.printStackTrace(out);

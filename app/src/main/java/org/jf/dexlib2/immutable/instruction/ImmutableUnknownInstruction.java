@@ -47,11 +47,18 @@ public class ImmutableUnknownInstruction extends ImmutableInstruction implements
 
     public static ImmutableUnknownInstruction of(UnknownInstruction instruction) {
         if (instruction instanceof ImmutableUnknownInstruction) {
-            return (ImmutableUnknownInstruction)instruction;
+            return (ImmutableUnknownInstruction) instruction;
         }
         return new ImmutableUnknownInstruction(instruction.getOriginalOpcode());
     }
 
-    @Override public Format getFormat() { return FORMAT; }
-    @Override public int getOriginalOpcode() { return originalOpcode; }
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
+
+    @Override
+    public int getOriginalOpcode() {
+        return originalOpcode;
+    }
 }

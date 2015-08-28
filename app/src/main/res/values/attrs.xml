@@ -10,5 +10,5 @@
     <declare-styleable name="TextViewWithFont">
         <attr name="font" format="string" />
     </declare-styleable>
-    
+
 </resources>

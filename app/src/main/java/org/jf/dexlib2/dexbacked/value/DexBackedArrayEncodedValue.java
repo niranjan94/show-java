@@ -43,7 +43,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class DexBackedArrayEncodedValue extends BaseArrayEncodedValue implements ArrayEncodedValue {
-    @Nonnull public final DexBackedDexFile dexFile;
+    @Nonnull
+    public final DexBackedDexFile dexFile;
     private final int elementCount;
     private final int encodedArrayOffset;
 
@@ -60,7 +61,7 @@ public class DexBackedArrayEncodedValue extends BaseArrayEncodedValue implements
     }
 
     private static void skipElementsFrom(@Nonnull DexReader reader, int elementCount) {
-        for (int i=0; i<elementCount; i++) {
+        for (int i = 0; i < elementCount; i++) {
             DexBackedEncodedValue.skipFrom(reader);
         }
     }

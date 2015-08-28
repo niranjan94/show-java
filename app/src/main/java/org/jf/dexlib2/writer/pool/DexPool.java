@@ -74,6 +74,13 @@ public class DexPool extends DexWriter<CharSequence, StringReference, CharSequen
         TypeListPool.Key<? extends Collection<? extends CharSequence>>, Field, PoolMethod,
         EncodedValue, AnnotationElement> {
 
+    private DexPool(int api, StringPool stringPool, TypePool typePool, ProtoPool protoPool, FieldPool fieldPool,
+                    MethodPool methodPool, ClassPool classPool, TypeListPool typeListPool,
+                    AnnotationPool annotationPool, AnnotationSetPool annotationSetPool) {
+        super(api, stringPool, typePool, protoPool, fieldPool, methodPool,
+                classPool, typeListPool, annotationPool, annotationSetPool);
+    }
+
     public static DexPool makeDexPool() {
         return makeDexPool(15);
     }
@@ -94,77 +101,12 @@ public class DexPool extends DexWriter<CharSequence, StringReference, CharSequen
                 annotationPool, annotationSetPool);
     }
 
-    private DexPool(int api, StringPool stringPool, TypePool typePool, ProtoPool protoPool, FieldPool fieldPool,
-                    MethodPool methodPool, ClassPool classPool, TypeListPool typeListPool,
-                    AnnotationPool annotationPool, AnnotationSetPool annotationSetPool) {
-        super(api, stringPool, typePool, protoPool, fieldPool, methodPool,
-                classPool, typeListPool, annotationPool, annotationSetPool);
-    }
-
     public static void writeTo(@Nonnull String path, @Nonnull org.jf.dexlib2.iface.DexFile input) throws IOException {
         DexPool dexPool = makeDexPool();
-        for (ClassDef classDef: input.getClasses()) {
-            ((ClassPool)dexPool.classSection).intern(classDef);
+        for (ClassDef classDef : input.getClasses()) {
+            ((ClassPool) dexPool.classSection).intern(classDef);
         }
         dexPool.writeTo(new FileDataStore(new File(path)));
-    }
-
-    @Override protected void writeEncodedValue(@Nonnull InternalEncodedValueWriter writer,
-                                               @Nonnull EncodedValue encodedValue) throws IOException {
-        switch (encodedValue.getValueType()) {
-            case ValueType.ANNOTATION:
-                AnnotationEncodedValue annotationEncodedValue = (AnnotationEncodedValue)encodedValue;
-                writer.writeAnnotation(annotationEncodedValue.getType(), annotationEncodedValue.getElements());
-                break;
-            case ValueType.ARRAY:
-                ArrayEncodedValue arrayEncodedValue = (ArrayEncodedValue)encodedValue;
-                writer.writeArray(arrayEncodedValue.getValue());
-                break;
-            case ValueType.BOOLEAN:
-                writer.writeBoolean(((BooleanEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.BYTE:
-                writer.writeByte(((ByteEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.CHAR:
-                writer.writeChar(((CharEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.DOUBLE:
-                writer.writeDouble(((DoubleEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.ENUM:
-                writer.writeEnum(((EnumEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.FIELD:
-                writer.writeField(((FieldEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.FLOAT:
-                writer.writeFloat(((FloatEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.INT:
-                writer.writeInt(((IntEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.LONG:
-                writer.writeLong(((LongEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.METHOD:
-                writer.writeMethod(((MethodEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.NULL:
-                writer.writeNull();
-                break;
-            case ValueType.SHORT:
-                writer.writeShort(((ShortEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.STRING:
-                writer.writeString(((StringEncodedValue)encodedValue).getValue());
-                break;
-            case ValueType.TYPE:
-                writer.writeType(((TypeEncodedValue)encodedValue).getValue());
-                break;
-            default:
-                throw new ExceptionWithContext("Unrecognized value type: %d", encodedValue.getValueType());
-        }
     }
 
     public static void internEncodedValue(@Nonnull EncodedValue encodedValue,
@@ -174,33 +116,92 @@ public class DexPool extends DexWriter<CharSequence, StringReference, CharSequen
                                           @Nonnull MethodPool methodPool) {
         switch (encodedValue.getValueType()) {
             case ValueType.ANNOTATION:
-                AnnotationEncodedValue annotationEncodedValue = (AnnotationEncodedValue)encodedValue;
+                AnnotationEncodedValue annotationEncodedValue = (AnnotationEncodedValue) encodedValue;
                 typePool.intern(annotationEncodedValue.getType());
-                for (AnnotationElement element: annotationEncodedValue.getElements()) {
+                for (AnnotationElement element : annotationEncodedValue.getElements()) {
                     stringPool.intern(element.getName());
                     internEncodedValue(element.getValue(), stringPool, typePool, fieldPool, methodPool);
                 }
                 break;
             case ValueType.ARRAY:
-                for (EncodedValue element: ((ArrayEncodedValue)encodedValue).getValue()) {
+                for (EncodedValue element : ((ArrayEncodedValue) encodedValue).getValue()) {
                     internEncodedValue(element, stringPool, typePool, fieldPool, methodPool);
                 }
                 break;
             case ValueType.STRING:
-                stringPool.intern(((StringEncodedValue)encodedValue).getValue());
+                stringPool.intern(((StringEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.TYPE:
-                typePool.intern(((TypeEncodedValue)encodedValue).getValue());
+                typePool.intern(((TypeEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.ENUM:
-                fieldPool.intern(((EnumEncodedValue)encodedValue).getValue());
+                fieldPool.intern(((EnumEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.FIELD:
-                fieldPool.intern(((FieldEncodedValue)encodedValue).getValue());
+                fieldPool.intern(((FieldEncodedValue) encodedValue).getValue());
                 break;
             case ValueType.METHOD:
-                methodPool.intern(((MethodEncodedValue)encodedValue).getValue());
+                methodPool.intern(((MethodEncodedValue) encodedValue).getValue());
                 break;
+        }
+    }
+
+    @Override
+    protected void writeEncodedValue(@Nonnull InternalEncodedValueWriter writer,
+                                     @Nonnull EncodedValue encodedValue) throws IOException {
+        switch (encodedValue.getValueType()) {
+            case ValueType.ANNOTATION:
+                AnnotationEncodedValue annotationEncodedValue = (AnnotationEncodedValue) encodedValue;
+                writer.writeAnnotation(annotationEncodedValue.getType(), annotationEncodedValue.getElements());
+                break;
+            case ValueType.ARRAY:
+                ArrayEncodedValue arrayEncodedValue = (ArrayEncodedValue) encodedValue;
+                writer.writeArray(arrayEncodedValue.getValue());
+                break;
+            case ValueType.BOOLEAN:
+                writer.writeBoolean(((BooleanEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.BYTE:
+                writer.writeByte(((ByteEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.CHAR:
+                writer.writeChar(((CharEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.DOUBLE:
+                writer.writeDouble(((DoubleEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.ENUM:
+                writer.writeEnum(((EnumEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.FIELD:
+                writer.writeField(((FieldEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.FLOAT:
+                writer.writeFloat(((FloatEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.INT:
+                writer.writeInt(((IntEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.LONG:
+                writer.writeLong(((LongEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.METHOD:
+                writer.writeMethod(((MethodEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.NULL:
+                writer.writeNull();
+                break;
+            case ValueType.SHORT:
+                writer.writeShort(((ShortEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.STRING:
+                writer.writeString(((StringEncodedValue) encodedValue).getValue());
+                break;
+            case ValueType.TYPE:
+                writer.writeType(((TypeEncodedValue) encodedValue).getValue());
+                break;
+            default:
+                throw new ExceptionWithContext("Unrecognized value type: %d", encodedValue.getValueType());
         }
     }
 }

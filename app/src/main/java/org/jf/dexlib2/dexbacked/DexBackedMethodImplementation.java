@@ -50,8 +50,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class DexBackedMethodImplementation implements MethodImplementation {
-    @Nonnull public final DexBackedDexFile dexFile;
-    @Nonnull public final DexBackedMethod method;
+    @Nonnull
+    public final DexBackedDexFile dexFile;
+    @Nonnull
+    public final DexBackedMethod method;
     private final int codeOffset;
 
     public DexBackedMethodImplementation(@Nonnull DexBackedDexFile dexFile,
@@ -62,14 +64,19 @@ public class DexBackedMethodImplementation implements MethodImplementation {
         this.codeOffset = codeOffset;
     }
 
-    @Override public int getRegisterCount() { return dexFile.readUshort(codeOffset); }
+    @Override
+    public int getRegisterCount() {
+        return dexFile.readUshort(codeOffset);
+    }
 
-    @Nonnull @Override public Iterable<? extends Instruction> getInstructions() {
+    @Nonnull
+    @Override
+    public Iterable<? extends Instruction> getInstructions() {
         // instructionsSize is the number of 16-bit code units in the instruction list, not the number of instructions
         int instructionsSize = dexFile.readSmallUint(codeOffset + CodeItem.INSTRUCTION_COUNT_OFFSET);
 
         final int instructionsStartOffset = codeOffset + CodeItem.INSTRUCTION_START_OFFSET;
-        final int endOffset = instructionsStartOffset + (instructionsSize*2);
+        final int endOffset = instructionsStartOffset + (instructionsSize * 2);
         return new Iterable<Instruction>() {
             @Override
             public Iterator<Instruction> iterator() {
@@ -93,15 +100,15 @@ public class DexBackedMethodImplementation implements MethodImplementation {
         if (triesSize > 0) {
             int instructionsSize = dexFile.readSmallUint(codeOffset + CodeItem.INSTRUCTION_COUNT_OFFSET);
             final int triesStartOffset = AlignmentUtils.alignOffset(
-                    codeOffset + CodeItem.INSTRUCTION_START_OFFSET + (instructionsSize*2), 4);
-            final int handlersStartOffset = triesStartOffset + triesSize*CodeItem.TryItem.ITEM_SIZE;
+                    codeOffset + CodeItem.INSTRUCTION_START_OFFSET + (instructionsSize * 2), 4);
+            final int handlersStartOffset = triesStartOffset + triesSize * CodeItem.TryItem.ITEM_SIZE;
 
             return new FixedSizeList<DexBackedTryBlock>() {
                 @Nonnull
                 @Override
                 public DexBackedTryBlock readItem(int index) {
                     return new DexBackedTryBlock(dexFile,
-                            triesStartOffset + index*CodeItem.TryItem.ITEM_SIZE,
+                            triesStartOffset + index * CodeItem.TryItem.ITEM_SIZE,
                             handlersStartOffset);
                 }
 
@@ -119,7 +126,8 @@ public class DexBackedMethodImplementation implements MethodImplementation {
         return DebugInfo.newOrEmpty(dexFile, dexFile.readSmallUint(codeOffset + CodeItem.DEBUG_INFO_OFFSET), this);
     }
 
-    @Nonnull @Override
+    @Nonnull
+    @Override
     public Iterable<? extends DebugItem> getDebugItems() {
         return getDebugInfo();
     }

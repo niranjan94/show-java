@@ -45,19 +45,35 @@ public class BuilderInstruction20bc extends BuilderInstruction implements Instru
     public static final Format FORMAT = Format.Format20bc;
 
     protected final int verificationError;
-    @Nonnull protected final Reference reference;
+    @Nonnull
+    protected final Reference reference;
 
     public BuilderInstruction20bc(@Nonnull Opcode opcode,
-                                    int verificationError,
-                                    @Nonnull Reference reference) {
+                                  int verificationError,
+                                  @Nonnull Reference reference) {
         super(opcode);
         this.verificationError = Preconditions.checkVerificationError(verificationError);
         this.reference = reference;
     }
 
-    @Override public int getVerificationError() { return verificationError; }
-    @Nonnull @Override public Reference getReference() { return reference; }
-    @Override public int getReferenceType() { return ReferenceType.getReferenceType(reference); }
+    @Override
+    public int getVerificationError() {
+        return verificationError;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Nonnull
+    @Override
+    public Reference getReference() {
+        return reference;
+    }
+
+    @Override
+    public int getReferenceType() {
+        return ReferenceType.getReferenceType(reference);
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

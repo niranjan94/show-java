@@ -53,20 +53,20 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class DexBackedClassDef extends BaseTypeReference implements ClassDef {
-    @Nonnull public final DexBackedDexFile dexFile;
+    @Nonnull
+    public final DexBackedDexFile dexFile;
     private final int classDefOffset;
 
     private final int staticFieldsOffset;
-    private int instanceFieldsOffset = 0;
-    private int directMethodsOffset = 0;
-    private int virtualMethodsOffset = 0;
-
     private final int staticFieldCount;
     private final int instanceFieldCount;
     private final int directMethodCount;
     private final int virtualMethodCount;
-
-    @Nullable private AnnotationsDirectory annotationsDirectory;
+    private int instanceFieldsOffset = 0;
+    private int directMethodsOffset = 0;
+    private int virtualMethodsOffset = 0;
+    @Nullable
+    private AnnotationsDirectory annotationsDirectory;
 
     public DexBackedClassDef(@Nonnull DexBackedDexFile dexFile,
                              int classDefOffset) {
@@ -124,10 +124,13 @@ public class DexBackedClassDef extends BaseTypeReference implements ClassDef {
                 @Nonnull
                 @Override
                 public String readItem(int index) {
-                    return dexFile.getType(dexFile.readUshort(interfacesOffset + 4 + (2*index)));
+                    return dexFile.getType(dexFile.readUshort(interfacesOffset + 4 + (2 * index)));
                 }
 
-                @Override public int size() { return size; }
+                @Override
+                public int size() {
+                    return size;
+                }
             };
         }
         return ImmutableSet.of();
@@ -166,7 +169,8 @@ public class DexBackedClassDef extends BaseTypeReference implements ClassDef {
 
                     return new VariableSizeLookaheadIterator<DexBackedField>(dexFile, fieldsStartOffset) {
                         private int count;
-                        @Nullable private FieldReference previousField;
+                        @Nullable
+                        private FieldReference previousField;
                         private int previousIndex;
 
                         @Nullable
@@ -225,7 +229,8 @@ public class DexBackedClassDef extends BaseTypeReference implements ClassDef {
 
                     return new VariableSizeLookaheadIterator<DexBackedField>(dexFile, fieldsStartOffset) {
                         private int count;
-                        @Nullable private FieldReference previousField;
+                        @Nullable
+                        private FieldReference previousField;
                         private int previousIndex;
 
                         @Nullable
@@ -294,7 +299,8 @@ public class DexBackedClassDef extends BaseTypeReference implements ClassDef {
 
                     return new VariableSizeLookaheadIterator<DexBackedMethod>(dexFile, methodsStartOffset) {
                         private int count;
-                        @Nullable private MethodReference previousMethod;
+                        @Nullable
+                        private MethodReference previousMethod;
                         private int previousIndex;
 
                         @Nullable
@@ -351,7 +357,8 @@ public class DexBackedClassDef extends BaseTypeReference implements ClassDef {
                 public Iterator<DexBackedMethod> iterator() {
                     return new VariableSizeLookaheadIterator<DexBackedMethod>(dexFile, methodsStartOffset) {
                         private int count;
-                        @Nullable private MethodReference previousMethod;
+                        @Nullable
+                        private MethodReference previousMethod;
                         private int previousIndex;
 
                         @Nullable

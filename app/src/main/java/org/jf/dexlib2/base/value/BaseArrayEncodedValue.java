@@ -50,16 +50,19 @@ public abstract class BaseArrayEncodedValue implements ArrayEncodedValue {
     @Override
     public boolean equals(@Nullable Object o) {
         if (o instanceof ArrayEncodedValue) {
-            return getValue().equals(((ArrayEncodedValue)o).getValue());
+            return getValue().equals(((ArrayEncodedValue) o).getValue());
         }
         return false;
     }
 
-    @Override public int compareTo(@Nonnull EncodedValue o) {
+    @Override
+    public int compareTo(@Nonnull EncodedValue o) {
         int res = Ints.compare(getValueType(), o.getValueType());
         if (res != 0) return res;
-        return CollectionUtils.compareAsList(getValue(), ((ArrayEncodedValue)o).getValue());
+        return CollectionUtils.compareAsList(getValue(), ((ArrayEncodedValue) o).getValue());
     }
 
-    public int getValueType() { return ValueType.ARRAY; }
+    public int getValueType() {
+        return ValueType.ARRAY;
+    }
 }

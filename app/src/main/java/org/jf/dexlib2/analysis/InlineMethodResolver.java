@@ -50,6 +50,9 @@ public abstract class InlineMethodResolver {
     public static final int VIRTUAL = 0x1; // AccessFlags.PUBLIC.value;
     public static final int DIRECT = 0x2; // AccessFlags.PRIVATE.value;
 
+    protected InlineMethodResolver() {
+    }
+
     @Nonnull
     public static InlineMethodResolver createInlineMethodResolver(int odexVersion) {
         if (odexVersion == 35) {
@@ -61,9 +64,6 @@ public abstract class InlineMethodResolver {
         }
     }
 
-    protected InlineMethodResolver() {
-    }
-
     @Nonnull
     private static Method inlineMethod(int accessFlags, @Nonnull String cls, @Nonnull String name,
                                        @Nonnull String params, @Nonnull String returnType) {
@@ -71,35 +71,35 @@ public abstract class InlineMethodResolver {
         return new ImmutableMethod(cls, name, paramList, returnType, accessFlags, null, null);
     }
 
-    @Nonnull public abstract Method resolveExecuteInline(@Nonnull AnalyzedInstruction instruction);
+    @Nonnull
+    public abstract Method resolveExecuteInline(@Nonnull AnalyzedInstruction instruction);
 
-    private static class InlineMethodResolver_version35 extends InlineMethodResolver
-    {
+    private static class InlineMethodResolver_version35 extends InlineMethodResolver {
         private final Method[] inlineMethods;
 
         public InlineMethodResolver_version35() {
-            inlineMethods = new Method[] {
-                inlineMethod(STATIC, "Lorg/apache/harmony/dalvik/NativeTestTarget;", "emptyInlineMethod", "", "V"),
-                inlineMethod(VIRTUAL, "Ljava/lang/String;", "charAt", "I", "C"),
-                inlineMethod(VIRTUAL, "Ljava/lang/String;", "compareTo", "Ljava/lang/String;", "I"),
-                inlineMethod(VIRTUAL, "Ljava/lang/String;", "equals", "Ljava/lang/Object;", "Z"),
-                inlineMethod(VIRTUAL, "Ljava/lang/String;", "length", "", "I"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "I", "I"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "J", "J"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "F", "F"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "D", "D"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "min", "II", "I"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "max", "II", "I"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "sqrt", "D", "D"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "cos", "D", "D"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "sin", "D", "D")
+            inlineMethods = new Method[]{
+                    inlineMethod(STATIC, "Lorg/apache/harmony/dalvik/NativeTestTarget;", "emptyInlineMethod", "", "V"),
+                    inlineMethod(VIRTUAL, "Ljava/lang/String;", "charAt", "I", "C"),
+                    inlineMethod(VIRTUAL, "Ljava/lang/String;", "compareTo", "Ljava/lang/String;", "I"),
+                    inlineMethod(VIRTUAL, "Ljava/lang/String;", "equals", "Ljava/lang/Object;", "Z"),
+                    inlineMethod(VIRTUAL, "Ljava/lang/String;", "length", "", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "I", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "J", "J"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "F", "F"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "D", "D"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "min", "II", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "max", "II", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "sqrt", "D", "D"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "cos", "D", "D"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "sin", "D", "D")
             };
         }
 
         @Override
         @Nonnull
         public Method resolveExecuteInline(@Nonnull AnalyzedInstruction analyzedInstruction) {
-            InlineIndexInstruction instruction = (InlineIndexInstruction)analyzedInstruction.instruction;
+            InlineIndexInstruction instruction = (InlineIndexInstruction) analyzedInstruction.instruction;
             int inlineIndex = instruction.getInlineIndex();
 
             if (inlineIndex < 0 || inlineIndex >= inlineMethods.length) {
@@ -109,8 +109,7 @@ public abstract class InlineMethodResolver {
         }
     }
 
-    private static class InlineMethodResolver_version36 extends InlineMethodResolver
-    {
+    private static class InlineMethodResolver_version36 extends InlineMethodResolver {
         private final Method[] inlineMethods;
         private final Method indexOfIMethod;
         private final Method indexOfIIMethod;
@@ -129,47 +128,47 @@ public abstract class InlineMethodResolver {
             fastIndexOfMethod = inlineMethod(DIRECT, "Ljava/lang/String;", "fastIndexOf", "II", "I");
             isEmptyMethod = inlineMethod(VIRTUAL, "Ljava/lang/String;", "isEmpty", "", "Z");
 
-            inlineMethods = new Method[] {
-                inlineMethod(STATIC, "Lorg/apache/harmony/dalvik/NativeTestTarget;", "emptyInlineMethod", "", "V"),
-                inlineMethod(VIRTUAL, "Ljava/lang/String;", "charAt", "I", "C"),
-                inlineMethod(VIRTUAL, "Ljava/lang/String;", "compareTo", "Ljava/lang/String;", "I"),
-                inlineMethod(VIRTUAL, "Ljava/lang/String;", "equals", "Ljava/lang/Object;", "Z"),
-                //froyo: deodexUtil.new InlineMethod(VIRTUAL, "Ljava/lang/String;", "indexOf", "I", "I"),
-                //gingerbread: deodexUtil.new InlineMethod(VIRTUAL, "Ljava/lang/String;", "fastIndexOf", "II", "I"),
-                null,
-                //froyo: deodexUtil.new InlineMethod(VIRTUAL, "Ljava/lang/String;", "indexOf", "II", "I"),
-                //gingerbread: deodexUtil.new InlineMethod(VIRTUAL, "Ljava/lang/String;", "isEmpty", "", "Z"),
-                null,
-                inlineMethod(VIRTUAL, "Ljava/lang/String;", "length", "", "I"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "I", "I"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "J", "J"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "F", "F"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "D", "D"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "min", "II", "I"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "max", "II", "I"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "sqrt", "D", "D"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "cos", "D", "D"),
-                inlineMethod(STATIC, "Ljava/lang/Math;", "sin", "D", "D"),
-                inlineMethod(STATIC, "Ljava/lang/Float;", "floatToIntBits", "F", "I"),
-                inlineMethod(STATIC, "Ljava/lang/Float;", "floatToRawIntBits", "F", "I"),
-                inlineMethod(STATIC, "Ljava/lang/Float;", "intBitsToFloat", "I", "F"),
-                inlineMethod(STATIC, "Ljava/lang/Double;", "doubleToLongBits", "D", "J"),
-                inlineMethod(STATIC, "Ljava/lang/Double;", "doubleToRawLongBits", "D", "J"),
-                inlineMethod(STATIC, "Ljava/lang/Double;", "longBitsToDouble", "J", "D"),
-                inlineMethod(STATIC, "Ljava/lang/StrictMath;", "abs", "I", "I"),
-                inlineMethod(STATIC, "Ljava/lang/StrictMath;", "abs", "J", "J"),
-                inlineMethod(STATIC, "Ljava/lang/StrictMath;", "abs", "F", "F"),
-                inlineMethod(STATIC, "Ljava/lang/StrictMath;", "abs", "D", "D"),
-                inlineMethod(STATIC, "Ljava/lang/StrictMath;", "min", "II", "I"),
-                inlineMethod(STATIC, "Ljava/lang/StrictMath;", "max", "II", "I"),
-                inlineMethod(STATIC, "Ljava/lang/StrictMath;", "sqrt", "D", "D"),
+            inlineMethods = new Method[]{
+                    inlineMethod(STATIC, "Lorg/apache/harmony/dalvik/NativeTestTarget;", "emptyInlineMethod", "", "V"),
+                    inlineMethod(VIRTUAL, "Ljava/lang/String;", "charAt", "I", "C"),
+                    inlineMethod(VIRTUAL, "Ljava/lang/String;", "compareTo", "Ljava/lang/String;", "I"),
+                    inlineMethod(VIRTUAL, "Ljava/lang/String;", "equals", "Ljava/lang/Object;", "Z"),
+                    //froyo: deodexUtil.new InlineMethod(VIRTUAL, "Ljava/lang/String;", "indexOf", "I", "I"),
+                    //gingerbread: deodexUtil.new InlineMethod(VIRTUAL, "Ljava/lang/String;", "fastIndexOf", "II", "I"),
+                    null,
+                    //froyo: deodexUtil.new InlineMethod(VIRTUAL, "Ljava/lang/String;", "indexOf", "II", "I"),
+                    //gingerbread: deodexUtil.new InlineMethod(VIRTUAL, "Ljava/lang/String;", "isEmpty", "", "Z"),
+                    null,
+                    inlineMethod(VIRTUAL, "Ljava/lang/String;", "length", "", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "I", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "J", "J"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "F", "F"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "abs", "D", "D"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "min", "II", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "max", "II", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "sqrt", "D", "D"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "cos", "D", "D"),
+                    inlineMethod(STATIC, "Ljava/lang/Math;", "sin", "D", "D"),
+                    inlineMethod(STATIC, "Ljava/lang/Float;", "floatToIntBits", "F", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/Float;", "floatToRawIntBits", "F", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/Float;", "intBitsToFloat", "I", "F"),
+                    inlineMethod(STATIC, "Ljava/lang/Double;", "doubleToLongBits", "D", "J"),
+                    inlineMethod(STATIC, "Ljava/lang/Double;", "doubleToRawLongBits", "D", "J"),
+                    inlineMethod(STATIC, "Ljava/lang/Double;", "longBitsToDouble", "J", "D"),
+                    inlineMethod(STATIC, "Ljava/lang/StrictMath;", "abs", "I", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/StrictMath;", "abs", "J", "J"),
+                    inlineMethod(STATIC, "Ljava/lang/StrictMath;", "abs", "F", "F"),
+                    inlineMethod(STATIC, "Ljava/lang/StrictMath;", "abs", "D", "D"),
+                    inlineMethod(STATIC, "Ljava/lang/StrictMath;", "min", "II", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/StrictMath;", "max", "II", "I"),
+                    inlineMethod(STATIC, "Ljava/lang/StrictMath;", "sqrt", "D", "D"),
             };
         }
 
         @Override
         @Nonnull
         public Method resolveExecuteInline(@Nonnull AnalyzedInstruction analyzedInstruction) {
-            InlineIndexInstruction instruction = (InlineIndexInstruction)analyzedInstruction.instruction;
+            InlineIndexInstruction instruction = (InlineIndexInstruction) analyzedInstruction.instruction;
             int inlineIndex = instruction.getInlineIndex();
 
             if (inlineIndex < 0 || inlineIndex >= inlineMethods.length) {
@@ -177,7 +176,7 @@ public abstract class InlineMethodResolver {
             }
 
             if (inlineIndex == 4) {
-                int parameterCount = ((VariableRegisterInstruction)instruction).getRegisterCount();
+                int parameterCount = ((VariableRegisterInstruction) instruction).getRegisterCount();
                 if (parameterCount == 2) {
                     return indexOfIMethod;
                 } else if (parameterCount == 3) {
@@ -186,7 +185,7 @@ public abstract class InlineMethodResolver {
                     throw new RuntimeException("Could not determine the correct inline method to use");
                 }
             } else if (inlineIndex == 5) {
-                int parameterCount = ((VariableRegisterInstruction)instruction).getRegisterCount();
+                int parameterCount = ((VariableRegisterInstruction) instruction).getRegisterCount();
                 if (parameterCount == 3) {
                     return indexOfIIMethod;
                 } else if (parameterCount == 1) {

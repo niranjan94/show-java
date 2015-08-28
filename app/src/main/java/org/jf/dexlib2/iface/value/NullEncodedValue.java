@@ -40,9 +40,9 @@ import javax.annotation.Nullable;
 public interface NullEncodedValue extends EncodedValue {
     /**
      * Returns a hashcode for this EncodedNullValue.
-     *
+     * <p/>
      * This hashCode is defined to be the following:
-     *
+     * <p/>
      * <pre>
      * {@code
      * int hashCode = 0;
@@ -50,26 +50,29 @@ public interface NullEncodedValue extends EncodedValue {
      *
      * @return The hash code value for this EncodedNullValue
      */
-    @Override int hashCode();
+    @Override
+    int hashCode();
 
     /**
      * Compares this NullEncodedValue to another NullEncodedValue for equality.
-     *
+     * <p/>
      * This NullEncodedValue is always equal to another other NullEncodedValue
      *
      * @param o The object to be compared for equality with this NullEncodedValue
      * @return true if the specified object is equal to this NullEncodedValue
      */
-    @Override boolean equals(@Nullable Object o);
+    @Override
+    boolean equals(@Nullable Object o);
 
     /**
      * Compare this NullEncodedValue to another EncodedValue.
-     *
+     * <p/>
      * The comparison is first done on the return values of getValueType(). If the other value is another
      * NullEncodedValue, then 0 is returned.
      *
      * @param o The EncodedValue to compare with this NullEncodedValue
      * @return An integer representing the result of the comparison
      */
-    @Override int compareTo(@Nonnull EncodedValue o);
+    @Override
+    int compareTo(@Nonnull EncodedValue o);
 }

@@ -44,7 +44,8 @@ public class BuilderInstruction21c extends BuilderInstruction implements Instruc
     public static final Format FORMAT = Format.Format21c;
 
     protected final int registerA;
-    @Nonnull protected final Reference reference;
+    @Nonnull
+    protected final Reference reference;
 
     public BuilderInstruction21c(@Nonnull Opcode opcode,
                                  int registerA,
@@ -54,9 +55,24 @@ public class BuilderInstruction21c extends BuilderInstruction implements Instruc
         this.reference = reference;
     }
 
-    @Override public int getRegisterA() { return registerA; }
-    @Nonnull @Override public Reference getReference() { return reference; }
-    @Override public int getReferenceType() { return opcode.referenceType; }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Nonnull
+    @Override
+    public Reference getReference() {
+        return reference;
+    }
+
+    @Override
+    public int getReferenceType() {
+        return opcode.referenceType;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

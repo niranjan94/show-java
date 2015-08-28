@@ -40,7 +40,8 @@ import org.jf.dexlib2.iface.reference.MethodReference;
 import javax.annotation.Nonnull;
 
 public class DexBackedMethodEncodedValue extends BaseMethodEncodedValue {
-    @Nonnull public final DexBackedDexFile dexFile;
+    @Nonnull
+    public final DexBackedDexFile dexFile;
     private final int MethodIndex;
 
     public DexBackedMethodEncodedValue(@Nonnull DexReader reader, int valueArg) {
@@ -48,7 +49,9 @@ public class DexBackedMethodEncodedValue extends BaseMethodEncodedValue {
         MethodIndex = reader.readSizedSmallUint(valueArg + 1);
     }
 
-    @Nonnull @Override public MethodReference getValue() {
+    @Nonnull
+    @Override
+    public MethodReference getValue() {
         return new DexBackedMethodReference(dexFile, MethodIndex);
     }
 }

@@ -1,52 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="60dip">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="60dip">
 
-	<ImageView
-		android:id="@+id/pkg_img"
-		android:layout_width="40dip"
-		android:layout_height="40dip"
-		android:layout_margin="10dp"
-		android:scaleType="fitCenter"/>
+    <ImageView
+        android:id="@+id/pkg_img"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
+        android:layout_margin="10dp"
+        android:scaleType="fitCenter" />
 
-	<TextView
-		android:id="@+id/pkg_name"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignWithParentIfMissing="true"
-		android:layout_toRightOf="@id/pkg_img"
-		android:paddingRight="6dip"
-		android:paddingTop="6dip"
-		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:text="Amrita Info Desk v2"/>
+    <TextView
+        android:id="@+id/pkg_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_toRightOf="@id/pkg_img"
+        android:paddingRight="6dip"
+        android:paddingTop="6dip"
+        android:text="Amrita Info Desk v2"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-	<TextView
-		android:id="@+id/pkg_id"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text=" "
-		android:visibility="gone"/>
+    <TextView
+        android:id="@+id/pkg_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:visibility="gone" />
 
-	<TextView
-		android:id="@+id/pkg_dir"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text=" "
-		android:visibility="gone"/>
+    <TextView
+        android:id="@+id/pkg_dir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:visibility="gone" />
 
-	<TextView
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignWithParentIfMissing="true"
-		android:layout_toRightOf="@id/pkg_img"
-		android:paddingRight="6dp"
-		android:paddingTop="2dp"
-		android:text="Version 1.2b"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-		android:layout_below="@id/pkg_name"
-		android:id="@+id/pkg_version"/>
+    <TextView
+        android:id="@+id/pkg_version"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@id/pkg_name"
+        android:layout_toRightOf="@id/pkg_img"
+        android:paddingRight="6dp"
+        android:paddingTop="2dp"
+        android:text="Version 1.2b"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
 

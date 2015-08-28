@@ -43,27 +43,30 @@ public interface FieldReference extends Reference, Comparable<FieldReference> {
      *
      * @return The type of the class that defines the referenced field
      */
-    @Nonnull String getDefiningClass();
+    @Nonnull
+    String getDefiningClass();
 
     /**
      * Gets the name of the referenced field.
      *
      * @return The name of the referenced field
      */
-    @Nonnull String getName();
+    @Nonnull
+    String getName();
 
     /**
      * Gets the type of the referenced field.
      *
      * @return The type of the referenced field
      */
-    @Nonnull String getType();
+    @Nonnull
+    String getType();
 
     /**
      * Returns a hashcode for this FieldReference.
-     *
+     * <p/>
      * This hashCode is defined to be the following:
-     *
+     * <p/>
      * <pre>
      * {@code
      * int hashCode =  getDefiningClass().hashCode();
@@ -73,27 +76,30 @@ public interface FieldReference extends Reference, Comparable<FieldReference> {
      *
      * @return The hash code value for this FieldReference
      */
-    @Override int hashCode();
+    @Override
+    int hashCode();
 
     /**
      * Compares this FieldReference to another FieldReference for equality.
-     *
+     * <p/>
      * This FieldReference is equal to another FieldReference if all of it's "fields" are equal. That is, if
      * the return values of getDefiningClass(), getName() and getType() are all equal.
      *
      * @param o The object to be compared for equality with this FieldReference
      * @return true if the specified object is equal to this FieldReference
      */
-    @Override boolean equals(@Nullable Object o);
+    @Override
+    boolean equals(@Nullable Object o);
 
     /**
      * Compare this FieldReference to another FieldReference.
-     *
+     * <p/>
      * The comparison is based on the comparison of the return values of getDefiningClass(), getName() and
      * getType(), in that order.
      *
      * @param o The FieldReference to compare with this FieldReference
      * @return An integer representing the result of the comparison
      */
-    @Override int compareTo(@Nonnull FieldReference o);
+    @Override
+    int compareTo(@Nonnull FieldReference o);
 }

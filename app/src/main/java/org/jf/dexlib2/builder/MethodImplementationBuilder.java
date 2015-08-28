@@ -60,7 +60,7 @@ public class MethodImplementationBuilder {
 
     /**
      * Adds a new named label at the current location.
-     *
+     * <p/>
      * Any previous unplaced references to a label of this name will now refer to this label/location
      *
      * @param name The name of the label to add
@@ -86,7 +86,7 @@ public class MethodImplementationBuilder {
 
     /**
      * Get a reference to a label with the given name.
-     *
+     * <p/>
      * If a label with that name has not been added yet, a new one is created, but is left
      * in an unplaced state. It is assumed that addLabel(name) will be called at a later
      * point to define the location of the label.
@@ -149,6 +149,6 @@ public class MethodImplementationBuilder {
 
     public void addInstruction(@Nullable BuilderInstruction instruction) {
         impl.addInstruction(instruction);
-        currentLocation = impl.instructionList.get(impl.instructionList.size()-1);
+        currentLocation = impl.instructionList.get(impl.instructionList.size() - 1);
     }
 }

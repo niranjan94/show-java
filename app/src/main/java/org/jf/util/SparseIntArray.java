@@ -37,6 +37,10 @@ package org.jf.util;
  * than using a HashMap to map Integers to Integers.
  */
 public class SparseIntArray {
+    private int[] mKeys;
+    private int[] mValues;
+    private int mSize;
+
     /**
      * Creates a new SparseIntArray containing no mappings.
      */
@@ -53,6 +57,26 @@ public class SparseIntArray {
         mKeys = new int[initialCapacity];
         mValues = new int[initialCapacity];
         mSize = 0;
+    }
+
+    private static int binarySearch(int[] a, int start, int len, int key) {
+        int high = start + len, low = start - 1, guess;
+
+        while (high - low > 1) {
+            guess = (high + low) / 2;
+
+            if (a[guess] < key)
+                low = guess;
+            else
+                high = guess;
+        }
+
+        if (high == start + len)
+            return ~(start + len);
+        else if (a[high] == key)
+            return high;
+        else
+            return ~high;
     }
 
     /**
@@ -241,28 +265,4 @@ public class SparseIntArray {
         mValues[pos] = value;
         mSize = pos + 1;
     }
-
-    private static int binarySearch(int[] a, int start, int len, int key) {
-        int high = start + len, low = start - 1, guess;
-
-        while (high - low > 1) {
-            guess = (high + low) / 2;
-
-            if (a[guess] < key)
-                low = guess;
-            else
-                high = guess;
-        }
-
-        if (high == start + len)
-            return ~(start + len);
-        else if (a[high] == key)
-            return high;
-        else
-            return ~high;
-    }
-
-    private int[] mKeys;
-    private int[] mValues;
-    private int mSize;
 }

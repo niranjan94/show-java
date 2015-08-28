@@ -7,9 +7,11 @@ import org.jf.dexlib2.iface.instruction.SwitchElement;
 import javax.annotation.Nonnull;
 
 public class BuilderSwitchElement implements SwitchElement {
-    @Nonnull BuilderSwitchPayload parent;
     private final int key;
-    @Nonnull private final Label target;
+    @Nonnull
+    private final Label target;
+    @Nonnull
+    BuilderSwitchPayload parent;
 
     public BuilderSwitchElement(@Nonnull BuilderSwitchPayload parent,
                                 int key,
@@ -19,11 +21,13 @@ public class BuilderSwitchElement implements SwitchElement {
         this.target = target;
     }
 
-    @Override public int getKey() {
+    @Override
+    public int getKey() {
         return key;
     }
 
-    @Override public int getOffset() {
+    @Override
+    public int getOffset() {
         return target.getCodeAddress() - parent.getReferrer().getCodeAddress();
     }
 

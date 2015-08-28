@@ -47,13 +47,14 @@ public class ImmutableArrayPayload extends ImmutableInstruction implements Array
     public static final Opcode OPCODE = Opcode.ARRAY_PAYLOAD;
 
     protected final int elementWidth;
-    @Nonnull protected final ImmutableList<Number> arrayElements;
+    @Nonnull
+    protected final ImmutableList<Number> arrayElements;
 
     public ImmutableArrayPayload(int elementWidth,
                                  @Nullable List<Number> arrayElements) {
         super(OPCODE);
         this.elementWidth = elementWidth;
-        this.arrayElements = arrayElements==null ? ImmutableList.<Number>of() : ImmutableList.copyOf(arrayElements);
+        this.arrayElements = arrayElements == null ? ImmutableList.<Number>of() : ImmutableList.copyOf(arrayElements);
     }
 
     public ImmutableArrayPayload(int elementWidth,
@@ -68,16 +69,31 @@ public class ImmutableArrayPayload extends ImmutableInstruction implements Array
     @Nonnull
     public static ImmutableArrayPayload of(ArrayPayload instruction) {
         if (instruction instanceof ImmutableArrayPayload) {
-            return (ImmutableArrayPayload)instruction;
+            return (ImmutableArrayPayload) instruction;
         }
         return new ImmutableArrayPayload(
                 instruction.getElementWidth(),
                 instruction.getArrayElements());
     }
 
-    @Override public int getElementWidth() { return elementWidth; }
-    @Nonnull @Override public List<Number> getArrayElements() { return arrayElements; }
+    @Override
+    public int getElementWidth() {
+        return elementWidth;
+    }
 
-    @Override public int getCodeUnits() { return 4 + (elementWidth * arrayElements.size() + 1) / 2; }
-    @Override public Format getFormat() { return OPCODE.format; }
+    @Nonnull
+    @Override
+    public List<Number> getArrayElements() {
+        return arrayElements;
+    }
+
+    @Override
+    public int getCodeUnits() {
+        return 4 + (elementWidth * arrayElements.size() + 1) / 2;
+    }
+
+    @Override
+    public Format getFormat() {
+        return OPCODE.format;
+    }
 }

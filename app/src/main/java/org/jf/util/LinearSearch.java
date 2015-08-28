@@ -38,17 +38,17 @@ public class LinearSearch {
     /**
      * Performs a linear search in a sorted list for key, starting at initialGuess
      *
-     * @param list The sorted list to search
-     * @param comparator The comparator to use
-     * @param key The key to search for
+     * @param list         The sorted list to search
+     * @param comparator   The comparator to use
+     * @param key          The key to search for
      * @param initialGuess An initial guess of the location.
      * @return If found, the index of the item. If not found, -return + 1 is the index at which the item would be
-     *         inserted
+     * inserted
      */
     public static <T> int linearSearch(List<? extends T> list, Comparator<T> comparator, T key, int initialGuess) {
         int guess = initialGuess;
         if (guess >= list.size()) {
-            guess = list.size()-1;
+            guess = list.size() - 1;
         }
         int comparison = comparator.compare(list.get(guess), key);
         if (comparison == 0) {
@@ -62,11 +62,11 @@ public class LinearSearch {
                     return guess;
                 }
                 if (comparison > 0) {
-                    return -(guess+1);
+                    return -(guess + 1);
                 }
                 guess++;
             }
-            return -(list.size()+1);
+            return -(list.size() + 1);
         } else {
             guess--;
             while (guess >= 0) {
@@ -75,7 +75,7 @@ public class LinearSearch {
                     return guess;
                 }
                 if (comparison < 0) {
-                    return -(guess+2);
+                    return -(guess + 2);
                 }
                 guess--;
             }

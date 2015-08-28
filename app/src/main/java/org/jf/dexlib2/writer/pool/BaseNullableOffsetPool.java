@@ -38,7 +38,8 @@ import javax.annotation.Nullable;
 
 public abstract class BaseNullableOffsetPool<Key> extends BaseOffsetPool<Key>
         implements NullableOffsetSection<Key> {
-    @Override public int getNullableItemOffset(@Nullable Key key) {
+    @Override
+    public int getNullableItemOffset(@Nullable Key key) {
         if (key == null) {
             return DexWriter.NO_OFFSET;
         }

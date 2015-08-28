@@ -63,12 +63,12 @@ public class ExceptionHandler implements java.lang.Thread.UncaughtExceptionHandl
         errorReport.append(Build.VERSION.INCREMENTAL);
         errorReport.append(LINE_SEPARATOR);
 
-        Log.e("com.njlabs.showjava",errorReport.toString());
+        Log.e("com.njlabs.showjava", errorReport.toString());
 
-        Toast.makeText(myContext,"There was an error decompiling this app. Showing incomplete source.",Toast.LENGTH_LONG).show();
+        Toast.makeText(myContext, "There was an error decompiling this app. Showing incomplete source.", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(myContext, JavaExplorer.class);
-        intent.putExtra("java_source_dir",sourceDir);
-        intent.putExtra("package_id",packageID);
+        intent.putExtra("java_source_dir", sourceDir);
+        intent.putExtra("package_id", packageID);
         myContext.startActivity(intent);
 
         android.os.Process.killProcess(android.os.Process.myPid());

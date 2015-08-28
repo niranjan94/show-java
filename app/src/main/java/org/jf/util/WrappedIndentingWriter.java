@@ -42,30 +42,42 @@ import java.io.Writer;
  * line.
  */
 public final class WrappedIndentingWriter extends FilterWriter {
-    /** null-ok; optional prefix for every line */
+    /**
+     * null-ok; optional prefix for every line
+     */
     private final String prefix;
 
-    /** &gt; 0; the maximum output width */
+    /**
+     * &gt; 0; the maximum output width
+     */
     private final int width;
 
-    /** &gt; 0; the maximum indent */
+    /**
+     * &gt; 0; the maximum indent
+     */
     private final int maxIndent;
 
-    /** &gt;= 0; current output column (zero-based) */
+    /**
+     * &gt;= 0; current output column (zero-based)
+     */
     private int column;
 
-    /** whether indent spaces are currently being collected */
+    /**
+     * whether indent spaces are currently being collected
+     */
     private boolean collectingIndent;
 
-    /** &gt;= 0; current indent amount */
+    /**
+     * &gt;= 0; current indent amount
+     */
     private int indent;
 
     /**
      * Constructs an instance.
      *
-     * @param out non-null; writer to send final output to
-     * @param width &gt;= 0; the maximum output width (not including
-     * <code>prefix</code>), or <code>0</code> for no maximum
+     * @param out    non-null; writer to send final output to
+     * @param width  &gt;= 0; the maximum output width (not including
+     *               <code>prefix</code>), or <code>0</code> for no maximum
      * @param prefix non-null; the prefix for each line
      */
     public WrappedIndentingWriter(Writer out, int width, String prefix) {
@@ -93,15 +105,17 @@ public final class WrappedIndentingWriter extends FilterWriter {
     /**
      * Constructs a no-prefix instance.
      *
-     * @param out non-null; writer to send final output to
+     * @param out   non-null; writer to send final output to
      * @param width &gt;= 0; the maximum output width (not including
-     * <code>prefix</code>), or <code>0</code> for no maximum
+     *              <code>prefix</code>), or <code>0</code> for no maximum
      */
     public WrappedIndentingWriter(Writer out, int width) {
         this(out, width, "");
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(int c) throws IOException {
         synchronized (lock) {
@@ -149,7 +163,9 @@ public final class WrappedIndentingWriter extends FilterWriter {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
         synchronized (lock) {
@@ -161,7 +177,9 @@ public final class WrappedIndentingWriter extends FilterWriter {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(String str, int off, int len) throws IOException {
         synchronized (lock) {

@@ -44,36 +44,48 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class MethodRewriter implements Rewriter<Method> {
-    @Nonnull protected final Rewriters rewriters;
+    @Nonnull
+    protected final Rewriters rewriters;
 
     public MethodRewriter(@Nonnull Rewriters rewriters) {
         this.rewriters = rewriters;
     }
 
-    @Nonnull @Override public Method rewrite(@Nonnull Method value) {
+    @Nonnull
+    @Override
+    public Method rewrite(@Nonnull Method value) {
         return new RewrittenMethod(value);
     }
 
     protected class RewrittenMethod extends BaseMethodReference implements Method {
-        @Nonnull protected Method method;
+        @Nonnull
+        protected Method method;
 
         public RewrittenMethod(@Nonnull Method method) {
             this.method = method;
         }
 
-        @Override @Nonnull public String getDefiningClass() {
+        @Override
+        @Nonnull
+        public String getDefiningClass() {
             return rewriters.getMethodReferenceRewriter().rewrite(method).getDefiningClass();
         }
 
-        @Override @Nonnull public String getName() {
+        @Override
+        @Nonnull
+        public String getName() {
             return rewriters.getMethodReferenceRewriter().rewrite(method).getName();
         }
 
-        @Override @Nonnull public List<? extends CharSequence> getParameterTypes() {
+        @Override
+        @Nonnull
+        public List<? extends CharSequence> getParameterTypes() {
             return rewriters.getMethodReferenceRewriter().rewrite(method).getParameterTypes();
         }
 
-        @Override @Nonnull public List<? extends MethodParameter> getParameters() {
+        @Override
+        @Nonnull
+        public List<? extends MethodParameter> getParameters() {
             // We can't use the MethodReferenceRewriter to rewrite the parameters, because we would lose
             // parameter names and annotations. If a method rewrite involves changing parameters, it needs
             // to be handled here as well as in the MethodReferenceRewriter
@@ -81,19 +93,26 @@ public class MethodRewriter implements Rewriter<Method> {
             return RewriterUtils.rewriteList(rewriters.getMethodParameterRewriter(), method.getParameters());
         }
 
-        @Override @Nonnull public String getReturnType() {
+        @Override
+        @Nonnull
+        public String getReturnType() {
             return rewriters.getMethodReferenceRewriter().rewrite(method).getReturnType();
         }
 
-        @Override public int getAccessFlags() {
+        @Override
+        public int getAccessFlags() {
             return method.getAccessFlags();
         }
 
-        @Override @Nonnull public Set<? extends Annotation> getAnnotations() {
+        @Override
+        @Nonnull
+        public Set<? extends Annotation> getAnnotations() {
             return RewriterUtils.rewriteSet(rewriters.getAnnotationRewriter(), method.getAnnotations());
         }
 
-        @Override @Nullable public MethodImplementation getImplementation() {
+        @Override
+        @Nullable
+        public MethodImplementation getImplementation() {
             return RewriterUtils.rewriteNullable(rewriters.getMethodImplementationRewriter(),
                     method.getImplementation());
         }

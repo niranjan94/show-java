@@ -54,7 +54,7 @@ public class ImmutableInstruction31t extends ImmutableInstruction implements Ins
 
     public static ImmutableInstruction31t of(Instruction31t instruction) {
         if (instruction instanceof ImmutableInstruction31t) {
-            return (ImmutableInstruction31t)instruction;
+            return (ImmutableInstruction31t) instruction;
         }
         return new ImmutableInstruction31t(
                 instruction.getOpcode(),
@@ -62,9 +62,19 @@ public class ImmutableInstruction31t extends ImmutableInstruction implements Ins
                 instruction.getCodeOffset());
     }
 
-    @Override public int getRegisterA() { return registerA; }
-    @Override public int getCodeOffset() { return codeOffset; }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getCodeOffset() {
+        return codeOffset;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }
 

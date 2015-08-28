@@ -28,13 +28,13 @@ public class JavaExtractor extends ProcessServiceHelper {
         this.javaSourceOutputDir = processService.javaSourceOutputDir;
     }
 
-    public void extract(){
+    public void extract() {
 
         broadcastStatus("jar2java");
         File JarInput;
 
-        Ln.d("jar location:" + sourceOutputDir + "/" + packageName +".jar");
-        JarInput = new File(sourceOutputDir+"/"+ packageName +".jar");
+        Ln.d("jar location:" + sourceOutputDir + "/" + packageName + ".jar");
+        JarInput = new File(sourceOutputDir + "/" + packageName + ".jar");
         final File JavaOutputDir = new File(javaSourceOutputDir);
 
         if (!JavaOutputDir.isDirectory()) {
@@ -42,14 +42,13 @@ public class JavaExtractor extends ProcessServiceHelper {
         }
 
         processService.javaSourceOutputDir = JavaOutputDir.toString();
-        String[] args = { JarInput.toString(), "--outputdir", JavaOutputDir.toString() };
+        String[] args = {JarInput.toString(), "--outputdir", JavaOutputDir.toString()};
         GetOptParser getOptParser = new GetOptParser();
 
         Options options = null;
         try {
             options = getOptParser.parse(args, OptionsImpl.getFactory());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Crashlytics.logException(e);
         }
 
@@ -57,14 +56,13 @@ public class JavaExtractor extends ProcessServiceHelper {
         final String path = options != null ? options.getFileName() : null;
 
         ThreadGroup group = new ThreadGroup("Jar 2 Java Group");
-        Thread javaExtractionThread = new Thread(group, new Runnable(){
+        Thread javaExtractionThread = new Thread(group, new Runnable() {
             @Override
-            public void run(){
+            public void run() {
                 boolean javaError = false;
                 try {
                     Main.doJar(dcCommonState, path);
-                }
-                catch(Exception | StackOverflowError e) {
+                } catch (Exception | StackOverflowError e) {
                     Ln.e(e);
                     javaError = true;
                 }
@@ -77,7 +75,7 @@ public class JavaExtractor extends ProcessServiceHelper {
         javaExtractionThread.start();
     }
 
-    private void startXMLExtractor(boolean hasJava){
+    private void startXMLExtractor(boolean hasJava) {
         SourceInfo.setjavaSourceStatus(processService, hasJava);
         ((new ResourcesExtractor(processService))).extract();
     }

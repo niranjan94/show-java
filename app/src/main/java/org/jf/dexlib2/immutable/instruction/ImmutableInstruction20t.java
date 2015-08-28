@@ -51,13 +51,20 @@ public class ImmutableInstruction20t extends ImmutableInstruction implements Ins
 
     public static ImmutableInstruction20t of(Instruction20t instruction) {
         if (instruction instanceof ImmutableInstruction20t) {
-            return (ImmutableInstruction20t)instruction;
+            return (ImmutableInstruction20t) instruction;
         }
         return new ImmutableInstruction20t(
                 instruction.getOpcode(),
                 instruction.getCodeOffset());
     }
 
-    @Override public int getCodeOffset() { return codeOffset; }
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getCodeOffset() {
+        return codeOffset;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

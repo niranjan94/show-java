@@ -50,13 +50,32 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ImmutableMethod extends BaseMethodReference implements Method {
-    @Nonnull protected final String definingClass;
-    @Nonnull protected final String name;
-    @Nonnull protected final ImmutableList<? extends ImmutableMethodParameter> parameters;
-    @Nonnull protected final String returnType;
+    private static final ImmutableConverter<ImmutableMethod, Method> CONVERTER =
+            new ImmutableConverter<ImmutableMethod, Method>() {
+                @Override
+                protected boolean isImmutable(@Nonnull Method item) {
+                    return item instanceof ImmutableMethod;
+                }
+
+                @Nonnull
+                @Override
+                protected ImmutableMethod makeImmutable(@Nonnull Method item) {
+                    return ImmutableMethod.of(item);
+                }
+            };
+    @Nonnull
+    protected final String definingClass;
+    @Nonnull
+    protected final String name;
+    @Nonnull
+    protected final ImmutableList<? extends ImmutableMethodParameter> parameters;
+    @Nonnull
+    protected final String returnType;
     protected final int accessFlags;
-    @Nonnull protected final ImmutableSet<? extends ImmutableAnnotation> annotations;
-    @Nullable protected final ImmutableMethodImplementation methodImplementation;
+    @Nonnull
+    protected final ImmutableSet<? extends ImmutableAnnotation> annotations;
+    @Nullable
+    protected final ImmutableMethodImplementation methodImplementation;
 
     public ImmutableMethod(@Nonnull String definingClass,
                            @Nonnull String name,
@@ -92,7 +111,7 @@ public class ImmutableMethod extends BaseMethodReference implements Method {
 
     public static ImmutableMethod of(Method method) {
         if (method instanceof ImmutableMethod) {
-            return (ImmutableMethod)method;
+            return (ImmutableMethod) method;
         }
         return new ImmutableMethod(
                 method.getDefiningClass(),
@@ -104,31 +123,55 @@ public class ImmutableMethod extends BaseMethodReference implements Method {
                 method.getImplementation());
     }
 
-    @Override @Nonnull public String getDefiningClass() { return definingClass; }
-    @Override @Nonnull public String getName() { return name; }
-    @Override @Nonnull public ImmutableList<? extends CharSequence> getParameterTypes() { return parameters; }
-    @Override @Nonnull public ImmutableList<? extends ImmutableMethodParameter> getParameters() { return parameters; }
-    @Override @Nonnull public String getReturnType() { return returnType; }
-    @Override public int getAccessFlags() { return accessFlags; }
-    @Override @Nonnull public ImmutableSet<? extends ImmutableAnnotation> getAnnotations() { return annotations; }
-    @Override @Nullable public ImmutableMethodImplementation getImplementation() { return methodImplementation; }
-
     @Nonnull
     public static ImmutableSortedSet<ImmutableMethod> immutableSetOf(@Nullable Iterable<? extends Method> list) {
         return CONVERTER.toSortedSet(Ordering.natural(), list);
     }
 
-    private static final ImmutableConverter<ImmutableMethod, Method> CONVERTER =
-            new ImmutableConverter<ImmutableMethod, Method>() {
-                @Override
-                protected boolean isImmutable(@Nonnull Method item) {
-                    return item instanceof ImmutableMethod;
-                }
+    @Override
+    @Nonnull
+    public String getDefiningClass() {
+        return definingClass;
+    }
 
-                @Nonnull
-                @Override
-                protected ImmutableMethod makeImmutable(@Nonnull Method item) {
-                    return ImmutableMethod.of(item);
-                }
-            };
+    @Override
+    @Nonnull
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    @Nonnull
+    public ImmutableList<? extends CharSequence> getParameterTypes() {
+        return parameters;
+    }
+
+    @Override
+    @Nonnull
+    public ImmutableList<? extends ImmutableMethodParameter> getParameters() {
+        return parameters;
+    }
+
+    @Override
+    @Nonnull
+    public String getReturnType() {
+        return returnType;
+    }
+
+    @Override
+    public int getAccessFlags() {
+        return accessFlags;
+    }
+
+    @Override
+    @Nonnull
+    public ImmutableSet<? extends ImmutableAnnotation> getAnnotations() {
+        return annotations;
+    }
+
+    @Override
+    @Nullable
+    public ImmutableMethodImplementation getImplementation() {
+        return methodImplementation;
+    }
 }

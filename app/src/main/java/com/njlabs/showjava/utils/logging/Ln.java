@@ -9,11 +9,12 @@ public final class Ln {
      * lnImpl is initially set to LnImpl() with sensible defaults, then replaced
      * by whatever binding you choose during guice static injection pass.
      */
-    @SuppressWarnings(value="MS_SHOULD_BE_FINAL")
+    @SuppressWarnings(value = "MS_SHOULD_BE_FINAL")
 
     protected static LnInterface lnImpl = new LnImpl();
 
-    private Ln() {}
+    private Ln() {
+    }
 
     public static int v(Throwable t) {
         return lnImpl.v(t);
@@ -23,8 +24,8 @@ public final class Ln {
         return lnImpl.v(s1, args);
     }
 
-    public static int v(Throwable throwable, Object s1, Object... args ) {
-        return lnImpl.v(throwable,s1,args);
+    public static int v(Throwable throwable, Object s1, Object... args) {
+        return lnImpl.v(throwable, s1, args);
     }
 
     public static int d(Throwable t) {
@@ -32,7 +33,7 @@ public final class Ln {
     }
 
     public static int d(Object s1, Object... args) {
-        return lnImpl.d(s1,args);
+        return lnImpl.d(s1, args);
     }
 
     public static int d(Throwable throwable, Object s1, Object... args) {
@@ -43,7 +44,7 @@ public final class Ln {
         return lnImpl.i(t);
     }
 
-    public static int i( Object s1, Object... args) {
+    public static int i(Object s1, Object... args) {
         return lnImpl.i(s1, args);
     }
 
@@ -55,24 +56,24 @@ public final class Ln {
         return lnImpl.w(t);
     }
 
-    public static int w( Object s1, Object... args) {
-        return lnImpl.w(s1,args);
+    public static int w(Object s1, Object... args) {
+        return lnImpl.w(s1, args);
     }
 
-    public static int w( Throwable throwable, Object s1, Object... args) {
-        return lnImpl.w(throwable,s1,args);
+    public static int w(Throwable throwable, Object s1, Object... args) {
+        return lnImpl.w(throwable, s1, args);
     }
 
     public static int e(Throwable t) {
         return lnImpl.e(t);
     }
 
-    public static int e( Object s1, Object... args) {
-        return lnImpl.e(s1,args);
+    public static int e(Object s1, Object... args) {
+        return lnImpl.e(s1, args);
     }
 
-    public static int e( Throwable throwable, Object s1, Object... args) {
-        return lnImpl.e(throwable,s1,args);
+    public static int e(Throwable throwable, Object s1, Object... args) {
+        return lnImpl.e(throwable, s1, args);
     }
 
     public static boolean isDebugEnabled() {
@@ -91,7 +92,7 @@ public final class Ln {
         lnImpl.setLoggingLevel(level);
     }
 
-    public static String logLevelToString( int loglevel ) {
+    public static String logLevelToString(int loglevel) {
         return lnImpl.logLevelToString(loglevel);
     }
 }

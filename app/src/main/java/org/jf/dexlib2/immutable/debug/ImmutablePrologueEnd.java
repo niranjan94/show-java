@@ -44,10 +44,13 @@ public class ImmutablePrologueEnd extends ImmutableDebugItem implements Prologue
     @Nonnull
     public static ImmutablePrologueEnd of(@Nonnull PrologueEnd prologueEnd) {
         if (prologueEnd instanceof ImmutablePrologueEnd) {
-            return (ImmutablePrologueEnd)prologueEnd;
+            return (ImmutablePrologueEnd) prologueEnd;
         }
         return new ImmutablePrologueEnd(prologueEnd.getCodeAddress());
     }
 
-    @Override public int getDebugItemType() { return DebugItemType.PROLOGUE_END; }
+    @Override
+    public int getDebugItemType() {
+        return DebugItemType.PROLOGUE_END;
+    }
 }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AppProcessActivity" >
+    tools:context=".AppProcessActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/current_package_name"
@@ -38,10 +38,10 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
-            android:text="Getting Ready"
-            android:textAllCaps="false"
             android:ellipsize="none"
             android:singleLine="false"
+            android:text="Getting Ready"
+            android:textAllCaps="false"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/grey_400" />
     </LinearLayout>
@@ -52,7 +52,7 @@
         android:layout_height="100dp"
         android:layout_above="@+id/linearLayout1"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/gear_progress_left"

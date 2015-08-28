@@ -39,7 +39,8 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 public class DexBackedAnnotation extends BaseAnnotation {
-    @Nonnull public final DexBackedDexFile dexFile;
+    @Nonnull
+    public final DexBackedDexFile dexFile;
 
     public final int visibility;
     public final int typeIndex;
@@ -55,8 +56,16 @@ public class DexBackedAnnotation extends BaseAnnotation {
         this.elementsOffset = reader.getOffset();
     }
 
-    @Override public int getVisibility() { return visibility; }
-    @Nonnull @Override public String getType() { return dexFile.getType(typeIndex); }
+    @Override
+    public int getVisibility() {
+        return visibility;
+    }
+
+    @Nonnull
+    @Override
+    public String getType() {
+        return dexFile.getType(typeIndex);
+    }
 
     @Nonnull
     @Override

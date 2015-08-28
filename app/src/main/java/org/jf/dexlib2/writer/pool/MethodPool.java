@@ -38,9 +38,12 @@ import javax.annotation.Nonnull;
 
 public class MethodPool extends BaseIndexPool<MethodReference>
         implements MethodSection<CharSequence, CharSequence, ProtoPool.Key, MethodReference, PoolMethod> {
-    @Nonnull private final StringPool stringPool;
-    @Nonnull private final TypePool typePool;
-    @Nonnull private final ProtoPool protoPool;
+    @Nonnull
+    private final StringPool stringPool;
+    @Nonnull
+    private final TypePool typePool;
+    @Nonnull
+    private final ProtoPool protoPool;
 
     public MethodPool(@Nonnull StringPool stringPool, @Nonnull TypePool typePool,
                       @Nonnull ProtoPool protoPool) {
@@ -58,23 +61,32 @@ public class MethodPool extends BaseIndexPool<MethodReference>
         }
     }
 
-    @Nonnull @Override public CharSequence getDefiningClass(@Nonnull MethodReference methodReference) {
+    @Nonnull
+    @Override
+    public CharSequence getDefiningClass(@Nonnull MethodReference methodReference) {
         return methodReference.getDefiningClass();
     }
 
-    @Nonnull @Override public ProtoPool.Key getPrototype(@Nonnull MethodReference methodReference) {
+    @Nonnull
+    @Override
+    public ProtoPool.Key getPrototype(@Nonnull MethodReference methodReference) {
         return new ProtoPool.Key(methodReference);
     }
 
-    @Nonnull @Override public ProtoPool.Key getPrototype(@Nonnull PoolMethod poolMethod) {
+    @Nonnull
+    @Override
+    public ProtoPool.Key getPrototype(@Nonnull PoolMethod poolMethod) {
         return new ProtoPool.Key(poolMethod);
     }
 
-    @Nonnull @Override public CharSequence getName(@Nonnull MethodReference methodReference) {
+    @Nonnull
+    @Override
+    public CharSequence getName(@Nonnull MethodReference methodReference) {
         return methodReference.getName();
     }
 
-    @Override public int getMethodIndex(@Nonnull PoolMethod poolMethod) {
+    @Override
+    public int getMethodIndex(@Nonnull PoolMethod poolMethod) {
         return getItemIndex(poolMethod);
     }
 }

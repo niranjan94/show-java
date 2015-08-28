@@ -45,5 +45,8 @@ public class BuilderInstruction10x extends BuilderInstruction implements Instruc
         super(opcode);
     }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

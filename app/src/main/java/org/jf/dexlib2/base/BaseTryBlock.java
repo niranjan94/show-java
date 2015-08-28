@@ -35,9 +35,10 @@ import org.jf.dexlib2.iface.ExceptionHandler;
 import org.jf.dexlib2.iface.TryBlock;
 
 public abstract class BaseTryBlock<EH extends ExceptionHandler> implements TryBlock<EH> {
-    @Override public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (o instanceof TryBlock) {
-            TryBlock other = (TryBlock)o;
+            TryBlock other = (TryBlock) o;
             return getStartCodeAddress() == other.getStartCodeAddress() &&
                     getCodeUnitCount() == other.getCodeUnitCount() &&
                     getExceptionHandlers().equals(other.getExceptionHandlers());

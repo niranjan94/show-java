@@ -54,7 +54,7 @@ public class ImmutableInstruction21lh extends ImmutableInstruction implements In
 
     public static ImmutableInstruction21lh of(Instruction21lh instruction) {
         if (instruction instanceof ImmutableInstruction21lh) {
-            return (ImmutableInstruction21lh)instruction;
+            return (ImmutableInstruction21lh) instruction;
         }
         return new ImmutableInstruction21lh(
                 instruction.getOpcode(),
@@ -62,9 +62,23 @@ public class ImmutableInstruction21lh extends ImmutableInstruction implements In
                 instruction.getWideLiteral());
     }
 
-    @Override public int getRegisterA() { return registerA; }
-    @Override public long getWideLiteral() { return literal; }
-    @Override public short getHatLiteral() { return (short)(literal >>> 48); }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public long getWideLiteral() {
+        return literal;
+    }
+
+    @Override
+    public short getHatLiteral() {
+        return (short) (literal >>> 48);
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

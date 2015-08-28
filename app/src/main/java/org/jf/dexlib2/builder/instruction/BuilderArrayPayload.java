@@ -47,18 +47,34 @@ public class BuilderArrayPayload extends BuilderInstruction implements ArrayPayl
     public static final Opcode OPCODE = Opcode.ARRAY_PAYLOAD;
 
     protected final int elementWidth;
-    @Nonnull protected final List<Number> arrayElements;
+    @Nonnull
+    protected final List<Number> arrayElements;
 
     public BuilderArrayPayload(int elementWidth,
                                @Nullable List<Number> arrayElements) {
         super(OPCODE);
         this.elementWidth = elementWidth;
-        this.arrayElements = arrayElements==null?ImmutableList.<Number>of():arrayElements;
+        this.arrayElements = arrayElements == null ? ImmutableList.<Number>of() : arrayElements;
     }
 
-    @Override public int getElementWidth() { return elementWidth; }
-    @Nonnull @Override public List<Number> getArrayElements() { return arrayElements; }
+    @Override
+    public int getElementWidth() {
+        return elementWidth;
+    }
 
-    @Override public int getCodeUnits() { return 4 + (elementWidth * arrayElements.size() + 1) / 2; }
-    @Override public Format getFormat() { return OPCODE.format; }
+    @Nonnull
+    @Override
+    public List<Number> getArrayElements() {
+        return arrayElements;
+    }
+
+    @Override
+    public int getCodeUnits() {
+        return 4 + (elementWidth * arrayElements.size() + 1) / 2;
+    }
+
+    @Override
+    public Format getFormat() {
+        return OPCODE.format;
+    }
 }

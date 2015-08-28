@@ -42,33 +42,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ImmutableSwitchElement implements SwitchElement {
-    protected final int key;
-    protected final int offset;
-
-    public ImmutableSwitchElement(int key,
-                                  int offset) {
-        this.key = key;
-        this.offset = offset;
-    }
-
-    @Nonnull
-    public static ImmutableSwitchElement of(SwitchElement switchElement) {
-        if (switchElement instanceof  ImmutableSwitchElement) {
-            return (ImmutableSwitchElement)switchElement;
-        }
-        return new ImmutableSwitchElement(
-                switchElement.getKey(),
-                switchElement.getOffset());
-    }
-
-    @Override public int getKey() { return key; }
-    @Override public int getOffset() { return offset; }
-
-    @Nonnull
-    public static ImmutableList<ImmutableSwitchElement> immutableListOf(@Nullable List<? extends SwitchElement> list) {
-        return CONVERTER.toList(list);
-    }
-
     private static final ImmutableConverter<ImmutableSwitchElement, SwitchElement> CONVERTER =
             new ImmutableConverter<ImmutableSwitchElement, SwitchElement>() {
                 @Override
@@ -82,4 +55,37 @@ public class ImmutableSwitchElement implements SwitchElement {
                     return ImmutableSwitchElement.of(item);
                 }
             };
+    protected final int key;
+    protected final int offset;
+
+    public ImmutableSwitchElement(int key,
+                                  int offset) {
+        this.key = key;
+        this.offset = offset;
+    }
+
+    @Nonnull
+    public static ImmutableSwitchElement of(SwitchElement switchElement) {
+        if (switchElement instanceof ImmutableSwitchElement) {
+            return (ImmutableSwitchElement) switchElement;
+        }
+        return new ImmutableSwitchElement(
+                switchElement.getKey(),
+                switchElement.getOffset());
+    }
+
+    @Nonnull
+    public static ImmutableList<ImmutableSwitchElement> immutableListOf(@Nullable List<? extends SwitchElement> list) {
+        return CONVERTER.toList(list);
+    }
+
+    @Override
+    public int getKey() {
+        return key;
+    }
+
+    @Override
+    public int getOffset() {
+        return offset;
+    }
 }

@@ -45,11 +45,12 @@ public class ImmutableInstruction21c extends ImmutableInstruction implements Ins
     public static final Format FORMAT = Format.Format21c;
 
     protected final int registerA;
-    @Nonnull protected final ImmutableReference reference;
+    @Nonnull
+    protected final ImmutableReference reference;
 
     public ImmutableInstruction21c(@Nonnull Opcode opcode,
-                                      int registerA,
-                                      @Nonnull Reference reference) {
+                                   int registerA,
+                                   @Nonnull Reference reference) {
         super(opcode);
         this.registerA = Preconditions.checkByteRegister(registerA);
         this.reference = ImmutableReferenceFactory.of(opcode.referenceType, reference);
@@ -57,7 +58,7 @@ public class ImmutableInstruction21c extends ImmutableInstruction implements Ins
 
     public static ImmutableInstruction21c of(Instruction21c instruction) {
         if (instruction instanceof ImmutableInstruction21c) {
-            return (ImmutableInstruction21c)instruction;
+            return (ImmutableInstruction21c) instruction;
         }
         return new ImmutableInstruction21c(
                 instruction.getOpcode(),
@@ -65,9 +66,24 @@ public class ImmutableInstruction21c extends ImmutableInstruction implements Ins
                 instruction.getReference());
     }
 
-    @Override public int getRegisterA() { return registerA; }
-    @Nonnull @Override public ImmutableReference getReference() { return reference; }
-    @Override public int getReferenceType() { return opcode.referenceType; }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Nonnull
+    @Override
+    public ImmutableReference getReference() {
+        return reference;
+    }
+
+    @Override
+    public int getReferenceType() {
+        return opcode.referenceType;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

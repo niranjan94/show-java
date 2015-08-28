@@ -39,10 +39,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BuilderField extends BaseFieldReference implements Field {
-    @Nonnull final BuilderFieldReference fieldReference;
+    @Nonnull
+    final BuilderFieldReference fieldReference;
     final int accessFlags;
-    @Nullable final BuilderEncodedValue initialValue;
-    @Nonnull final BuilderAnnotationSet annotations;
+    @Nullable
+    final BuilderEncodedValue initialValue;
+    @Nonnull
+    final BuilderAnnotationSet annotations;
 
     BuilderField(@Nonnull BuilderFieldReference fieldReference,
                  int accessFlags,
@@ -54,27 +57,38 @@ public class BuilderField extends BaseFieldReference implements Field {
         this.annotations = annotations;
     }
 
-    @Override public int getAccessFlags() {
+    @Override
+    public int getAccessFlags() {
         return accessFlags;
     }
 
-    @Nullable @Override public BuilderEncodedValue getInitialValue() {
+    @Nullable
+    @Override
+    public BuilderEncodedValue getInitialValue() {
         return initialValue;
     }
 
-    @Nonnull @Override public BuilderAnnotationSet getAnnotations() {
+    @Nonnull
+    @Override
+    public BuilderAnnotationSet getAnnotations() {
         return annotations;
     }
 
-    @Nonnull @Override public String getDefiningClass() {
+    @Nonnull
+    @Override
+    public String getDefiningClass() {
         return fieldReference.definingClass.getType();
     }
 
-    @Nonnull @Override public String getName() {
+    @Nonnull
+    @Override
+    public String getName() {
         return fieldReference.name.getString();
     }
 
-    @Nonnull @Override public String getType() {
+    @Nonnull
+    @Override
+    public String getType() {
         return fieldReference.fieldType.getType();
     }
 }

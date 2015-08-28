@@ -39,5 +39,8 @@ public class BuilderPrologueEnd extends BuilderDebugItem implements PrologueEnd 
     public BuilderPrologueEnd() {
     }
 
-    @Override public int getDebugItemType() { return DebugItemType.PROLOGUE_END; }
+    @Override
+    public int getDebugItemType() {
+        return DebugItemType.PROLOGUE_END;
+    }
 }

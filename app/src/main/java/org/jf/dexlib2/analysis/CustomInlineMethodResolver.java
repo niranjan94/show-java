@@ -54,8 +54,11 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 
 public class CustomInlineMethodResolver extends InlineMethodResolver {
-    @Nonnull private final ClassPath classPath;
-    @Nonnull private final Method[] inlineMethods;
+    private static final Pattern longMethodPattern = Pattern.compile("(L[^;]+;)->([^(]+)\\(([^)]*)\\)(.+)");
+    @Nonnull
+    private final ClassPath classPath;
+    @Nonnull
+    private final Method[] inlineMethods;
 
     public CustomInlineMethodResolver(@Nonnull ClassPath classPath, @Nonnull String inlineTable) {
         this.classPath = classPath;
@@ -81,7 +84,7 @@ public class CustomInlineMethodResolver extends InlineMethodResolver {
 
         inlineMethods = new Method[lines.size()];
 
-        for (int i=0; i<inlineMethods.length; i++) {
+        for (int i = 0; i < inlineMethods.length; i++) {
             inlineMethods[i] = parseAndResolveInlineMethod(lines.get(i));
         }
     }
@@ -93,7 +96,7 @@ public class CustomInlineMethodResolver extends InlineMethodResolver {
     @Override
     @Nonnull
     public Method resolveExecuteInline(@Nonnull AnalyzedInstruction analyzedInstruction) {
-        InlineIndexInstruction instruction = (InlineIndexInstruction)analyzedInstruction.instruction;
+        InlineIndexInstruction instruction = (InlineIndexInstruction) analyzedInstruction.instruction;
         int methodIndex = instruction.getInlineIndex();
 
         if (methodIndex < 0 || methodIndex >= inlineMethods.length) {
@@ -101,8 +104,6 @@ public class CustomInlineMethodResolver extends InlineMethodResolver {
         }
         return inlineMethods[methodIndex];
     }
-
-    private static final Pattern longMethodPattern = Pattern.compile("(L[^;]+;)->([^(]+)\\(([^)]*)\\)(.+)");
 
     @Nonnull
     private Method parseAndResolveInlineMethod(@Nonnull String inlineMethod) {
@@ -124,8 +125,8 @@ public class CustomInlineMethodResolver extends InlineMethodResolver {
         boolean resolved = false;
         TypeProto typeProto = classPath.getClass(className);
         if (typeProto instanceof ClassProto) {
-            ClassDef classDef = ((ClassProto)typeProto).getClassDef();
-            for (Method method: classDef.getMethods()) {
+            ClassDef classDef = ((ClassProto) typeProto).getClassDef();
+            for (Method method : classDef.getMethods()) {
                 if (method.equals(methodRef)) {
                     resolved = true;
                     accessFlags = method.getAccessFlags();

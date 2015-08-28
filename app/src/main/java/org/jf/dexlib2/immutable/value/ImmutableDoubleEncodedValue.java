@@ -43,10 +43,13 @@ public class ImmutableDoubleEncodedValue extends BaseDoubleEncodedValue implemen
 
     public static ImmutableDoubleEncodedValue of(DoubleEncodedValue doubleEncodedValue) {
         if (doubleEncodedValue instanceof ImmutableDoubleEncodedValue) {
-            return (ImmutableDoubleEncodedValue)doubleEncodedValue;
+            return (ImmutableDoubleEncodedValue) doubleEncodedValue;
         }
         return new ImmutableDoubleEncodedValue(doubleEncodedValue.getValue());
     }
 
-    @Override public double getValue() { return value; }
+    @Override
+    public double getValue() {
+        return value;
+    }
 }

@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * Represents a node of a Radix tree {@link RadixTreeImpl}
  *
+ * @param <T>
  * @author Tahseen Ur Rehman
  * @email tahseen.ur.rehman {at.spam.me.not} gmail.com
- * @param <T>
  */
 class RadixTreeNode<T> {
     private String key;

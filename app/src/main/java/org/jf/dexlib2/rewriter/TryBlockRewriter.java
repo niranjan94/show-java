@@ -40,33 +40,41 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class TryBlockRewriter implements Rewriter<TryBlock<? extends ExceptionHandler>> {
-    @Nonnull protected final Rewriters rewriters;
+    @Nonnull
+    protected final Rewriters rewriters;
 
     public TryBlockRewriter(@Nonnull Rewriters rewriters) {
         this.rewriters = rewriters;
     }
 
-    @Nonnull @Override public TryBlock<? extends ExceptionHandler> rewrite(
+    @Nonnull
+    @Override
+    public TryBlock<? extends ExceptionHandler> rewrite(
             @Nonnull TryBlock<? extends ExceptionHandler> tryBlock) {
         return new RewrittenTryBlock(tryBlock);
     }
 
     protected class RewrittenTryBlock extends BaseTryBlock<ExceptionHandler> {
-        @Nonnull protected TryBlock<? extends ExceptionHandler> tryBlock;
+        @Nonnull
+        protected TryBlock<? extends ExceptionHandler> tryBlock;
 
         public RewrittenTryBlock(@Nonnull TryBlock<? extends ExceptionHandler> tryBlock) {
             this.tryBlock = tryBlock;
         }
 
-        @Override public int getStartCodeAddress() {
+        @Override
+        public int getStartCodeAddress() {
             return tryBlock.getStartCodeAddress();
         }
 
-        @Override public int getCodeUnitCount() {
+        @Override
+        public int getCodeUnitCount() {
             return tryBlock.getCodeUnitCount();
         }
 
-        @Override @Nonnull public List<? extends ExceptionHandler> getExceptionHandlers() {
+        @Override
+        @Nonnull
+        public List<? extends ExceptionHandler> getExceptionHandlers() {
             return RewriterUtils.rewriteList(rewriters.getExceptionHandlerRewriter(), tryBlock.getExceptionHandlers());
         }
     }

@@ -41,8 +41,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class DexBackedInstruction implements Instruction {
-    @Nonnull public final DexBackedDexFile dexFile;
-    @Nonnull public final Opcode opcode;
+    @Nonnull
+    public final DexBackedDexFile dexFile;
+    @Nonnull
+    public final Opcode opcode;
     public final int instructionStart;
 
     public DexBackedInstruction(@Nonnull DexBackedDexFile dexFile,
@@ -52,9 +54,6 @@ public abstract class DexBackedInstruction implements Instruction {
         this.opcode = opcode;
         this.instructionStart = instructionStart;
     }
-
-    @Nonnull public Opcode getOpcode() { return opcode; }
-    @Override public int getCodeUnits() { return opcode.format.size / 2; }
 
     @Nonnull
     public static Instruction readFrom(@Nonnull DexReader reader) {
@@ -67,10 +66,10 @@ public abstract class DexBackedInstruction implements Instruction {
         Opcode opcode = reader.dexBuf.getOpcodes().getOpcodeByValue(opcodeValue);
 
         Instruction instruction = buildInstruction(reader.dexBuf, opcode, reader.getOffset());
-        reader.moveRelative(instruction.getCodeUnits()*2);
+        reader.moveRelative(instruction.getCodeUnits() * 2);
         return instruction;
     }
-    
+
     private static DexBackedInstruction buildInstruction(@Nonnull DexBackedDexFile dexFile, @Nullable Opcode opcode,
                                                          int instructionStartOffset) {
         if (opcode == null) {
@@ -148,5 +147,15 @@ public abstract class DexBackedInstruction implements Instruction {
             default:
                 throw new ExceptionWithContext("Unexpected opcode format: %s", opcode.format.toString());
         }
+    }
+
+    @Nonnull
+    public Opcode getOpcode() {
+        return opcode;
+    }
+
+    @Override
+    public int getCodeUnits() {
+        return opcode.format.size / 2;
     }
 }

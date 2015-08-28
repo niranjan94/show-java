@@ -43,13 +43,11 @@ import javax.annotation.Nonnull;
 
 public class DexBackedArrayPayload extends DexBackedInstruction implements ArrayPayload {
     public static final Opcode OPCODE = Opcode.ARRAY_PAYLOAD;
-
-    public final int elementWidth;
-    public final int elementCount;
-
     private static final int ELEMENT_WIDTH_OFFSET = 2;
     private static final int ELEMENT_COUNT_OFFSET = 4;
     private static final int ELEMENTS_OFFSET = 8;
+    public final int elementWidth;
+    public final int elementCount;
 
     public DexBackedArrayPayload(@Nonnull DexBackedDexFile dexFile,
                                  int instructionStart) {
@@ -59,7 +57,10 @@ public class DexBackedArrayPayload extends DexBackedInstruction implements Array
         elementCount = dexFile.readSmallUint(instructionStart + ELEMENT_COUNT_OFFSET);
     }
 
-    @Override public int getElementWidth() { return elementWidth; }
+    @Override
+    public int getElementWidth() {
+        return elementWidth;
+    }
 
     @Nonnull
     @Override
@@ -67,7 +68,10 @@ public class DexBackedArrayPayload extends DexBackedInstruction implements Array
         final int elementsStart = instructionStart + ELEMENTS_OFFSET;
 
         abstract class ReturnedList extends FixedSizeList<Number> {
-            @Override public int size() { return elementCount; }
+            @Override
+            public int size() {
+                return elementCount;
+            }
         }
 
         switch (elementWidth) {
@@ -84,7 +88,7 @@ public class DexBackedArrayPayload extends DexBackedInstruction implements Array
                     @Nonnull
                     @Override
                     public Number readItem(int index) {
-                        return dexFile.readShort(elementsStart + index*2);
+                        return dexFile.readShort(elementsStart + index * 2);
                     }
                 };
             case 4:
@@ -92,7 +96,7 @@ public class DexBackedArrayPayload extends DexBackedInstruction implements Array
                     @Nonnull
                     @Override
                     public Number readItem(int index) {
-                        return dexFile.readInt(elementsStart + index*4);
+                        return dexFile.readInt(elementsStart + index * 4);
                     }
                 };
             case 8:
@@ -100,7 +104,7 @@ public class DexBackedArrayPayload extends DexBackedInstruction implements Array
                     @Nonnull
                     @Override
                     public Number readItem(int index) {
-                        return dexFile.readLong(elementsStart + index*8);
+                        return dexFile.readLong(elementsStart + index * 8);
                     }
                 };
             default:
@@ -110,6 +114,6 @@ public class DexBackedArrayPayload extends DexBackedInstruction implements Array
 
     @Override
     public int getCodeUnits() {
-        return 4 + (elementWidth*elementCount + 1) / 2;
+        return 4 + (elementWidth * elementCount + 1) / 2;
     }
 }

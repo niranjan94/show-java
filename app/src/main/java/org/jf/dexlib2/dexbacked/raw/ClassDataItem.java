@@ -47,13 +47,16 @@ public class ClassDataItem {
         return new SectionAnnotator(annotator, mapItem) {
             private SectionAnnotator codeItemAnnotator = null;
 
-            @Override public void annotateSection(@Nonnull AnnotatedBytes out) {
+            @Override
+            public void annotateSection(@Nonnull AnnotatedBytes out) {
                 codeItemAnnotator = annotator.getAnnotator(ItemType.CODE_ITEM);
                 super.annotateSection(out);
             }
 
 
-            @Nonnull @Override public String getItemName() {
+            @Nonnull
+            @Override
+            public String getItemName() {
                 return "class_data_item";
             }
 
@@ -77,7 +80,7 @@ public class ClassDataItem {
                 if (staticFieldsSize > 0) {
                     out.annotate(0, "static_fields:");
                     out.indent();
-                    for (int i=0; i<staticFieldsSize; i++) {
+                    for (int i = 0; i < staticFieldsSize; i++) {
                         out.annotate(0, "static_field[%d]", i);
                         out.indent();
                         previousIndex = annotateEncodedField(out, dexFile, reader, previousIndex);
@@ -90,7 +93,7 @@ public class ClassDataItem {
                     out.annotate(0, "instance_fields:");
                     out.indent();
                     previousIndex = 0;
-                    for (int i=0; i<instanceFieldsSize; i++) {
+                    for (int i = 0; i < instanceFieldsSize; i++) {
                         out.annotate(0, "instance_field[%d]", i);
                         out.indent();
                         previousIndex = annotateEncodedField(out, dexFile, reader, previousIndex);
@@ -103,7 +106,7 @@ public class ClassDataItem {
                     out.annotate(0, "direct_methods:");
                     out.indent();
                     previousIndex = 0;
-                    for (int i=0; i<directMethodsSize; i++) {
+                    for (int i = 0; i < directMethodsSize; i++) {
                         out.annotate(0, "direct_method[%d]", i);
                         out.indent();
                         previousIndex = annotateEncodedMethod(out, dexFile, reader, previousIndex);
@@ -116,7 +119,7 @@ public class ClassDataItem {
                     out.annotate(0, "virtual_methods:");
                     out.indent();
                     previousIndex = 0;
-                    for (int i=0; i<virtualMethodsSize; i++) {
+                    for (int i = 0; i < virtualMethodsSize; i++) {
                         out.annotate(0, "virtual_method[%d]", i);
                         out.indent();
                         previousIndex = annotateEncodedMethod(out, dexFile, reader, previousIndex);

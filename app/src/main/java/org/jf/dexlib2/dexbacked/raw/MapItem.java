@@ -53,27 +53,12 @@ public class MapItem {
         this.offset = offset;
     }
 
-    public int getType() {
-        return dexFile.readUshort(offset + TYPE_OFFSET);
-    }
-
-    @Nonnull
-    public String getName() {
-        return ItemType.getItemTypeName(getType());
-    }
-
-    public int getItemCount() {
-        return dexFile.readSmallUint(offset + SIZE_OFFSET);
-    }
-
-    public int getOffset() {
-        return dexFile.readSmallUint(offset + OFFSET_OFFSET);
-    }
-
     @Nonnull
     public static SectionAnnotator makeAnnotator(@Nonnull DexAnnotator annotator, @Nonnull MapItem mapItem) {
         return new SectionAnnotator(annotator, mapItem) {
-            @Nonnull @Override public String getItemName() {
+            @Nonnull
+            @Override
+            public String getItemName() {
                 return "map_item";
             }
 
@@ -91,7 +76,8 @@ public class MapItem {
                 out.annotate(4, "offset = 0x%x", offset);
             }
 
-            @Override public void annotateSection(@Nonnull AnnotatedBytes out) {
+            @Override
+            public void annotateSection(@Nonnull AnnotatedBytes out) {
                 out.moveTo(sectionOffset);
                 int mapItemCount = dexFile.readSmallUint(out.getCursor());
                 out.annotate(4, "size = %d", mapItemCount);
@@ -99,5 +85,22 @@ public class MapItem {
                 super.annotateSectionInner(out, mapItemCount);
             }
         };
+    }
+
+    public int getType() {
+        return dexFile.readUshort(offset + TYPE_OFFSET);
+    }
+
+    @Nonnull
+    public String getName() {
+        return ItemType.getItemTypeName(getType());
+    }
+
+    public int getItemCount() {
+        return dexFile.readSmallUint(offset + SIZE_OFFSET);
+    }
+
+    public int getOffset() {
+        return dexFile.readSmallUint(offset + OFFSET_OFFSET);
     }
 }

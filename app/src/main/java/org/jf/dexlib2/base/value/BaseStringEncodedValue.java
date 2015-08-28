@@ -49,7 +49,7 @@ public abstract class BaseStringEncodedValue implements StringEncodedValue {
     @Override
     public boolean equals(@Nullable Object o) {
         if (o instanceof StringEncodedValue) {
-            return getValue().equals(((StringEncodedValue)o).getValue());
+            return getValue().equals(((StringEncodedValue) o).getValue());
         }
         return false;
     }
@@ -58,8 +58,10 @@ public abstract class BaseStringEncodedValue implements StringEncodedValue {
     public int compareTo(@Nonnull EncodedValue o) {
         int res = Ints.compare(getValueType(), o.getValueType());
         if (res != 0) return res;
-        return getValue().compareTo(((StringEncodedValue)o).getValue());
+        return getValue().compareTo(((StringEncodedValue) o).getValue());
     }
 
-    public int getValueType() { return ValueType.STRING; }
+    public int getValueType() {
+        return ValueType.STRING;
+    }
 }

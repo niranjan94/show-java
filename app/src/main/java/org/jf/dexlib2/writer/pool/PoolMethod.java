@@ -47,49 +47,65 @@ import javax.annotation.Nullable;
 
 
 class PoolMethod extends BaseMethodReference implements Method {
-    @Nonnull private final Method method;
-    protected int annotationSetRefListOffset = DexPool.NO_OFFSET;
-    protected int codeItemOffset = DexPool.NO_OFFSET;
-
     public static final Function<Method, PoolMethod> TRANSFORM = new Function<Method, PoolMethod>() {
-        @Override public PoolMethod apply(Method method) {
+        @Override
+        public PoolMethod apply(Method method) {
             return new PoolMethod(method);
         }
     };
+    @Nonnull
+    private final Method method;
+    protected int annotationSetRefListOffset = DexPool.NO_OFFSET;
+    protected int codeItemOffset = DexPool.NO_OFFSET;
 
     PoolMethod(@Nonnull Method method) {
         this.method = method;
     }
 
-    @Override @Nonnull public String getDefiningClass() {
+    @Override
+    @Nonnull
+    public String getDefiningClass() {
         return method.getDefiningClass();
     }
 
-    @Override @Nonnull public String getName() {
+    @Override
+    @Nonnull
+    public String getName() {
         return method.getName();
     }
 
-    @Override @Nonnull public List<? extends CharSequence> getParameterTypes() {
+    @Override
+    @Nonnull
+    public List<? extends CharSequence> getParameterTypes() {
         return method.getParameterTypes();
     }
 
-    @Override @Nonnull public List<? extends MethodParameter> getParameters() {
+    @Override
+    @Nonnull
+    public List<? extends MethodParameter> getParameters() {
         return method.getParameters();
     }
 
-    @Override @Nonnull public String getReturnType() {
+    @Override
+    @Nonnull
+    public String getReturnType() {
         return method.getReturnType();
     }
 
-    @Override public int getAccessFlags() {
+    @Override
+    public int getAccessFlags() {
         return method.getAccessFlags();
     }
 
-    @Override @Nonnull public Set<? extends Annotation> getAnnotations() {
+    @Override
+    @Nonnull
+    public Set<? extends Annotation> getAnnotations() {
         return method.getAnnotations();
     }
 
-    @Override @Nullable public MethodImplementation getImplementation() {
+    @Override
+    @Nullable
+    public MethodImplementation getImplementation() {
         return method.getImplementation();
     }
 }

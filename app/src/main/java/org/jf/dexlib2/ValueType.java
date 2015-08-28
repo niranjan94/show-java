@@ -49,5 +49,6 @@ public final class ValueType {
     public static final int NULL = 0x1e;
     public static final int BOOLEAN = 0x1f;
 
-    private ValueType() {}
+    private ValueType() {
+    }
 }

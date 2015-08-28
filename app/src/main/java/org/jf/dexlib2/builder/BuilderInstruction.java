@@ -40,16 +40,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class BuilderInstruction implements Instruction {
-    @Nonnull protected final Opcode opcode;
+    @Nonnull
+    protected final Opcode opcode;
 
-    @Nullable MethodLocation location;
+    @Nullable
+    MethodLocation location;
 
     protected BuilderInstruction(@Nonnull Opcode opcode) {
         Preconditions.checkFormat(opcode, getFormat());
         this.opcode = opcode;
     }
 
-    @Nonnull public Opcode getOpcode() {
+    @Nonnull
+    public Opcode getOpcode() {
         return opcode;
     }
 

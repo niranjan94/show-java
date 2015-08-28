@@ -38,32 +38,33 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class BuilderExceptionHandler extends BaseExceptionHandler {
-    @Nonnull protected final Label handler;
+    @Nonnull
+    protected final Label handler;
 
     private BuilderExceptionHandler(@Nonnull Label handler) {
         this.handler = handler;
     }
 
-    @Nonnull
-    public Label getHandler() {
-        return handler;
-    }
-
     static BuilderExceptionHandler newExceptionHandler(@Nullable final TypeReference exceptionType,
-                                                @Nonnull Label handler) {
+                                                       @Nonnull Label handler) {
         if (exceptionType == null) {
             return newExceptionHandler(handler);
         }
         return new BuilderExceptionHandler(handler) {
-            @Nullable @Override public String getExceptionType() {
+            @Nullable
+            @Override
+            public String getExceptionType() {
                 return exceptionType.getType();
             }
 
-            @Override public int getHandlerCodeAddress() {
+            @Override
+            public int getHandlerCodeAddress() {
                 return handler.getCodeAddress();
             }
 
-            @Nullable @Override public TypeReference getExceptionTypeReference() {
+            @Nullable
+            @Override
+            public TypeReference getExceptionTypeReference() {
                 return exceptionType;
             }
         };
@@ -71,29 +72,40 @@ public abstract class BuilderExceptionHandler extends BaseExceptionHandler {
 
     static BuilderExceptionHandler newExceptionHandler(@Nonnull Label handler) {
         return new BuilderExceptionHandler(handler) {
-            @Nullable @Override public String getExceptionType() {
+            @Nullable
+            @Override
+            public String getExceptionType() {
                 return null;
             }
 
-            @Override public int getHandlerCodeAddress() {
+            @Override
+            public int getHandlerCodeAddress() {
                 return handler.getCodeAddress();
             }
         };
     }
 
     static BuilderExceptionHandler newExceptionHandler(@Nullable final String exceptionType,
-                                                @Nonnull Label handler) {
+                                                       @Nonnull Label handler) {
         if (exceptionType == null) {
             return newExceptionHandler(handler);
         }
         return new BuilderExceptionHandler(handler) {
-            @Nullable @Override public String getExceptionType() {
+            @Nullable
+            @Override
+            public String getExceptionType() {
                 return exceptionType;
             }
 
-            @Override public int getHandlerCodeAddress() {
+            @Override
+            public int getHandlerCodeAddress() {
                 return handler.getCodeAddress();
             }
         };
+    }
+
+    @Nonnull
+    public Label getHandler() {
+        return handler;
     }
 }

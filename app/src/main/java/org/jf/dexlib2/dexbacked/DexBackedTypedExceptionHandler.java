@@ -34,7 +34,8 @@ package org.jf.dexlib2.dexbacked;
 import javax.annotation.Nonnull;
 
 public class DexBackedTypedExceptionHandler extends DexBackedExceptionHandler {
-    @Nonnull private final DexBackedDexFile dexFile;
+    @Nonnull
+    private final DexBackedDexFile dexFile;
     private final int typeId;
     private final int handlerCodeAddress;
 
@@ -44,6 +45,14 @@ public class DexBackedTypedExceptionHandler extends DexBackedExceptionHandler {
         this.handlerCodeAddress = reader.readSmallUleb128();
     }
 
-    @Nonnull @Override public String getExceptionType() { return dexFile.getType(typeId); }
-    @Override public int getHandlerCodeAddress() { return handlerCodeAddress; }
+    @Nonnull
+    @Override
+    public String getExceptionType() {
+        return dexFile.getType(typeId);
+    }
+
+    @Override
+    public int getHandlerCodeAddress() {
+        return handlerCodeAddress;
+    }
 }

@@ -1,25 +1,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/holder"
+    android:id="@+id/holder"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <include layout="@layout/toolbar" android:id="@+id/toolbar" />
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <WebView
-	    android:id="@+id/source_view"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:layout_above="@+id/adView"
+        android:id="@+id/source_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/adView"
         android:layout_below="@+id/toolbar" />
 
-	<ProgressBar
-	    android:id="@+id/progress"
-	    style="?android:attr/progressBarStyleLarge"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_centerHorizontal="true"
-	    android:layout_centerVertical="true" />
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
 
-	<include layout="@layout/adview" android:id="@+id/adView"/>
+    <include
+        android:id="@+id/adView"
+        layout="@layout/adview" />
 
 
 </RelativeLayout>

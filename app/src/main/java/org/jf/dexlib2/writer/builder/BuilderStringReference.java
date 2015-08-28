@@ -37,22 +37,27 @@ import org.jf.dexlib2.writer.DexWriter;
 import javax.annotation.Nonnull;
 
 public class BuilderStringReference extends BaseStringReference implements BuilderReference {
-    @Nonnull final String string;
+    @Nonnull
+    final String string;
     int index = DexWriter.NO_INDEX;
 
     BuilderStringReference(@Nonnull String string) {
         this.string = string;
     }
 
-    @Nonnull @Override public String getString() {
+    @Nonnull
+    @Override
+    public String getString() {
         return string;
     }
 
-    @Override public int getIndex() {
+    @Override
+    public int getIndex() {
         return index;
     }
 
-    @Override public void setIndex(int index) {
+    @Override
+    public void setIndex(int index) {
         this.index = index;
     }
 }

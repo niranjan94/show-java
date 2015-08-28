@@ -49,7 +49,7 @@ public abstract class BaseByteEncodedValue implements ByteEncodedValue {
     @Override
     public boolean equals(@Nullable Object o) {
         if (o instanceof ByteEncodedValue) {
-            return getValue() == ((ByteEncodedValue)o).getValue();
+            return getValue() == ((ByteEncodedValue) o).getValue();
         }
         return false;
     }
@@ -58,8 +58,10 @@ public abstract class BaseByteEncodedValue implements ByteEncodedValue {
     public int compareTo(@Nonnull EncodedValue o) {
         int res = Ints.compare(getValueType(), o.getValueType());
         if (res != 0) return res;
-        return Ints.compare(getValue(), ((ByteEncodedValue)o).getValue());
+        return Ints.compare(getValue(), ((ByteEncodedValue) o).getValue());
     }
 
-    public int getValueType() { return ValueType.BYTE; }
+    public int getValueType() {
+        return ValueType.BYTE;
+    }
 }

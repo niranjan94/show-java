@@ -48,7 +48,9 @@ public class FieldIdItem {
     @Nonnull
     public static SectionAnnotator makeAnnotator(@Nonnull DexAnnotator annotator, @Nonnull MapItem mapItem) {
         return new SectionAnnotator(annotator, mapItem) {
-            @Nonnull @Override public String getItemName() {
+            @Nonnull
+            @Override
+            public String getItemName() {
                 return "field_id_item";
             }
 
@@ -100,7 +102,7 @@ public class FieldIdItem {
 
         int fieldCount = mapItem.getItemCount();
         String[] ret = new String[fieldCount];
-        for (int i=0; i<fieldCount; i++) {
+        for (int i = 0; i < fieldCount; i++) {
             ret[i] = asString(dexFile, i);
         }
         return ret;

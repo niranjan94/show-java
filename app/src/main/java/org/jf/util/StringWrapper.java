@@ -38,40 +38,40 @@ public class StringWrapper {
     /**
      * Splits the given string into lines using on any embedded newlines, and wrapping the text as needed to conform to
      * the given maximum line width.
-     *
+     * <p/>
      * This uses and assumes unix-style newlines
      *
-     * @param str The string to split
+     * @param str      The string to split
      * @param maxWidth The maximum length of any line
-     * @param output If given, try to use this array as the return value. If there are more values than will fit
-     *               into the array, a new array will be allocated and returned, while the given array will be filled
-     *               with as many lines as would fit.
+     * @param output   If given, try to use this array as the return value. If there are more values than will fit
+     *                 into the array, a new array will be allocated and returned, while the given array will be filled
+     *                 with as many lines as would fit.
      * @return The split lines from the original, as an array of Strings. The returned array may be larger than the
-     *         number of lines. If this is the case, the end of the split lines will be denoted by a null entry in the
-     *         array. If there is no null entry, then the size of the array exactly matches the number of lines.
-     *         The returned lines will not contain an ending newline
+     * number of lines. If this is the case, the end of the split lines will be denoted by a null entry in the
+     * array. If there is no null entry, then the size of the array exactly matches the number of lines.
+     * The returned lines will not contain an ending newline
      */
     public static String[] wrapString(@Nonnull String str, int maxWidth, @Nullable String[] output) {
         if (output == null) {
-            output = new String[(int)((str.length() / maxWidth) * 1.5d + 1)];
+            output = new String[(int) ((str.length() / maxWidth) * 1.5d + 1)];
         }
 
         int lineStart = 0;
         int arrayIndex = 0;
         int i;
-        for (i=0; i<str.length(); i++) {
+        for (i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
 
             if (c == '\n') {
                 output = addString(output, str.substring(lineStart, i), arrayIndex++);
-                lineStart = i+1;
+                lineStart = i + 1;
             } else if (i - lineStart == maxWidth) {
                 output = addString(output, str.substring(lineStart, i), arrayIndex++);
                 lineStart = i;
             }
         }
         if (lineStart != i || i == 0) {
-            output = addString(output, str.substring(lineStart), arrayIndex++, output.length+1);
+            output = addString(output, str.substring(lineStart), arrayIndex++, output.length + 1);
         }
 
         if (arrayIndex < output.length) {
@@ -82,7 +82,7 @@ public class StringWrapper {
 
     private static String[] addString(@Nonnull String[] arr, String str, int index) {
         if (index >= arr.length) {
-            arr = enlargeArray(arr, (int)(Math.ceil((arr.length + 1) * 1.5)));
+            arr = enlargeArray(arr, (int) (Math.ceil((arr.length + 1) * 1.5)));
         }
 
         arr[index] = str;

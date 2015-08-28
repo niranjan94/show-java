@@ -32,32 +32,34 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         baseContext = this;
     }
-    public void setupLayout(int layoutRef){
+
+    public void setupLayout(int layoutRef) {
         setContentView(layoutRef);
         setupToolbar(null);
         setupGoogleAds();
     }
 
-    public void setupLayout(int layoutRef, String title){
+    public void setupLayout(int layoutRef, String title) {
         setContentView(layoutRef);
         setupToolbar(title);
         setupGoogleAds();
     }
 
-    public void setupLayoutNoActionBar(int layoutRef){
+    public void setupLayoutNoActionBar(int layoutRef) {
         setContentView(layoutRef);
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void setupToolbar(String title){
+    private void setupToolbar(String title) {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if(title!=null){
+        if (title != null) {
             getSupportActionBar().setTitle(title);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -73,7 +75,7 @@ public class BaseActivity extends AppCompatActivity {
                 return true;
 
             case R.id.about_option:
-                startActivity(new Intent(getBaseContext(),About.class));
+                startActivity(new Intent(getBaseContext(), About.class));
                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
 
@@ -86,7 +88,8 @@ public class BaseActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public Context getContext(){
+
+    public Context getContext() {
         return baseContext;
     }
 
@@ -95,6 +98,7 @@ public class BaseActivity extends AppCompatActivity {
         finish();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -110,10 +114,10 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private boolean checkDataConnection(){
+    private boolean checkDataConnection() {
         boolean status = false;
-        ConnectivityManager connectivityMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityMgr.getActiveNetworkInfo()!=null &&
+        ConnectivityManager connectivityMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityMgr.getActiveNetworkInfo() != null &&
                 connectivityMgr.getActiveNetworkInfo().isAvailable() &&
                 connectivityMgr.getActiveNetworkInfo().isConnected()) {
             status = true;
@@ -133,11 +137,11 @@ public class BaseActivity extends AppCompatActivity {
         return BuildConfig.IS_FREE;
     }
 
-    private void setupGoogleAds(){
+    private void setupGoogleAds() {
         mAdView = (AdView) findViewById(R.id.adView);
-        if(mAdView != null) {
+        if (mAdView != null) {
             mAdView.setVisibility(View.GONE);
-            if(isFree()){
+            if (isFree()) {
                 AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
                 mAdView.setAdListener(new AdListener() {
                     @Override
@@ -145,6 +149,7 @@ public class BaseActivity extends AppCompatActivity {
                         super.onAdFailedToLoad(errorCode);
                         mAdView.setVisibility(View.GONE);
                     }
+
                     @Override
                     public void onAdLoaded() {
                         super.onAdLoaded();
@@ -152,7 +157,7 @@ public class BaseActivity extends AppCompatActivity {
                     }
                 });
                 mAdView.loadAd(adRequest);
-                if(!checkDataConnection()){
+                if (!checkDataConnection()) {
                     mAdView.setVisibility(View.GONE);
                 }
             }

@@ -52,13 +52,15 @@ public class DexDataWriter extends BufferedOutputStream {
      */
     private byte[] tempBuf = new byte[8];
 
-    /** A buffer of 0s to use for writing alignment values */
+    /**
+     * A buffer of 0s to use for writing alignment values
+     */
     private byte[] zeroBuf = new byte[3];
 
     /**
      * Construct a new DexWriter instance that writes to output.
      *
-     * @param output An OutputStream to write the data to.
+     * @param output       An OutputStream to write the data to.
      * @param filePosition The position within the file that OutputStream will write to.
      */
     public DexDataWriter(@Nonnull OutputStream output, int filePosition) {
@@ -69,6 +71,37 @@ public class DexDataWriter extends BufferedOutputStream {
         super(output, bufferSize);
 
         this.filePosition = filePosition;
+    }
+
+    public static void writeInt(OutputStream out, int value) throws IOException {
+        out.write(value);
+        out.write(value >> 8);
+        out.write(value >> 16);
+        out.write(value >> 24);
+    }
+
+    public static void writeUleb128(OutputStream out, int value) throws IOException {
+        while (value > 0x7f) {
+            out.write((value & 0x7f) | 0x80);
+            value >>>= 7;
+        }
+        out.write(value);
+    }
+
+    public static void writeSleb128(OutputStream out, int value) throws IOException {
+        if (value >= 0) {
+            while (value > 0x3f) {
+                out.write((value & 0x7f) | 0x80);
+                value >>>= 7;
+            }
+            out.write(value & 0x7f);
+        } else {
+            while (value < -0x40) {
+                out.write((value & 0x7f) | 0x80);
+                value >>= 7;
+            }
+            out.write(value & 0x7f);
+        }
     }
 
     @Override
@@ -89,15 +122,8 @@ public class DexDataWriter extends BufferedOutputStream {
     }
 
     public void writeLong(long value) throws IOException {
-        writeInt((int)value);
-        writeInt((int)(value >> 32));
-    }
-
-    public static void writeInt(OutputStream out, int value) throws IOException {
-        out.write(value);
-        out.write(value >> 8);
-        out.write(value >> 16);
-        out.write(value >> 24);
+        writeInt((int) value);
+        writeInt((int) (value >> 32));
     }
 
     public void writeInt(int value) throws IOException {
@@ -127,32 +153,8 @@ public class DexDataWriter extends BufferedOutputStream {
         write(value);
     }
 
-    public static void writeUleb128(OutputStream out, int value) throws IOException {
-        while (value > 0x7f) {
-            out.write((value & 0x7f) | 0x80);
-            value >>>= 7;
-        }
-        out.write(value);
-    }
-
     public void writeUleb128(int value) throws IOException {
         writeUleb128(this, value);
-    }
-
-    public static void writeSleb128(OutputStream out, int value) throws IOException {
-        if (value >= 0) {
-            while (value > 0x3f) {
-                out.write((value & 0x7f) | 0x80);
-                value >>>= 7;
-            }
-            out.write(value & 0x7f);
-        } else {
-            while (value < -0x40) {
-                out.write((value & 0x7f) | 0x80);
-                value >>= 7;
-            }
-            out.write(value & 0x7f);
-        }
     }
 
     public void writeSleb128(int value) throws IOException {
@@ -167,17 +169,17 @@ public class DexDataWriter extends BufferedOutputStream {
         int index = 0;
         if (value >= 0) {
             while (value > 0x7f) {
-                tempBuf[index++] = (byte)value;
+                tempBuf[index++] = (byte) value;
                 value >>= 8;
             }
         } else {
             while (value < -0x80) {
-                tempBuf[index++] = (byte)value;
+                tempBuf[index++] = (byte) value;
                 value >>= 8;
             }
         }
-        tempBuf[index++] = (byte)value;
-        writeEncodedValueHeader(valueType, index-1);
+        tempBuf[index++] = (byte) value;
+        writeEncodedValueHeader(valueType, index - 1);
         write(tempBuf, 0, index);
     }
 
@@ -185,27 +187,27 @@ public class DexDataWriter extends BufferedOutputStream {
         int index = 0;
         if (value >= 0) {
             while (value > 0x7f) {
-                tempBuf[index++] = (byte)value;
+                tempBuf[index++] = (byte) value;
                 value >>= 8;
             }
         } else {
             while (value < -0x80) {
-                tempBuf[index++] = (byte)value;
+                tempBuf[index++] = (byte) value;
                 value >>= 8;
             }
         }
-        tempBuf[index++] = (byte)value;
-        writeEncodedValueHeader(valueType, index-1);
+        tempBuf[index++] = (byte) value;
+        writeEncodedValueHeader(valueType, index - 1);
         write(tempBuf, 0, index);
     }
 
     public void writeEncodedUint(int valueType, int value) throws IOException {
         int index = 0;
         do {
-            tempBuf[index++] = (byte)value;
+            tempBuf[index++] = (byte) value;
             value >>>= 8;
         } while (value != 0);
-        writeEncodedValueHeader(valueType, index-1);
+        writeEncodedValueHeader(valueType, index - 1);
         write(tempBuf, 0, index);
     }
 
@@ -216,12 +218,12 @@ public class DexDataWriter extends BufferedOutputStream {
     protected void writeRightZeroExtendedInt(int valueType, int value) throws IOException {
         int index = 3;
         do {
-            tempBuf[index--] = (byte)((value & 0xFF000000) >>> 24);
+            tempBuf[index--] = (byte) ((value & 0xFF000000) >>> 24);
             value <<= 8;
         } while (value != 0);
 
-        int firstElement = index+1;
-        int encodedLength = 4-firstElement;
+        int firstElement = index + 1;
+        int encodedLength = 4 - firstElement;
         writeEncodedValueHeader(valueType, encodedLength - 1);
         write(tempBuf, firstElement, encodedLength);
     }
@@ -233,12 +235,12 @@ public class DexDataWriter extends BufferedOutputStream {
     protected void writeRightZeroExtendedLong(int valueType, long value) throws IOException {
         int index = 7;
         do {
-            tempBuf[index--] = (byte)((value & 0xFF00000000000000L) >>> 56);
+            tempBuf[index--] = (byte) ((value & 0xFF00000000000000L) >>> 56);
             value <<= 8;
         } while (value != 0);
 
-        int firstElement = index+1;
-        int encodedLength = 8-firstElement;
+        int firstElement = index + 1;
+        int encodedLength = 8 - firstElement;
         writeEncodedValueHeader(valueType, encodedLength - 1);
         write(tempBuf, firstElement, encodedLength);
     }
@@ -247,8 +249,8 @@ public class DexDataWriter extends BufferedOutputStream {
         int len = string.length();
 
         // make sure we have enough room in the temporary buffer
-        if (tempBuf.length <= string.length()*3) {
-            tempBuf = new byte[string.length()*3];
+        if (tempBuf.length <= string.length() * 3) {
+            tempBuf = new byte[string.length() * 3];
         }
 
         final byte[] buf = tempBuf;
@@ -257,14 +259,14 @@ public class DexDataWriter extends BufferedOutputStream {
         for (int i = 0; i < len; i++) {
             char c = string.charAt(i);
             if ((c != 0) && (c < 0x80)) {
-                buf[bufPos++] = (byte)c;
+                buf[bufPos++] = (byte) c;
             } else if (c < 0x800) {
-                buf[bufPos++] = (byte)(((c >> 6) & 0x1f) | 0xc0);
-                buf[bufPos++] = (byte)((c & 0x3f) | 0x80);
+                buf[bufPos++] = (byte) (((c >> 6) & 0x1f) | 0xc0);
+                buf[bufPos++] = (byte) ((c & 0x3f) | 0x80);
             } else {
-                buf[bufPos++] = (byte)(((c >> 12) & 0x0f) | 0xe0);
-                buf[bufPos++] = (byte)(((c >> 6) & 0x3f) | 0x80);
-                buf[bufPos++] = (byte)((c & 0x3f) | 0x80);
+                buf[bufPos++] = (byte) (((c >> 12) & 0x0f) | 0xe0);
+                buf[bufPos++] = (byte) (((c >> 6) & 0x3f) | 0x80);
+                buf[bufPos++] = (byte) ((c & 0x3f) | 0x80);
             }
         }
         write(buf, 0, bufPos);

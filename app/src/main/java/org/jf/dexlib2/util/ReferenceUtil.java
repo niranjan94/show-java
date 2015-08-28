@@ -44,11 +44,14 @@ import java.io.Writer;
 import javax.annotation.Nullable;
 
 public final class ReferenceUtil {
+    private ReferenceUtil() {
+    }
+
     public static String getShortMethodDescriptor(MethodReference methodReference) {
         StringBuilder sb = new StringBuilder();
         sb.append(methodReference.getName());
         sb.append('(');
-        for (CharSequence paramType: methodReference.getParameterTypes()) {
+        for (CharSequence paramType : methodReference.getParameterTypes()) {
             sb.append(paramType);
         }
         sb.append(')');
@@ -62,7 +65,7 @@ public final class ReferenceUtil {
         sb.append("->");
         sb.append(methodReference.getName());
         sb.append('(');
-        for (CharSequence paramType: methodReference.getParameterTypes()) {
+        for (CharSequence paramType : methodReference.getParameterTypes()) {
             sb.append(paramType);
         }
         sb.append(')');
@@ -75,7 +78,7 @@ public final class ReferenceUtil {
         writer.write("->");
         writer.write(methodReference.getName());
         writer.write('(');
-        for (CharSequence paramType: methodReference.getParameterTypes()) {
+        for (CharSequence paramType : methodReference.getParameterTypes()) {
             writer.write(paramType.toString());
         }
         writer.write(')');
@@ -111,19 +114,17 @@ public final class ReferenceUtil {
     @Nullable
     public static String getReferenceString(Reference reference) {
         if (reference instanceof StringReference) {
-            return String.format("\"%s\"", StringUtils.escapeString(((StringReference)reference).getString()));
+            return String.format("\"%s\"", StringUtils.escapeString(((StringReference) reference).getString()));
         }
         if (reference instanceof TypeReference) {
-            return ((TypeReference)reference).getType();
+            return ((TypeReference) reference).getType();
         }
         if (reference instanceof FieldReference) {
-            return getFieldDescriptor((FieldReference)reference);
+            return getFieldDescriptor((FieldReference) reference);
         }
         if (reference instanceof MethodReference) {
-            return getMethodDescriptor((MethodReference)reference);
+            return getMethodDescriptor((MethodReference) reference);
         }
         return null;
     }
-
-    private ReferenceUtil() {}
 }

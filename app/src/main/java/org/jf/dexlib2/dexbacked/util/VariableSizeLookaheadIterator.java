@@ -41,7 +41,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class VariableSizeLookaheadIterator<T> implements Iterator<T> {
-    @Nonnull private final DexReader reader;
+    @Nonnull
+    private final DexReader reader;
 
     private T cachedItem = null;
 
@@ -55,7 +56,8 @@ public abstract class VariableSizeLookaheadIterator<T> implements Iterator<T> {
      *
      * @return The item that was read, or null if the end of the list has been reached.
      */
-    @Nullable protected abstract T readNextItem(@Nonnull DexReader reader);
+    @Nullable
+    protected abstract T readNextItem(@Nonnull DexReader reader);
 
     @Override
     public boolean hasNext() {
@@ -73,5 +75,8 @@ public abstract class VariableSizeLookaheadIterator<T> implements Iterator<T> {
         return ret;
     }
 
-    @Override public void remove() { throw new UnsupportedOperationException(); }
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 }

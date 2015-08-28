@@ -49,23 +49,48 @@ import org.jf.dexlib2.iface.value.EncodedValue;
 import javax.annotation.Nonnull;
 
 public interface Rewriters {
-    @Nonnull Rewriter<ClassDef> getClassDefRewriter();
-    @Nonnull Rewriter<Field> getFieldRewriter();
+    @Nonnull
+    Rewriter<ClassDef> getClassDefRewriter();
 
-    @Nonnull Rewriter<Method> getMethodRewriter();
-    @Nonnull Rewriter<MethodParameter> getMethodParameterRewriter();
-    @Nonnull Rewriter<MethodImplementation> getMethodImplementationRewriter();
-    @Nonnull Rewriter<Instruction> getInstructionRewriter();
-    @Nonnull Rewriter<TryBlock<? extends ExceptionHandler>> getTryBlockRewriter();
-    @Nonnull Rewriter<ExceptionHandler> getExceptionHandlerRewriter();
-    @Nonnull Rewriter<DebugItem> getDebugItemRewriter();
+    @Nonnull
+    Rewriter<Field> getFieldRewriter();
 
-    @Nonnull Rewriter<String> getTypeRewriter();
-    @Nonnull Rewriter<FieldReference> getFieldReferenceRewriter();
-    @Nonnull Rewriter<MethodReference> getMethodReferenceRewriter();
+    @Nonnull
+    Rewriter<Method> getMethodRewriter();
 
-    @Nonnull Rewriter<Annotation> getAnnotationRewriter();
-    @Nonnull Rewriter<AnnotationElement> getAnnotationElementRewriter();
+    @Nonnull
+    Rewriter<MethodParameter> getMethodParameterRewriter();
 
-    @Nonnull Rewriter<EncodedValue> getEncodedValueRewriter();
+    @Nonnull
+    Rewriter<MethodImplementation> getMethodImplementationRewriter();
+
+    @Nonnull
+    Rewriter<Instruction> getInstructionRewriter();
+
+    @Nonnull
+    Rewriter<TryBlock<? extends ExceptionHandler>> getTryBlockRewriter();
+
+    @Nonnull
+    Rewriter<ExceptionHandler> getExceptionHandlerRewriter();
+
+    @Nonnull
+    Rewriter<DebugItem> getDebugItemRewriter();
+
+    @Nonnull
+    Rewriter<String> getTypeRewriter();
+
+    @Nonnull
+    Rewriter<FieldReference> getFieldReferenceRewriter();
+
+    @Nonnull
+    Rewriter<MethodReference> getMethodReferenceRewriter();
+
+    @Nonnull
+    Rewriter<Annotation> getAnnotationRewriter();
+
+    @Nonnull
+    Rewriter<AnnotationElement> getAnnotationElementRewriter();
+
+    @Nonnull
+    Rewriter<EncodedValue> getEncodedValueRewriter();
 }

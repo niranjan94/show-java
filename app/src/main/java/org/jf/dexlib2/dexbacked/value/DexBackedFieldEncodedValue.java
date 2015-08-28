@@ -40,7 +40,8 @@ import org.jf.dexlib2.iface.reference.FieldReference;
 import javax.annotation.Nonnull;
 
 public class DexBackedFieldEncodedValue extends BaseFieldEncodedValue {
-    @Nonnull public final DexBackedDexFile dexFile;
+    @Nonnull
+    public final DexBackedDexFile dexFile;
     private final int fieldIndex;
 
     public DexBackedFieldEncodedValue(@Nonnull DexReader reader, int valueArg) {
@@ -48,7 +49,9 @@ public class DexBackedFieldEncodedValue extends BaseFieldEncodedValue {
         fieldIndex = reader.readSizedSmallUint(valueArg + 1);
     }
 
-    @Nonnull @Override public FieldReference getValue() {
+    @Nonnull
+    @Override
+    public FieldReference getValue() {
         return new DexBackedFieldReference(dexFile, fieldIndex);
     }
 }

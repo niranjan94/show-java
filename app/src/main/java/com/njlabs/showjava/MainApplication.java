@@ -10,7 +10,7 @@ import com.njlabs.showjava.utils.FontsOverride;
 import io.fabric.sdk.android.Fabric;
 
 public class MainApplication extends Application {
-	
+
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());

@@ -43,29 +43,30 @@ import org.jf.dexlib2.iface.value.LongEncodedValue;
 import org.jf.dexlib2.iface.value.ShortEncodedValue;
 
 public final class EncodedValueUtils {
+    private EncodedValueUtils() {
+    }
+
     public static boolean isDefaultValue(EncodedValue encodedValue) {
         switch (encodedValue.getValueType()) {
             case ValueType.BOOLEAN:
-                return !((BooleanEncodedValue)encodedValue).getValue();
+                return !((BooleanEncodedValue) encodedValue).getValue();
             case ValueType.BYTE:
-                return ((ByteEncodedValue)encodedValue).getValue() == 0;
+                return ((ByteEncodedValue) encodedValue).getValue() == 0;
             case ValueType.CHAR:
-                return ((CharEncodedValue)encodedValue).getValue() == 0;
+                return ((CharEncodedValue) encodedValue).getValue() == 0;
             case ValueType.DOUBLE:
-                return ((DoubleEncodedValue)encodedValue).getValue() == 0;
+                return ((DoubleEncodedValue) encodedValue).getValue() == 0;
             case ValueType.FLOAT:
-                return ((FloatEncodedValue)encodedValue).getValue() == 0;
+                return ((FloatEncodedValue) encodedValue).getValue() == 0;
             case ValueType.INT:
-                return ((IntEncodedValue)encodedValue).getValue() == 0;
+                return ((IntEncodedValue) encodedValue).getValue() == 0;
             case ValueType.LONG:
-                return ((LongEncodedValue)encodedValue).getValue() == 0;
+                return ((LongEncodedValue) encodedValue).getValue() == 0;
             case ValueType.NULL:
                 return true;
             case ValueType.SHORT:
-                return ((ShortEncodedValue)encodedValue).getValue() == 0;
+                return ((ShortEncodedValue) encodedValue).getValue() == 0;
         }
         return false;
     }
-
-    private EncodedValueUtils() {}
 }

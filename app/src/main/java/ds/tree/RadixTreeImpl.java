@@ -56,10 +56,10 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
     }
 
     public T find(String key) {
-        Visitor<T,T> visitor = new VisitorImpl<T,T>() {
+        Visitor<T, T> visitor = new VisitorImpl<T, T>() {
 
             public void visit(String key, RadixTreeNode<T> parent,
-                    RadixTreeNode<T> node) {
+                              RadixTreeNode<T> node) {
                 if (node.isReal())
                     result = node.getValue();
             }
@@ -71,7 +71,7 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
     }
 
     public boolean replace(String key, final T value) {
-        Visitor<T,T> visitor = new VisitorImpl<T,T>() {
+        Visitor<T, T> visitor = new VisitorImpl<T, T>() {
             public void visit(String key, RadixTreeNode<T> parent, RadixTreeNode<T> node) {
                 if (node.isReal()) {
                     node.setValue(value);
@@ -90,7 +90,7 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
     public boolean delete(String key) {
         Visitor<T, Boolean> visitor = new VisitorImpl<T, Boolean>(Boolean.FALSE) {
             public void visit(String key, RadixTreeNode<T> parent,
-                    RadixTreeNode<T> node) {
+                              RadixTreeNode<T> node) {
                 result = node.isReal();
 
                 // if it is a real node
@@ -133,7 +133,7 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
              *            The child Node
              */
             private void mergeNodes(RadixTreeNode<T> parent,
-                    RadixTreeNode<T> child) {
+                                    RadixTreeNode<T> child) {
                 parent.setKey(parent.getKey() + child.getKey());
                 parent.setReal(child.isReal());
                 parent.setValue(child.getValue());
@@ -144,7 +144,7 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
 
         visit(key, visitor);
 
-        if(visitor.getResult()) {
+        if (visitor.getResult()) {
             size--;
         }
         return visitor.getResult().booleanValue();
@@ -156,19 +156,19 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
      */
     public void insert(String key, T value) throws DuplicateKeyException {
         try {
-			insert(key, root, value);
-		} catch (DuplicateKeyException e) {
-			// re-throw the exception with 'key' in the message
-			throw new DuplicateKeyException("Duplicate key: '" + key + "'");
-		}
+            insert(key, root, value);
+        } catch (DuplicateKeyException e) {
+            // re-throw the exception with 'key' in the message
+            throw new DuplicateKeyException("Duplicate key: '" + key + "'");
+        }
         size++;
     }
 
     /**
      * Recursively insert the key in the radix tree.
      *
-     * @param key The key to be inserted
-     * @param node The current node
+     * @param key   The key to be inserted
+     * @param node  The current node
      * @param value The value associated with the key
      * @throws DuplicateKeyException If the key already exists in the database.
      */
@@ -223,13 +223,13 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
             node.setChildern(new ArrayList<RadixTreeNode<T>>());
             node.getChildern().add(n1);
 
-            if(numberOfMatchingCharacters < key.length()) {
-	            RadixTreeNode<T> n2 = new RadixTreeNode<T>();
-	            n2.setKey(key.substring(numberOfMatchingCharacters, key.length()));
-	            n2.setReal(true);
-	            n2.setValue(value);
+            if (numberOfMatchingCharacters < key.length()) {
+                RadixTreeNode<T> n2 = new RadixTreeNode<T>();
+                n2.setKey(key.substring(numberOfMatchingCharacters, key.length()));
+                n2.setReal(true);
+                n2.setValue(value);
 
-	            node.getChildern().add(n2);
+                node.getChildern().add(n2);
             } else {
                 node.setValue(value);
                 node.setReal(true);
@@ -307,9 +307,9 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
     }
 
     public boolean contains(String key) {
-        Visitor<T, Boolean> visitor = new VisitorImpl<T,Boolean>(Boolean.FALSE) {
+        Visitor<T, Boolean> visitor = new VisitorImpl<T, Boolean>(Boolean.FALSE) {
             public void visit(String key, RadixTreeNode<T> parent,
-                    RadixTreeNode<T> node) {
+                              RadixTreeNode<T> node) {
                 result = node.isReal();
             }
         };
@@ -321,7 +321,8 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
 
     /**
      * visit the node those key matches the given key
-     * @param key The key that need to be visited
+     *
+     * @param key     The key that need to be visited
      * @param visitor The visitor object
      */
     public <R> void visit(String key, Visitor<T, R> visitor) {
@@ -334,16 +335,13 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
      * recursively visit the tree based on the supplied "key". calls the Visitor
      * for the node those key matches the given prefix
      *
-     * @param prefix
-     *            The key o prefix to search in the tree
-     * @param visitor
-     *            The Visitor that will be called if a node with "key" as its
-     *            key is found
-     * @param node
-     *            The Node from where onward to search
+     * @param prefix  The key o prefix to search in the tree
+     * @param visitor The Visitor that will be called if a node with "key" as its
+     *                key is found
+     * @param node    The Node from where onward to search
      */
     private <R> void visit(String prefix, Visitor<T, R> visitor,
-            RadixTreeNode<T> parent, RadixTreeNode<T> node) {
+                           RadixTreeNode<T> parent, RadixTreeNode<T> node) {
 
         int numberOfMatchingCharacters = node.getNumberOfMatchingCharacters(prefix);
 
@@ -371,8 +369,9 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
 
     /**
      * Display the Trie on console.
-     *
+     * <p/>
      * WARNING! Do not use this for a large Trie, it's for testing purpose only.
+     *
      * @see formatTo
      */
     @Deprecated
@@ -381,7 +380,7 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
     }
 
     @SuppressWarnings("unused")
-	@Deprecated
+    @Deprecated
     private void display(int level, RadixTreeNode<T> node) {
         formatNodeTo(new Formatter(System.out), level, node);
     }
@@ -399,41 +398,41 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
         }
 
         if (node.isReal() == true)
-            f.format("%s[%s]*%n", node.getKey(),  node.getValue());
+            f.format("%s[%s]*%n", node.getKey(), node.getValue());
         else
             f.format("%s%n", node.getKey());
 
         for (RadixTreeNode<T> child : node.getChildern()) {
             formatNodeTo(f, level + 1, child);
         }
-	}
+    }
 
-	/**
-	 * Writes a textual representation of this tree to the given formatter.
-	 *
-	 * Currently, all options are simply ignored.
-	 *
+    /**
+     * Writes a textual representation of this tree to the given formatter.
+     * <p/>
+     * Currently, all options are simply ignored.
+     * <p/>
      * WARNING! Do not use this for a large Trie, it's for testing purpose only.
-	 */
-	public void formatTo(Formatter formatter, int flags, int width, int precision) {
-		formatNodeTo(formatter, 0, root);
-	}
+     */
+    public void formatTo(Formatter formatter, int flags, int width, int precision) {
+        formatNodeTo(formatter, 0, root);
+    }
 
     /**
      * Complete the a prefix to the point where ambiguity starts.
-     *
-     *  Example:
-     *  If a tree contain "blah1", "blah2"
-     *  complete("b") -> return "blah"
+     * <p/>
+     * Example:
+     * If a tree contain "blah1", "blah2"
+     * complete("b") -> return "blah"
      *
      * @param prefix The prefix we want to complete
      * @return The unambiguous completion of the string.
      */
-	public String complete(String prefix) {
-		return complete(prefix, root, "");
-	}
+    public String complete(String prefix) {
+        return complete(prefix, root, "");
+    }
 
-	private String complete(String key, RadixTreeNode<T> node, String base) {
+    private String complete(String key, RadixTreeNode<T> node, String base) {
         int i = 0;
         int keylen = key.length();
         int nodelen = node.getKey().length();
@@ -447,8 +446,7 @@ public class RadixTreeImpl<T> implements RadixTree<T>, Formattable {
 
         if (i == keylen && i <= nodelen) {
             return base + node.getKey();
-        }
-        else if (nodelen == 0 || (i < keylen && i >= nodelen)) {
+        } else if (nodelen == 0 || (i < keylen && i >= nodelen)) {
             String beginning = key.substring(0, i);
             String ending = key.substring(i, keylen);
             for (RadixTreeNode<T> child : node.getChildern()) {

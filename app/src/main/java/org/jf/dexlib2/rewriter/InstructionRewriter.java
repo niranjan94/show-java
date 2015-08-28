@@ -49,27 +49,30 @@ import org.jf.dexlib2.iface.reference.TypeReference;
 import javax.annotation.Nonnull;
 
 public class InstructionRewriter implements Rewriter<Instruction> {
-    @Nonnull protected final Rewriters rewriters;
+    @Nonnull
+    protected final Rewriters rewriters;
 
     public InstructionRewriter(@Nonnull Rewriters rewriters) {
         this.rewriters = rewriters;
     }
 
-    @Nonnull @Override public Instruction rewrite(@Nonnull Instruction instruction) {
+    @Nonnull
+    @Override
+    public Instruction rewrite(@Nonnull Instruction instruction) {
         if (instruction instanceof ReferenceInstruction) {
             switch (instruction.getOpcode().format) {
                 case Format20bc:
-                    return new RewrittenInstruction20bc((Instruction20bc)instruction);
+                    return new RewrittenInstruction20bc((Instruction20bc) instruction);
                 case Format21c:
-                    return new RewrittenInstruction21c((Instruction21c)instruction);
+                    return new RewrittenInstruction21c((Instruction21c) instruction);
                 case Format22c:
-                    return new RewrittenInstruction22c((Instruction22c)instruction);
+                    return new RewrittenInstruction22c((Instruction22c) instruction);
                 case Format31c:
-                    return new RewrittenInstruction31c((Instruction31c)instruction);
+                    return new RewrittenInstruction31c((Instruction31c) instruction);
                 case Format35c:
-                    return new RewrittenInstruction35c((Instruction35c)instruction);
+                    return new RewrittenInstruction35c((Instruction35c) instruction);
                 case Format3rc:
-                    return new RewrittenInstruction3rc((Instruction3rc)instruction);
+                    return new RewrittenInstruction3rc((Instruction3rc) instruction);
                 default:
                     throw new IllegalArgumentException();
             }
@@ -79,21 +82,24 @@ public class InstructionRewriter implements Rewriter<Instruction> {
 
     protected class BaseRewrittenReferenceInstruction<T extends ReferenceInstruction>
             implements ReferenceInstruction {
-        @Nonnull protected T instruction;
+        @Nonnull
+        protected T instruction;
 
         protected BaseRewrittenReferenceInstruction(@Nonnull T instruction) {
             this.instruction = instruction;
         }
 
-        @Override @Nonnull public Reference getReference() {
+        @Override
+        @Nonnull
+        public Reference getReference() {
             switch (getReferenceType()) {
                 case ReferenceType.TYPE:
                     return RewriterUtils.rewriteTypeReference(rewriters.getTypeRewriter(),
-                            (TypeReference)instruction.getReference());
+                            (TypeReference) instruction.getReference());
                 case ReferenceType.FIELD:
-                    return rewriters.getFieldReferenceRewriter().rewrite((FieldReference)instruction.getReference());
+                    return rewriters.getFieldReferenceRewriter().rewrite((FieldReference) instruction.getReference());
                 case ReferenceType.METHOD:
-                    return rewriters.getMethodReferenceRewriter().rewrite((MethodReference)instruction.getReference());
+                    return rewriters.getMethodReferenceRewriter().rewrite((MethodReference) instruction.getReference());
                 case ReferenceType.STRING:
                     return instruction.getReference();
                 default:
@@ -101,15 +107,18 @@ public class InstructionRewriter implements Rewriter<Instruction> {
             }
         }
 
-        @Override public int getReferenceType() {
+        @Override
+        public int getReferenceType() {
             return instruction.getReferenceType();
         }
 
-        @Override public Opcode getOpcode() {
+        @Override
+        public Opcode getOpcode() {
             return instruction.getOpcode();
         }
 
-        @Override public int getCodeUnits() {
+        @Override
+        public int getCodeUnits() {
             return instruction.getCodeUnits();
         }
     }
@@ -120,7 +129,8 @@ public class InstructionRewriter implements Rewriter<Instruction> {
             super(instruction);
         }
 
-        @Override public int getVerificationError() {
+        @Override
+        public int getVerificationError() {
             return instruction.getVerificationError();
         }
     }

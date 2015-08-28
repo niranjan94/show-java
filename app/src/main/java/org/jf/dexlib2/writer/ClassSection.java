@@ -47,51 +47,97 @@ import javax.annotation.Nullable;
 
 public interface ClassSection<StringKey extends CharSequence, TypeKey extends CharSequence, TypeListKey, ClassKey,
         FieldKey, MethodKey, AnnotationSetKey, EncodedValue> extends IndexSection<ClassKey> {
-    @Nonnull Collection<? extends ClassKey> getSortedClasses();
+    @Nonnull
+    Collection<? extends ClassKey> getSortedClasses();
 
-    @Nullable Map.Entry<? extends ClassKey, Integer> getClassEntryByType(@Nullable TypeKey key);
+    @Nullable
+    Map.Entry<? extends ClassKey, Integer> getClassEntryByType(@Nullable TypeKey key);
 
-    @Nonnull TypeKey getType(@Nonnull ClassKey key);
+    @Nonnull
+    TypeKey getType(@Nonnull ClassKey key);
+
     int getAccessFlags(@Nonnull ClassKey key);
-    @Nullable TypeKey getSuperclass(@Nonnull ClassKey key);
-    @Nullable TypeListKey getSortedInterfaces(@Nonnull ClassKey key);
-    @Nullable StringKey getSourceFile(@Nonnull ClassKey key);
-    @Nullable Collection<? extends EncodedValue> getStaticInitializers(@Nonnull ClassKey key);
 
-    @Nonnull Collection<? extends FieldKey> getSortedStaticFields(@Nonnull ClassKey key);
-    @Nonnull Collection<? extends FieldKey> getSortedInstanceFields(@Nonnull ClassKey key);
-    @Nonnull Collection<? extends FieldKey> getSortedFields(@Nonnull ClassKey key);
-    @Nonnull Collection<? extends MethodKey> getSortedDirectMethods(@Nonnull ClassKey key);
-    @Nonnull Collection<? extends MethodKey> getSortedVirtualMethods(@Nonnull ClassKey key);
-    @Nonnull Collection<? extends MethodKey> getSortedMethods(@Nonnull ClassKey key);
+    @Nullable
+    TypeKey getSuperclass(@Nonnull ClassKey key);
+
+    @Nullable
+    TypeListKey getSortedInterfaces(@Nonnull ClassKey key);
+
+    @Nullable
+    StringKey getSourceFile(@Nonnull ClassKey key);
+
+    @Nullable
+    Collection<? extends EncodedValue> getStaticInitializers(@Nonnull ClassKey key);
+
+    @Nonnull
+    Collection<? extends FieldKey> getSortedStaticFields(@Nonnull ClassKey key);
+
+    @Nonnull
+    Collection<? extends FieldKey> getSortedInstanceFields(@Nonnull ClassKey key);
+
+    @Nonnull
+    Collection<? extends FieldKey> getSortedFields(@Nonnull ClassKey key);
+
+    @Nonnull
+    Collection<? extends MethodKey> getSortedDirectMethods(@Nonnull ClassKey key);
+
+    @Nonnull
+    Collection<? extends MethodKey> getSortedVirtualMethods(@Nonnull ClassKey key);
+
+    @Nonnull
+    Collection<? extends MethodKey> getSortedMethods(@Nonnull ClassKey key);
 
     int getFieldAccessFlags(@Nonnull FieldKey key);
+
     int getMethodAccessFlags(@Nonnull MethodKey key);
 
-    @Nullable AnnotationSetKey getClassAnnotations(@Nonnull ClassKey key);
-    @Nullable AnnotationSetKey getFieldAnnotations(@Nonnull FieldKey key);
-    @Nullable AnnotationSetKey getMethodAnnotations(@Nonnull MethodKey key);
-    @Nullable List<? extends AnnotationSetKey> getParameterAnnotations(@Nonnull MethodKey key);
+    @Nullable
+    AnnotationSetKey getClassAnnotations(@Nonnull ClassKey key);
 
-    @Nullable Iterable<? extends DebugItem> getDebugItems(@Nonnull MethodKey key);
-    @Nullable Iterable<? extends StringKey> getParameterNames(@Nonnull MethodKey key);
+    @Nullable
+    AnnotationSetKey getFieldAnnotations(@Nonnull FieldKey key);
+
+    @Nullable
+    AnnotationSetKey getMethodAnnotations(@Nonnull MethodKey key);
+
+    @Nullable
+    List<? extends AnnotationSetKey> getParameterAnnotations(@Nonnull MethodKey key);
+
+    @Nullable
+    Iterable<? extends DebugItem> getDebugItems(@Nonnull MethodKey key);
+
+    @Nullable
+    Iterable<? extends StringKey> getParameterNames(@Nonnull MethodKey key);
 
     int getRegisterCount(@Nonnull MethodKey key);
-    @Nullable Iterable<? extends Instruction> getInstructions(@Nonnull MethodKey key);
-    @Nonnull List<? extends TryBlock<? extends ExceptionHandler>> getTryBlocks(@Nonnull MethodKey key);
-    @Nullable TypeKey getExceptionType(@Nonnull ExceptionHandler handler);
-    @Nonnull MutableMethodImplementation makeMutableMethodImplementation(@Nonnull MethodKey key);
+
+    @Nullable
+    Iterable<? extends Instruction> getInstructions(@Nonnull MethodKey key);
+
+    @Nonnull
+    List<? extends TryBlock<? extends ExceptionHandler>> getTryBlocks(@Nonnull MethodKey key);
+
+    @Nullable
+    TypeKey getExceptionType(@Nonnull ExceptionHandler handler);
+
+    @Nonnull
+    MutableMethodImplementation makeMutableMethodImplementation(@Nonnull MethodKey key);
 
     void setEncodedArrayOffset(@Nonnull ClassKey key, int offset);
+
     int getEncodedArrayOffset(@Nonnull ClassKey key);
 
     void setAnnotationDirectoryOffset(@Nonnull ClassKey key, int offset);
+
     int getAnnotationDirectoryOffset(@Nonnull ClassKey key);
 
     void setAnnotationSetRefListOffset(@Nonnull MethodKey key, int offset);
+
     int getAnnotationSetRefListOffset(@Nonnull MethodKey key);
 
     void setCodeItemOffset(@Nonnull MethodKey key, int offset);
+
     int getCodeItemOffset(@Nonnull MethodKey key);
 
     void writeDebugItem(@Nonnull DebugWriter<StringKey, TypeKey> writer, DebugItem debugItem) throws IOException;

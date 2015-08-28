@@ -49,7 +49,7 @@ public abstract class BaseTypeEncodedValue implements TypeEncodedValue {
     @Override
     public boolean equals(@Nullable Object o) {
         if (o instanceof TypeEncodedValue) {
-            return getValue().equals(((TypeEncodedValue)o).getValue());
+            return getValue().equals(((TypeEncodedValue) o).getValue());
         }
         return false;
     }
@@ -58,8 +58,10 @@ public abstract class BaseTypeEncodedValue implements TypeEncodedValue {
     public int compareTo(@Nonnull EncodedValue o) {
         int res = Ints.compare(getValueType(), o.getValueType());
         if (res != 0) return res;
-        return getValue().compareTo(((TypeEncodedValue)o).getValue());
+        return getValue().compareTo(((TypeEncodedValue) o).getValue());
     }
 
-    public int getValueType() { return ValueType.TYPE; }
+    public int getValueType() {
+        return ValueType.TYPE;
+    }
 }

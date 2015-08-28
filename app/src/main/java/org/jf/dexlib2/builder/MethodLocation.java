@@ -54,7 +54,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class MethodLocation {
-    @Nullable BuilderInstruction instruction;
+    @Nullable
+    BuilderInstruction instruction;
     int codeAddress;
     int index;
 
@@ -113,7 +114,7 @@ public class MethodLocation {
     void mergeInto(@Nonnull MethodLocation other) {
         if (this.labels != null || other.labels != null) {
             List<Label> otherLabels = other.getLabels(true);
-            for (Label label: this.getLabels(false)) {
+            for (Label label : this.getLabels(false)) {
                 label.location = other;
                 otherLabels.add(label);
             }
@@ -124,7 +125,7 @@ public class MethodLocation {
             // We need to keep the debug items in the same order. We add the other debug items to this list, then reassign
             // the list.
             List<BuilderDebugItem> debugItems = getDebugItems(true);
-            for (BuilderDebugItem debugItem: debugItems) {
+            for (BuilderDebugItem debugItem : debugItems) {
                 debugItem.location = other;
             }
             debugItems.addAll(other.getDebugItems(false));
@@ -137,22 +138,28 @@ public class MethodLocation {
     public Set<Label> getLabels() {
         return new AbstractSet<Label>() {
             @Nonnull
-            @Override public Iterator<Label> iterator() {
+            @Override
+            public Iterator<Label> iterator() {
                 final Iterator<Label> it = getLabels(false).iterator();
 
                 return new Iterator<Label>() {
-                    private @Nullable Label currentLabel = null;
+                    private
+                    @Nullable
+                    Label currentLabel = null;
 
-                    @Override public boolean hasNext() {
+                    @Override
+                    public boolean hasNext() {
                         return it.hasNext();
                     }
 
-                    @Override public Label next() {
+                    @Override
+                    public Label next() {
                         currentLabel = it.next();
                         return currentLabel;
                     }
 
-                    @Override public void remove() {
+                    @Override
+                    public void remove() {
                         if (currentLabel != null) {
                             currentLabel.location = null;
                         }
@@ -161,11 +168,13 @@ public class MethodLocation {
                 };
             }
 
-            @Override public int size() {
+            @Override
+            public int size() {
                 return getLabels(false).size();
             }
 
-            @Override public boolean add(@Nonnull Label label) {
+            @Override
+            public boolean add(@Nonnull Label label) {
                 if (label.isPlaced()) {
                     throw new IllegalArgumentException("Cannot add a label that is already placed. You must remove " +
                             "it from its current location first.");
@@ -188,22 +197,28 @@ public class MethodLocation {
     public Set<BuilderDebugItem> getDebugItems() {
         return new AbstractSet<BuilderDebugItem>() {
             @Nonnull
-            @Override public Iterator<BuilderDebugItem> iterator() {
+            @Override
+            public Iterator<BuilderDebugItem> iterator() {
                 final Iterator<BuilderDebugItem> it = getDebugItems(false).iterator();
 
                 return new Iterator<BuilderDebugItem>() {
-                    private @Nullable BuilderDebugItem currentDebugItem = null;
+                    private
+                    @Nullable
+                    BuilderDebugItem currentDebugItem = null;
 
-                    @Override public boolean hasNext() {
+                    @Override
+                    public boolean hasNext() {
                         return it.hasNext();
                     }
 
-                    @Override public BuilderDebugItem next() {
+                    @Override
+                    public BuilderDebugItem next() {
                         currentDebugItem = it.next();
                         return currentDebugItem;
                     }
 
-                    @Override public void remove() {
+                    @Override
+                    public void remove() {
                         if (currentDebugItem != null) {
                             currentDebugItem.location = null;
                         }
@@ -212,11 +227,13 @@ public class MethodLocation {
                 };
             }
 
-            @Override public int size() {
+            @Override
+            public int size() {
                 return getDebugItems(false).size();
             }
 
-            @Override public boolean add(@Nonnull BuilderDebugItem debugItem) {
+            @Override
+            public boolean add(@Nonnull BuilderDebugItem debugItem) {
                 if (debugItem.location != null) {
                     throw new IllegalArgumentException("Cannot add a debug item that has already been added to a " +
                             "method. You must remove it from its current location first.");

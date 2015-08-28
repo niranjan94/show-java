@@ -46,10 +46,11 @@ public abstract class BuilderOffsetInstruction extends BuilderInstruction implem
         this.target = target;
     }
 
-    @Override public int getCodeOffset() {
+    @Override
+    public int getCodeOffset() {
         int codeOffset = internalGetCodeOffset();
         if ((this.getCodeUnits() == 1 && (codeOffset < Byte.MIN_VALUE || codeOffset > Byte.MAX_VALUE)) ||
-            (this.getCodeUnits() == 2 && (codeOffset < Short.MIN_VALUE || codeOffset > Short.MAX_VALUE))) {
+                (this.getCodeUnits() == 2 && (codeOffset < Short.MIN_VALUE || codeOffset > Short.MAX_VALUE))) {
             throw new IllegalStateException("Target is out of range");
         }
         return codeOffset;

@@ -51,7 +51,7 @@ public abstract class BaseAnnotationEncodedValue implements AnnotationEncodedVal
     @Override
     public boolean equals(@Nullable Object o) {
         if (o instanceof AnnotationEncodedValue) {
-            AnnotationEncodedValue other = (AnnotationEncodedValue)o;
+            AnnotationEncodedValue other = (AnnotationEncodedValue) o;
             return getType().equals(other.getType()) &&
                     getElements().equals(other.getElements());
         }
@@ -62,7 +62,7 @@ public abstract class BaseAnnotationEncodedValue implements AnnotationEncodedVal
     public int compareTo(@Nonnull EncodedValue o) {
         int res = Ints.compare(getValueType(), o.getValueType());
         if (res != 0) return res;
-        AnnotationEncodedValue other = (AnnotationEncodedValue)o;
+        AnnotationEncodedValue other = (AnnotationEncodedValue) o;
         res = getType().compareTo(other.getType());
         if (res != 0) return res;
         return CollectionUtils.compareAsSet(getElements(), other.getElements());

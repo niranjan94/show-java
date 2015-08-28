@@ -49,15 +49,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 class BuilderAnnotationSetPool implements AnnotationSetSection<BuilderAnnotation, BuilderAnnotationSet> {
-    @Nonnull private final BuilderContext context;
-    @Nonnull private final ConcurrentMap<Set<? extends Annotation>, BuilderAnnotationSet> internedItems =
+    @Nonnull
+    private final BuilderContext context;
+    @Nonnull
+    private final ConcurrentMap<Set<? extends Annotation>, BuilderAnnotationSet> internedItems =
             Maps.newConcurrentMap();
 
     BuilderAnnotationSetPool(@Nonnull BuilderContext context) {
         this.context = context;
     }
 
-    @Nonnull public BuilderAnnotationSet internAnnotationSet(@Nullable Set<? extends Annotation> annotations) {
+    @Nonnull
+    public BuilderAnnotationSet internAnnotationSet(@Nullable Set<? extends Annotation> annotations) {
         if (annotations == null) {
             return BuilderAnnotationSet.EMPTY;
         }
@@ -70,35 +73,44 @@ class BuilderAnnotationSetPool implements AnnotationSetSection<BuilderAnnotation
         BuilderAnnotationSet annotationSet = new BuilderAnnotationSet(
                 ImmutableSet.copyOf(Iterators.transform(annotations.iterator(),
                         new Function<Annotation, BuilderAnnotation>() {
-                            @Nullable @Override public BuilderAnnotation apply(Annotation input) {
+                            @Nullable
+                            @Override
+                            public BuilderAnnotation apply(Annotation input) {
                                 return context.annotationPool.internAnnotation(input);
                             }
                         })));
 
         ret = internedItems.putIfAbsent(annotationSet, annotationSet);
-        return ret==null?annotationSet:ret;
+        return ret == null ? annotationSet : ret;
     }
 
-    @Nonnull @Override
+    @Nonnull
+    @Override
     public Collection<? extends BuilderAnnotation> getAnnotations(@Nonnull BuilderAnnotationSet key) {
-        return key.annotations; 
+        return key.annotations;
     }
 
-    @Override public int getNullableItemOffset(@Nullable BuilderAnnotationSet key) {
-        return key==null?DexWriter.NO_OFFSET:key.offset;
+    @Override
+    public int getNullableItemOffset(@Nullable BuilderAnnotationSet key) {
+        return key == null ? DexWriter.NO_OFFSET : key.offset;
     }
 
-    @Override public int getItemOffset(@Nonnull BuilderAnnotationSet key) {
+    @Override
+    public int getItemOffset(@Nonnull BuilderAnnotationSet key) {
         return key.offset;
     }
 
-    @Nonnull @Override public Collection<? extends Entry<? extends BuilderAnnotationSet, Integer>> getItems() {
+    @Nonnull
+    @Override
+    public Collection<? extends Entry<? extends BuilderAnnotationSet, Integer>> getItems() {
         return new BuilderMapEntryCollection<BuilderAnnotationSet>(internedItems.values()) {
-            @Override protected int getValue(@Nonnull BuilderAnnotationSet key) {
+            @Override
+            protected int getValue(@Nonnull BuilderAnnotationSet key) {
                 return key.offset;
             }
 
-            @Override protected int setValue(@Nonnull BuilderAnnotationSet key, int value) {
+            @Override
+            protected int setValue(@Nonnull BuilderAnnotationSet key, int value) {
                 int prev = key.offset;
                 key.offset = value;
                 return prev;

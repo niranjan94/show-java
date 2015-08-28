@@ -50,7 +50,8 @@ public class ImmutableInstruction35c extends ImmutableInstruction implements Ins
     protected final int registerE;
     protected final int registerF;
     protected final int registerG;
-    @Nonnull protected final ImmutableReference reference;
+    @Nonnull
+    protected final ImmutableReference reference;
 
     public ImmutableInstruction35c(@Nonnull Opcode opcode,
                                    int registerCount,
@@ -62,17 +63,17 @@ public class ImmutableInstruction35c extends ImmutableInstruction implements Ins
                                    @Nonnull Reference reference) {
         super(opcode);
         this.registerCount = Preconditions.check35cRegisterCount(registerCount);
-        this.registerC = (registerCount>0) ? Preconditions.checkNibbleRegister(registerC) : 0;
-        this.registerD = (registerCount>1) ? Preconditions.checkNibbleRegister(registerD) : 0;
-        this.registerE = (registerCount>2) ? Preconditions.checkNibbleRegister(registerE) : 0;
-        this.registerF = (registerCount>3) ? Preconditions.checkNibbleRegister(registerF) : 0;
-        this.registerG = (registerCount>4) ? Preconditions.checkNibbleRegister(registerG) : 0;
+        this.registerC = (registerCount > 0) ? Preconditions.checkNibbleRegister(registerC) : 0;
+        this.registerD = (registerCount > 1) ? Preconditions.checkNibbleRegister(registerD) : 0;
+        this.registerE = (registerCount > 2) ? Preconditions.checkNibbleRegister(registerE) : 0;
+        this.registerF = (registerCount > 3) ? Preconditions.checkNibbleRegister(registerF) : 0;
+        this.registerG = (registerCount > 4) ? Preconditions.checkNibbleRegister(registerG) : 0;
         this.reference = ImmutableReferenceFactory.of(opcode.referenceType, reference);
     }
 
     public static ImmutableInstruction35c of(Instruction35c instruction) {
         if (instruction instanceof ImmutableInstruction35c) {
-            return (ImmutableInstruction35c)instruction;
+            return (ImmutableInstruction35c) instruction;
         }
         return new ImmutableInstruction35c(
                 instruction.getOpcode(),
@@ -85,14 +86,49 @@ public class ImmutableInstruction35c extends ImmutableInstruction implements Ins
                 instruction.getReference());
     }
 
-    @Override public int getRegisterCount() { return registerCount; }
-    @Override public int getRegisterC() { return registerC; }
-    @Override public int getRegisterD() { return registerD; }
-    @Override public int getRegisterE() { return registerE; }
-    @Override public int getRegisterF() { return registerF; }
-    @Override public int getRegisterG() { return registerG; }
-    @Nonnull @Override public ImmutableReference getReference() { return reference; }
-    @Override public int getReferenceType() { return opcode.referenceType; }
+    @Override
+    public int getRegisterCount() {
+        return registerCount;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getRegisterC() {
+        return registerC;
+    }
+
+    @Override
+    public int getRegisterD() {
+        return registerD;
+    }
+
+    @Override
+    public int getRegisterE() {
+        return registerE;
+    }
+
+    @Override
+    public int getRegisterF() {
+        return registerF;
+    }
+
+    @Override
+    public int getRegisterG() {
+        return registerG;
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableReference getReference() {
+        return reference;
+    }
+
+    @Override
+    public int getReferenceType() {
+        return opcode.referenceType;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

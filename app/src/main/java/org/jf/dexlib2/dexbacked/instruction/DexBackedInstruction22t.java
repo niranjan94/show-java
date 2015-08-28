@@ -55,5 +55,8 @@ public class DexBackedInstruction22t extends DexBackedInstruction implements Ins
         return NibbleUtils.extractHighUnsignedNibble(dexFile.readByte(instructionStart + 1));
     }
 
-    @Override public int getCodeOffset() { return dexFile.readShort(instructionStart + 2); }
+    @Override
+    public int getCodeOffset() {
+        return dexFile.readShort(instructionStart + 2);
+    }
 }

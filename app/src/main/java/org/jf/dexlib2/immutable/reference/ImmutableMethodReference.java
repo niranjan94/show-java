@@ -42,10 +42,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ImmutableMethodReference extends BaseMethodReference implements ImmutableReference {
-    @Nonnull protected final String definingClass;
-    @Nonnull protected final String name;
-    @Nonnull protected final ImmutableList<String> parameters;
-    @Nonnull protected final String returnType;
+    @Nonnull
+    protected final String definingClass;
+    @Nonnull
+    protected final String name;
+    @Nonnull
+    protected final ImmutableList<String> parameters;
+    @Nonnull
+    protected final String returnType;
 
     public ImmutableMethodReference(@Nonnull String definingClass,
                                     @Nonnull String name,
@@ -70,7 +74,7 @@ public class ImmutableMethodReference extends BaseMethodReference implements Imm
     @Nonnull
     public static ImmutableMethodReference of(@Nonnull MethodReference methodReference) {
         if (methodReference instanceof ImmutableMethodReference) {
-            return (ImmutableMethodReference)methodReference;
+            return (ImmutableMethodReference) methodReference;
         }
         return new ImmutableMethodReference(
                 methodReference.getDefiningClass(),
@@ -79,10 +83,29 @@ public class ImmutableMethodReference extends BaseMethodReference implements Imm
                 methodReference.getReturnType());
     }
 
-    @Nonnull @Override public String getDefiningClass() { return definingClass; }
-    @Nonnull @Override public String getName() { return name; }
-    @Nonnull @Override public ImmutableList<String> getParameterTypes() { return parameters; }
-    @Nonnull @Override public String getReturnType() { return returnType; }
+    @Nonnull
+    @Override
+    public String getDefiningClass() {
+        return definingClass;
+    }
+
+    @Nonnull
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableList<String> getParameterTypes() {
+        return parameters;
+    }
+
+    @Nonnull
+    @Override
+    public String getReturnType() {
+        return returnType;
+    }
 
 
 }

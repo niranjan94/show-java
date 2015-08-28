@@ -11,12 +11,11 @@ public final class Constants {
     public static final String PROCESS_DIR = "com.njlabs.showjava.process.DIR";
     public static final String PROCESS_PACKAGE_ID = "com.njlabs.showjava.process.PACKAGE_ID";
     public static final int PROCESS_NOTIFICATION_ID = 1;
+    public static final int STACK_SIZE = 20971520;
 
     public interface ACTION {
         String START_PROCESS = "com.njlabs.showjava.process.action.START";
         String STOP_PROCESS = "com.njlabs.showjava.process.action.STOP";
     }
-
-    public static final int STACK_SIZE = 20971520;
 
 }

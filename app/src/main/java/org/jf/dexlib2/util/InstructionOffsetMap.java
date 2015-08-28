@@ -40,13 +40,14 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class InstructionOffsetMap {
-    @Nonnull private final int[] instructionCodeOffsets;
+    @Nonnull
+    private final int[] instructionCodeOffsets;
 
     public InstructionOffsetMap(@Nonnull List<? extends Instruction> instructions) {
         this.instructionCodeOffsets = new int[instructions.size()];
 
         int codeOffset = 0;
-        for (int i=0; i<instructions.size(); i++) {
+        for (int i = 0; i < instructions.size(); i++) {
             instructionCodeOffsets[i] = codeOffset;
             codeOffset += instructions.get(i).getCodeUnits();
         }

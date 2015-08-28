@@ -45,7 +45,7 @@ public abstract class BaseTypeReference implements TypeReference {
     public boolean equals(Object o) {
         if (o != null) {
             if (o instanceof TypeReference) {
-                return getType().equals(((TypeReference)o).getType());
+                return getType().equals(((TypeReference) o).getType());
             }
             if (o instanceof CharSequence) {
                 return getType().equals(o.toString());
@@ -59,8 +59,24 @@ public abstract class BaseTypeReference implements TypeReference {
         return getType().compareTo(o.toString());
     }
 
-    @Override public int length() { return getType().length(); }
-    @Override public char charAt(int index) { return getType().charAt(index); }
-    @Override public CharSequence subSequence(int start, int end) { return getType().subSequence(start, end); }
-    @Override @Nonnull public String toString() { return getType(); }
+    @Override
+    public int length() {
+        return getType().length();
+    }
+
+    @Override
+    public char charAt(int index) {
+        return getType().charAt(index);
+    }
+
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        return getType().subSequence(start, end);
+    }
+
+    @Override
+    @Nonnull
+    public String toString() {
+        return getType();
+    }
 }

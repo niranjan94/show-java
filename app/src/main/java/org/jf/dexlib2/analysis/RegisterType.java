@@ -41,58 +41,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class RegisterType {
-    public final byte category;
-    @Nullable public final TypeProto type;
-
-    private RegisterType(byte category, @Nullable TypeProto type) {
-        assert ((category == REFERENCE || category == UNINIT_REF || category == UNINIT_THIS) && type != null) ||
-               ((category != REFERENCE && category != UNINIT_REF && category != UNINIT_THIS) && type == null);
-
-        this.category = category;
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return "(" + CATEGORY_NAMES[category] + (type==null?"":("," + type)) + ")";
-    }
-
-    public void writeTo(Writer writer) throws IOException {
-        writer.write('(');
-        writer.write(CATEGORY_NAMES[category]);
-        if (type != null) {
-            writer.write(',');
-            writer.write(type.getType());
-        }
-        writer.write(')');
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RegisterType that = (RegisterType) o;
-
-        if (category != that.category) {
-            return false;
-        }
-
-        // These require strict reference equality. Every instance represents a unique
-        // reference that can't be merged with a different one, even if they have the same type.
-        if (category == UNINIT_REF || category == UNINIT_THIS) {
-            return false;
-        }
-        return (type != null ? type.equals(that.type) : that.type == null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = category;
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        return result;
-    }
-    
     // The Unknown category denotes a register type that hasn't been determined yet
     public static final byte UNKNOWN = 0;
     // The Uninit category is for registers that haven't been set yet. e.g. the non-parameter registers in a method
@@ -122,8 +70,7 @@ public class RegisterType {
     // example if the register's type is an Integer on one incoming code path, but is a Reference type on another
     // incomming code path. There is no register type that can hold either an Integer or a Reference.
     public static final byte CONFLICTED = 19;
-
-    public static final String[] CATEGORY_NAMES = new String[] {
+    public static final String[] CATEGORY_NAMES = new String[]{
             "Unknown",
             "Uninit",
             "Null",
@@ -145,36 +92,6 @@ public class RegisterType {
             "Reference",
             "Conflicted"
     };
-
-    //this table is used when merging register types. For example, if a particular register can be either a BYTE
-    //or a Char, then the "merged" type of that register would be Integer, because it is the "smallest" type can
-    //could hold either type of value.
-    protected static byte[][] mergeTable  =
-    {
-            /*              UNKNOWN      UNINIT      NULL        ONE,        BOOLEAN     BYTE        POS_BYTE    SHORT       POS_SHORT   CHAR        INTEGER,    FLOAT,      LONG_LO     LONG_HI     DOUBLE_LO   DOUBLE_HI   UNINIT_REF  UNINIT_THIS REFERENCE   CONFLICTED*/
-            /*UNKNOWN*/    {UNKNOWN,     UNINIT,     NULL,       ONE,        BOOLEAN,    BYTE,       POS_BYTE,   SHORT,      POS_SHORT,  CHAR,       INTEGER,    FLOAT,      LONG_LO,    LONG_HI,    DOUBLE_LO,  DOUBLE_HI,  UNINIT_REF, UNINIT_THIS,REFERENCE,  CONFLICTED},
-            /*UNINIT*/     {UNINIT,      UNINIT,     CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*NULL*/       {NULL,        CONFLICTED, NULL,       BOOLEAN,    BOOLEAN,    BYTE,       POS_BYTE,   SHORT,      POS_SHORT,  CHAR,       INTEGER,    FLOAT,      CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, REFERENCE,  CONFLICTED},
-            /*ONE*/        {ONE,         CONFLICTED, BOOLEAN,    ONE,        BOOLEAN,    BYTE,       POS_BYTE,   SHORT,      POS_SHORT,  CHAR,       INTEGER,    FLOAT,      CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*BOOLEAN*/    {BOOLEAN,     CONFLICTED, BOOLEAN,    BOOLEAN,    BOOLEAN,    BYTE,       POS_BYTE,   SHORT,      POS_SHORT,  CHAR,       INTEGER,    FLOAT,      CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*BYTE*/       {BYTE,        CONFLICTED, BYTE,       BYTE,       BYTE,       BYTE,       BYTE,       SHORT,      SHORT,      INTEGER,    INTEGER,    FLOAT,      CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*POS_BYTE*/   {POS_BYTE,    CONFLICTED, POS_BYTE,   POS_BYTE,   POS_BYTE,   BYTE,       POS_BYTE,   SHORT,      POS_SHORT,  CHAR,       INTEGER,    FLOAT,      CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*SHORT*/      {SHORT,       CONFLICTED, SHORT,      SHORT,      SHORT,      SHORT,      SHORT,      SHORT,      SHORT,      INTEGER,    INTEGER,    FLOAT,      CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*POS_SHORT*/  {POS_SHORT,   CONFLICTED, POS_SHORT,  POS_SHORT,  POS_SHORT,  SHORT,      POS_SHORT,  SHORT,      POS_SHORT,  CHAR,       INTEGER,    FLOAT,      CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*CHAR*/       {CHAR,        CONFLICTED, CHAR,       CHAR,       CHAR,       INTEGER,    CHAR,       INTEGER,    CHAR,       CHAR,       INTEGER,    FLOAT,      CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*INTEGER*/    {INTEGER,     CONFLICTED, INTEGER,    INTEGER,    INTEGER,    INTEGER,    INTEGER,    INTEGER,    INTEGER,    INTEGER,    INTEGER,    INTEGER,    CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*FLOAT*/      {FLOAT,       CONFLICTED, FLOAT,      FLOAT,      FLOAT,      FLOAT,      FLOAT,      FLOAT,      FLOAT,      FLOAT,      INTEGER,    FLOAT,      CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*LONG_LO*/    {LONG_LO,     CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, LONG_LO,    CONFLICTED, LONG_LO,    CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*LONG_HI*/    {LONG_HI,     CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, LONG_HI,    CONFLICTED, LONG_HI,    CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*DOUBLE_LO*/  {DOUBLE_LO,   CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, LONG_LO,    CONFLICTED, DOUBLE_LO,  CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*DOUBLE_HI*/  {DOUBLE_HI,   CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, LONG_HI,    CONFLICTED, DOUBLE_HI,  CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*UNINIT_REF*/ {UNINIT_REF,  CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
-            /*UNINIT_THIS*/{UNINIT_THIS, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, UNINIT_THIS,CONFLICTED, CONFLICTED},
-            /*REFERENCE*/  {REFERENCE,   CONFLICTED, REFERENCE,  CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, REFERENCE,  CONFLICTED},
-            /*CONFLICTED*/ {CONFLICTED,  CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED}
-    };
-
-
     public static final RegisterType UNKNOWN_TYPE = new RegisterType(UNKNOWN, null);
     public static final RegisterType UNINIT_TYPE = new RegisterType(UNINIT, null);
     public static final RegisterType NULL_TYPE = new RegisterType(NULL, null);
@@ -192,6 +109,43 @@ public class RegisterType {
     public static final RegisterType DOUBLE_LO_TYPE = new RegisterType(DOUBLE_LO, null);
     public static final RegisterType DOUBLE_HI_TYPE = new RegisterType(DOUBLE_HI, null);
     public static final RegisterType CONFLICTED_TYPE = new RegisterType(CONFLICTED, null);
+    //this table is used when merging register types. For example, if a particular register can be either a BYTE
+    //or a Char, then the "merged" type of that register would be Integer, because it is the "smallest" type can
+    //could hold either type of value.
+    protected static byte[][] mergeTable =
+            {
+            /*              UNKNOWN      UNINIT      NULL        ONE,        BOOLEAN     BYTE        POS_BYTE    SHORT       POS_SHORT   CHAR        INTEGER,    FLOAT,      LONG_LO     LONG_HI     DOUBLE_LO   DOUBLE_HI   UNINIT_REF  UNINIT_THIS REFERENCE   CONFLICTED*/
+            /*UNKNOWN*/    {UNKNOWN, UNINIT, NULL, ONE, BOOLEAN, BYTE, POS_BYTE, SHORT, POS_SHORT, CHAR, INTEGER, FLOAT, LONG_LO, LONG_HI, DOUBLE_LO, DOUBLE_HI, UNINIT_REF, UNINIT_THIS, REFERENCE, CONFLICTED},
+            /*UNINIT*/     {UNINIT, UNINIT, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*NULL*/       {NULL, CONFLICTED, NULL, BOOLEAN, BOOLEAN, BYTE, POS_BYTE, SHORT, POS_SHORT, CHAR, INTEGER, FLOAT, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, REFERENCE, CONFLICTED},
+            /*ONE*/        {ONE, CONFLICTED, BOOLEAN, ONE, BOOLEAN, BYTE, POS_BYTE, SHORT, POS_SHORT, CHAR, INTEGER, FLOAT, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*BOOLEAN*/    {BOOLEAN, CONFLICTED, BOOLEAN, BOOLEAN, BOOLEAN, BYTE, POS_BYTE, SHORT, POS_SHORT, CHAR, INTEGER, FLOAT, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*BYTE*/       {BYTE, CONFLICTED, BYTE, BYTE, BYTE, BYTE, BYTE, SHORT, SHORT, INTEGER, INTEGER, FLOAT, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*POS_BYTE*/   {POS_BYTE, CONFLICTED, POS_BYTE, POS_BYTE, POS_BYTE, BYTE, POS_BYTE, SHORT, POS_SHORT, CHAR, INTEGER, FLOAT, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*SHORT*/      {SHORT, CONFLICTED, SHORT, SHORT, SHORT, SHORT, SHORT, SHORT, SHORT, INTEGER, INTEGER, FLOAT, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*POS_SHORT*/  {POS_SHORT, CONFLICTED, POS_SHORT, POS_SHORT, POS_SHORT, SHORT, POS_SHORT, SHORT, POS_SHORT, CHAR, INTEGER, FLOAT, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*CHAR*/       {CHAR, CONFLICTED, CHAR, CHAR, CHAR, INTEGER, CHAR, INTEGER, CHAR, CHAR, INTEGER, FLOAT, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*INTEGER*/    {INTEGER, CONFLICTED, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*FLOAT*/      {FLOAT, CONFLICTED, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, FLOAT, INTEGER, FLOAT, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*LONG_LO*/    {LONG_LO, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, LONG_LO, CONFLICTED, LONG_LO, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*LONG_HI*/    {LONG_HI, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, LONG_HI, CONFLICTED, LONG_HI, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*DOUBLE_LO*/  {DOUBLE_LO, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, LONG_LO, CONFLICTED, DOUBLE_LO, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*DOUBLE_HI*/  {DOUBLE_HI, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, LONG_HI, CONFLICTED, DOUBLE_HI, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*UNINIT_REF*/ {UNINIT_REF, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED},
+            /*UNINIT_THIS*/{UNINIT_THIS, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, UNINIT_THIS, CONFLICTED, CONFLICTED},
+            /*REFERENCE*/  {REFERENCE, CONFLICTED, REFERENCE, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, REFERENCE, CONFLICTED},
+            /*CONFLICTED*/ {CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED, CONFLICTED}
+            };
+    public final byte category;
+    @Nullable
+    public final TypeProto type;
+    private RegisterType(byte category, @Nullable TypeProto type) {
+        assert ((category == REFERENCE || category == UNINIT_REF || category == UNINIT_THIS) && type != null) ||
+                ((category != REFERENCE && category != UNINIT_REF && category != UNINIT_THIS) && type == null);
+
+        this.category = category;
+        this.type = type;
+    }
 
     @Nonnull
     public static RegisterType getWideRegisterType(@Nonnull CharSequence type, boolean firstRegister) {
@@ -270,45 +224,6 @@ public class RegisterType {
     }
 
     @Nonnull
-    public RegisterType merge(@Nonnull RegisterType other) {
-        if (other.equals(this)) {
-            return this;
-        }
-
-        byte mergedCategory = mergeTable[this.category][other.category];
-
-        TypeProto mergedType = null;
-        if (mergedCategory == REFERENCE) {
-            TypeProto type = this.type;
-            if (type != null) {
-                if (other.type != null) {
-                    mergedType = type.getCommonSuperclass(other.type);
-                } else {
-                    mergedType = type;
-                }
-            } else {
-                mergedType = other.type;
-            }
-        } else if (mergedCategory == UNINIT_REF || mergedCategory == UNINIT_THIS) {
-            if (this.category == UNKNOWN) {
-                return other;
-            }
-            assert other.category == UNKNOWN;
-            return this;
-        }
-
-        if (mergedType != null) {
-            if (mergedType.equals(this.type)) {
-                return this;
-            }
-            if (mergedType.equals(other.type)) {
-                return other;
-            }
-        }
-        return RegisterType.getRegisterType(mergedCategory, mergedType);
-    }
-
-    @Nonnull
     public static RegisterType getRegisterType(byte category, @Nullable TypeProto typeProto) {
         switch (category) {
             case UNKNOWN:
@@ -348,5 +263,85 @@ public class RegisterType {
         }
 
         return new RegisterType(category, typeProto);
+    }
+
+    @Override
+    public String toString() {
+        return "(" + CATEGORY_NAMES[category] + (type == null ? "" : ("," + type)) + ")";
+    }
+
+    public void writeTo(Writer writer) throws IOException {
+        writer.write('(');
+        writer.write(CATEGORY_NAMES[category]);
+        if (type != null) {
+            writer.write(',');
+            writer.write(type.getType());
+        }
+        writer.write(')');
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RegisterType that = (RegisterType) o;
+
+        if (category != that.category) {
+            return false;
+        }
+
+        // These require strict reference equality. Every instance represents a unique
+        // reference that can't be merged with a different one, even if they have the same type.
+        if (category == UNINIT_REF || category == UNINIT_THIS) {
+            return false;
+        }
+        return (type != null ? type.equals(that.type) : that.type == null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = category;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
+    }
+
+    @Nonnull
+    public RegisterType merge(@Nonnull RegisterType other) {
+        if (other.equals(this)) {
+            return this;
+        }
+
+        byte mergedCategory = mergeTable[this.category][other.category];
+
+        TypeProto mergedType = null;
+        if (mergedCategory == REFERENCE) {
+            TypeProto type = this.type;
+            if (type != null) {
+                if (other.type != null) {
+                    mergedType = type.getCommonSuperclass(other.type);
+                } else {
+                    mergedType = type;
+                }
+            } else {
+                mergedType = other.type;
+            }
+        } else if (mergedCategory == UNINIT_REF || mergedCategory == UNINIT_THIS) {
+            if (this.category == UNKNOWN) {
+                return other;
+            }
+            assert other.category == UNKNOWN;
+            return this;
+        }
+
+        if (mergedType != null) {
+            if (mergedType.equals(this.type)) {
+                return this;
+            }
+            if (mergedType.equals(other.type)) {
+                return other;
+            }
+        }
+        return RegisterType.getRegisterType(mergedCategory, mergedType);
     }
 }

@@ -47,5 +47,6 @@ public final class DebugItemType {
     public static final int ADVANCE_LINE = 0x02;
     public static final int START_LOCAL_EXTENDED = 0x04;
 
-    private DebugItemType() {}
+    private DebugItemType() {
+    }
 }

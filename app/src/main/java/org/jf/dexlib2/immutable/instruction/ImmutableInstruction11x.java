@@ -51,14 +51,20 @@ public class ImmutableInstruction11x extends ImmutableInstruction implements Ins
 
     public static ImmutableInstruction11x of(Instruction11x instruction) {
         if (instruction instanceof ImmutableInstruction11x) {
-            return (ImmutableInstruction11x)instruction;
+            return (ImmutableInstruction11x) instruction;
         }
         return new ImmutableInstruction11x(
                 instruction.getOpcode(),
                 instruction.getRegisterA());
     }
 
-    @Override public int getRegisterA() { return registerA; }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

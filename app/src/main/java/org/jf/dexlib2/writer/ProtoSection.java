@@ -35,7 +35,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface ProtoSection<StringKey, TypeKey, ProtoKey, TypeListKey> extends IndexSection<ProtoKey> {
-    @Nonnull StringKey getShorty(@Nonnull ProtoKey key);
-    @Nonnull TypeKey getReturnType(@Nonnull ProtoKey key);
-    @Nullable TypeListKey getParameters(@Nonnull ProtoKey key);
+    @Nonnull
+    StringKey getShorty(@Nonnull ProtoKey key);
+
+    @Nonnull
+    TypeKey getReturnType(@Nonnull ProtoKey key);
+
+    @Nullable
+    TypeListKey getParameters(@Nonnull ProtoKey key);
 }

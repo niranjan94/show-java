@@ -37,9 +37,12 @@ import org.jf.dexlib2.writer.DexWriter;
 import javax.annotation.Nonnull;
 
 public class BuilderFieldReference extends BaseFieldReference implements BuilderReference {
-    @Nonnull final BuilderTypeReference definingClass;
-    @Nonnull final BuilderStringReference name;
-    @Nonnull final BuilderTypeReference fieldType;
+    @Nonnull
+    final BuilderTypeReference definingClass;
+    @Nonnull
+    final BuilderStringReference name;
+    @Nonnull
+    final BuilderTypeReference fieldType;
     int index = DexWriter.NO_INDEX;
 
     BuilderFieldReference(@Nonnull BuilderTypeReference definingClass,
@@ -50,23 +53,31 @@ public class BuilderFieldReference extends BaseFieldReference implements Builder
         this.fieldType = fieldType;
     }
 
-    @Nonnull @Override public String getDefiningClass() {
+    @Nonnull
+    @Override
+    public String getDefiningClass() {
         return definingClass.getType();
     }
 
-    @Nonnull @Override public String getName() {
+    @Nonnull
+    @Override
+    public String getName() {
         return name.getString();
     }
 
-    @Nonnull @Override public String getType() {
+    @Nonnull
+    @Override
+    public String getType() {
         return fieldType.getType();
     }
 
-    @Override public int getIndex() {
+    @Override
+    public int getIndex() {
         return index;
     }
 
-    @Override public void setIndex(int index) {
+    @Override
+    public void setIndex(int index) {
         this.index = index;
     }
 }

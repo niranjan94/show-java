@@ -37,7 +37,8 @@ import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import javax.annotation.Nonnull;
 
 public class DexBackedStringReference extends BaseStringReference {
-    @Nonnull public final DexBackedDexFile dexFile;
+    @Nonnull
+    public final DexBackedDexFile dexFile;
     public final int stringIndex;
 
     public DexBackedStringReference(@Nonnull DexBackedDexFile dexBuf,

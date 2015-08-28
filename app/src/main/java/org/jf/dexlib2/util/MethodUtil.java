@@ -47,16 +47,21 @@ public final class MethodUtil {
             AccessFlags.CONSTRUCTOR.getValue();
 
     public static Predicate<Method> METHOD_IS_DIRECT = new Predicate<Method>() {
-        @Override public boolean apply(@Nullable Method input) {
+        @Override
+        public boolean apply(@Nullable Method input) {
             return input != null && isDirect(input);
         }
     };
 
     public static Predicate<Method> METHOD_IS_VIRTUAL = new Predicate<Method>() {
-        @Override public boolean apply(@Nullable Method input) {
+        @Override
+        public boolean apply(@Nullable Method input) {
             return input != null && !isDirect(input);
         }
     };
+
+    private MethodUtil() {
+    }
 
     public static boolean isDirect(@Nonnull Method method) {
         return (method.getAccessFlags() & directMask) != 0;
@@ -81,7 +86,7 @@ public final class MethodUtil {
     public static int getParameterRegisterCount(@Nonnull Collection<? extends CharSequence> parameterTypes,
                                                 boolean isStatic) {
         int regCount = 0;
-        for (CharSequence paramType: parameterTypes) {
+        for (CharSequence paramType : parameterTypes) {
             int firstChar = paramType.charAt(0);
             if (firstChar == 'J' || firstChar == 'D') {
                 regCount += 2;
@@ -105,11 +110,9 @@ public final class MethodUtil {
     public static String getShorty(Collection<? extends CharSequence> params, String returnType) {
         StringBuilder sb = new StringBuilder(params.size() + 1);
         sb.append(getShortyType(returnType));
-        for (CharSequence typeRef: params) {
+        for (CharSequence typeRef : params) {
             sb.append(getShortyType(typeRef));
         }
         return sb.toString();
     }
-
-    private MethodUtil() {}
 }

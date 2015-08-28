@@ -41,36 +41,48 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class MethodParameterRewriter implements Rewriter<MethodParameter> {
-    @Nonnull protected final Rewriters rewriters;
+    @Nonnull
+    protected final Rewriters rewriters;
 
     public MethodParameterRewriter(@Nonnull Rewriters rewriters) {
         this.rewriters = rewriters;
     }
 
-    @Nonnull @Override public MethodParameter rewrite(@Nonnull MethodParameter methodParameter) {
+    @Nonnull
+    @Override
+    public MethodParameter rewrite(@Nonnull MethodParameter methodParameter) {
         return new RewrittenMethodParameter(methodParameter);
     }
 
     protected class RewrittenMethodParameter extends BaseMethodParameter {
-        @Nonnull protected MethodParameter methodParameter;
+        @Nonnull
+        protected MethodParameter methodParameter;
 
         public RewrittenMethodParameter(@Nonnull MethodParameter methodParameter) {
             this.methodParameter = methodParameter;
         }
 
-        @Override @Nonnull public String getType() {
+        @Override
+        @Nonnull
+        public String getType() {
             return rewriters.getTypeRewriter().rewrite(methodParameter.getType());
         }
 
-        @Override @Nonnull public Set<? extends Annotation> getAnnotations() {
+        @Override
+        @Nonnull
+        public Set<? extends Annotation> getAnnotations() {
             return RewriterUtils.rewriteSet(rewriters.getAnnotationRewriter(), methodParameter.getAnnotations());
         }
 
-        @Override @Nullable public String getName() {
+        @Override
+        @Nullable
+        public String getName() {
             return methodParameter.getName();
         }
 
-        @Override @Nullable public String getSignature() {
+        @Override
+        @Nullable
+        public String getSignature() {
             return methodParameter.getSignature();
         }
     }

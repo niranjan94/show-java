@@ -76,7 +76,7 @@ public class SyntheticAccessorResolver {
     public SyntheticAccessorResolver(Iterable<? extends ClassDef> classDefs) {
         ImmutableMap.Builder<String, ClassDef> builder = ImmutableMap.builder();
 
-        for (ClassDef classDef: classDefs) {
+        for (ClassDef classDef : classDefs) {
             builder.put(classDef.getType(), classDef);
         }
 
@@ -85,6 +85,13 @@ public class SyntheticAccessorResolver {
 
     public static boolean looksLikeSyntheticAccessor(String methodName) {
         return methodName.startsWith("access$");
+    }
+
+    private static boolean methodReferenceEquals(@Nonnull MethodReference ref1, @Nonnull MethodReference ref2) {
+        // we already know the containing class matches
+        return ref1.getName().equals(ref2.getName()) &&
+                ref1.getReturnType().equals(ref2.getReturnType()) &&
+                ref1.getParameterTypes().equals(ref2.getParameterTypes());
     }
 
     @Nullable
@@ -104,7 +111,7 @@ public class SyntheticAccessorResolver {
 
         Method matchedMethod = null;
         MethodImplementation matchedMethodImpl = null;
-        for (Method method: classDef.getMethods()) {
+        for (Method method : classDef.getMethods()) {
             MethodImplementation methodImpl = method.getImplementation();
             if (methodImpl != null) {
                 if (methodReferenceEquals(method, methodReference)) {
@@ -130,7 +137,7 @@ public class SyntheticAccessorResolver {
 
         if (accessType >= 0) {
             AccessedMember member =
-                    new AccessedMember(accessType, ((ReferenceInstruction)instructions.get(0)).getReference());
+                    new AccessedMember(accessType, ((ReferenceInstruction) instructions.get(0)).getReference());
             resolvedAccessors.put(methodDescriptor, member);
             return member;
         }
@@ -139,18 +146,12 @@ public class SyntheticAccessorResolver {
 
     public static class AccessedMember {
         public final int accessedMemberType;
-        @Nonnull public final Reference accessedMember;
+        @Nonnull
+        public final Reference accessedMember;
 
         public AccessedMember(int accessedMemberType, @Nonnull Reference accessedMember) {
             this.accessedMemberType = accessedMemberType;
             this.accessedMember = accessedMember;
         }
-    }
-
-    private static boolean methodReferenceEquals(@Nonnull MethodReference ref1, @Nonnull MethodReference ref2) {
-        // we already know the containing class matches
-        return ref1.getName().equals(ref2.getName()) &&
-               ref1.getReturnType().equals(ref2.getReturnType()) &&
-               ref1.getParameterTypes().equals(ref2.getParameterTypes());
     }
 }

@@ -58,15 +58,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class DebugInfo implements Iterable<DebugItem> {
-    /**
-     * Gets an iterator that yields the parameter names from the debug_info_item
-     *
-     * @param reader Optional. If provided, the reader must be positioned at the debug_info_item.parameters_size
-     *               field, and will
-     * @return An iterator that yields the parameter names as strings
-     */
-    @Nonnull public abstract Iterator<String> getParameterNames(@Nullable DexReader reader);
-
     public static DebugInfo newOrEmpty(@Nonnull DexBackedDexFile dexFile, int debugInfoOffset,
                                        @Nonnull DexBackedMethodImplementation methodImpl) {
         if (debugInfoOffset == 0) {
@@ -75,33 +66,68 @@ public abstract class DebugInfo implements Iterable<DebugItem> {
         return new DebugInfoImpl(dexFile, debugInfoOffset, methodImpl);
     }
 
+    /**
+     * Gets an iterator that yields the parameter names from the debug_info_item
+     *
+     * @param reader Optional. If provided, the reader must be positioned at the debug_info_item.parameters_size
+     *               field, and will
+     * @return An iterator that yields the parameter names as strings
+     */
+    @Nonnull
+    public abstract Iterator<String> getParameterNames(@Nullable DexReader reader);
+
     private static class EmptyDebugInfo extends DebugInfo {
         public static final EmptyDebugInfo INSTANCE = new EmptyDebugInfo();
-        private EmptyDebugInfo() {}
-        @Nonnull @Override public Iterator<DebugItem> iterator() { return Iterators.emptyIterator(); }
-        @Nonnull @Override public Iterator<String> getParameterNames(@Nullable DexReader reader) {
+
+        private EmptyDebugInfo() {
+        }
+
+        @Nonnull
+        @Override
+        public Iterator<DebugItem> iterator() {
+            return Iterators.emptyIterator();
+        }
+
+        @Nonnull
+        @Override
+        public Iterator<String> getParameterNames(@Nullable DexReader reader) {
             return Iterators.emptyIterator();
         }
     }
 
     private static class DebugInfoImpl extends DebugInfo {
-        @Nonnull public final DexBackedDexFile dexFile;
+        private static final LocalInfo EMPTY_LOCAL_INFO = new LocalInfo() {
+            @Nullable
+            @Override
+            public String getName() {
+                return null;
+            }
+
+            @Nullable
+            @Override
+            public String getType() {
+                return null;
+            }
+
+            @Nullable
+            @Override
+            public String getSignature() {
+                return null;
+            }
+        };
+        @Nonnull
+        public final DexBackedDexFile dexFile;
         private final int debugInfoOffset;
-        @Nonnull private final DexBackedMethodImplementation methodImpl;
+        @Nonnull
+        private final DexBackedMethodImplementation methodImpl;
 
         public DebugInfoImpl(@Nonnull DexBackedDexFile dexFile,
-                         int debugInfoOffset,
-                         @Nonnull DexBackedMethodImplementation methodImpl) {
+                             int debugInfoOffset,
+                             @Nonnull DexBackedMethodImplementation methodImpl) {
             this.dexFile = dexFile;
             this.debugInfoOffset = debugInfoOffset;
             this.methodImpl = methodImpl;
         }
-
-        private static final LocalInfo EMPTY_LOCAL_INFO = new LocalInfo() {
-            @Nullable @Override public String getName() { return null; }
-            @Nullable @Override public String getType() { return null; }
-            @Nullable @Override public String getSignature() { return null; }
-        };
 
         @Nonnull
         @Override
@@ -130,9 +156,20 @@ public abstract class DebugInfo implements Iterable<DebugItem> {
             if (!AccessFlags.STATIC.isSet(methodImpl.method.getAccessFlags())) {
                 // add the local info for the "this" parameter
                 locals[parameterIndex++] = new LocalInfo() {
-                    @Override public String getName() { return "this"; }
-                    @Override public String getType() { return methodImpl.method.getDefiningClass(); }
-                    @Override public String getSignature() { return null; }
+                    @Override
+                    public String getName() {
+                        return "this";
+                    }
+
+                    @Override
+                    public String getType() {
+                        return methodImpl.method.getDefiningClass();
+                    }
+
+                    @Override
+                    public String getSignature() {
+                        return null;
+                    }
                 };
             }
             while (parameterIterator.hasNext()) {
@@ -141,8 +178,8 @@ public abstract class DebugInfo implements Iterable<DebugItem> {
 
             if (parameterIndex < registerCount) {
                 // now, we push the parameter locals back to their appropriate register, starting from the end
-                int localIndex = registerCount-1;
-                while(--parameterIndex > -1) {
+                int localIndex = registerCount - 1;
+                while (--parameterIndex > -1) {
                     LocalInfo currentLocal = locals[parameterIndex];
                     String type = currentLocal.getType();
                     if (type != null && (type.equals("J") || type.equals("D"))) {
@@ -259,7 +296,8 @@ public abstract class DebugInfo implements Iterable<DebugItem> {
             //TODO: make sure dalvik doesn't allow more parameter names than we have parameters
             final int parameterNameCount = reader.readSmallUleb128();
             return new VariableSizeIterator<String>(reader, parameterNameCount) {
-                @Override protected String readNextItem(@Nonnull DexReader reader, int index) {
+                @Override
+                protected String readNextItem(@Nonnull DexReader reader, int index) {
                     return dexFile.getOptionalString(reader.readSmallUleb128() - 1);
                 }
             };

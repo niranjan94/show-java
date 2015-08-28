@@ -47,9 +47,9 @@ public interface ShortEncodedValue extends EncodedValue {
 
     /**
      * Returns a hashcode for this EncodedShortValue.
-     *
+     * <p/>
      * This hashCode is defined to be the following:
-     *
+     * <p/>
      * <pre>
      * {@code
      * int hashCode = getValue();
@@ -57,26 +57,29 @@ public interface ShortEncodedValue extends EncodedValue {
      *
      * @return The hash code value for this EncodedShortValue
      */
-    @Override int hashCode();
+    @Override
+    int hashCode();
 
     /**
      * Compares this ShortEncodedValue to another ShortEncodedValue for equality.
-     *
+     * <p/>
      * This ShortEncodedValue is equal to another ShortEncodedValue if the values returned by getValue() are equal.
      *
      * @param o The object to be compared for equality with this ShortEncodedValue
      * @return true if the specified object is equal to this ShortEncodedValue
      */
-    @Override boolean equals(@Nullable Object o);
+    @Override
+    boolean equals(@Nullable Object o);
 
     /**
      * Compare this ShortEncodedValue to another EncodedValue.
-     *
+     * <p/>
      * The comparison is first done on the return values of getValueType(). If the other value is another
      * ShortEncodedValue, the return values of getValue() are compared.
      *
      * @param o The EncodedValue to compare with this ShortEncodedValue
      * @return An integer representing the result of the comparison
      */
-    @Override int compareTo(@Nonnull EncodedValue o);
+    @Override
+    int compareTo(@Nonnull EncodedValue o);
 }

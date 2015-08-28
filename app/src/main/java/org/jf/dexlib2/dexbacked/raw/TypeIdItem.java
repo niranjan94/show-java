@@ -44,7 +44,9 @@ public class TypeIdItem {
     @Nonnull
     public static SectionAnnotator makeAnnotator(@Nonnull DexAnnotator annotator, @Nonnull MapItem mapItem) {
         return new SectionAnnotator(annotator, mapItem) {
-            @Nonnull @Override public String getItemName() {
+            @Nonnull
+            @Override
+            public String getItemName() {
                 return "type_id_item";
             }
 
@@ -83,7 +85,7 @@ public class TypeIdItem {
 
         int typeCount = mapItem.getItemCount();
         String[] ret = new String[typeCount];
-        for (int i=0; i<typeCount; i++) {
+        for (int i = 0; i < typeCount; i++) {
             ret[i] = dexFile.getType(i);
         }
         return ret;

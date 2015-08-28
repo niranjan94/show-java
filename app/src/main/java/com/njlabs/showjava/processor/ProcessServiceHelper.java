@@ -20,24 +20,28 @@ public class ProcessServiceHelper {
     String javaSourceOutputDir;
     ExceptionHandler exceptionHandler;
 
-    public void broadcastStatus(String status){
+    public void broadcastStatus(String status) {
         processService.broadcastStatus(status);
     }
-    public void broadcastStatus(String statusKey, String statusData){
-        processService.broadcastStatus(statusKey,statusData);
+
+    public void broadcastStatus(String statusKey, String statusData) {
+        processService.broadcastStatus(statusKey, statusData);
     }
-    public void broadcastStatusWithPackageInfo(String statusKey, String dir, String packId){
-        processService.broadcastStatusWithPackageInfo(statusKey,dir,packId);
+
+    public void broadcastStatusWithPackageInfo(String statusKey, String dir, String packId) {
+        processService.broadcastStatusWithPackageInfo(statusKey, dir, packId);
     }
 
     protected class ToastRunnable implements Runnable {
 
         String mText;
+
         public ToastRunnable(String text) {
             mText = text;
         }
+
         @Override
-        public void run(){
+        public void run() {
             Toast.makeText(processService.getApplicationContext(), mText, Toast.LENGTH_SHORT).show();
         }
     }
@@ -46,14 +50,15 @@ public class ProcessServiceHelper {
         public ProgressStream() {
 
         }
-        public void write(@NonNull byte[] data,int i1,int i2)
-        {
+
+        public void write(@NonNull byte[] data, int i1, int i2) {
             String str = new String(data);
             str = str.replace("\n", "").replace("\r", "");
-            if(!str.equals("") && !str.equals("")) {
-                broadcastStatus("progress_stream",str);
+            if (!str.equals("") && !str.equals("")) {
+                broadcastStatus("progress_stream", str);
             }
         }
+
         @Override
         public void write(int arg0) throws IOException {
 

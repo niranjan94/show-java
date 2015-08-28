@@ -52,12 +52,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 class PoolClassDef extends BaseTypeReference implements ClassDef {
-    @Nonnull final ClassDef classDef;
-    @Nonnull final TypeListPool.Key<SortedSet<String>> interfaces;
-    @Nonnull final ImmutableSortedSet<Field> staticFields;
-    @Nonnull final ImmutableSortedSet<Field> instanceFields;
-    @Nonnull final ImmutableSortedSet<PoolMethod> directMethods;
-    @Nonnull final ImmutableSortedSet<PoolMethod> virtualMethods;
+    @Nonnull
+    final ClassDef classDef;
+    @Nonnull
+    final TypeListPool.Key<SortedSet<String>> interfaces;
+    @Nonnull
+    final ImmutableSortedSet<Field> staticFields;
+    @Nonnull
+    final ImmutableSortedSet<Field> instanceFields;
+    @Nonnull
+    final ImmutableSortedSet<PoolMethod> directMethods;
+    @Nonnull
+    final ImmutableSortedSet<PoolMethod> virtualMethods;
 
     int classDefIndex = DexPool.NO_INDEX;
     int encodedArrayOffset = DexPool.NO_OFFSET;
@@ -75,69 +81,98 @@ class PoolClassDef extends BaseTypeReference implements ClassDef {
                 Iterables.transform(classDef.getVirtualMethods(), PoolMethod.TRANSFORM));
     }
 
-    @Nonnull @Override public String getType() {
+    @Nonnull
+    @Override
+    public String getType() {
         return classDef.getType();
     }
 
-    @Override public int getAccessFlags() {
+    @Override
+    public int getAccessFlags() {
         return classDef.getAccessFlags();
     }
 
-    @Nullable @Override public String getSuperclass() {
+    @Nullable
+    @Override
+    public String getSuperclass() {
         return classDef.getSuperclass();
     }
 
-    @Nonnull @Override public SortedSet<String> getInterfaces() {
+    @Nonnull
+    @Override
+    public SortedSet<String> getInterfaces() {
         return interfaces.types;
     }
 
-    @Nullable @Override public String getSourceFile() {
+    @Nullable
+    @Override
+    public String getSourceFile() {
         return classDef.getSourceFile();
     }
 
-    @Nonnull @Override public Set<? extends Annotation> getAnnotations() {
+    @Nonnull
+    @Override
+    public Set<? extends Annotation> getAnnotations() {
         return classDef.getAnnotations();
     }
 
-    @Nonnull @Override public SortedSet<Field> getStaticFields() {
+    @Nonnull
+    @Override
+    public SortedSet<Field> getStaticFields() {
         return staticFields;
     }
 
-    @Nonnull @Override public SortedSet<Field> getInstanceFields() {
+    @Nonnull
+    @Override
+    public SortedSet<Field> getInstanceFields() {
         return instanceFields;
     }
 
-    @Nonnull @Override public Collection<Field> getFields() {
+    @Nonnull
+    @Override
+    public Collection<Field> getFields() {
         return new AbstractCollection<Field>() {
-            @Nonnull @Override public Iterator<Field> iterator() {
+            @Nonnull
+            @Override
+            public Iterator<Field> iterator() {
                 return Iterators.mergeSorted(
                         ImmutableList.of(staticFields.iterator(), instanceFields.iterator()),
                         Ordering.natural());
             }
 
-            @Override public int size() {
+            @Override
+            public int size() {
                 return staticFields.size() + instanceFields.size();
             }
         };
     }
 
-    @Nonnull @Override public SortedSet<PoolMethod> getDirectMethods() {
+    @Nonnull
+    @Override
+    public SortedSet<PoolMethod> getDirectMethods() {
         return directMethods;
     }
 
-    @Nonnull @Override public SortedSet<PoolMethod> getVirtualMethods() {
+    @Nonnull
+    @Override
+    public SortedSet<PoolMethod> getVirtualMethods() {
         return virtualMethods;
     }
 
-    @Nonnull @Override public Collection<PoolMethod> getMethods() {
+    @Nonnull
+    @Override
+    public Collection<PoolMethod> getMethods() {
         return new AbstractCollection<PoolMethod>() {
-            @Nonnull @Override public Iterator<PoolMethod> iterator() {
+            @Nonnull
+            @Override
+            public Iterator<PoolMethod> iterator() {
                 return Iterators.mergeSorted(
                         ImmutableList.of(directMethods.iterator(), virtualMethods.iterator()),
                         Ordering.natural());
             }
 
-            @Override public int size() {
+            @Override
+            public int size() {
                 return directMethods.size() + virtualMethods.size();
             }
         };

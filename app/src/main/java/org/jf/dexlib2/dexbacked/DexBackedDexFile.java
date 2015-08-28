@@ -125,6 +125,25 @@ public class DexBackedDexFile extends BaseDexBuffer implements DexFile {
         return new DexBackedDexFile(opcodes, buf, 0, false);
     }
 
+    private static void verifyMagicAndByteOrder(@Nonnull byte[] buf, int offset) {
+        if (!HeaderItem.verifyMagic(buf, offset)) {
+            StringBuilder sb = new StringBuilder("Invalid magic value:");
+            for (int i = 0; i < 8; i++) {
+                sb.append(String.format(" %02x", buf[i]));
+            }
+            throw new NotADexFile(sb.toString());
+        }
+
+        int endian = HeaderItem.getEndian(buf, offset);
+        if (endian == HeaderItem.BIG_ENDIAN_TAG) {
+            throw new ExceptionWithContext("Big endian dex files are not currently supported");
+        }
+
+        if (endian != HeaderItem.LITTLE_ENDIAN_TAG) {
+            throw new ExceptionWithContext("Invalid endian tag: 0x%x", endian);
+        }
+    }
+
     public Opcodes getOpcodes() {
         return opcodes;
     }
@@ -150,65 +169,46 @@ public class DexBackedDexFile extends BaseDexBuffer implements DexFile {
         };
     }
 
-    private static void verifyMagicAndByteOrder(@Nonnull byte[] buf, int offset) {
-        if (!HeaderItem.verifyMagic(buf, offset)) {
-            StringBuilder sb = new StringBuilder("Invalid magic value:");
-            for (int i=0; i<8; i++) {
-                sb.append(String.format(" %02x", buf[i]));
-            }
-            throw new NotADexFile(sb.toString());
-        }
-
-        int endian = HeaderItem.getEndian(buf, offset);
-        if (endian == HeaderItem.BIG_ENDIAN_TAG) {
-            throw new ExceptionWithContext("Big endian dex files are not currently supported");
-        }
-
-        if (endian != HeaderItem.LITTLE_ENDIAN_TAG) {
-            throw new ExceptionWithContext("Invalid endian tag: 0x%x", endian);
-        }
-    }
-
     public int getStringIdItemOffset(int stringIndex) {
         if (stringIndex < 0 || stringIndex >= stringCount) {
             throw new InvalidItemIndex(stringIndex, "String index out of bounds: %d", stringIndex);
         }
-        return stringStartOffset + stringIndex*StringIdItem.ITEM_SIZE;
+        return stringStartOffset + stringIndex * StringIdItem.ITEM_SIZE;
     }
 
     public int getTypeIdItemOffset(int typeIndex) {
         if (typeIndex < 0 || typeIndex >= typeCount) {
             throw new InvalidItemIndex(typeIndex, "Type index out of bounds: %d", typeIndex);
         }
-        return typeStartOffset + typeIndex*TypeIdItem.ITEM_SIZE;
+        return typeStartOffset + typeIndex * TypeIdItem.ITEM_SIZE;
     }
 
     public int getFieldIdItemOffset(int fieldIndex) {
         if (fieldIndex < 0 || fieldIndex >= fieldCount) {
             throw new InvalidItemIndex(fieldIndex, "Field index out of bounds: %d", fieldIndex);
         }
-        return fieldStartOffset + fieldIndex*FieldIdItem.ITEM_SIZE;
+        return fieldStartOffset + fieldIndex * FieldIdItem.ITEM_SIZE;
     }
 
     public int getMethodIdItemOffset(int methodIndex) {
         if (methodIndex < 0 || methodIndex >= methodCount) {
             throw new InvalidItemIndex(methodIndex, "Method index out of bounds: %d", methodIndex);
         }
-        return methodStartOffset + methodIndex*MethodIdItem.ITEM_SIZE;
+        return methodStartOffset + methodIndex * MethodIdItem.ITEM_SIZE;
     }
 
     public int getProtoIdItemOffset(int protoIndex) {
         if (protoIndex < 0 || protoIndex >= protoCount) {
             throw new InvalidItemIndex(protoIndex, "Proto index out of bounds: %d", protoIndex);
         }
-        return protoStartOffset + protoIndex*ProtoIdItem.ITEM_SIZE;
+        return protoStartOffset + protoIndex * ProtoIdItem.ITEM_SIZE;
     }
 
     public int getClassDefItemOffset(int classIndex) {
         if (classIndex < 0 || classIndex >= classCount) {
             throw new InvalidItemIndex(classIndex, "Class index out of bounds: %d", classIndex);
         }
-        return classStartOffset + classIndex*ClassDefItem.ITEM_SIZE;
+        return classStartOffset + classIndex * ClassDefItem.ITEM_SIZE;
     }
 
     public int getClassCount() {

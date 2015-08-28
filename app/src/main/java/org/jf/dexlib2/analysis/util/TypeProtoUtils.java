@@ -44,9 +44,9 @@ public class TypeProtoUtils {
     /**
      * Get the chain of superclasses of the given class. The first element will be the immediate superclass followed by
      * it's superclass, etc. up to java.lang.Object.
-     *
+     * <p/>
      * Returns an empty iterable if called on java.lang.Object or a primitive.
-     *
+     * <p/>
      * If any class in the superclass chain can't be resolved, the iterable will return Ujava/lang/Object; to represent
      * the unknown class.
      *
@@ -56,15 +56,19 @@ public class TypeProtoUtils {
     public static Iterable<TypeProto> getSuperclassChain(@Nonnull final TypeProto typeProto) {
         return new Iterable<TypeProto>() {
 
-            @Override public Iterator<TypeProto> iterator() {
+            @Override
+            public Iterator<TypeProto> iterator() {
                 return new Iterator<TypeProto>() {
-                    @Nullable private TypeProto type = getSuperclassAsTypeProto(typeProto);
+                    @Nullable
+                    private TypeProto type = getSuperclassAsTypeProto(typeProto);
 
-                    @Override public boolean hasNext() {
+                    @Override
+                    public boolean hasNext() {
                         return type != null;
                     }
 
-                    @Override public TypeProto next() {
+                    @Override
+                    public TypeProto next() {
                         TypeProto type = this.type;
                         if (type == null) {
                             throw new NoSuchElementException();
@@ -74,7 +78,8 @@ public class TypeProtoUtils {
                         return type;
                     }
 
-                    @Override public void remove() {
+                    @Override
+                    public void remove() {
                         throw new UnsupportedOperationException();
                     }
                 };

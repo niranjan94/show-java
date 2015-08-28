@@ -36,8 +36,8 @@ import java.text.DecimalFormat;
 public class NumberUtils {
     private static final int canonicalFloatNaN = Float.floatToRawIntBits(Float.NaN);
     private static final int maxFloat = Float.floatToRawIntBits(Float.MAX_VALUE);
-    private static final int piFloat = Float.floatToRawIntBits((float)Math.PI);
-    private static final int eFloat = Float.floatToRawIntBits((float)Math.E);
+    private static final int piFloat = Float.floatToRawIntBits((float) Math.PI);
+    private static final int eFloat = Float.floatToRawIntBits((float) Math.E);
 
     private static final long canonicalDoubleNaN = Double.doubleToRawLongBits(Double.NaN);
     private static final long maxDouble = Double.doubleToLongBits(Double.MAX_VALUE);

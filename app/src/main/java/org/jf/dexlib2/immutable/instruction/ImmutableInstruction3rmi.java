@@ -57,7 +57,7 @@ public class ImmutableInstruction3rmi extends ImmutableInstruction implements In
 
     public static ImmutableInstruction3rmi of(Instruction3rmi instruction) {
         if (instruction instanceof ImmutableInstruction3rmi) {
-            return (ImmutableInstruction3rmi)instruction;
+            return (ImmutableInstruction3rmi) instruction;
         }
         return new ImmutableInstruction3rmi(
                 instruction.getOpcode(),
@@ -66,10 +66,24 @@ public class ImmutableInstruction3rmi extends ImmutableInstruction implements In
                 instruction.getInlineIndex());
     }
 
-    @Override public int getStartRegister() { return startRegister; }
-    @Override public int getRegisterCount() { return registerCount; }
-    @Override public int getInlineIndex() { return inlineIndex; }
+    @Override
+    public int getStartRegister() {
+        return startRegister;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getRegisterCount() {
+        return registerCount;
+    }
+
+    @Override
+    public int getInlineIndex() {
+        return inlineIndex;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }
 

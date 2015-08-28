@@ -35,6 +35,7 @@ public abstract class NibbleUtils {
     /**
      * Extracts the high signed 4-bit nibble from the least significant
      * byte of the given value
+     *
      * @param value the value to extract the nibble from
      * @return the extracted signed nibble value
      */
@@ -45,6 +46,7 @@ public abstract class NibbleUtils {
     /**
      * Extracts the low signed 4-bit nibble from the least significant
      * byte of the given value
+     *
      * @param value the value to extract the nibble from
      * @return the extracted signed nibble value
      */
@@ -55,6 +57,7 @@ public abstract class NibbleUtils {
     /**
      * Extracts the high unsigned 4-bit nibble from the least significant
      * byte of the given value
+     *
      * @param value the value to extract the nibble from
      * @return the extracted unsigned nibble value
      */
@@ -65,6 +68,7 @@ public abstract class NibbleUtils {
     /**
      * Extracts the low unsigned 4-bit nibble from the least significant
      * byte of the given value
+     *
      * @param value the value to extract the nibble from
      * @return the extracted unsigned nibble value
      */

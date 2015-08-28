@@ -57,7 +57,7 @@ public class ImmutableInstruction22s extends ImmutableInstruction implements Ins
 
     public static ImmutableInstruction22s of(Instruction22s instruction) {
         if (instruction instanceof ImmutableInstruction22s) {
-            return (ImmutableInstruction22s)instruction;
+            return (ImmutableInstruction22s) instruction;
         }
         return new ImmutableInstruction22s(
                 instruction.getOpcode(),
@@ -66,10 +66,28 @@ public class ImmutableInstruction22s extends ImmutableInstruction implements Ins
                 instruction.getNarrowLiteral());
     }
 
-    @Override public int getRegisterA() { return registerA; }
-    @Override public int getRegisterB() { return registerB; }
-    @Override public int getNarrowLiteral() { return literal; }
-    @Override public long getWideLiteral() { return literal; }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getRegisterB() {
+        return registerB;
+    }
+
+    @Override
+    public int getNarrowLiteral() {
+        return literal;
+    }
+
+    @Override
+    public long getWideLiteral() {
+        return literal;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

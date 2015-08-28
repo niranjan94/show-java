@@ -45,11 +45,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class DexBackedField extends BaseFieldReference implements Field {
-    @Nonnull public final DexBackedDexFile dexFile;
-    @Nonnull public final ClassDef classDef;
+    @Nonnull
+    public final DexBackedDexFile dexFile;
+    @Nonnull
+    public final ClassDef classDef;
 
     public final int accessFlags;
-    @Nullable public final EncodedValue initialValue;
+    @Nullable
+    public final EncodedValue initialValue;
     public final int annotationSetOffset;
 
     public final int fieldIndex;
@@ -91,6 +94,19 @@ public class DexBackedField extends BaseFieldReference implements Field {
         this.initialValue = null;
     }
 
+    /**
+     * Skips the reader over the specified number of encoded_field structures
+     *
+     * @param reader The reader to skip
+     * @param count  The number of encoded_field structures to skip over
+     */
+    public static void skipFields(@Nonnull DexReader reader, int count) {
+        for (int i = 0; i < count; i++) {
+            reader.skipUleb128();
+            reader.skipUleb128();
+        }
+    }
+
     @Nonnull
     @Override
     public String getName() {
@@ -103,27 +119,27 @@ public class DexBackedField extends BaseFieldReference implements Field {
         return dexFile.getType(dexFile.readUshort(getFieldIdItemOffset() + FieldIdItem.TYPE_OFFSET));
     }
 
-    @Nonnull @Override public String getDefiningClass() { return classDef.getType(); }
-    @Override public int getAccessFlags() { return accessFlags; }
-    @Nullable @Override public EncodedValue getInitialValue() { return initialValue; }
+    @Nonnull
+    @Override
+    public String getDefiningClass() {
+        return classDef.getType();
+    }
+
+    @Override
+    public int getAccessFlags() {
+        return accessFlags;
+    }
+
+    @Nullable
+    @Override
+    public EncodedValue getInitialValue() {
+        return initialValue;
+    }
 
     @Nonnull
     @Override
     public Set<? extends DexBackedAnnotation> getAnnotations() {
         return AnnotationsDirectory.getAnnotations(dexFile, annotationSetOffset);
-    }
-
-    /**
-     * Skips the reader over the specified number of encoded_field structures
-     *
-     * @param reader The reader to skip
-     * @param count The number of encoded_field structures to skip over
-     */
-    public static void skipFields(@Nonnull DexReader reader, int count) {
-        for (int i=0; i<count; i++) {
-            reader.skipUleb128();
-            reader.skipUleb128();
-        }
     }
 
     private int getFieldIdItemOffset() {

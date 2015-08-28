@@ -38,9 +38,16 @@ import javax.annotation.Nonnull;
 public interface AnnotationSection<StringKey, TypeKey, AnnotationKey, AnnotationElement, EncodedValue>
         extends OffsetSection<AnnotationKey> {
     int getVisibility(@Nonnull AnnotationKey key);
-    @Nonnull TypeKey getType(@Nonnull AnnotationKey key);
-    @Nonnull Collection<? extends AnnotationElement> getElements(@Nonnull AnnotationKey key);
 
-    @Nonnull StringKey getElementName(@Nonnull AnnotationElement element);
-    @Nonnull EncodedValue getElementValue(@Nonnull AnnotationElement element);
+    @Nonnull
+    TypeKey getType(@Nonnull AnnotationKey key);
+
+    @Nonnull
+    Collection<? extends AnnotationElement> getElements(@Nonnull AnnotationKey key);
+
+    @Nonnull
+    StringKey getElementName(@Nonnull AnnotationElement element);
+
+    @Nonnull
+    EncodedValue getElementValue(@Nonnull AnnotationElement element);
 }

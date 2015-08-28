@@ -53,8 +53,18 @@ public class BuilderInstruction22x extends BuilderInstruction implements Instruc
         this.registerB = Preconditions.checkShortRegister(registerB);
     }
 
-    @Override public int getRegisterA() { return registerA; }
-    @Override public int getRegisterB() { return registerB; }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getRegisterB() {
+        return registerB;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

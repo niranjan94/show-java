@@ -44,10 +44,31 @@ public class BuilderEndLocal extends BuilderDebugItem implements EndLocal {
         this.register = register;
     }
 
-    @Override public int getRegister() { return register; }
-    @Nullable @Override public String getName() { return null; }
-    @Nullable @Override public String getType() { return null; }
-    @Nullable @Override public String getSignature() { return null; }
+    @Override
+    public int getRegister() {
+        return register;
+    }
 
-    @Override public int getDebugItemType() { return DebugItemType.END_LOCAL; }
+    @Nullable
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String getType() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String getSignature() {
+        return null;
+    }
+
+    @Override
+    public int getDebugItemType() {
+        return DebugItemType.END_LOCAL;
+    }
 }

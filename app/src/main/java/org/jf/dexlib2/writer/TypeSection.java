@@ -36,6 +36,8 @@ import org.jf.dexlib2.iface.reference.TypeReference;
 import javax.annotation.Nonnull;
 
 public interface TypeSection<StringKey, TypeKey, TypeRef extends TypeReference> extends NullableIndexSection<TypeKey> {
-    @Nonnull StringKey getString(@Nonnull TypeKey key);
+    @Nonnull
+    StringKey getString(@Nonnull TypeKey key);
+
     int getItemIndex(@Nonnull TypeRef key);
 }

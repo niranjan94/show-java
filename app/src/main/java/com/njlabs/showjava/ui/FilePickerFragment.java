@@ -9,7 +9,6 @@ public class FilePickerFragment extends com.nononsenseapps.filepicker.FilePicker
     private static final String EXTENSION = ".apk";
 
     /**
-     *
      * @param file input file
      * @return The file extension. If file has no extension, it returns null.
      */
@@ -40,14 +39,13 @@ public class FilePickerFragment extends com.nononsenseapps.filepicker.FilePicker
     public File getBackTop() {
         if (getArguments().containsKey(KEY_START_PATH)) {
             String keyStartPath = getArguments().getString(KEY_START_PATH);
-            return getPath((keyStartPath!=null?keyStartPath:"/"));
+            return getPath((keyStartPath != null ? keyStartPath : "/"));
         } else {
             return new File("/");
         }
     }
 
     /**
-     *
      * @return true if the current path is the startpath or /
      */
     public boolean isBackTop() {

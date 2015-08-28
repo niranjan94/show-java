@@ -39,14 +39,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class CharSequenceConverter {
-    private CharSequenceConverter() {
-    }
-
-    @Nonnull
-    public static ImmutableList<String> immutableStringList(@Nullable Iterable<? extends CharSequence> iterable) {
-        return CONVERTER.toList(iterable);
-    }
-
     private static final ImmutableConverter<String, CharSequence> CONVERTER =
             new ImmutableConverter<String, CharSequence>() {
                 @Override
@@ -60,4 +52,12 @@ public final class CharSequenceConverter {
                     return item.toString();
                 }
             };
+
+    private CharSequenceConverter() {
+    }
+
+    @Nonnull
+    public static ImmutableList<String> immutableStringList(@Nullable Iterable<? extends CharSequence> iterable) {
+        return CONVERTER.toList(iterable);
+    }
 }

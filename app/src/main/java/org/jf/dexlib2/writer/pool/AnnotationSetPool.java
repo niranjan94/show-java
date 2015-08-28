@@ -41,7 +41,8 @@ import javax.annotation.Nonnull;
 
 public class AnnotationSetPool extends BaseNullableOffsetPool<Set<? extends Annotation>>
         implements AnnotationSetSection<Annotation, Set<? extends Annotation>> {
-    @Nonnull private final AnnotationPool annotationPool;
+    @Nonnull
+    private final AnnotationPool annotationPool;
 
     public AnnotationSetPool(@Nonnull AnnotationPool annotationPool) {
         this.annotationPool = annotationPool;
@@ -51,14 +52,16 @@ public class AnnotationSetPool extends BaseNullableOffsetPool<Set<? extends Anno
         if (annotationSet.size() > 0) {
             Integer prev = internedItems.put(annotationSet, 0);
             if (prev == null) {
-                for (Annotation annotation: annotationSet) {
+                for (Annotation annotation : annotationSet) {
                     annotationPool.intern(annotation);
                 }
             }
         }
     }
 
-    @Nonnull @Override public Collection<? extends Annotation> getAnnotations(
+    @Nonnull
+    @Override
+    public Collection<? extends Annotation> getAnnotations(
             @Nonnull Set<? extends Annotation> annotations) {
         return annotations;
     }

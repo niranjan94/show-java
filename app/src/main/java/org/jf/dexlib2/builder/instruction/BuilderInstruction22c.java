@@ -45,7 +45,8 @@ public class BuilderInstruction22c extends BuilderInstruction implements Instruc
 
     protected final int registerA;
     protected final int registerB;
-    @Nonnull protected final Reference reference;
+    @Nonnull
+    protected final Reference reference;
 
     public BuilderInstruction22c(@Nonnull Opcode opcode,
                                  int registerA,
@@ -57,10 +58,29 @@ public class BuilderInstruction22c extends BuilderInstruction implements Instruc
         this.reference = reference;
     }
 
-    @Override public int getRegisterA() { return registerA; }
-    @Override public int getRegisterB() { return registerB; }
-    @Nonnull @Override public Reference getReference() { return reference; }
-    @Override public int getReferenceType() { return opcode.referenceType; }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getRegisterB() {
+        return registerB;
+    }
+
+    @Nonnull
+    @Override
+    public Reference getReference() {
+        return reference;
+    }
+
+    @Override
+    public int getReferenceType() {
+        return opcode.referenceType;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

@@ -79,7 +79,7 @@ public class DumpVtables {
         String outFile = "vtables.txt";
         int apiLevel = 15;
 
-        for (int i=0; i<parsedOptions.length; i++) {
+        for (int i = 0; i < parsedOptions.length; i++) {
             Option option = parsedOptions[i];
             String opt = option.getOpt();
 
@@ -117,16 +117,16 @@ public class DumpVtables {
             ClassPath classPath = ClassPath.fromClassPath(bootClassPathDirs, bootClassPaths, dexFile, apiLevel);
             FileOutputStream outStream = new FileOutputStream(outFile);
 
-            for (ClassDef classDef: dexFile.getClasses()) {
+            for (ClassDef classDef : dexFile.getClasses()) {
                 ClassProto classProto = (ClassProto) classPath.getClass(classDef);
                 List<Method> methods = classProto.getVtable();
-                String className = "Class "  + classDef.getType() + " extends " + classDef.getSuperclass() + " : " + methods.size() + " methods\n";
+                String className = "Class " + classDef.getType() + " extends " + classDef.getSuperclass() + " : " + methods.size() + " methods\n";
                 outStream.write(className.getBytes());
-                for (int i=0;i<methods.size();i++) {
+                for (int i = 0; i < methods.size(); i++) {
                     Method method = methods.get(i);
 
                     String methodString = i + ":" + method.getDefiningClass() + "->" + method.getName() + "(";
-                    for (CharSequence parameter: method.getParameterTypes()) {
+                    for (CharSequence parameter : method.getParameterTypes()) {
                         methodString += parameter;
                     }
                     methodString += ")" + method.getReturnType() + "\n";

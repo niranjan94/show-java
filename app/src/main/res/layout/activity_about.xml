@@ -4,16 +4,18 @@
     android:layout_height="match_parent"
     tools:context=".About">
 
-    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:layout_below="@+id/toolbar">
+        android:paddingTop="@dimen/activity_vertical_margin">
 
         <ImageView
             android:id="@+id/showjava_logo_view"

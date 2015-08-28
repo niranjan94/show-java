@@ -37,5 +37,6 @@ import javax.annotation.Nonnull;
 
 public interface StringSection<StringKey, StringRef extends StringReference> extends NullableIndexSection<StringKey> {
     int getItemIndex(@Nonnull StringRef key);
+
     boolean hasJumboIndexes();
 }

@@ -39,9 +39,12 @@ import javax.annotation.Nullable;
 
 public class ImmutableRestartLocal extends ImmutableDebugItem implements RestartLocal {
     protected final int register;
-    @Nullable protected final String name;
-    @Nullable protected final String type;
-    @Nullable protected final String signature;
+    @Nullable
+    protected final String name;
+    @Nullable
+    protected final String type;
+    @Nullable
+    protected final String signature;
 
     public ImmutableRestartLocal(int codeAddress,
                                  int register) {
@@ -66,8 +69,8 @@ public class ImmutableRestartLocal extends ImmutableDebugItem implements Restart
 
     @Nonnull
     public static ImmutableRestartLocal of(@Nonnull RestartLocal restartLocal) {
-        if (restartLocal instanceof  ImmutableRestartLocal) {
-            return (ImmutableRestartLocal)restartLocal;
+        if (restartLocal instanceof ImmutableRestartLocal) {
+            return (ImmutableRestartLocal) restartLocal;
         }
         return new ImmutableRestartLocal(
                 restartLocal.getCodeAddress(),
@@ -77,10 +80,31 @@ public class ImmutableRestartLocal extends ImmutableDebugItem implements Restart
                 restartLocal.getSignature());
     }
 
-    @Override public int getRegister() { return register; }
-    @Nullable @Override public String getName() { return name; }
-    @Nullable @Override public String getType() { return type; }
-    @Nullable @Override public String getSignature() { return signature; }
+    @Override
+    public int getRegister() {
+        return register;
+    }
 
-    @Override public int getDebugItemType() { return DebugItemType.RESTART_LOCAL; }
+    @Nullable
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Nullable
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Nullable
+    @Override
+    public String getSignature() {
+        return signature;
+    }
+
+    @Override
+    public int getDebugItemType() {
+        return DebugItemType.RESTART_LOCAL;
+    }
 }

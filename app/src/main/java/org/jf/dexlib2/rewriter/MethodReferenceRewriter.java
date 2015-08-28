@@ -42,42 +42,56 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class MethodReferenceRewriter implements Rewriter<MethodReference> {
-    @Nonnull protected final Rewriters rewriters;
+    @Nonnull
+    protected final Rewriters rewriters;
 
     public MethodReferenceRewriter(@Nonnull Rewriters rewriters) {
         this.rewriters = rewriters;
     }
 
-    @Nonnull @Override public MethodReference rewrite(@Nonnull MethodReference methodReference) {
+    @Nonnull
+    @Override
+    public MethodReference rewrite(@Nonnull MethodReference methodReference) {
         return new RewrittenMethodReference(methodReference);
     }
 
     protected class RewrittenMethodReference extends BaseMethodReference {
-        @Nonnull protected MethodReference methodReference;
+        @Nonnull
+        protected MethodReference methodReference;
 
         public RewrittenMethodReference(@Nonnull MethodReference methodReference) {
             this.methodReference = methodReference;
         }
 
-        @Override @Nonnull public String getDefiningClass() {
+        @Override
+        @Nonnull
+        public String getDefiningClass() {
             return rewriters.getTypeRewriter().rewrite(methodReference.getDefiningClass());
         }
 
-        @Override @Nonnull public String getName() {
+        @Override
+        @Nonnull
+        public String getName() {
             return methodReference.getName();
         }
 
-        @Override @Nonnull public List<? extends CharSequence> getParameterTypes() {
+        @Override
+        @Nonnull
+        public List<? extends CharSequence> getParameterTypes() {
             return RewriterUtils.rewriteList(rewriters.getTypeRewriter(),
                     Lists.transform(methodReference.getParameterTypes(),
-                    new Function<CharSequence, String>() {
-                        @Nonnull @Override public String apply(CharSequence input) {
-                            return input.toString();
-                        }
-                    }));
+                            new Function<CharSequence, String>() {
+                                @Nonnull
+                                @Override
+                                public String apply(CharSequence input) {
+                                    return input.toString();
+                                }
+                            }));
         }
 
-        @Override @Nonnull public String getReturnType() {
+        @Override
+        @Nonnull
+        public String getReturnType() {
             return rewriters.getTypeRewriter().rewrite(methodReference.getReturnType());
         }
     }

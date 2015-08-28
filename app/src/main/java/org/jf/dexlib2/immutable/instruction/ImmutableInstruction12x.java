@@ -54,7 +54,7 @@ public class ImmutableInstruction12x extends ImmutableInstruction implements Ins
 
     public static ImmutableInstruction12x of(Instruction12x instruction) {
         if (instruction instanceof ImmutableInstruction12x) {
-            return (ImmutableInstruction12x)instruction;
+            return (ImmutableInstruction12x) instruction;
         }
         return new ImmutableInstruction12x(
                 instruction.getOpcode(),
@@ -62,8 +62,18 @@ public class ImmutableInstruction12x extends ImmutableInstruction implements Ins
                 instruction.getRegisterB());
     }
 
-    @Override public int getRegisterA() { return registerA; }
-    @Override public int getRegisterB() { return registerB; }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getRegisterB() {
+        return registerB;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

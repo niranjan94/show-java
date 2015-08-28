@@ -44,10 +44,13 @@ public class ImmutableEpilogueBegin extends ImmutableDebugItem implements Epilog
     @Nonnull
     public static ImmutableEpilogueBegin of(@Nonnull EpilogueBegin epilogueBegin) {
         if (epilogueBegin instanceof ImmutableEpilogueBegin) {
-            return (ImmutableEpilogueBegin)epilogueBegin;
+            return (ImmutableEpilogueBegin) epilogueBegin;
         }
         return new ImmutableEpilogueBegin(epilogueBegin.getCodeAddress());
     }
 
-    @Override public int getDebugItemType() { return DebugItemType.EPILOGUE_BEGIN; }
+    @Override
+    public int getDebugItemType() {
+        return DebugItemType.EPILOGUE_BEGIN;
+    }
 }

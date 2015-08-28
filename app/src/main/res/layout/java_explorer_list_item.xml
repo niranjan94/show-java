@@ -8,9 +8,9 @@
         android:id="@+id/file_icon"
         android:layout_width="50dip"
         android:layout_height="50dip"
-        android:layout_marginLeft="8dp"
-        android:layout_margin="8dp"
         android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:layout_marginLeft="8dp"
         android:src="@drawable/viewer_summary">
 
     </ImageView>

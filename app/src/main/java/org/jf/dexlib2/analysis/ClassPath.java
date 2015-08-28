@@ -57,9 +57,24 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 
 public class ClassPath {
-    @Nonnull private final TypeProto unknownClass;
-    @Nonnull private HashMap<String, ClassDef> availableClasses = Maps.newHashMap();
+    private static final Pattern dalvikCacheOdexPattern = Pattern.compile("@([^@]+)@classes.dex$");
+    @Nonnull
+    private final TypeProto unknownClass;
+    private final CacheLoader<String, TypeProto> classLoader = new CacheLoader<String, TypeProto>() {
+        @Override
+        public TypeProto load(String type) throws Exception {
+            if (type.charAt(0) == '[') {
+                return new ArrayProto(ClassPath.this, type);
+            } else {
+                return new ClassProto(ClassPath.this, type);
+            }
+        }
+    };
+    @Nonnull
+    private HashMap<String, ClassDef> availableClasses = Maps.newHashMap();
     private int api;
+    @Nonnull
+    private LoadingCache<String, TypeProto> loadedClasses = CacheBuilder.newBuilder().build(classLoader);
 
     /**
      * Creates a new ClassPath instance that can load classes from the given dex files
@@ -74,7 +89,7 @@ public class ClassPath {
      * Creates a new ClassPath instance that can load classes from the given dex files
      *
      * @param classPath An iterable of DexFile objects. When loading a class, these dex files will be searched in order
-     * @param api API level
+     * @param api       API level
      */
     public ClassPath(@Nonnull Iterable<DexFile> classPath, int api) {
         // add fallbacks for certain special classes that must be present
@@ -94,18 +109,14 @@ public class ClassPath {
         loadPrimitiveType("D");
         loadPrimitiveType("L");
 
-        for (DexFile dexFile: dexFiles) {
-            for (ClassDef classDef: dexFile.getClasses()) {
+        for (DexFile dexFile : dexFiles) {
+            for (ClassDef classDef : dexFile.getClasses()) {
                 ClassDef prev = availableClasses.get(classDef.getType());
                 if (prev == null) {
                     availableClasses.put(classDef.getType(), classDef);
                 }
             }
         }
-    }
-
-    private void loadPrimitiveType(String type) {
-        loadedClasses.put(type, new PrimitiveProto(this, type));
     }
 
     private static DexFile getBasicClasses() {
@@ -120,53 +131,16 @@ public class ClassPath {
     }
 
     @Nonnull
-    public TypeProto getClass(CharSequence type) {
-        return loadedClasses.getUnchecked(type.toString());
-    }
-
-    private final CacheLoader<String, TypeProto> classLoader = new CacheLoader<String, TypeProto>() {
-        @Override public TypeProto load(String type) throws Exception {
-            if (type.charAt(0) == '[') {
-                return new ArrayProto(ClassPath.this, type);
-            } else {
-                return new ClassProto(ClassPath.this, type);
-            }
-        }
-    };
-
-    @Nonnull private LoadingCache<String, TypeProto> loadedClasses = CacheBuilder.newBuilder().build(classLoader);
-
-    @Nonnull
-    public ClassDef getClassDef(String type) {
-        ClassDef ret = availableClasses.get(type);
-        if (ret == null) {
-            throw new UnresolvedClassException("Could not resolve class %s", type);
-        }
-        return ret;
-    }
-
-    @Nonnull
-    public TypeProto getUnknownClass() {
-        return unknownClass;
-    }
-
-    public int getApi() {
-        return api;
-    }
-
-    @Nonnull
     public static ClassPath fromClassPath(Iterable<String> classPathDirs, Iterable<String> classPath, DexFile dexFile,
                                           int api) {
         ArrayList<DexFile> dexFiles = Lists.newArrayList();
 
-        for (String classPathEntry: classPath) {
+        for (String classPathEntry : classPath) {
             dexFiles.add(loadClassPathEntry(classPathDirs, classPathEntry, api));
         }
         dexFiles.add(dexFile);
         return new ClassPath(dexFiles, api);
     }
-
-    private static final Pattern dalvikCacheOdexPattern = Pattern.compile("@([^@]+)@classes.dex$");
 
     @Nonnull
     private static DexFile loadClassPathEntry(@Nonnull Iterable<String> classPathDirs,
@@ -195,8 +169,8 @@ public class ClassPath {
             baseEntryName = entryName.substring(0, extIndex);
         }
 
-        for (String classPathDir: classPathDirs) {
-            for (String ext: new String[]{"", ".odex", ".jar", ".apk", ".zip"}) {
+        for (String classPathDir : classPathDirs) {
+            for (String ext : new String[]{"", ".odex", ".jar", ".apk", ".zip"}) {
                 File file = new File(classPathDir, baseEntryName + ext);
 
                 if (file.exists() && file.isFile()) {
@@ -217,5 +191,32 @@ public class ClassPath {
             }
         }
         throw new ExceptionWithContext("Cannot locate boot class path file %s", bootClassPathEntry);
+    }
+
+    private void loadPrimitiveType(String type) {
+        loadedClasses.put(type, new PrimitiveProto(this, type));
+    }
+
+    @Nonnull
+    public TypeProto getClass(CharSequence type) {
+        return loadedClasses.getUnchecked(type.toString());
+    }
+
+    @Nonnull
+    public ClassDef getClassDef(String type) {
+        ClassDef ret = availableClasses.get(type);
+        if (ret == null) {
+            throw new UnresolvedClassException("Could not resolve class %s", type);
+        }
+        return ret;
+    }
+
+    @Nonnull
+    public TypeProto getUnknownClass() {
+        return unknownClass;
+    }
+
+    public int getApi() {
+        return api;
     }
 }

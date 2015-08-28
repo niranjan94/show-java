@@ -42,12 +42,18 @@ import javax.annotation.Nonnull;
 
 public abstract class EncodedValueWriter<StringKey, TypeKey, FieldRefKey extends FieldReference,
         MethodRefKey extends MethodReference, AnnotationElement, EncodedValue> {
-    @Nonnull private final DexDataWriter writer;
-    @Nonnull private final StringSection<StringKey, ?> stringSection;
-    @Nonnull private final TypeSection<?, TypeKey, ?> typeSection;
-    @Nonnull private final FieldSection<?, ?, FieldRefKey, ?> fieldSection;
-    @Nonnull private final MethodSection<?, ?, ?, MethodRefKey, ?> methodSection;
-    @Nonnull private final AnnotationSection<StringKey, TypeKey, ?, AnnotationElement, EncodedValue> annotationSection;
+    @Nonnull
+    private final DexDataWriter writer;
+    @Nonnull
+    private final StringSection<StringKey, ?> stringSection;
+    @Nonnull
+    private final TypeSection<?, TypeKey, ?> typeSection;
+    @Nonnull
+    private final FieldSection<?, ?, FieldRefKey, ?> fieldSection;
+    @Nonnull
+    private final MethodSection<?, ?, ?, MethodRefKey, ?> methodSection;
+    @Nonnull
+    private final AnnotationSection<StringKey, TypeKey, ?, AnnotationElement, EncodedValue> annotationSection;
 
     public EncodedValueWriter(
             @Nonnull DexDataWriter writer,
@@ -71,7 +77,7 @@ public abstract class EncodedValueWriter<StringKey, TypeKey, FieldRefKey extends
         writer.writeEncodedValueHeader(ValueType.ANNOTATION, 0);
         writer.writeUleb128(typeSection.getItemIndex(annotationType));
         writer.writeUleb128(elements.size());
-        for (AnnotationElement element: elements) {
+        for (AnnotationElement element : elements) {
             writer.writeUleb128(stringSection.getItemIndex(annotationSection.getElementName(element)));
             writeEncodedValue(annotationSection.getElementValue(element));
         }
@@ -80,7 +86,7 @@ public abstract class EncodedValueWriter<StringKey, TypeKey, FieldRefKey extends
     public void writeArray(Collection<? extends EncodedValue> elements) throws IOException {
         writer.writeEncodedValueHeader(ValueType.ARRAY, 0);
         writer.writeUleb128(elements.size());
-        for (EncodedValue element: elements) {
+        for (EncodedValue element : elements) {
             writeEncodedValue(element);
         }
     }
@@ -104,7 +110,7 @@ public abstract class EncodedValueWriter<StringKey, TypeKey, FieldRefKey extends
     public void writeEnum(@Nonnull FieldRefKey value) throws IOException {
         writer.writeEncodedUint(ValueType.ENUM, fieldSection.getItemIndex(value));
     }
-    
+
     public void writeField(@Nonnull FieldRefKey value) throws IOException {
         writer.writeEncodedUint(ValueType.FIELD, fieldSection.getItemIndex(value));
     }

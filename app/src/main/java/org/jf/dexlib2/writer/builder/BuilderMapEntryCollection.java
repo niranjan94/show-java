@@ -39,52 +39,65 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 public abstract class BuilderMapEntryCollection<Key> extends AbstractCollection<Map.Entry<Key, Integer>> {
-    @Nonnull private final Collection<Key> keys;
+    @Nonnull
+    private final Collection<Key> keys;
 
     public BuilderMapEntryCollection(@Nonnull Collection<Key> keys) {
         this.keys = keys;
     }
 
-    private class MapEntry implements Map.Entry<Key, Integer> {
-        @Nonnull private Key key;
-
-        @Nonnull @Override public Key getKey() {
-            return key;
-        }
-
-        @Override public Integer getValue() {
-            return BuilderMapEntryCollection.this.getValue(key);
-        }
-
-        @Override public Integer setValue(Integer value) {
-            return BuilderMapEntryCollection.this.setValue(key, value);
-        }
-    }
-
-    @Nonnull @Override public Iterator<Map.Entry<Key, Integer>> iterator() {
+    @Nonnull
+    @Override
+    public Iterator<Map.Entry<Key, Integer>> iterator() {
         final Iterator<Key> iter = keys.iterator();
 
         return new Iterator<Map.Entry<Key, Integer>>() {
-            @Override public boolean hasNext() {
+            @Override
+            public boolean hasNext() {
                 return iter.hasNext();
             }
 
-            @Override public Map.Entry<Key, Integer> next() {
+            @Override
+            public Map.Entry<Key, Integer> next() {
                 MapEntry entry = new MapEntry();
                 entry.key = iter.next();
                 return entry;
             }
 
-            @Override public void remove() {
+            @Override
+            public void remove() {
                 throw new UnsupportedOperationException();
             }
         };
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
         return keys.size();
     }
 
     protected abstract int getValue(@Nonnull Key key);
+
     protected abstract int setValue(@Nonnull Key key, int value);
+
+    private class MapEntry implements Map.Entry<Key, Integer> {
+        @Nonnull
+        private Key key;
+
+        @Nonnull
+        @Override
+        public Key getKey() {
+            return key;
+        }
+
+        @Override
+        public Integer getValue() {
+            return BuilderMapEntryCollection.this.getValue(key);
+        }
+
+        @Override
+        public Integer setValue(Integer value) {
+            return BuilderMapEntryCollection.this.setValue(key, value);
+        }
+    }
 }

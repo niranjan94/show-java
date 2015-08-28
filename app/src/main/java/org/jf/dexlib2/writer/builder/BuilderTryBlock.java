@@ -40,7 +40,8 @@ import javax.annotation.Nonnull;
 public class BuilderTryBlock extends BaseTryBlock<BuilderExceptionHandler> {
     private final int startCodeAddress;
     private final int codeUnitCount;
-    @Nonnull private final List<? extends BuilderExceptionHandler> exceptionHandlers;
+    @Nonnull
+    private final List<? extends BuilderExceptionHandler> exceptionHandlers;
 
     public BuilderTryBlock(int startCodeAddress, int codeUnitCount,
                            @Nonnull List<? extends BuilderExceptionHandler> exceptionHandlers) {
@@ -49,15 +50,19 @@ public class BuilderTryBlock extends BaseTryBlock<BuilderExceptionHandler> {
         this.exceptionHandlers = exceptionHandlers;
     }
 
-    @Override public int getStartCodeAddress() {
+    @Override
+    public int getStartCodeAddress() {
         return startCodeAddress;
     }
 
-    @Override public int getCodeUnitCount() {
+    @Override
+    public int getCodeUnitCount() {
         return codeUnitCount;
     }
 
-    @Nonnull @Override public List<? extends BuilderExceptionHandler> getExceptionHandlers() {
+    @Nonnull
+    @Override
+    public List<? extends BuilderExceptionHandler> getExceptionHandlers() {
         return exceptionHandlers;
     }
 }

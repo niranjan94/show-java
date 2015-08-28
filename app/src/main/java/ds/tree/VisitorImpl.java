@@ -4,8 +4,8 @@ package ds.tree;
 /**
  * A simple standard implementation for a {@link visitor}.
  *
- * @author Dennis Heidsiek
  * @param <T,R>
+ * @author Dennis Heidsiek
  */
 public abstract class VisitorImpl<T, R> implements Visitor<T, R> {
 

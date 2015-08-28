@@ -21,27 +21,27 @@ public class Notify {
         this.NOTIFICATION_ID = NOTIFICATION_ID;
     }
 
-    public void updateTitle(String title){
+    public void updateTitle(String title) {
         mBuilder.setContentTitle(title);
-        mBuilder.setProgress(0,0,true);
-        mNotifyManager.notify(NOTIFICATION_ID,mBuilder.build());
+        mBuilder.setProgress(0, 0, true);
+        mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
-    public void updateText(String text){
+    public void updateText(String text) {
         long currentTime = System.currentTimeMillis();
-        if(currentTime - time >= 500){
+        if (currentTime - time >= 500) {
             mBuilder.setContentText(text);
-            mBuilder.setProgress(0,0,true);
-            mNotifyManager.notify(NOTIFICATION_ID,mBuilder.build());
+            mBuilder.setProgress(0, 0, true);
+            mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
             time = currentTime;
         }
     }
 
-    public void updateTitleText(String title, String text){
+    public void updateTitleText(String title, String text) {
         mBuilder.setContentTitle(title);
         mBuilder.setContentText(text);
-        mBuilder.setProgress(0,0,true);
-        mNotifyManager.notify(NOTIFICATION_ID,mBuilder.build());
+        mBuilder.setProgress(0, 0, true);
+        mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
     public void updateIntent(PendingIntent pendingIntent) {

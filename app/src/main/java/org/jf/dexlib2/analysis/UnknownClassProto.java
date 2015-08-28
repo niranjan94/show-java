@@ -38,19 +38,43 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class UnknownClassProto implements TypeProto {
-    @Nonnull protected final ClassPath classPath;
+    @Nonnull
+    protected final ClassPath classPath;
 
     public UnknownClassProto(@Nonnull ClassPath classPath) {
         this.classPath = classPath;
     }
 
-    @Override public String toString() { return "Ujava/lang/Object;"; }
-    @Nonnull @Override public ClassPath getClassPath() { return classPath; }
-    @Nullable @Override public String getSuperclass() { return null; }
-    @Override public boolean isInterface() { return false; }
-    @Override public boolean implementsInterface(@Nonnull String iface) { return false; }
+    @Override
+    public String toString() {
+        return "Ujava/lang/Object;";
+    }
 
-    @Nonnull @Override public TypeProto getCommonSuperclass(@Nonnull TypeProto other) {
+    @Nonnull
+    @Override
+    public ClassPath getClassPath() {
+        return classPath;
+    }
+
+    @Nullable
+    @Override
+    public String getSuperclass() {
+        return null;
+    }
+
+    @Override
+    public boolean isInterface() {
+        return false;
+    }
+
+    @Override
+    public boolean implementsInterface(@Nonnull String iface) {
+        return false;
+    }
+
+    @Nonnull
+    @Override
+    public TypeProto getCommonSuperclass(@Nonnull TypeProto other) {
         if (other.getType().equals("Ljava/lang/Object;")) {
             return other;
         }
@@ -62,7 +86,9 @@ public class UnknownClassProto implements TypeProto {
         return this;
     }
 
-    @Nonnull @Override public String getType() {
+    @Nonnull
+    @Override
+    public String getType() {
         // use the otherwise used U prefix for an unknown/unresolvable class
         return "Ujava/lang/Object;";
     }

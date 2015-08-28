@@ -50,14 +50,21 @@ public class ImmutableInstruction30t extends ImmutableInstruction implements Ins
 
     public static ImmutableInstruction30t of(Instruction30t instruction) {
         if (instruction instanceof ImmutableInstruction30t) {
-            return (ImmutableInstruction30t)instruction;
+            return (ImmutableInstruction30t) instruction;
         }
         return new ImmutableInstruction30t(
                 instruction.getOpcode(),
                 instruction.getCodeOffset());
     }
 
-    @Override public int getCodeOffset() { return codeOffset; }
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public int getCodeOffset() {
+        return codeOffset;
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }
 

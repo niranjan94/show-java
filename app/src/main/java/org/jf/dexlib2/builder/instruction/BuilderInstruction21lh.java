@@ -53,9 +53,23 @@ public class BuilderInstruction21lh extends BuilderInstruction implements Instru
         this.literal = Preconditions.checkLongHatLiteral(literal);
     }
 
-    @Override public int getRegisterA() { return registerA; }
-    @Override public long getWideLiteral() { return literal; }
-    @Override public short getHatLiteral() { return (short)(literal >>> 48); }
+    @Override
+    public int getRegisterA() {
+        return registerA;
+    }
 
-    @Override public Format getFormat() { return FORMAT; }
+    @Override
+    public long getWideLiteral() {
+        return literal;
+    }
+
+    @Override
+    public short getHatLiteral() {
+        return (short) (literal >>> 48);
+    }
+
+    @Override
+    public Format getFormat() {
+        return FORMAT;
+    }
 }

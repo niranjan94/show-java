@@ -39,20 +39,27 @@ import org.jf.util.CollectionUtils;
 import java.util.Comparator;
 
 public abstract class BaseAnnotation implements Annotation {
+    public static final Comparator<? super Annotation> BY_TYPE = new Comparator<Annotation>() {
+        @Override
+        public int compare(Annotation annotation1, Annotation annotation2) {
+            return annotation1.getType().compareTo(annotation2.getType());
+        }
+    };
+
     @Override
     public int hashCode() {
         int hashCode = getVisibility();
-        hashCode = hashCode*31 + getType().hashCode();
-        return hashCode*31 + getElements().hashCode();
+        hashCode = hashCode * 31 + getType().hashCode();
+        return hashCode * 31 + getElements().hashCode();
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof Annotation) {
-            Annotation other = (Annotation)o;
+            Annotation other = (Annotation) o;
             return (getVisibility() == other.getVisibility()) &&
-                   getType().equals(other.getType()) &&
-                   getElements().equals(other.getElements());
+                    getType().equals(other.getType()) &&
+                    getElements().equals(other.getElements());
         }
         return false;
     }
@@ -65,11 +72,4 @@ public abstract class BaseAnnotation implements Annotation {
         if (res != 0) return res;
         return CollectionUtils.compareAsSet(getElements(), o.getElements());
     }
-
-    public static final Comparator<? super Annotation> BY_TYPE = new Comparator<Annotation>() {
-        @Override
-        public int compare(Annotation annotation1, Annotation annotation2) {
-            return annotation1.getType().compareTo(annotation2.getType());
-        }
-    };
 }

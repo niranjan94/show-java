@@ -41,6 +41,14 @@ public class DexBackedCatchAllExceptionHandler extends DexBackedExceptionHandler
         this.handlerCodeAddress = reader.readSmallUleb128();
     }
 
-    @Nullable @Override public String getExceptionType() { return null; }
-    @Override public int getHandlerCodeAddress() { return handlerCodeAddress; }
+    @Nullable
+    @Override
+    public String getExceptionType() {
+        return null;
+    }
+
+    @Override
+    public int getHandlerCodeAddress() {
+        return handlerCodeAddress;
+    }
 }
