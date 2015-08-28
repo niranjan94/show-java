@@ -31,12 +31,12 @@
 
 package org.jf.dexlib2.builder.debug;
 
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.builder.BuilderDebugItem;
 import org.jf.dexlib2.iface.debug.SetSourceFile;
 import org.jf.dexlib2.iface.reference.StringReference;
+
+import javax.annotation.Nullable;
 
 public class BuilderSetSourceFile extends BuilderDebugItem implements SetSourceFile {
     @Nullable

@@ -31,14 +31,14 @@
 
 package org.jf.dexlib2.dexbacked.instruction;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.DexReader;
 import org.jf.dexlib2.iface.instruction.Instruction;
 import org.jf.util.ExceptionWithContext;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class DexBackedInstruction implements Instruction {
     @Nonnull public final DexBackedDexFile dexFile;

@@ -31,13 +31,13 @@
 
 package org.jf.dexlib2;
 
-import java.util.HashMap;
-
-import javax.annotation.Nullable;
+import com.google.common.collect.Maps;
 
 import org.jf.util.ExceptionWithContext;
 
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+
+import javax.annotation.Nullable;
 
 public class VerificationError {
     public static final int GENERIC = 1;

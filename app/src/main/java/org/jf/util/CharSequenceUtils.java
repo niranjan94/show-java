@@ -31,11 +31,11 @@
 
 package org.jf.util;
 
-import java.util.List;
-
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
+
+import java.util.List;
 
 public class CharSequenceUtils {
     private static final Function<Object, String> TO_STRING = Functions.toStringFunction();

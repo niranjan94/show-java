@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.rewriter;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.base.reference.BaseFieldReference;
 import org.jf.dexlib2.iface.reference.FieldReference;
+
+import javax.annotation.Nonnull;
 
 public class FieldReferenceRewriter implements Rewriter<FieldReference> {
     @Nonnull protected final Rewriters rewriters;

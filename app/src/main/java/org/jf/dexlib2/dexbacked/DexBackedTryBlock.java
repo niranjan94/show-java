@@ -31,13 +31,13 @@
 
 package org.jf.dexlib2.dexbacked;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.base.BaseTryBlock;
 import org.jf.dexlib2.dexbacked.raw.CodeItem;
 import org.jf.dexlib2.dexbacked.util.VariableSizeList;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class DexBackedTryBlock extends BaseTryBlock<DexBackedExceptionHandler> {
     @Nonnull public final DexBackedDexFile dexFile;

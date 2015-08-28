@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.builder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.base.BaseExceptionHandler;
 import org.jf.dexlib2.iface.reference.TypeReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class BuilderExceptionHandler extends BaseExceptionHandler {
     @Nonnull protected final Label handler;

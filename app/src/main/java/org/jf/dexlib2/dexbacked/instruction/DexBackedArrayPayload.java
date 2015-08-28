@@ -31,15 +31,15 @@
 
 package org.jf.dexlib2.dexbacked.instruction;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.util.FixedSizeList;
 import org.jf.dexlib2.iface.instruction.formats.ArrayPayload;
 import org.jf.util.ExceptionWithContext;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class DexBackedArrayPayload extends DexBackedInstruction implements ArrayPayload {
     public static final Opcode OPCODE = Opcode.ARRAY_PAYLOAD;

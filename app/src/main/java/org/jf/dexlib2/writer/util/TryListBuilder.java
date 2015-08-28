@@ -31,19 +31,19 @@
 
 package org.jf.dexlib2.writer.util;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.Lists;
 
 import org.jf.dexlib2.base.BaseTryBlock;
 import org.jf.dexlib2.iface.ExceptionHandler;
 import org.jf.dexlib2.iface.TryBlock;
 import org.jf.util.ExceptionWithContext;
 
-import com.google.common.collect.Lists;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TryListBuilder<EH extends ExceptionHandler>
 {

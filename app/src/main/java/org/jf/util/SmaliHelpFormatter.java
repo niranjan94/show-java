@@ -28,10 +28,10 @@
 
 package org.jf.util;
 
-import java.io.PrintWriter;
-
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
+
+import java.io.PrintWriter;
 
 public class SmaliHelpFormatter extends HelpFormatter {
     public void printHelp(String cmdLineSyntax, String header, Options options, Options debugOptions) {

@@ -31,16 +31,16 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.Ordering;
 
 import org.jf.dexlib2.writer.DexWriter;
 import org.jf.util.CharSequenceUtils;
 import org.jf.util.CollectionUtils;
 
-import com.google.common.collect.Ordering;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BuilderProtoReference implements BuilderProtoPool.ProtoKey, Comparable<BuilderProtoReference> {
     @Nonnull final BuilderStringReference shorty;

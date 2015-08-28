@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.builder.debug;
 
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.builder.BuilderDebugItem;
 import org.jf.dexlib2.iface.debug.RestartLocal;
+
+import javax.annotation.Nullable;
 
 public class BuilderRestartLocal extends BuilderDebugItem implements RestartLocal {
     private final int register;

@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.immutable.debug;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.iface.debug.RestartLocal;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ImmutableRestartLocal extends ImmutableDebugItem implements RestartLocal {
     protected final int register;

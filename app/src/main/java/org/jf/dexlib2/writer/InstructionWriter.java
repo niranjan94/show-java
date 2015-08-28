@@ -31,11 +31,6 @@
 
 package org.jf.dexlib2.writer;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.ReferenceType;
 import org.jf.dexlib2.iface.instruction.ReferenceInstruction;
 import org.jf.dexlib2.iface.instruction.SwitchElement;
@@ -73,6 +68,11 @@ import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.iface.reference.StringReference;
 import org.jf.dexlib2.iface.reference.TypeReference;
 import org.jf.util.ExceptionWithContext;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class InstructionWriter<StringRef extends StringReference, TypeRef extends TypeReference,
         FieldRefKey extends FieldReference, MethodRefKey extends MethodReference> {

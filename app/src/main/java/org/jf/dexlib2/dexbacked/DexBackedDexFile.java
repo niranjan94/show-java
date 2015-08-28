@@ -31,13 +31,7 @@
 
 package org.jf.dexlib2.dexbacked;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.io.ByteStreams;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.raw.ClassDefItem;
@@ -51,7 +45,13 @@ import org.jf.dexlib2.dexbacked.util.FixedSizeSet;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.util.ExceptionWithContext;
 
-import com.google.common.io.ByteStreams;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DexBackedDexFile extends BaseDexBuffer implements DexFile {
     private final Opcodes opcodes;

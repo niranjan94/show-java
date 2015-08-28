@@ -31,13 +31,13 @@
 
 package org.jf.dexlib2.util;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Predicate;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Field;
 
-import com.google.common.base.Predicate;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class FieldUtil {
     public static Predicate<Field> FIELD_IS_STATIC = new Predicate<Field>() {

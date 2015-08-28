@@ -31,15 +31,15 @@
 
 package org.jf.dexlib2.dexbacked.raw;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Joiner;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.dexbacked.DexReader;
 import org.jf.dexlib2.dexbacked.raw.util.DexAnnotator;
 import org.jf.dexlib2.util.AnnotatedBytes;
 
-import com.google.common.base.Joiner;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ClassDataItem {
     @Nonnull

@@ -31,10 +31,8 @@
 
 package org.jf.dexlib2.dexbacked.raw;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 import org.jf.dexlib2.VerificationError;
 import org.jf.dexlib2.dexbacked.DexReader;
@@ -63,8 +61,10 @@ import org.jf.dexlib2.util.ReferenceUtil;
 import org.jf.util.ExceptionWithContext;
 import org.jf.util.NumberUtils;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CodeItem {
     public static final int REGISTERS_OFFSET = 0;

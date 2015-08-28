@@ -31,14 +31,9 @@
 
 package org.jf.dexlib2.dexbacked.raw.util;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Ordering;
+import com.google.common.primitives.Ints;
 
 import org.jf.dexlib2.dexbacked.raw.AnnotationDirectoryItem;
 import org.jf.dexlib2.dexbacked.raw.AnnotationItem;
@@ -63,9 +58,14 @@ import org.jf.dexlib2.dexbacked.raw.TypeIdItem;
 import org.jf.dexlib2.dexbacked.raw.TypeListItem;
 import org.jf.dexlib2.util.AnnotatedBytes;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Ordering;
-import com.google.common.primitives.Ints;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DexAnnotator extends AnnotatedBytes {
     @Nonnull public final RawDexFile dexFile;

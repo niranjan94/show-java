@@ -31,8 +31,6 @@
 
 package org.jf.dexlib2.dexbacked.value;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.dexbacked.DexReader;
 import org.jf.dexlib2.iface.value.EncodedValue;
@@ -47,6 +45,8 @@ import org.jf.dexlib2.immutable.value.ImmutableNullEncodedValue;
 import org.jf.dexlib2.immutable.value.ImmutableShortEncodedValue;
 import org.jf.dexlib2.util.Preconditions;
 import org.jf.util.ExceptionWithContext;
+
+import javax.annotation.Nonnull;
 
 public abstract class DexBackedEncodedValue {
     @Nonnull

@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.dexbacked.instruction;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.instruction.formats.Instruction22b;
+
+import javax.annotation.Nonnull;
 
 public class DexBackedInstruction22b extends DexBackedInstruction implements Instruction22b {
     public DexBackedInstruction22b(@Nonnull DexBackedDexFile dexFile,

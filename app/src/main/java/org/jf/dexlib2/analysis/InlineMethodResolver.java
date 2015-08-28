@@ -31,7 +31,7 @@
 
 package org.jf.dexlib2.analysis;
 
-import javax.annotation.Nonnull;
+import com.google.common.collect.ImmutableList;
 
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.instruction.InlineIndexInstruction;
@@ -40,7 +40,7 @@ import org.jf.dexlib2.immutable.ImmutableMethod;
 import org.jf.dexlib2.immutable.ImmutableMethodParameter;
 import org.jf.dexlib2.immutable.util.ParamUtil;
 
-import com.google.common.collect.ImmutableList;
+import javax.annotation.Nonnull;
 
 public abstract class InlineMethodResolver {
     // These are the possible values for the accessFlag field on a resolved inline method

@@ -31,17 +31,17 @@
 
 package org.jf.dexlib2.writer.builder;
 
+import com.google.common.collect.Maps;
+
+import org.jf.dexlib2.writer.DexWriter;
+import org.jf.dexlib2.writer.StringSection;
+
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jf.dexlib2.writer.DexWriter;
-import org.jf.dexlib2.writer.StringSection;
-
-import com.google.common.collect.Maps;
 
 class BuilderStringPool implements StringSection<BuilderStringReference, BuilderStringReference> {
     @Nonnull private final ConcurrentMap<String, BuilderStringReference> internedItems = Maps.newConcurrentMap();

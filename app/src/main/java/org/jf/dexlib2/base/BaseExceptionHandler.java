@@ -31,17 +31,17 @@
 
 package org.jf.dexlib2.base;
 
-import java.util.Comparator;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Objects;
+import com.google.common.primitives.Ints;
 
 import org.jf.dexlib2.base.reference.BaseTypeReference;
 import org.jf.dexlib2.iface.ExceptionHandler;
 import org.jf.dexlib2.iface.reference.TypeReference;
 
-import com.google.common.base.Objects;
-import com.google.common.primitives.Ints;
+import java.util.Comparator;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class BaseExceptionHandler implements ExceptionHandler {
     @Nullable @Override public TypeReference getExceptionTypeReference() {

@@ -31,16 +31,16 @@
 
 package org.jf.dexlib2.dexbacked.util;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 import org.jf.dexlib2.dexbacked.DexBackedAnnotation;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 public abstract class AnnotationsDirectory {
     public static final AnnotationsDirectory EMPTY = new AnnotationsDirectory() {

@@ -31,12 +31,12 @@
 
 package org.jf.dexlib2.dexbacked.reference;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.ReferenceType;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.reference.Reference;
 import org.jf.util.ExceptionWithContext;
+
+import javax.annotation.Nonnull;
 
 public abstract class DexBackedReference {
     public static Reference makeReference(@Nonnull DexBackedDexFile dexFile, int referenceType, int referenceIndex) {

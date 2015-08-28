@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.base.reference.BaseFieldReference;
 import org.jf.dexlib2.writer.DexWriter;
+
+import javax.annotation.Nonnull;
 
 public class BuilderFieldReference extends BaseFieldReference implements BuilderReference {
     @Nonnull final BuilderTypeReference definingClass;

@@ -31,20 +31,13 @@
 
 package org.jf.dexlib2.writer.pool;
 
-import java.io.IOException;
-import java.util.AbstractCollection;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Ordering;
 
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.ReferenceType;
@@ -80,13 +73,20 @@ import org.jf.util.AbstractForwardSequentialList;
 import org.jf.util.CollectionUtils;
 import org.jf.util.ExceptionWithContext;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Ordering;
+import java.io.IOException;
+import java.util.AbstractCollection;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ClassPool implements ClassSection<CharSequence, CharSequence,
         TypeListPool.Key<? extends Collection<? extends CharSequence>>, PoolClassDef, Field, PoolMethod,

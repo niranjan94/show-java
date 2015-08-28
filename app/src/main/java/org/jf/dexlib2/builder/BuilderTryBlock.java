@@ -31,15 +31,15 @@
 
 package org.jf.dexlib2.builder;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
 
 import org.jf.dexlib2.base.BaseTryBlock;
 import org.jf.dexlib2.iface.reference.TypeReference;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BuilderTryBlock extends BaseTryBlock<BuilderExceptionHandler> {
     // We only ever have one exception handler per try block. They are later merged as needed in TryListBuilder

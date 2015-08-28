@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterators;
 
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.iface.AnnotationElement;
@@ -73,10 +73,10 @@ import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderStringEncodedVa
 import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderTypeEncodedValue;
 import org.jf.util.ExceptionWithContext;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterators;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class BuilderContext {
     // keep our own local references to the various pools, using the Builder specific pool type;

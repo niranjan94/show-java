@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.dexbacked;
 
-import javax.annotation.Nonnull;
-
 import org.jf.util.ExceptionWithContext;
 import org.jf.util.Utf8Utils;
+
+import javax.annotation.Nonnull;
 
 public class BaseDexReader<T extends BaseDexBuffer> {
     @Nonnull public final T dexBuf;

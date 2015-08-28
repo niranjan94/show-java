@@ -31,13 +31,13 @@
 
 package org.jf.dexlib2.iface;
 
+import org.jf.dexlib2.iface.debug.LocalInfo;
+import org.jf.dexlib2.iface.reference.TypeReference;
+
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jf.dexlib2.iface.debug.LocalInfo;
-import org.jf.dexlib2.iface.reference.TypeReference;
 
 /**
  * This class represents a method parameter.

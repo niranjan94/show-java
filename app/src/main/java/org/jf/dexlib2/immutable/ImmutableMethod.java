@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.immutable;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Ordering;
 
 import org.jf.dexlib2.base.reference.BaseMethodReference;
 import org.jf.dexlib2.iface.Annotation;
@@ -44,10 +44,10 @@ import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.util.ImmutableConverter;
 import org.jf.util.ImmutableUtils;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Ordering;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ImmutableMethod extends BaseMethodReference implements Method {
     @Nonnull protected final String definingClass;

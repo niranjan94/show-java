@@ -1,10 +1,10 @@
 package org.jf.dexlib2.builder.instruction;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.builder.BuilderSwitchPayload;
 import org.jf.dexlib2.builder.Label;
 import org.jf.dexlib2.iface.instruction.SwitchElement;
+
+import javax.annotation.Nonnull;
 
 public class BuilderSwitchElement implements SwitchElement {
     @Nonnull BuilderSwitchPayload parent;

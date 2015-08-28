@@ -31,8 +31,6 @@
 
 package org.jf.dexlib2.rewriter;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.ClassDef;
@@ -47,6 +45,8 @@ import org.jf.dexlib2.iface.instruction.Instruction;
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.iface.value.EncodedValue;
+
+import javax.annotation.Nonnull;
 
 public class RewriterModule {
     @Nonnull public Rewriter<ClassDef> getClassDefRewriter(@Nonnull Rewriters rewriters) {

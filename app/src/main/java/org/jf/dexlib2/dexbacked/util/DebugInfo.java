@@ -31,11 +31,7 @@
 
 package org.jf.dexlib2.dexbacked.util;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.Iterators;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.DebugItemType;
@@ -55,7 +51,11 @@ import org.jf.dexlib2.immutable.debug.ImmutableRestartLocal;
 import org.jf.dexlib2.immutable.debug.ImmutableSetSourceFile;
 import org.jf.dexlib2.immutable.debug.ImmutableStartLocal;
 
-import com.google.common.collect.Iterators;
+import java.util.Arrays;
+import java.util.Iterator;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class DebugInfo implements Iterable<DebugItem> {
     /**

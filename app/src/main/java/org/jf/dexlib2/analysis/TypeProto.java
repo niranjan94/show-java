@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.analysis;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface TypeProto {
     @Nonnull ClassPath getClassPath();

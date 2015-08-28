@@ -31,15 +31,15 @@
 
 package org.jf.dexlib2.dexbacked.instruction;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.util.FixedSizeList;
 import org.jf.dexlib2.iface.instruction.SwitchElement;
 import org.jf.dexlib2.iface.instruction.formats.PackedSwitchPayload;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class DexBackedPackedSwitchPayload extends DexBackedInstruction implements PackedSwitchPayload {
     public final int elementCount;

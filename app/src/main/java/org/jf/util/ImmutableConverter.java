@@ -31,16 +31,16 @@
 
 package org.jf.util;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
+
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.SortedSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
 
 public abstract class ImmutableConverter<ImmutableItem, Item> {
     protected abstract boolean isImmutable(@Nonnull Item item);

@@ -31,8 +31,6 @@
 
 package org.jf.dexlib2.rewriter;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.ReferenceType;
 import org.jf.dexlib2.iface.instruction.Instruction;
@@ -47,6 +45,8 @@ import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.iface.reference.Reference;
 import org.jf.dexlib2.iface.reference.TypeReference;
+
+import javax.annotation.Nonnull;
 
 public class InstructionRewriter implements Rewriter<Instruction> {
     @Nonnull protected final Rewriters rewriters;

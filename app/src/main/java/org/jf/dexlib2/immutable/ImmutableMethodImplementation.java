@@ -31,10 +31,7 @@
 
 package org.jf.dexlib2.immutable;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
 
 import org.jf.dexlib2.iface.ExceptionHandler;
 import org.jf.dexlib2.iface.MethodImplementation;
@@ -45,7 +42,10 @@ import org.jf.dexlib2.immutable.debug.ImmutableDebugItem;
 import org.jf.dexlib2.immutable.instruction.ImmutableInstruction;
 import org.jf.util.ImmutableUtils;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ImmutableMethodImplementation implements MethodImplementation {
     protected final int registerCount;

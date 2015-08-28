@@ -31,15 +31,15 @@
 
 package org.jf.dexlib2.writer.builder;
 
+import com.google.common.collect.ImmutableSet;
+
+import org.jf.dexlib2.writer.DexWriter;
+
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-
-import org.jf.dexlib2.writer.DexWriter;
-
-import com.google.common.collect.ImmutableSet;
 
 class BuilderAnnotationSet extends AbstractSet<BuilderAnnotation> {
     public static final BuilderAnnotationSet EMPTY =

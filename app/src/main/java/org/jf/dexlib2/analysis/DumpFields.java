@@ -31,10 +31,8 @@
 
 package org.jf.dexlib2.analysis;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -50,8 +48,10 @@ import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.util.ConsoleUtil;
 import org.jf.util.SparseArray;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class DumpFields {
     private static final Options options;

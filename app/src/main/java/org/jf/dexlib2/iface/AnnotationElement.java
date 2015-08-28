@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.iface;
 
+import org.jf.dexlib2.iface.value.EncodedValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jf.dexlib2.iface.value.EncodedValue;
 
 /**
  * This class represents an individual name/value element in an annotation

@@ -31,10 +31,7 @@
 
 package org.jf.dexlib2.immutable.value;
 
-import java.util.Collection;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableSet;
 
 import org.jf.dexlib2.base.value.BaseAnnotationEncodedValue;
 import org.jf.dexlib2.iface.AnnotationElement;
@@ -42,7 +39,10 @@ import org.jf.dexlib2.iface.value.AnnotationEncodedValue;
 import org.jf.dexlib2.immutable.ImmutableAnnotationElement;
 import org.jf.util.ImmutableUtils;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Collection;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ImmutableAnnotationEncodedValue extends BaseAnnotationEncodedValue implements ImmutableEncodedValue {
     @Nonnull protected final String type;

@@ -31,8 +31,8 @@
 
 package org.jf.dexlib2.immutable.value;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.iface.value.AnnotationEncodedValue;
@@ -54,8 +54,8 @@ import org.jf.dexlib2.iface.value.TypeEncodedValue;
 import org.jf.util.ExceptionWithContext;
 import org.jf.util.ImmutableConverter;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ImmutableEncodedValueFactory {
     @Nonnull

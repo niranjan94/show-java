@@ -31,8 +31,7 @@
 
 package org.jf.dexlib2.immutable.debug;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
 
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.iface.debug.DebugItem;
@@ -46,7 +45,8 @@ import org.jf.dexlib2.iface.debug.StartLocal;
 import org.jf.util.ExceptionWithContext;
 import org.jf.util.ImmutableConverter;
 
-import com.google.common.collect.ImmutableList;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class ImmutableDebugItem implements DebugItem {
     protected final int codeAddress;

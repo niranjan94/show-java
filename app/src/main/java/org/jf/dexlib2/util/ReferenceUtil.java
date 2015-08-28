@@ -31,17 +31,17 @@
 
 package org.jf.dexlib2.util;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.iface.reference.Reference;
 import org.jf.dexlib2.iface.reference.StringReference;
 import org.jf.dexlib2.iface.reference.TypeReference;
 import org.jf.util.StringUtils;
+
+import java.io.IOException;
+import java.io.Writer;
+
+import javax.annotation.Nullable;
 
 public final class ReferenceUtil {
     public static String getShortMethodDescriptor(MethodReference methodReference) {

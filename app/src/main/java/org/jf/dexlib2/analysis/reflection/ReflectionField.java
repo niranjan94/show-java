@@ -31,10 +31,7 @@
 
 package org.jf.dexlib2.analysis.reflection;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableSet;
 
 import org.jf.dexlib2.analysis.reflection.util.ReflectionUtils;
 import org.jf.dexlib2.base.reference.BaseFieldReference;
@@ -42,7 +39,10 @@ import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.value.EncodedValue;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ReflectionField extends BaseFieldReference implements Field {
     private final java.lang.reflect.Field field;

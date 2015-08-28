@@ -31,7 +31,7 @@
 
 package org.jf.dexlib2.immutable.instruction;
 
-import javax.annotation.Nonnull;
+import com.google.common.collect.ImmutableList;
 
 import org.jf.dexlib2.Format;
 import org.jf.dexlib2.Opcode;
@@ -74,7 +74,7 @@ import org.jf.dexlib2.iface.instruction.formats.UnknownInstruction;
 import org.jf.dexlib2.util.Preconditions;
 import org.jf.util.ImmutableConverter;
 
-import com.google.common.collect.ImmutableList;
+import javax.annotation.Nonnull;
 
 public abstract class ImmutableInstruction implements Instruction {
     @Nonnull protected final Opcode opcode;

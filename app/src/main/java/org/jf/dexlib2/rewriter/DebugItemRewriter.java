@@ -31,9 +31,6 @@
 
 package org.jf.dexlib2.rewriter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.iface.debug.DebugItem;
 import org.jf.dexlib2.iface.debug.EndLocal;
@@ -42,6 +39,9 @@ import org.jf.dexlib2.iface.debug.RestartLocal;
 import org.jf.dexlib2.iface.debug.StartLocal;
 import org.jf.dexlib2.iface.reference.StringReference;
 import org.jf.dexlib2.iface.reference.TypeReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DebugItemRewriter implements Rewriter<DebugItem> {
     @Nonnull protected final Rewriters rewriters;

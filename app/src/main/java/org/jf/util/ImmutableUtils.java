@@ -31,12 +31,12 @@
 
 package org.jf.util;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ImmutableUtils {
     @Nonnull public static <T> ImmutableList<T> nullToEmptyList(@Nullable ImmutableList<T> list) {

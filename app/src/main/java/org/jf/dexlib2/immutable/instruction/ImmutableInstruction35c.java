@@ -31,8 +31,6 @@
 
 package org.jf.dexlib2.immutable.instruction;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.Format;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.instruction.formats.Instruction35c;
@@ -40,6 +38,8 @@ import org.jf.dexlib2.iface.reference.Reference;
 import org.jf.dexlib2.immutable.reference.ImmutableReference;
 import org.jf.dexlib2.immutable.reference.ImmutableReferenceFactory;
 import org.jf.dexlib2.util.Preconditions;
+
+import javax.annotation.Nonnull;
 
 public class ImmutableInstruction35c extends ImmutableInstruction implements Instruction35c {
     public static final Format FORMAT = Format.Format35c;

@@ -31,12 +31,12 @@
 
 package org.jf.dexlib2.immutable.instruction;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.Format;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.instruction.formats.Instruction12x;
 import org.jf.dexlib2.util.Preconditions;
+
+import javax.annotation.Nonnull;
 
 public class ImmutableInstruction12x extends ImmutableInstruction implements Instruction12x {
     public static final Format FORMAT = Format.Format12x;

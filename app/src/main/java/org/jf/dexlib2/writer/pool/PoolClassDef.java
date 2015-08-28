@@ -31,6 +31,17 @@
 
 package org.jf.dexlib2.writer.pool;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Ordering;
+
+import org.jf.dexlib2.base.reference.BaseTypeReference;
+import org.jf.dexlib2.iface.Annotation;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.Field;
+
 import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Iterator;
@@ -39,17 +50,6 @@ import java.util.SortedSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jf.dexlib2.base.reference.BaseTypeReference;
-import org.jf.dexlib2.iface.Annotation;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.Field;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Ordering;
 
 class PoolClassDef extends BaseTypeReference implements ClassDef {
     @Nonnull final ClassDef classDef;

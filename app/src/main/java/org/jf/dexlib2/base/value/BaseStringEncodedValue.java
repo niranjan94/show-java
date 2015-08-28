@@ -31,14 +31,14 @@
 
 package org.jf.dexlib2.base.value;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.primitives.Ints;
 
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.StringEncodedValue;
 
-import com.google.common.primitives.Ints;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class BaseStringEncodedValue implements StringEncodedValue {
     @Override

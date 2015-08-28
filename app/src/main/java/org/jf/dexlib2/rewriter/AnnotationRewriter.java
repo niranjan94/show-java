@@ -31,13 +31,13 @@
 
 package org.jf.dexlib2.rewriter;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.base.BaseAnnotation;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
+
+import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 public class AnnotationRewriter implements Rewriter<Annotation> {
     @Nonnull protected final Rewriters rewriters;

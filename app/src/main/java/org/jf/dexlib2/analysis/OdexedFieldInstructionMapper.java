@@ -31,9 +31,9 @@
 
 package org.jf.dexlib2.analysis;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.Opcode;
+
+import javax.annotation.Nonnull;
 
 public class OdexedFieldInstructionMapper {
     private static Opcode[][][][] opcodeMap = new Opcode[][][][] {

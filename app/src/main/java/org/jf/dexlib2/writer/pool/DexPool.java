@@ -31,13 +31,6 @@
 
 package org.jf.dexlib2.writer.pool;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
@@ -67,6 +60,13 @@ import org.jf.dexlib2.writer.DexWriter;
 import org.jf.dexlib2.writer.io.FileDataStore;
 import org.jf.dexlib2.writer.pool.ProtoPool.Key;
 import org.jf.util.ExceptionWithContext;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 public class DexPool extends DexWriter<CharSequence, StringReference, CharSequence, TypeReference, Key,
         FieldReference, MethodReference, PoolClassDef,

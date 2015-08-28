@@ -31,14 +31,14 @@
 
 package org.jf.dexlib2.dexbacked.util;
 
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.dexbacked.DexReader;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.dexbacked.DexReader;
 
 public abstract class VariableSizeLookaheadIterator<T> implements Iterator<T> {
     @Nonnull private final DexReader reader;

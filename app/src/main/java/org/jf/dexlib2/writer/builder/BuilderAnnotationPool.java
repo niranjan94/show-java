@@ -31,17 +31,17 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import java.util.Collection;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentMap;
-
-import javax.annotation.Nonnull;
+import com.google.common.collect.Maps;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.writer.AnnotationSection;
 import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderEncodedValue;
 
-import com.google.common.collect.Maps;
+import java.util.Collection;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentMap;
+
+import javax.annotation.Nonnull;
 
 class BuilderAnnotationPool implements AnnotationSection<BuilderStringReference, BuilderTypeReference,
         BuilderAnnotation, BuilderAnnotationElement, BuilderEncodedValue> {

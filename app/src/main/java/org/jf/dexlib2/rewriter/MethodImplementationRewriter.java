@@ -31,15 +31,15 @@
 
 package org.jf.dexlib2.rewriter;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.iface.ExceptionHandler;
 import org.jf.dexlib2.iface.MethodImplementation;
 import org.jf.dexlib2.iface.TryBlock;
 import org.jf.dexlib2.iface.debug.DebugItem;
 import org.jf.dexlib2.iface.instruction.Instruction;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class MethodImplementationRewriter implements Rewriter<MethodImplementation> {
     @Nonnull protected final Rewriters rewriters;

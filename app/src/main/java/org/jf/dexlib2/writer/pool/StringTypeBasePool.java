@@ -31,17 +31,17 @@
 
 package org.jf.dexlib2.writer.pool;
 
-import java.util.Collection;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.Maps;
 
 import org.jf.dexlib2.writer.DexWriter;
 import org.jf.dexlib2.writer.NullableIndexSection;
 import org.jf.util.ExceptionWithContext;
 
-import com.google.common.collect.Maps;
+import java.util.Collection;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class StringTypeBasePool implements NullableIndexSection<CharSequence> {
     @Nonnull protected final Map<String, Integer> internedItems = Maps.newHashMap();

@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.rewriter;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.base.BaseAnnotationElement;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.value.EncodedValue;
+
+import javax.annotation.Nonnull;
 
 public class AnnotationElementRewriter implements Rewriter<AnnotationElement> {
     @Nonnull protected final Rewriters rewriters;

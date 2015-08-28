@@ -31,17 +31,17 @@
 
 package org.jf.dexlib2.writer.builder;
 
+import com.google.common.collect.Maps;
+
+import org.jf.dexlib2.writer.DexWriter;
+import org.jf.dexlib2.writer.TypeSection;
+
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jf.dexlib2.writer.DexWriter;
-import org.jf.dexlib2.writer.TypeSection;
-
-import com.google.common.collect.Maps;
 
 class BuilderTypePool implements TypeSection<BuilderStringReference, BuilderTypeReference, BuilderTypeReference> {
     @Nonnull private final BuilderContext context;

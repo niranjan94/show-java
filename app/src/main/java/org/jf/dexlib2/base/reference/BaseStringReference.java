@@ -31,10 +31,10 @@
 
 package org.jf.dexlib2.base.reference;
 
+import org.jf.dexlib2.iface.reference.StringReference;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jf.dexlib2.iface.reference.StringReference;
 
 public abstract class BaseStringReference implements StringReference {
     @Override

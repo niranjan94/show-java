@@ -31,11 +31,6 @@
 
 package org.jf.dexlib2.rewriter;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.base.value.BaseAnnotationEncodedValue;
 import org.jf.dexlib2.base.value.BaseArrayEncodedValue;
@@ -53,6 +48,11 @@ import org.jf.dexlib2.iface.value.EnumEncodedValue;
 import org.jf.dexlib2.iface.value.FieldEncodedValue;
 import org.jf.dexlib2.iface.value.MethodEncodedValue;
 import org.jf.dexlib2.iface.value.TypeEncodedValue;
+
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 public class EncodedValueRewriter implements Rewriter<EncodedValue> {
     @Nonnull protected final Rewriters rewriters;

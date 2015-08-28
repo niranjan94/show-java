@@ -31,11 +31,7 @@
 
 package org.jf.dexlib2.rewriter;
 
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.Iterators;
 
 import org.jf.dexlib2.base.reference.BaseTypeReference;
 import org.jf.dexlib2.iface.Annotation;
@@ -43,7 +39,11 @@ import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
 
-import com.google.common.collect.Iterators;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ClassDefRewriter implements Rewriter<ClassDef> {
     @Nonnull protected final Rewriters rewriters;

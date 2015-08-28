@@ -31,25 +31,10 @@
 
 package org.jf.dexlib2.writer;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.zip.Adler32;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Ordering;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.Opcode;
@@ -116,10 +101,25 @@ import org.jf.dexlib2.writer.util.TryListBuilder;
 import org.jf.util.CollectionUtils;
 import org.jf.util.ExceptionWithContext;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Ordering;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.zip.Adler32;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class DexWriter<
         StringKey extends CharSequence, StringRef extends StringReference, TypeKey extends CharSequence,

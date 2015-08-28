@@ -31,6 +31,11 @@
 
 package org.jf.util;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Ordering;
+import com.google.common.primitives.Ints;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -38,11 +43,6 @@ import java.util.NoSuchElementException;
 import java.util.SortedSet;
 
 import javax.annotation.Nonnull;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Ordering;
-import com.google.common.primitives.Ints;
 
 public class CollectionUtils {
     public static <T> int listHashCode(@Nonnull Iterable<T> iterable) {

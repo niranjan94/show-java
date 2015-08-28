@@ -31,10 +31,9 @@
 
 package org.jf.dexlib2.immutable;
 
-import java.util.Collection;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Ordering;
 
 import org.jf.dexlib2.base.reference.BaseFieldReference;
 import org.jf.dexlib2.iface.Annotation;
@@ -45,9 +44,10 @@ import org.jf.dexlib2.immutable.value.ImmutableEncodedValueFactory;
 import org.jf.util.ImmutableConverter;
 import org.jf.util.ImmutableUtils;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Ordering;
+import java.util.Collection;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ImmutableField extends BaseFieldReference implements Field {
     @Nonnull protected final String definingClass;

@@ -31,14 +31,14 @@
 
 package org.jf.dexlib2.builder;
 
+import org.jf.dexlib2.iface.MethodImplementation;
+import org.jf.dexlib2.iface.reference.StringReference;
+import org.jf.dexlib2.iface.reference.TypeReference;
+
 import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jf.dexlib2.iface.MethodImplementation;
-import org.jf.dexlib2.iface.reference.StringReference;
-import org.jf.dexlib2.iface.reference.TypeReference;
 
 public class MethodImplementationBuilder {
     // Contains all named labels - both placed and unplaced

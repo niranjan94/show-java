@@ -31,11 +31,9 @@
 
 package org.jf.dexlib2.analysis;
 
-import java.util.BitSet;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.Opcode;
@@ -83,9 +81,11 @@ import org.jf.util.BitSetUtils;
 import org.jf.util.ExceptionWithContext;
 import org.jf.util.SparseArray;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import java.util.BitSet;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * The MethodAnalyzer performs several functions. It "analyzes" the instructions and infers the register types

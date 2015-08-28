@@ -31,13 +31,13 @@
 
 package org.jf.dexlib2.dexbacked.raw;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.raw.util.DexAnnotator;
 import org.jf.dexlib2.util.AnnotatedBytes;
 import org.jf.util.StringUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class StringIdItem {
     public static final int ITEM_SIZE = 4;

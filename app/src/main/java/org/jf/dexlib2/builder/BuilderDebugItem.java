@@ -31,9 +31,9 @@
 
 package org.jf.dexlib2.builder;
 
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.iface.debug.DebugItem;
+
+import javax.annotation.Nullable;
 
 public abstract class BuilderDebugItem implements DebugItem {
     @Nullable MethodLocation location;

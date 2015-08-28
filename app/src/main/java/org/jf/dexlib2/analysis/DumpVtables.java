@@ -31,11 +31,8 @@
 
 package org.jf.dexlib2.analysis;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -50,8 +47,11 @@ import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Method;
 import org.jf.util.ConsoleUtil;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DumpVtables {
     private static final Options options;

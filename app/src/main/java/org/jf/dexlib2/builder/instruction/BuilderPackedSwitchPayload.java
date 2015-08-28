@@ -31,10 +31,8 @@
 
 package org.jf.dexlib2.builder.instruction;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 import org.jf.dexlib2.Format;
 import org.jf.dexlib2.Opcode;
@@ -42,8 +40,10 @@ import org.jf.dexlib2.builder.BuilderSwitchPayload;
 import org.jf.dexlib2.builder.Label;
 import org.jf.dexlib2.iface.instruction.formats.PackedSwitchPayload;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BuilderPackedSwitchPayload extends BuilderSwitchPayload implements PackedSwitchPayload {
     public static final Opcode OPCODE = Opcode.PACKED_SWITCH_PAYLOAD;

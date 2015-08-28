@@ -31,15 +31,15 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.base.reference.BaseMethodReference;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodImplementation;
 import org.jf.dexlib2.writer.DexWriter;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BuilderMethod extends BaseMethodReference implements Method {
     @Nonnull final BuilderMethodReference methodReference;

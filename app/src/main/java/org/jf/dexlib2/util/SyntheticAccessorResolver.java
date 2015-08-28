@@ -31,11 +31,9 @@
 
 package org.jf.dexlib2.util;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.ClassDef;
@@ -46,9 +44,11 @@ import org.jf.dexlib2.iface.instruction.ReferenceInstruction;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.iface.reference.Reference;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SyntheticAccessorResolver {
     public static final int METHOD = 0;

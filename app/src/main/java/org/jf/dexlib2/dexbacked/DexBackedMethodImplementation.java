@@ -31,11 +31,7 @@
 
 package org.jf.dexlib2.dexbacked;
 
-import java.util.Iterator;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
 
 import org.jf.dexlib2.dexbacked.instruction.DexBackedInstruction;
 import org.jf.dexlib2.dexbacked.raw.CodeItem;
@@ -47,7 +43,11 @@ import org.jf.dexlib2.iface.debug.DebugItem;
 import org.jf.dexlib2.iface.instruction.Instruction;
 import org.jf.util.AlignmentUtils;
 
-import com.google.common.collect.ImmutableList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DexBackedMethodImplementation implements MethodImplementation {
     @Nonnull public final DexBackedDexFile dexFile;

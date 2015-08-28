@@ -31,16 +31,16 @@
 
 package org.jf.dexlib2.util;
 
-import java.util.Collection;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Predicate;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.reference.MethodReference;
 
-import com.google.common.base.Predicate;
+import java.util.Collection;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class MethodUtil {
     private static int directMask = AccessFlags.STATIC.getValue() | AccessFlags.PRIVATE.getValue() |

@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.rewriter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.jf.dexlib2.base.BaseExceptionHandler;
 import org.jf.dexlib2.iface.ExceptionHandler;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ExceptionHandlerRewriter implements Rewriter<ExceptionHandler> {
     @Nonnull protected final Rewriters rewriters;

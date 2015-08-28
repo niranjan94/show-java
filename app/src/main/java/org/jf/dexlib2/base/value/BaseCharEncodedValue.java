@@ -31,15 +31,15 @@
 
 package org.jf.dexlib2.base.value;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.primitives.Chars;
+import com.google.common.primitives.Ints;
 
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.iface.value.CharEncodedValue;
 import org.jf.dexlib2.iface.value.EncodedValue;
 
-import com.google.common.primitives.Chars;
-import com.google.common.primitives.Ints;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class BaseCharEncodedValue implements CharEncodedValue {
     @Override

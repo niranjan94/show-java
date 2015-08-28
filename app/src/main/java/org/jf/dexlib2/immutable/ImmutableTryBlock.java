@@ -31,10 +31,7 @@
 
 package org.jf.dexlib2.immutable;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.ImmutableList;
 
 import org.jf.dexlib2.base.BaseTryBlock;
 import org.jf.dexlib2.iface.ExceptionHandler;
@@ -42,7 +39,10 @@ import org.jf.dexlib2.iface.TryBlock;
 import org.jf.util.ImmutableConverter;
 import org.jf.util.ImmutableUtils;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ImmutableTryBlock extends BaseTryBlock<ImmutableExceptionHandler> {
     protected final int startCodeAddress;

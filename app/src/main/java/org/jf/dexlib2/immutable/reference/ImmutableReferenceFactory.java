@@ -31,8 +31,6 @@
 
 package org.jf.dexlib2.immutable.reference;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.ReferenceType;
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
@@ -40,6 +38,8 @@ import org.jf.dexlib2.iface.reference.Reference;
 import org.jf.dexlib2.iface.reference.StringReference;
 import org.jf.dexlib2.iface.reference.TypeReference;
 import org.jf.util.ExceptionWithContext;
+
+import javax.annotation.Nonnull;
 
 public class ImmutableReferenceFactory {
     @Nonnull

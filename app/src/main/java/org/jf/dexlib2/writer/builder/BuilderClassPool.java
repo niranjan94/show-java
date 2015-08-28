@@ -31,18 +31,13 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import java.io.IOException;
-import java.util.AbstractCollection;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.SortedSet;
-import java.util.concurrent.ConcurrentMap;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Ordering;
 
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.builder.MutableMethodImplementation;
@@ -68,13 +63,18 @@ import org.jf.util.AbstractForwardSequentialList;
 import org.jf.util.CollectionUtils;
 import org.jf.util.ExceptionWithContext;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Ordering;
+import java.io.IOException;
+import java.util.AbstractCollection;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedSet;
+import java.util.concurrent.ConcurrentMap;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BuilderClassPool implements ClassSection<BuilderStringReference, BuilderTypeReference, BuilderTypeList,
         BuilderClassDef, BuilderField, BuilderMethod, BuilderAnnotationSet, BuilderEncodedValue> {

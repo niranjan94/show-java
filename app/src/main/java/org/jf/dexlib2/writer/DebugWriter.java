@@ -31,13 +31,13 @@
 
 package org.jf.dexlib2.writer;
 
+import org.jf.dexlib2.DebugItemType;
+import org.jf.util.ExceptionWithContext;
+
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jf.dexlib2.DebugItemType;
-import org.jf.util.ExceptionWithContext;
 
 public class DebugWriter<StringKey extends CharSequence, TypeKey extends CharSequence> {
     @Nonnull private final StringSection<StringKey, ?> stringSection;

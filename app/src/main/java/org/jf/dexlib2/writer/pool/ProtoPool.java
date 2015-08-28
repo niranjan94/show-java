@@ -31,11 +31,7 @@
 
 package org.jf.dexlib2.writer.pool;
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.collect.Ordering;
 
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.util.MethodUtil;
@@ -44,7 +40,11 @@ import org.jf.dexlib2.writer.pool.ProtoPool.Key;
 import org.jf.util.CharSequenceUtils;
 import org.jf.util.CollectionUtils;
 
-import com.google.common.collect.Ordering;
+import java.util.Collection;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ProtoPool extends BaseIndexPool<Key>
         implements ProtoSection<CharSequence, CharSequence, Key, TypeListPool.Key<? extends Collection<? extends CharSequence>>> {

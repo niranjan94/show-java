@@ -31,14 +31,10 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.iface.Annotation;
@@ -69,10 +65,14 @@ import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderStringEncodedVa
 import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderTypeEncodedValue;
 import org.jf.util.ExceptionWithContext;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DexBuilder extends DexWriter<BuilderStringReference, BuilderStringReference, BuilderTypeReference,
         BuilderTypeReference, BuilderProtoReference, BuilderFieldReference, BuilderMethodReference,

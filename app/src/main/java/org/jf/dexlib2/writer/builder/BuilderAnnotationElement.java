@@ -31,11 +31,11 @@
 
 package org.jf.dexlib2.writer.builder;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.base.BaseAnnotationElement;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.writer.builder.BuilderEncodedValues.BuilderEncodedValue;
+
+import javax.annotation.Nonnull;
 
 public class BuilderAnnotationElement extends BaseAnnotationElement {
     @Nonnull final BuilderStringReference name;

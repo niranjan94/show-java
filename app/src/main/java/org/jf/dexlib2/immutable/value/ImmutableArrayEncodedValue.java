@@ -31,15 +31,15 @@
 
 package org.jf.dexlib2.immutable.value;
 
-import java.util.Collection;
-
-import javax.annotation.Nonnull;
+import com.google.common.collect.ImmutableList;
 
 import org.jf.dexlib2.base.value.BaseArrayEncodedValue;
 import org.jf.dexlib2.iface.value.ArrayEncodedValue;
 import org.jf.dexlib2.iface.value.EncodedValue;
 
-import com.google.common.collect.ImmutableList;
+import java.util.Collection;
+
+import javax.annotation.Nonnull;
 
 public class ImmutableArrayEncodedValue extends BaseArrayEncodedValue implements ImmutableEncodedValue {
     @Nonnull protected final ImmutableList<? extends ImmutableEncodedValue> value;

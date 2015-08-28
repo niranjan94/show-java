@@ -31,14 +31,14 @@
 
 package org.jf.dexlib2.analysis.util;
 
+import org.jf.dexlib2.analysis.TypeProto;
+import org.jf.dexlib2.analysis.UnresolvedClassException;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jf.dexlib2.analysis.TypeProto;
-import org.jf.dexlib2.analysis.UnresolvedClassException;
 
 public class TypeProtoUtils {
     /**

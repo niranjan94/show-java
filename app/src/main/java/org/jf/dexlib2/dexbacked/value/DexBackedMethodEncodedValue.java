@@ -31,13 +31,13 @@
 
 package org.jf.dexlib2.dexbacked.value;
 
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.base.value.BaseMethodEncodedValue;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.DexReader;
 import org.jf.dexlib2.dexbacked.reference.DexBackedMethodReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
+
+import javax.annotation.Nonnull;
 
 public class DexBackedMethodEncodedValue extends BaseMethodEncodedValue {
     @Nonnull public final DexBackedDexFile dexFile;

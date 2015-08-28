@@ -31,10 +31,6 @@
 
 package org.jf.dexlib2.rewriter;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.ClassDef;
@@ -50,6 +46,10 @@ import org.jf.dexlib2.iface.instruction.Instruction;
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.iface.value.EncodedValue;
+
+import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 /**
  * Out-of-the box, this class does nothing except make a picture-perfect copy of a dex file.

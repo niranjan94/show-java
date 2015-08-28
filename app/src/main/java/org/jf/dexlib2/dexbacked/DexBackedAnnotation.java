@@ -31,12 +31,12 @@
 
 package org.jf.dexlib2.dexbacked;
 
+import org.jf.dexlib2.base.BaseAnnotation;
+import org.jf.dexlib2.dexbacked.util.VariableSizeSet;
+
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-
-import org.jf.dexlib2.base.BaseAnnotation;
-import org.jf.dexlib2.dexbacked.util.VariableSizeSet;
 
 public class DexBackedAnnotation extends BaseAnnotation {
     @Nonnull public final DexBackedDexFile dexFile;
