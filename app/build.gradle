@@ -96,7 +96,6 @@ dependencies {
     compile files('libs/dex-reader-1.15.jar')
     compile files('libs/dex-tools-0.0.9.15.jar')
     compile files('libs/dex-translator-0.0.9.15.jar')
-    compile files('libs/dx.jar')
     compile files('libs/jsr305-1.3.9.jar')
 
     // CLASS FILE READER - JAVA DECOMPILER
@@ -123,4 +122,10 @@ dependencies {
 
     // FILE PICKER
     compile 'com.nononsenseapps:filepicker:2.2.3'
+    
+    // DEPENDENCIES FOR JaDX
+    compile files('libs/dx-1.10.jar')
+    compile 'org.slf4j:slf4j-api:1.7.12'
+    compile 'uk.com.robust-it:cloning:1.9.2'
+    compile files('libs/android-5.1-clst-core.jar')
 }
