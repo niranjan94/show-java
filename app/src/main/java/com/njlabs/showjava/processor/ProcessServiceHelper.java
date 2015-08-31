@@ -54,7 +54,7 @@ public class ProcessServiceHelper {
         public void write(@NonNull byte[] data, int i1, int i2) {
             String str = new String(data);
             str = str.replace("\n", "").replace("\r", "");
-            if (!str.equals("") && !str.equals("")) {
+            if (!str.equals("")) {
                 broadcastStatus("progress_stream", str);
             }
         }

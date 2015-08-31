@@ -32,6 +32,7 @@ public class AppProcessActivity extends BaseActivity {
     private TextView CurrentLine;
     private String packageFilePath;
     private BroadcastReceiver processStatusReceiver;
+    private String decompilerToUse = "cfr";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,14 @@ public class AppProcessActivity extends BaseActivity {
 
         CurrentStatus.setText("Starting Decompiler");
 
+
+
         if (getIntent().getDataString() == null || getIntent().getDataString().equals("")) {
-            appNameView.setText(getIntent().getStringExtra("package_label"));
-            packageFilePath = getIntent().getStringExtra("package_file_path");
+
+            Bundle extras = getIntent().getExtras();
+
+            appNameView.setText(extras.getString("package_label"));
+            packageFilePath = extras.getString("package_file_path");
 
             try {
                 ApkParser apkParser = new ApkParser(new File(packageFilePath));
@@ -57,6 +63,10 @@ public class AppProcessActivity extends BaseActivity {
             } catch (Exception e) {
                 Ln.e(e);
                 exitWithError();
+            }
+
+            if(extras.containsKey("decompiler")){
+                decompilerToUse = extras.getString("decompiler");
             }
 
         } else {
@@ -121,6 +131,7 @@ public class AppProcessActivity extends BaseActivity {
         Intent mServiceIntent = new Intent(getContext(), ProcessService.class);
         mServiceIntent.setAction(Constants.ACTION.START_PROCESS);
         mServiceIntent.putExtra("package_file_path", packageFilePath);
+        mServiceIntent.putExtra("decompiler", decompilerToUse);
         startService(mServiceIntent);
     }
 
