@@ -119,41 +119,9 @@ public class AppListing extends BaseActivity {
                     final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + holder.packageName.getText().toString() + "");
 
                     if (Utils.sourceExists(sourceDir)) {
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(AppListing.this, R.style.AlertDialog);
-                        alertDialog.setTitle("This Package has already been decompiled");
-                        alertDialog.setMessage("This application has already been decompiled once and the source exists on your sdcard. What would you like to do ?");
-                        alertDialog.setPositiveButton("View Source", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
-                                i.putExtra("java_source_dir", sourceDir + "/");
-                                i.putExtra("package_id", holder.packageName.getText().toString());
-                                startActivity(i);
-                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-                            }
-                        });
-
-                        alertDialog.setNegativeButton("Decompile", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    FileUtils.deleteDirectory(sourceDir);
-                                } catch (IOException e) {
-                                    Crashlytics.logException(e);
-                                }
-                                Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
-                                i.putExtra("package_label", holder.packageLabel.getText().toString());
-                                i.putExtra("package_file_path", holder.packageFilePath.getText().toString());
-                                startActivity(i);
-                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-                            }
-                        });
-                        alertDialog.show();
-
+                        showAlreadyExistsDialog(holder, sourceDir);
                     } else {
-                        Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
-                        i.putExtra("package_label", holder.packageLabel.getText().toString());
-                        i.putExtra("package_file_path", holder.packageFilePath.getText().toString());
-                        startActivity(i);
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                        showDecompilerSelection(holder);
                     }
                 }
             }
@@ -266,5 +234,60 @@ public class AppListing extends BaseActivity {
         }
     }
 
+    private void showAlreadyExistsDialog(final ViewHolder holder, final File sourceDir){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(AppListing.this, R.style.AlertDialog);
+        alertDialog.setTitle("This Package has already been decompiled");
+        alertDialog.setMessage("This application has already been decompiled once and the source exists on your sdcard. What would you like to do ?");
+        alertDialog.setPositiveButton("View Source", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent i = new Intent(getApplicationContext(), JavaExplorer.class);
+                i.putExtra("java_source_dir", sourceDir + "/");
+                i.putExtra("package_id", holder.packageName.getText().toString());
+                startActivity(i);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            }
+        });
+
+        alertDialog.setNegativeButton("Decompile", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    FileUtils.deleteDirectory(sourceDir);
+                } catch (IOException e) {
+                    Crashlytics.logException(e);
+                }
+                showDecompilerSelection(holder);
+            }
+        });
+        alertDialog.show();
+    }
+
+    private void openProcessActivity(ViewHolder holder){
+        openProcessActivity(holder, "cfr");
+    }
+
+    private void openProcessActivity(ViewHolder holder, String decompiler){
+        Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
+        i.putExtra("package_label", holder.packageLabel.getText().toString());
+        i.putExtra("package_file_path", holder.packageFilePath.getText().toString());
+        i.putExtra("decompiler", decompiler);
+        startActivity(i);
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+    }
+
+    private void showDecompilerSelection(final ViewHolder holder){
+        final CharSequence[] items = {
+                "CFR 0.102", "JaDX 0.6.x"
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pick a decompiler");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                openProcessActivity(holder, (item==1?"jadx":"cfr"));
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
 }

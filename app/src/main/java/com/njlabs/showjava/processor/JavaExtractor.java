@@ -13,6 +13,8 @@ import org.benf.cfr.reader.util.getopt.OptionsImpl;
 
 import java.io.File;
 
+import jadx.api.JadxDecompiler;
+
 /**
  * Created by Niranjan on 29-05-2015.
  */
@@ -31,18 +33,26 @@ public class JavaExtractor extends ProcessServiceHelper {
     public void extract() {
 
         broadcastStatus("jar2java");
-        File JarInput;
 
-        Ln.d("jar location:" + sourceOutputDir + "/" + packageName + ".jar");
-        JarInput = new File(sourceOutputDir + "/" + packageName + ".jar");
-        final File JavaOutputDir = new File(javaSourceOutputDir);
+        File dexInputFile = new File(sourceOutputDir + "/optimised_classes.dex");
+        File jarInputFile = new File(sourceOutputDir + "/" + packageName + ".jar");
 
-        if (!JavaOutputDir.isDirectory()) {
-            JavaOutputDir.mkdirs();
+        final File javaOutputDir = new File(javaSourceOutputDir);
+
+        if (!javaOutputDir.isDirectory()) {
+            javaOutputDir.mkdirs();
         }
 
-        processService.javaSourceOutputDir = JavaOutputDir.toString();
-        String[] args = {JarInput.toString(), "--outputdir", JavaOutputDir.toString()};
+        if(processService.decompilerToUse.equals("jadx")){
+            decompileWithJaDX(dexInputFile, javaOutputDir);
+        } else {
+            decompileWithCFR(jarInputFile,javaOutputDir);
+        }
+
+    }
+
+    private void decompileWithCFR(File jarInputFile, File javaOutputDir){
+        String[] args = {jarInputFile.toString(), "--outputdir", javaOutputDir.toString()};
         GetOptParser getOptParser = new GetOptParser();
 
         Options options = null;
@@ -62,6 +72,31 @@ public class JavaExtractor extends ProcessServiceHelper {
                 boolean javaError = false;
                 try {
                     Main.doJar(dcCommonState, path);
+                } catch (Exception | StackOverflowError e) {
+                    Ln.e(e);
+                    javaError = true;
+                }
+                startXMLExtractor(!javaError);
+            }
+        }, "Jar to Java Thread", Constants.STACK_SIZE);
+
+        javaExtractionThread.setPriority(Thread.MAX_PRIORITY);
+        javaExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
+        javaExtractionThread.start();
+    }
+
+    private void decompileWithJaDX(final File dexInputFile, final File javaOutputDir){
+
+        ThreadGroup group = new ThreadGroup("Jar 2 Java Group");
+        Thread javaExtractionThread = new Thread(group, new Runnable() {
+            @Override
+            public void run() {
+                boolean javaError = false;
+                try {
+                    JadxDecompiler jadx = new JadxDecompiler();
+                    jadx.setOutputDir(javaOutputDir);
+                    jadx.loadFile(dexInputFile);
+                    jadx.save();
                 } catch (Exception | StackOverflowError e) {
                     Ln.e(e);
                     javaError = true;

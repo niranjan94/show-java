@@ -20,6 +20,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import jadx.api.JadxDecompiler;
+
 /**
  * Created by Niranjan on 30-05-2015.
  */
@@ -39,8 +41,54 @@ public class ResourcesExtractor extends ProcessServiceHelper {
     }
 
     public void extract() {
-
         broadcastStatus("res");
+
+        if(processService.decompilerToUse.equals("jadx")){
+            extractResourcesWithJadx();
+        } else {
+            extractResourcesWithParser();
+        }
+    }
+
+    private void extractResourcesWithJadx(){
+        ThreadGroup group = new ThreadGroup("XML Extraction Group");
+        Thread xmlExtractionThread = new Thread(group, new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    File resDir = new File(sourceOutputDir);
+
+                    JadxDecompiler jadx = new JadxDecompiler();
+                    jadx.setOutputDir(resDir);
+                    jadx.loadFile(new File(packageFilePath));
+                    jadx.save(false, true);
+
+                    ZipFile zipFile = new ZipFile(packageFilePath);
+                    Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                    while (entries.hasMoreElements()) {
+                        ZipEntry zipEntry = entries.nextElement();
+                        if (!zipEntry.isDirectory() && (FilenameUtils.getExtension(zipEntry.getName()).equals("png") || FilenameUtils.getExtension(zipEntry.getName()).equals("jpg"))) {
+                            broadcastStatus("progress_stream", zipEntry.getName());
+                            writeFile(zipFile.getInputStream(zipEntry), zipEntry.getName());
+                        }
+                    }
+                    zipFile.close();
+
+                    saveIcon();
+                    allDone();
+
+                } catch (Exception | StackOverflowError e) {
+                    processService.publishProgress("start_activity_with_error");
+                }
+            }
+        }, "XML Extraction Thread", Constants.STACK_SIZE);
+        xmlExtractionThread.setPriority(Thread.MAX_PRIORITY);
+        xmlExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
+        xmlExtractionThread.start();
+    }
+
+    private void extractResourcesWithParser(){
         ThreadGroup group = new ThreadGroup("XML Extraction Group");
         Thread xmlExtractionThread = new Thread(group, new Runnable() {
             @Override
@@ -70,7 +118,6 @@ public class ResourcesExtractor extends ProcessServiceHelper {
         xmlExtractionThread.setPriority(Thread.MAX_PRIORITY);
         xmlExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
         xmlExtractionThread.start();
-
     }
 
     private void writeFile(InputStream fileStream, String path) {

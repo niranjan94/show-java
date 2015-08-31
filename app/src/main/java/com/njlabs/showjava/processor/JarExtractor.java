@@ -53,7 +53,9 @@ public class JarExtractor extends ProcessServiceHelper {
             public void run() {
                 loadIgnoredLibs();
                 apkToDex();
-                dexToJar();
+                if(processService.decompilerToUse.equals("cfr")){
+                    dexToJar();
+                }
                 startJavaExtractor();
             }
         };
@@ -100,6 +102,12 @@ public class JarExtractor extends ProcessServiceHelper {
             broadcastStatus("exit");
             UIHandler.post(new ToastRunnable("The app you selected cannot be decompiled. Please select another app."));
         }
+
+        //////
+        PrintStream printStream = new PrintStream(new ProgressStream());
+        System.setErr(printStream);
+        System.setOut(printStream);
+        //////
     }
 
     public void dexToJar() {
@@ -115,12 +123,6 @@ public class JarExtractor extends ProcessServiceHelper {
         boolean debugInfo = false; // translate debug info
         boolean printIR = false; // print ir to System.out
         boolean optimizeSynchronized = true; // Optimise-synchronised
-
-        //////
-        PrintStream printStream = new PrintStream(new ProgressStream());
-        System.setErr(printStream);
-        System.setOut(printStream);
-        //////
 
         File PerAppWorkingDirectory = new File(sourceOutputDir);
         File file = new File(PerAppWorkingDirectory + "/" + packageName + ".jar");

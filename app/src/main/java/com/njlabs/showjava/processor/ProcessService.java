@@ -46,6 +46,8 @@ public class ProcessService extends Service {
     public Notify processNotify;
     public ApkParser apkParser;
 
+    public String decompilerToUse = "cfr";
+
     public void onCreate() {
         super.onCreate();
     }
@@ -53,34 +55,58 @@ public class ProcessService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
+        /**
+         * Initialize a handler for posting runnables that have to run on the UI thread
+         */
         UIHandler = new Handler();
 
+        /**
+         * Receive action from the intent and decide whether to start or stop the existing process
+         */
         if (intent.getAction().equals(Constants.ACTION.START_PROCESS)) {
+
+            /**
+             * The intent's actions is {@link Constants.ACTION.START_PROCESS}
+             * Which means, the process has to start.
+             *
+             * We build the notification and start the process as a foreground process (to prevent it
+             * from being killed on exit)
+             */
             startForeground(Constants.PROCESS_NOTIFICATION_ID, buildNotification());
             handleIntent(intent);
+
         } else if (intent.getAction().equals(Constants.ACTION.STOP_PROCESS)) {
-            broadcastStatus("exit");
-            stopForeground(true);
-            try {
-                NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotifyManager.cancel(Constants.PROCESS_NOTIFICATION_ID);
-                Utils.killAllProcessorServices(this);
-            } catch (Exception e) {
-                Ln.e(e);
-            }
-            stopSelf();
+
+            /**
+             * The intent's actions is {@link Constants.ACTION.STOP_PROCESS}
+             * Which means, the process has to stop and kill itself.
+             *
+             * We are broadcasting an 'exit' status so that any activity listening can exit.
+             * We stop the foreground process.
+             * And we forcefully kill the service.
+             *
+             * Uses the {@link #killSelf()} method.
+             */
+            killSelf();
+
         }
 
         return START_NOT_STICKY;
     }
 
     protected void handleIntent(Intent workIntent) {
-        Ln.i("onHandleIntent ProcessService");
+
+        /**
+         * This is the main starting point of the ProcessorService. The intent is read and handled here
+         */
         Bundle extras = workIntent.getExtras();
         if (extras != null) {
-            packageFilePath = extras.getString("package_file_path");
-            Ln.i("package_file_path :" + packageFilePath);
 
+            if(extras.containsKey("decompiler")){
+                decompilerToUse = extras.getString("decompiler");
+            }
+
+            packageFilePath = extras.getString("package_file_path");
             (new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -103,6 +129,7 @@ public class ProcessService extends Service {
                             resultIntent.putExtra("package_name", packageName);
                             resultIntent.putExtra("package_label", packageLabel);
                             resultIntent.putExtra("package_file_path", packageFilePath);
+                            resultIntent.putExtra("decompiler", decompilerToUse);
 
                             PendingIntent resultPendingIntent =
                                     PendingIntent.getActivity(ProcessService.this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -126,6 +153,8 @@ public class ProcessService extends Service {
                     });
                 }
             })).start();
+        } else {
+            killSelf();
         }
     }
 
@@ -317,5 +346,18 @@ public class ProcessService extends Service {
         public void run() {
             Toast.makeText(getApplicationContext(), mText, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void killSelf(){
+        broadcastStatus("exit");
+        stopForeground(true);
+        try {
+            NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotifyManager.cancel(Constants.PROCESS_NOTIFICATION_ID);
+            Utils.killAllProcessorServices(this);
+        } catch (Exception e) {
+            Ln.e(e);
+        }
+        stopSelf();
     }
 }
