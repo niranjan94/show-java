@@ -62,20 +62,21 @@
         </activity>
         <activity
             android:name=".ui.JavaExplorer"
-            android:label="@string/title_activity_java_explorer"></activity>
+            android:label="@string/title_activity_java_explorer"/>
         <activity
             android:name=".ui.SourceViewer"
             android:label="@string/title_activity_source_viewer"
-            android:theme="@style/SourceViewerTheme"></activity>
+            android:theme="@style/SourceViewerTheme"/>
 
         <activity
             android:name=".ui.ImageResourceViewer"
             android:label="@string/title_activity_image_resource_viewer"
-            android:theme="@style/SourceViewerTheme"></activity>
+            android:theme="@style/SourceViewerTheme"/>
 
         <activity
             android:name=".ui.About"
-            android:label="@string/title_activity_about"></activity>
+            android:label="@string/title_activity_about"/>
+
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings"/>
@@ -83,12 +84,13 @@
         <activity
             android:name=".ui.FilePicker"
             android:label="@string/app_name"
-            android:theme="@style/FilePickerTheme"></activity>
+            android:theme="@style/FilePickerTheme"/>
 
         <service
             android:name=".processor.ProcessService"
             android:exported="false"
             android:process=":service" />
+
     </application>
 
 </manifest>
