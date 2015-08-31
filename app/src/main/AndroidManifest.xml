@@ -76,6 +76,9 @@
         <activity
             android:name=".ui.About"
             android:label="@string/title_activity_about"></activity>
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:label="@string/title_activity_settings"/>
 
         <activity
             android:name=".ui.FilePicker"

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Decompiler settings">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="ignore_libraries"
+            android:summary="Speed up by ignoring common open sourced libraries"
+            android:title="Speed up decompiling process" />
+
+        <ListPreference
+            android:defaultValue="cfr"
+            android:entries="@array/decompilers"
+            android:entryValues="@array/decompilers_values"
+            android:key="decompiler"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="Select default decompiler" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Ease of use">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="hide_decompiler_select"
+            android:summary="Show/Hide the decompiler selection dialog box"
+            android:title="Don't ask to pick decompiler each time" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Experimental">
+
+        <EditTextPreference
+            android:capitalize="words"
+            android:defaultValue="20"
+            android:inputType="number"
+            android:key="thread_stack_size"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:title="Max. Thread stack size (in mb)" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Help &amp; Support">
+
+        <Preference
+            android:summary="Tap to report any bug (or) issue found in this app."
+            android:title="Report a bug">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/niranjan94/show-java/issues/new"/>
+        </Preference>
+
+        <Preference
+            android:summary="Tap to rate this app on Play Store"
+            android:title="Rate &amp; Review">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=com.njlabs.showjava"/>
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

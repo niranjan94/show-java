@@ -14,6 +14,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/settings_option"
+        android:orderInCategory="2"
+        android:title="Settings"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/invert_colors"
         android:icon="@drawable/ic_action_invert_colors"
         android:orderInCategory="2"

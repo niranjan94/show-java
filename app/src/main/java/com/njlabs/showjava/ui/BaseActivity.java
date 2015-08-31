@@ -84,6 +84,11 @@ public class BaseActivity extends AppCompatActivity {
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
+
+            case R.id.settings_option:
+                startActivity(new Intent(getBaseContext(), SettingsActivity.class));
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
