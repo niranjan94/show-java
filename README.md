@@ -13,6 +13,7 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 ## Features ##
 
+- Select either CFR (Class File Reader) or JaDX to use as the decompiler
 - Runs directly on an android device (4.x and above)
 - Select apk from sdcard (or) from a list of installed applications
 - Easy to use
@@ -54,3 +55,4 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 2. Panxiaobo ([pxb1988@gmail.com](mailto:pxb1988@gmail.com)) for dex2jar
 3. [Liu Dong](https://github.com/xiaxiaocao) for apk-parser
 4. [Ben Gruver](https://github.com/JesusFreke/) for dexlib2
+5. [skylot](https://github.com/skylot) for JaDX
