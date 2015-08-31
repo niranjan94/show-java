@@ -8,7 +8,6 @@ import com.googlecode.dex2jar.ir.IrMethod;
 import com.googlecode.dex2jar.reader.DexFileReader;
 import com.googlecode.dex2jar.v3.Dex2jar;
 import com.googlecode.dex2jar.v3.DexExceptionHandler;
-import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.utils.StringUtils;
 import com.njlabs.showjava.utils.logging.Ln;
 
@@ -59,7 +58,7 @@ public class JarExtractor extends ProcessServiceHelper {
                 startJavaExtractor();
             }
         };
-        Thread extractionThread = new Thread(group, runProcess, "DEX TO JAR EXTRACTION", Constants.STACK_SIZE);
+        Thread extractionThread = new Thread(group, runProcess, "DEX TO JAR EXTRACTION", processService.STACK_SIZE);
         extractionThread.setPriority(Thread.MAX_PRIORITY);
         extractionThread.setUncaughtExceptionHandler(exceptionHandler);
         extractionThread.start();
@@ -154,9 +153,10 @@ public class JarExtractor extends ProcessServiceHelper {
     }
 
     private void loadIgnoredLibs() {
+        String ignoredList = processService.IGNORE_LIBS?"ignored.list":"ignored_basic.list";
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new InputStreamReader(processService.getAssets().open("ignored.list")));
+            reader = new BufferedReader(new InputStreamReader(processService.getAssets().open(ignoredList)));
             String mLine = reader.readLine().trim();
             while (mLine != null) {
                 mLine = mLine.trim();

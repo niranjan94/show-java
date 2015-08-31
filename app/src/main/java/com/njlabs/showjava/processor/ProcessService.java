@@ -6,12 +6,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
@@ -48,9 +50,13 @@ public class ProcessService extends Service {
 
     public String decompilerToUse = "cfr";
 
+
     public void onCreate() {
         super.onCreate();
     }
+
+    public int STACK_SIZE;
+    public boolean IGNORE_LIBS;
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
@@ -95,6 +101,10 @@ public class ProcessService extends Service {
     }
 
     protected void handleIntent(Intent workIntent) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        STACK_SIZE = Integer.valueOf(prefs.getString("thread_stack_size", String.valueOf(20 * 1024 * 1024)));
+        IGNORE_LIBS = prefs.getBoolean("ignore_libraries", true);
 
         /**
          * This is the main starting point of the ProcessorService. The intent is read and handled here

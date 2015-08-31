@@ -1,7 +1,6 @@
 package com.njlabs.showjava.processor;
 
 import com.crashlytics.android.Crashlytics;
-import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.utils.SourceInfo;
 import com.njlabs.showjava.utils.logging.Ln;
 
@@ -78,7 +77,7 @@ public class JavaExtractor extends ProcessServiceHelper {
                 }
                 startXMLExtractor(!javaError);
             }
-        }, "Jar to Java Thread", Constants.STACK_SIZE);
+        }, "Jar to Java Thread", processService.STACK_SIZE);
 
         javaExtractionThread.setPriority(Thread.MAX_PRIORITY);
         javaExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
@@ -103,7 +102,7 @@ public class JavaExtractor extends ProcessServiceHelper {
                 }
                 startXMLExtractor(!javaError);
             }
-        }, "Jar to Java Thread", Constants.STACK_SIZE);
+        }, "Jar to Java Thread", processService.STACK_SIZE);
 
         javaExtractionThread.setPriority(Thread.MAX_PRIORITY);
         javaExtractionThread.setUncaughtExceptionHandler(exceptionHandler);

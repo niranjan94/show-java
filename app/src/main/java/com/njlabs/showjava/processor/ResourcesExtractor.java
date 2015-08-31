@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.crashlytics.android.Crashlytics;
-import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.utils.SourceInfo;
 
 import net.dongliu.apk.parser.ApkParser;
@@ -42,7 +41,6 @@ public class ResourcesExtractor extends ProcessServiceHelper {
 
     public void extract() {
         broadcastStatus("res");
-
         if(processService.decompilerToUse.equals("jadx")){
             extractResourcesWithJadx();
         } else {
@@ -56,7 +54,6 @@ public class ResourcesExtractor extends ProcessServiceHelper {
             @Override
             public void run() {
                 try {
-
                     File resDir = new File(sourceOutputDir);
 
                     JadxDecompiler jadx = new JadxDecompiler();
@@ -74,7 +71,6 @@ public class ResourcesExtractor extends ProcessServiceHelper {
                         }
                     }
                     zipFile.close();
-
                     saveIcon();
                     allDone();
 
@@ -82,7 +78,7 @@ public class ResourcesExtractor extends ProcessServiceHelper {
                     processService.publishProgress("start_activity_with_error");
                 }
             }
-        }, "XML Extraction Thread", Constants.STACK_SIZE);
+        }, "XML Extraction Thread", processService.STACK_SIZE);
         xmlExtractionThread.setPriority(Thread.MAX_PRIORITY);
         xmlExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
         xmlExtractionThread.start();
@@ -114,7 +110,7 @@ public class ResourcesExtractor extends ProcessServiceHelper {
                     processService.publishProgress("start_activity_with_error");
                 }
             }
-        }, "XML Extraction Thread", Constants.STACK_SIZE);
+        }, "XML Extraction Thread", processService.STACK_SIZE);
         xmlExtractionThread.setPriority(Thread.MAX_PRIORITY);
         xmlExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
         xmlExtractionThread.start();
@@ -131,7 +127,7 @@ public class ResourcesExtractor extends ProcessServiceHelper {
 
             outputStream = new FileOutputStream(new File(fileFolderPath + FilenameUtils.getName(path)));
 
-            int read = 0;
+            int read;
             byte[] bytes = new byte[1024];
 
             while ((read = fileStream.read(bytes)) != -1) {
