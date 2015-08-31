@@ -1,6 +1,7 @@
 package com.njlabs.showjava.ui;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -13,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -205,12 +207,12 @@ public class Landing extends BaseActivity {
 
                 Uri uri = data.getData();
                 File apkFile = new File(uri.getPath());
-                String PackageDir = apkFile.getAbsolutePath();
+                final String PackageDir = apkFile.getAbsolutePath();
 
                 Ln.d(PackageDir);
 
-                String PackageName;
-                String PackageId;
+                final String PackageName;
+                final String PackageId;
 
                 if (FilenameUtils.isExtension(PackageDir, "apk")) {
                     PackageManager pm = getPackageManager();
@@ -230,13 +232,32 @@ public class Landing extends BaseActivity {
                         PackageId = "";
                     }
 
-                    Ln.d(PackageName + " " + PackageId);
-                    Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
-                    i.putExtra("package_id", PackageId);
-                    i.putExtra("package_label", PackageName);
-                    i.putExtra("package_file_path", PackageDir);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                    if(!prefs.getBoolean("hide_decompiler_select",false)){
+                        final CharSequence[] items = { "CFR 0.102", "JaDX 0.6.1" };
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Pick a decompiler");
+                        builder.setItems(items, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int item) {
+                                Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
+                                i.putExtra("package_id", PackageId);
+                                i.putExtra("package_label", PackageName);
+                                i.putExtra("package_file_path", PackageDir);
+                                i.putExtra("decompiler", (item==1?"jadx":"cfr"));
+                                startActivity(i);
+                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    } else {
+                        Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
+                        i.putExtra("package_id", PackageId);
+                        i.putExtra("package_label", PackageName);
+                        i.putExtra("package_file_path", PackageDir);
+                        i.putExtra("decompiler", prefs.getString("decompiler", "cfr"));
+                        startActivity(i);
+                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                    }
                 }
             }
         }
