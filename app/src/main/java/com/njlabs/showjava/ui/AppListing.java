@@ -261,10 +261,6 @@ public class AppListing extends BaseActivity {
         alertDialog.show();
     }
 
-    private void openProcessActivity(ViewHolder holder){
-        openProcessActivity(holder, "cfr");
-    }
-
     private void openProcessActivity(ViewHolder holder, String decompiler){
         Intent i = new Intent(getApplicationContext(), AppProcessActivity.class);
         i.putExtra("package_label", holder.packageLabel.getText().toString());
@@ -275,19 +271,21 @@ public class AppListing extends BaseActivity {
     }
 
     private void showDecompilerSelection(final ViewHolder holder){
-        final CharSequence[] items = {
-                "CFR 0.102", "JaDX 0.6.x"
-        };
+        if(!prefs.getBoolean("hide_decompiler_select", false)){
+            final CharSequence[] items = { "CFR 0.102", "JaDX 0.6.1" };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pick a decompiler");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                openProcessActivity(holder, (item==1?"jadx":"cfr"));
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Pick a decompiler");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int item) {
+                    openProcessActivity(holder, (item==1?"jadx":"cfr"));
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            openProcessActivity(holder, prefs.getString("decompiler","cfr"));
+        }
     }
 
 }
