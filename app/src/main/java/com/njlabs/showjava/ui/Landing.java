@@ -272,7 +272,7 @@ public class Landing extends BaseActivity {
                     try {
                         FileUtils.cleanDirectory(file);
                         file.delete();
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         Ln.d(e);
                     }
                 }
