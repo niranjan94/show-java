@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/travis/niranjan94/show-java.svg?style=flat-square)](https://travis-ci.org/niranjan94/show-java) [![License Info](https://img.shields.io/badge/license-Apache_License_2.0-blue.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store Info](https://img.shields.io/badge/Play_Store-v2.0.2-36B0C1.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava) [![GitHub app version](https://img.shields.io/badge/GitHub-v2.0.2-yellow.svg?style=flat-square)](https://github.com/niranjan94/show-java)
+[![Build Status](https://img.shields.io/travis/niranjan94/show-java.svg?style=flat-square)](https://travis-ci.org/niranjan94/show-java) [![License Info](https://img.shields.io/badge/license-Apache_License_2.0-blue.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store Info](https://img.shields.io/badge/Play_Store-v2.0.3-36B0C1.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava) [![GitHub app version](https://img.shields.io/badge/GitHub-v2.0.3-yellow.svg?style=flat-square)](https://github.com/niranjan94/show-java)
 
 ![ShowJava Banner v0.1](https://raw.githubusercontent.com/niranjan94/show-java/master/banner.png)
 
@@ -13,7 +13,7 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 ## Features ##
 
-- Select either CFR (Class File Reader) or JaDX to use as the decompiler
+- Select either **CFR 0.102** or **JaDX 0.6.1** to use as the decompiler
 - Runs directly on an android device (4.x and above)
 - Select apk from sdcard (or) from a list of installed applications
 - Easy to use
