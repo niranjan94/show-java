@@ -306,9 +306,11 @@ public class Landing extends BaseActivity {
         protected List<SourceInfo> doInBackground(String... params) {
 
             List<SourceInfo> historyItems = new ArrayList<>();
+            File showJavaDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/");
+            showJavaDir.mkdirs();
 
-            File nomedia = new File(Environment.getExternalStorageDirectory() + "/ShowJava/.nomedia");
-            nomedia.mkdirs();
+            File nomedia = new File(showJavaDir, ".nomedia");
+
             if (!nomedia.exists() || !nomedia.isFile()) {
                 try {
                     nomedia.createNewFile();
