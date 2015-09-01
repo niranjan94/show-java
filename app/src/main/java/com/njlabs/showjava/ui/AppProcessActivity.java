@@ -48,8 +48,6 @@ public class AppProcessActivity extends BaseActivity {
 
         CurrentStatus.setText("Starting Decompiler");
 
-
-
         if (getIntent().getDataString() == null || getIntent().getDataString().equals("")) {
 
             Bundle extras = getIntent().getExtras();
@@ -82,11 +80,11 @@ public class AppProcessActivity extends BaseActivity {
             }
         }
 
-        if (!fromNotification()) {
-            startProcessorService();
-        } else {
+        if(fromNotification()&&Utils.isProcessorServiceRunning(this)){
             CurrentStatus.setText("Processing ...");
             CurrentLine.setText("");
+        } else {
+            startProcessorService();
         }
 
         appNameView.setSingleLine(false);
