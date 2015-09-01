@@ -37,11 +37,11 @@ import java.util.List;
 public class JavaExplorer extends BaseActivity {
 
     ListView lv;
-    String PackageID;
+    String packageID;
     ActionBar actionBar;
     private File currentDir;
     private FileArrayAdapter adapter;
-    private String rootDir;
+    private String sourceDir;
     private ProgressDialog zipProgressDialog;
 
     @Override
@@ -52,16 +52,14 @@ public class JavaExplorer extends BaseActivity {
         actionBar = getSupportActionBar();
 
         Bundle extras = getIntent().getExtras();
-        String JavSourceDir;
 
         if (extras != null) {
-            JavSourceDir = extras.getString("java_source_dir");
-            PackageID = extras.getString("package_id");
+            sourceDir = extras.getString("java_source_dir");
+            packageID = extras.getString("package_id");
 
-            if (JavSourceDir != null) {
+            if (sourceDir != null) {
                 lv = (ListView) findViewById(R.id.list);
-                currentDir = new File(JavSourceDir);
-                rootDir = currentDir.toString();
+                currentDir = new File(sourceDir);
                 fill(currentDir);
             } else {
                 finish();
@@ -78,7 +76,7 @@ public class JavaExplorer extends BaseActivity {
 
         if (actionBar != null) {
             if (f.getName().equalsIgnoreCase("java_output")) {
-                actionBar.setTitle("Viewing the source of " + PackageID);
+                actionBar.setTitle("Viewing the source of " + packageID);
             } else {
                 actionBar.setTitle(f.getName());
             }
@@ -122,7 +120,7 @@ public class JavaExplorer extends BaseActivity {
         Collections.sort(fls);
         dir.addAll(fls);
 
-        if (!f.toString().equalsIgnoreCase(rootDir))
+        if (!f.equals(new File(sourceDir)))
             dir.add(0, new Item("..", "Parent Directory", "", f.getParent(), "directory_up"));
 
         adapter = new FileArrayAdapter(JavaExplorer.this, R.layout.java_explorer_list_item, dir);
@@ -144,13 +142,13 @@ public class JavaExplorer extends BaseActivity {
         if (FilenameUtils.getExtension(o.getPath()).equals("png") || FilenameUtils.getExtension(o.getPath()).equals("jpg")) {
             Intent i = new Intent(getApplicationContext(), ImageResourceViewer.class);
             i.putExtra("file_path", o.getPath());
-            i.putExtra("package_id", PackageID);
+            i.putExtra("package_id", packageID);
             startActivity(i);
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         } else {
             Intent i = new Intent(getApplicationContext(), SourceViewer.class);
             i.putExtra("file_path", o.getPath());
-            i.putExtra("package_id", PackageID);
+            i.putExtra("package_id", packageID);
             startActivity(i);
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
@@ -204,7 +202,7 @@ public class JavaExplorer extends BaseActivity {
     }
     @Override
     public void onBackPressed() {
-        if (!currentDir.toString().equalsIgnoreCase(rootDir)) {
+        if (!currentDir.equals(new File(sourceDir))) {
             currentDir = new File(currentDir.getParent());
             fill(currentDir);
         } else {
