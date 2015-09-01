@@ -22,6 +22,7 @@ This is a Decompiler that extracts the source code of an Android application (in
 - The decompiled source can easily be copied from the sdcard (source is stored in ShowJava folder in the sdcard)
 - Simple source browser with a summary of all decompilation errors
 - Each decompiled source file has commented references to classes that could not be decompiled
+- Share the decompiled source easily with the built in archive + share mechanism
 
 ## Know Issues ##
 1. Does not work with system applications in most of the phones (especially ones that are not de-odexed)
