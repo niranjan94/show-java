@@ -1,6 +1,9 @@
 package com.njlabs.showjava.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
@@ -17,6 +20,7 @@ import com.njlabs.showjava.R;
 import com.njlabs.showjava.modals.Item;
 import com.njlabs.showjava.utils.FileArrayAdapter;
 import com.njlabs.showjava.utils.StringUtils;
+import com.njlabs.showjava.utils.Utils;
 import com.njlabs.showjava.utils.logging.Ln;
 
 import org.apache.commons.io.FileUtils;
@@ -38,6 +42,7 @@ public class JavaExplorer extends BaseActivity {
     private File currentDir;
     private FileArrayAdapter adapter;
     private String rootDir;
+    private ProgressDialog zipProgressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +136,6 @@ public class JavaExplorer extends BaseActivity {
                 } else {
                     onFileClick(o);
                 }
-
             }
         });
     }
@@ -152,6 +156,52 @@ public class JavaExplorer extends BaseActivity {
         }
     }
 
+    private void showProgressDialog() {
+        if (zipProgressDialog == null) {
+            zipProgressDialog = new ProgressDialog(this);
+            zipProgressDialog.setIndeterminate(false);
+            zipProgressDialog.setCancelable(false);
+            zipProgressDialog.setInverseBackgroundForced(false);
+            zipProgressDialog.setCanceledOnTouchOutside(false);
+            zipProgressDialog.setMessage("Loading installed applications...");
+        }
+        zipProgressDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (zipProgressDialog != null && zipProgressDialog.isShowing()) {
+            zipProgressDialog.dismiss();
+        }
+    }
+
+    public class SourceArchiver extends AsyncTask<String, String, File> {
+
+        @Override
+        protected File doInBackground(String... params) {
+            publishProgress("Compressing source files ...");
+            return Utils.zipDir(new File(sourceDir), packageID);
+        }
+
+        public void doProgress(String progress){
+            publishProgress(progress);
+        }
+
+        @Override
+        protected void onPostExecute(File zipFilePath) {
+            dismissProgressDialog();
+            shareSourceZip(zipFilePath);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        protected void onProgressUpdate(String... text) {
+            zipProgressDialog.setMessage(text[0]);
+        }
+    }
     @Override
     public void onBackPressed() {
         if (!currentDir.toString().equalsIgnoreCase(rootDir)) {
@@ -163,6 +213,15 @@ public class JavaExplorer extends BaseActivity {
             finish();
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
+    }
+
+    private void shareSourceZip(File zipFile){
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(zipFile));
+        shareIntent.setType("application/zip");
+        startActivity(Intent.createChooser(shareIntent, "Send source via"));
+
     }
 
     @Override
@@ -181,7 +240,7 @@ public class JavaExplorer extends BaseActivity {
 
             case R.id.action_delete:
                 try {
-                    final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + PackageID);
+                    final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + packageID);
                     if (sourceDir.exists()) {
                         FileUtils.deleteDirectory(sourceDir);
                     }
@@ -191,6 +250,11 @@ public class JavaExplorer extends BaseActivity {
                 Toast.makeText(baseContext, "The source code has been deleted from sdcard", Toast.LENGTH_SHORT).show();
                 finish();
                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                return true;
+
+            case R.id.action_share:
+                SourceArchiver sourceArchiver = new SourceArchiver();
+                sourceArchiver.execute();
                 return true;
         }
 

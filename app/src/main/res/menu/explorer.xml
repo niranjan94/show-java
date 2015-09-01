@@ -2,9 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_action_share"
+        android:orderInCategory="0"
+        android:title="Zip and share"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_delete"
         android:icon="@drawable/ic_action_delete"
-        android:orderInCategory="0"
+        android:orderInCategory="1"
         android:title="Delete Source"
         app:showAsAction="always" />
+
 </menu>
