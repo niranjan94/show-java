@@ -4,7 +4,7 @@
 
 An apk decompiler for android. Build on Android Studio 1.4 Beta with gradle 2.4.
 
-> The current GitHub master branch may be ahead of the Play Store version (and maybe unstable/incomplete/buggy at some places)
+> The current GitHub master branch may be ahead of the Play Store version (and could be unstable/incomplete/buggy at some places)
 
 [![Get Show Java on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=com.njlabs.showjava "Get Show Java on Google Play")
 
