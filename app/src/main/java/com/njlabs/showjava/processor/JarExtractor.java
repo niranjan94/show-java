@@ -153,7 +153,7 @@ public class JarExtractor extends ProcessServiceHelper {
     }
 
     private void loadIgnoredLibs() {
-        String ignoredList = processService.IGNORE_LIBS?"ignored.list":"ignored_basic.list";
+        String ignoredList = (processService.IGNORE_LIBS ? "ignored.list":"ignored_basic.list");
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(processService.getAssets().open(ignoredList)));
