@@ -38,7 +38,7 @@ import java.util.List;
 
 public class AppListing extends BaseActivity {
 
-    ProgressDialog PackageLoadDialog;
+    ProgressDialog packageLoadDialog;
     ListView listView = null;
     private boolean isDestroyed;
 
@@ -55,20 +55,20 @@ public class AppListing extends BaseActivity {
     }
 
     private void showProgressDialog() {
-        if (PackageLoadDialog == null) {
-            PackageLoadDialog = new ProgressDialog(this);
-            PackageLoadDialog.setIndeterminate(false);
-            PackageLoadDialog.setCancelable(false);
-            PackageLoadDialog.setInverseBackgroundForced(false);
-            PackageLoadDialog.setCanceledOnTouchOutside(false);
-            PackageLoadDialog.setMessage("Loading installed applications...");
+        if (packageLoadDialog == null) {
+            packageLoadDialog = new ProgressDialog(this);
+            packageLoadDialog.setIndeterminate(false);
+            packageLoadDialog.setCancelable(false);
+            packageLoadDialog.setInverseBackgroundForced(false);
+            packageLoadDialog.setCanceledOnTouchOutside(false);
+            packageLoadDialog.setMessage("Loading installed applications...");
         }
-        PackageLoadDialog.show();
+        packageLoadDialog.show();
     }
 
     private void dismissProgressDialog() {
-        if (PackageLoadDialog != null && PackageLoadDialog.isShowing()) {
-            PackageLoadDialog.dismiss();
+        if (packageLoadDialog != null && packageLoadDialog.isShowing()) {
+            packageLoadDialog.dismiss();
         }
     }
 
@@ -218,7 +218,7 @@ public class AppListing extends BaseActivity {
 
         @Override
         protected void onProgressUpdate(String... text) {
-            PackageLoadDialog.setMessage(text[0]);
+            packageLoadDialog.setMessage(text[0]);
         }
     }
 
