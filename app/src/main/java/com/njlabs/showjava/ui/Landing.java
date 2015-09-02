@@ -270,8 +270,13 @@ public class Landing extends BaseActivity {
             for (File file : files) {
                 if (!file.getName().equalsIgnoreCase("sources")) {
                     try {
-                        FileUtils.cleanDirectory(file);
-                        file.delete();
+                        if(file.exists()){
+                            if(file.isDirectory()){
+                                FileUtils.deleteDirectory(file);
+                            } else {
+                                file.delete();
+                            }
+                        }
                     } catch (Exception e) {
                         Ln.d(e);
                     }
@@ -329,12 +334,19 @@ public class Landing extends BaseActivity {
                     } else {
                         if (!Utils.isProcessorServiceRunning(baseContext)) {
                             try {
-                                FileUtils.deleteDirectory(file);
-                            } catch (IOException e) {
+                                if(file.exists()){
+                                    if(file.isDirectory()){
+                                        FileUtils.deleteDirectory(file);
+                                    } else {
+                                        file.delete();
+                                    }
+                                }
+
+                            } catch (Exception e) {
                                 Ln.d(e);
                             }
                         }
-                        if (!file.isDirectory()) {
+                        if (file.exists()&&!file.isDirectory()) {
                             file.delete();
                         }
                     }
