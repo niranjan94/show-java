@@ -2,8 +2,11 @@ package com.njlabs.showjava.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 
+import com.njlabs.showjava.Constants;
+import com.njlabs.showjava.processor.ProcessService;
 import com.njlabs.showjava.utils.logging.Ln;
 
 import java.io.File;
@@ -16,6 +19,11 @@ import java.util.zip.ZipOutputStream;
 public class Utils {
 
     public static void killAllProcessorServices(Context context) {
+
+        Intent mServiceIntent = new Intent(context, ProcessService.class);
+        mServiceIntent.setAction(Constants.ACTION.STOP_PROCESS);
+        context.startService(mServiceIntent);
+
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
         for (ActivityManager.RunningAppProcessInfo next : runningAppProcesses) {

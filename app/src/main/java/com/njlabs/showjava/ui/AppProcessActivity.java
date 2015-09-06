@@ -95,6 +95,12 @@ public class AppProcessActivity extends BaseActivity {
         CurrentStatus.setEllipsize(TextUtils.TruncateAt.END);
         CurrentStatus.setLines(1);
 
+        setupGears();
+
+        registerBroadcastReceiver();
+    }
+
+    private void setupGears(){
         final ImageView GearProgressLeft = (ImageView) findViewById(R.id.gear_progress_left);
         final ImageView GearProgressRight = (ImageView) findViewById(R.id.gear_progress_right);
 
@@ -120,11 +126,9 @@ public class AppProcessActivity extends BaseActivity {
                 GearProgressRight.setAnimation(GearProgressRightAnim);
             }
         });
-
-        registerBroadcastReceiver();
     }
 
-    public void startProcessorService() {
+    private void startProcessorService() {
         Utils.killAllProcessorServices(this);
         Intent mServiceIntent = new Intent(getContext(), ProcessService.class);
         mServiceIntent.setAction(Constants.ACTION.START_PROCESS);
@@ -133,7 +137,7 @@ public class AppProcessActivity extends BaseActivity {
         startService(mServiceIntent);
     }
 
-    public void registerBroadcastReceiver() {
+    private void registerBroadcastReceiver() {
         IntentFilter statusIntentFilter = new IntentFilter(Constants.PROCESS_BROADCAST_ACTION);
         registerReceiver(processStatusReceiver, statusIntentFilter);
     }
@@ -159,9 +163,9 @@ public class AppProcessActivity extends BaseActivity {
     }
 
     private void exitWithError() {
+        Toast.makeText(baseContext, "There was an error initialising the decompiler with the app you selected.", Toast.LENGTH_LONG).show();
         finish();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-        Toast.makeText(baseContext, "There was an error initialising the decompiler with the app you selected.", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -189,13 +193,16 @@ public class AppProcessActivity extends BaseActivity {
                 case "optimise_dex_start":
                     CurrentStatus.setText("Optimising dex file");
                     break;
+
                 case "optimising":
                     CurrentStatus.setText("Optimising dex file");
                     CurrentLine.setText("");
                     break;
+
                 case "optimise_dex_finish":
                     CurrentStatus.setText("Finishing optimisation");
                     break;
+
                 case "merging_classes":
                     CurrentStatus.setText("Merging classes");
                     CurrentLine.setText("");
@@ -209,7 +216,6 @@ public class AppProcessActivity extends BaseActivity {
                         startActivityForResult(iOne, 1);
                         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
-
                     break;
 
                 case "start_activity_with_error":
@@ -224,6 +230,7 @@ public class AppProcessActivity extends BaseActivity {
                     break;
 
                 case "exit_process_on_error":
+                    Toast.makeText(baseContext, "Exiting with error.", Toast.LENGTH_SHORT).show();
                     finish();
                     overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     break;
@@ -236,16 +243,21 @@ public class AppProcessActivity extends BaseActivity {
                 case "dex2jar":
                     CurrentStatus.setText("Decompiling dex to jar");
                     break;
+
                 case "jar2java":
                     CurrentStatus.setText("Decompiling to java");
                     break;
+
                 case "res":
                     CurrentStatus.setText("Extracting Resources");
                     break;
+
                 case "exit":
+                    Toast.makeText(baseContext, "Exiting.", Toast.LENGTH_SHORT).show();
                     finish();
                     overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     break;
+
                 default:
                     CurrentLine.setText(statusData);
             }
