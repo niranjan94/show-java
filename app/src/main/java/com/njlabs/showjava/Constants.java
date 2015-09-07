@@ -15,6 +15,7 @@ public final class Constants {
     public interface ACTION {
         String START_PROCESS = "com.njlabs.showjava.process.action.START";
         String STOP_PROCESS = "com.njlabs.showjava.process.action.STOP";
+        String STOP_PROCESS_FOR_NEW = "com.njlabs.showjava.process.action.STOP_FOR_NEW";
     }
 
 }
