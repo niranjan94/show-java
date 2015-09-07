@@ -163,7 +163,6 @@ public class JarExtractor extends ProcessServiceHelper {
                 if (mLine.length() != 0) {
                     ignoredLibs.add(StringUtils.toClassName(mLine));
                 }
-                Ln.d(mLine);
                 mLine = reader.readLine();
             }
         } catch (IOException e) {
