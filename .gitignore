@@ -3,6 +3,7 @@
 *.apk
 *.ap_
 
+/releases
 # files for the dex VM
 *.dex
 
