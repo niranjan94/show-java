@@ -129,7 +129,7 @@ public class AppProcessActivity extends BaseActivity {
     }
 
     private void startProcessorService() {
-        Utils.killAllProcessorServices(this);
+        Utils.killAllProcessorServices(this, true);
         Intent mServiceIntent = new Intent(getContext(), ProcessService.class);
         mServiceIntent.setAction(Constants.ACTION.START_PROCESS);
         mServiceIntent.putExtra("package_file_path", packageFilePath);
@@ -253,7 +253,6 @@ public class AppProcessActivity extends BaseActivity {
                     break;
 
                 case "exit":
-                    Toast.makeText(baseContext, "Exiting.", Toast.LENGTH_SHORT).show();
                     finish();
                     overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     break;

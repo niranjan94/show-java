@@ -18,13 +18,18 @@ import java.util.zip.ZipOutputStream;
 
 public class Utils {
 
-    public static void killAllProcessorServices(Context context) {
-
+    public static void killAllProcessorServices(Context context, boolean forNew) {
         Intent mServiceIntent = new Intent(context, ProcessService.class);
-        mServiceIntent.setAction(Constants.ACTION.STOP_PROCESS);
-        context.startService(mServiceIntent);
+        if(forNew){
+            mServiceIntent.setAction(Constants.ACTION.STOP_PROCESS_FOR_NEW);
+        } else {
+            mServiceIntent.setAction(Constants.ACTION.STOP_PROCESS);
+        }
+        context.stopService(mServiceIntent);
+    }
 
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+    public static void forceKillAllProcessorServices(Context context) {
+       ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
         for (ActivityManager.RunningAppProcessInfo next : runningAppProcesses) {
             String processName = context.getPackageName() + ":service";
