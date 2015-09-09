@@ -45,6 +45,9 @@ public class JavaExtractor extends ProcessServiceHelper {
         if(processService.decompilerToUse.equals("jadx")){
             decompileWithJaDX(dexInputFile, javaOutputDir);
         } else {
+            if(dexInputFile.exists() && dexInputFile.isFile()){
+                dexInputFile.delete();
+            }
             decompileWithCFR(jarInputFile,javaOutputDir);
         }
 
@@ -99,6 +102,9 @@ public class JavaExtractor extends ProcessServiceHelper {
                 } catch (Exception | StackOverflowError e) {
                     Ln.e(e);
                     javaError = true;
+                }
+                if(dexInputFile.exists() && dexInputFile.isFile()){
+                    dexInputFile.delete();
                 }
                 startXMLExtractor(!javaError);
             }
