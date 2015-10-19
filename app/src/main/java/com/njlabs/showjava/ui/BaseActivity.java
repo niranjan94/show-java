@@ -138,6 +138,10 @@ public class BaseActivity extends AppCompatActivity {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
+    public boolean isMarshmallow() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
     public boolean isPro() {
         return BuildConfig.IS_PRO;
     }

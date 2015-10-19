@@ -1,5 +1,6 @@
 package com.njlabs.showjava.ui;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -33,6 +38,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.njlabs.showjava.BuildConfig;
+import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.R;
 import com.njlabs.showjava.utils.SourceInfo;
 import com.njlabs.showjava.utils.Utils;
@@ -113,11 +119,23 @@ public class Landing extends BaseActivity {
                 .withCloseOnClick(true)
                 .build();
 
+        if(isMarshmallow()){
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,  new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, Constants.STORAGE_PERMISSION_REQUEST);
+            } else {
+                initHistoryLoader();
+            }
+        } else {
+            initHistoryLoader();
+        }
 
+
+    }
+
+    public void initHistoryLoader(){
         HistoryLoader historyLoader = new HistoryLoader();
         historyLoader.execute();
     }
-
     public void SetupList(List<SourceInfo> AllPackages) {
 
         if (AllPackages.size() < 1) {
@@ -370,4 +388,19 @@ public class Landing extends BaseActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.STORAGE_PERMISSION_REQUEST: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initHistoryLoader();
+                } else {
+                    Toast.makeText(baseContext, "Storage permission is required to use this app", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+
+        }
+    }
 }
