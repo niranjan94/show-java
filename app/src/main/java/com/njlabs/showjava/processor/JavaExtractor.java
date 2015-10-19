@@ -5,6 +5,7 @@ import com.njlabs.showjava.utils.SourceInfo;
 import com.njlabs.showjava.utils.logging.Ln;
 
 import org.benf.cfr.reader.Main;
+import org.benf.cfr.reader.state.ClassFileSourceImpl;
 import org.benf.cfr.reader.state.DCCommonState;
 import org.benf.cfr.reader.util.getopt.GetOptParser;
 import org.benf.cfr.reader.util.getopt.Options;
@@ -59,32 +60,44 @@ public class JavaExtractor extends ProcessServiceHelper {
 
         Options options = null;
         try {
-            options = getOptParser.parse(args, OptionsImpl.getFactory());
+            options = (Options) getOptParser.parse(args, OptionsImpl.getFactory());
         } catch (Exception e) {
             Crashlytics.logException(e);
+            broadcastStatus("exit_process_on_error");
         }
 
-        final DCCommonState dcCommonState = new DCCommonState(options);
-        final String path = options != null ? options.getFileName() : null;
-
-        ThreadGroup group = new ThreadGroup("Jar 2 Java Group");
-        Thread javaExtractionThread = new Thread(group, new Runnable() {
-            @Override
-            public void run() {
-                boolean javaError = false;
-                try {
-                    Main.doJar(dcCommonState, path);
-                } catch (Exception | StackOverflowError e) {
-                    Ln.e(e);
-                    javaError = true;
-                }
-                startXMLExtractor(!javaError);
+        if(!options.optionIsSet(OptionsImpl.HELP) && options.getOption(OptionsImpl.FILENAME) != null) {
+            ClassFileSourceImpl classFileSource = new ClassFileSourceImpl(options);
+            final DCCommonState dcCommonState = new DCCommonState(options, classFileSource);
+            final String path = (String)options.getOption(OptionsImpl.FILENAME);
+            String type = (String)options.getOption(OptionsImpl.ANALYSE_AS);
+            if(type == null) {
+                type = dcCommonState.detectClsJar(path);
             }
-        }, "Jar to Java Thread", processService.STACK_SIZE);
 
-        javaExtractionThread.setPriority(Thread.MAX_PRIORITY);
-        javaExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
-        javaExtractionThread.start();
+            ThreadGroup group = new ThreadGroup("Jar 2 Java Group");
+            Thread javaExtractionThread = new Thread(group, new Runnable() {
+                @Override
+                public void run() {
+                    boolean javaError = false;
+                    try {
+                        Main.doJar(dcCommonState, path);
+                    } catch (Exception | StackOverflowError e) {
+                        Ln.e(e);
+                        javaError = true;
+                    }
+                    startXMLExtractor(!javaError);
+                }
+            }, "Jar to Java Thread", processService.STACK_SIZE);
+
+            javaExtractionThread.setPriority(Thread.MAX_PRIORITY);
+            javaExtractionThread.setUncaughtExceptionHandler(exceptionHandler);
+            javaExtractionThread.start();
+
+        } else {
+            broadcastStatus("exit_process_on_error");
+        }
+
     }
 
     private void decompileWithJaDX(final File dexInputFile, final File javaOutputDir){
