@@ -13,19 +13,19 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 ## Features ##
 
-- Select either **CFR 0.102** or **JaDX 0.6.1** to use as the decompiler (more to come)
-- Runs directly on an android device (4.x and above)
-- Select apk from sdcard (or) from a list of installed applications
-- Easy to use
-- Decompiles resources too (layouts, Drawables, Menus, AndroidManifest, image assets)
-- Displays code in a clean-syntax-highlighted form
-- The decompiled source can easily be copied from the sdcard (source is stored in ShowJava folder in the sdcard)
-- Simple source browser with a summary of all decompilation errors
-- Each decompiled source file has commented references to classes that could not be decompiled
-- Share the decompiled source easily with the built in archive + share mechanism
+- Select either **CFR 0.102** or **JaDX 0.6.1** to use as the decompiler (more to come).
+- Runs directly on an android device (4.x and above).
+- Select apk from sdcard (or) from a list of installed applications.
+- Easy to use.
+- Decompiles resources too (layouts, Drawables, Menus, AndroidManifest, image assets).
+- Displays code in a clean-syntax-highlighted form.
+- The decompiled source can easily be copied from the sdcard (source is stored in ShowJava folder in the sdcard).
+- Simple source browser with a summary of all decompilation errors.
+- Each decompiled source file has commented references to classes that could not be decompiled.
+- Share the decompiled source easily with the built in archive + share mechanism.
 
-## Know Issues ##
-1. Does not work with system applications in most of the phones (especially ones that are not de-odexed)
+## Known Issues ##
+1. Does not work with system applications in most of the phones (especially ones that are not de-odexed).
 2. java.lang.OutOfMemoryError crashes when decompiling large apps on a mobile phone with low ram and Java VM Heap space.
 
 ## Contributing to ShowJava ##
@@ -40,7 +40,7 @@ Unless explicitly stated otherwise all files in this repository are licensed und
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+    You may obtain a copy of the License at : 
     
     http://www.apache.org/licenses/LICENSE-2.0
     
@@ -53,7 +53,7 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 ## External Credits ##
 
 1. A Big-Huge Thanks to Lee Benfield ([lee@benf.org](mailto:lee@benf.org)) for his awesome CFR - Class File Reader
-2. Panxiaobo ([pxb1988@gmail.com](mailto:pxb1988@gmail.com)) for dex2jar
-3. [Liu Dong](https://github.com/xiaxiaocao) for apk-parser
-4. [Ben Gruver](https://github.com/JesusFreke/) for dexlib2
-5. [skylot](https://github.com/skylot) for JaDX
+2. Panxiaobo ([pxb1988@gmail.com](mailto:pxb1988@gmail.com)) for dex2jar.
+3. [Liu Dong](https://github.com/xiaxiaocao) for apk-parser.
+4. [Ben Gruver](https://github.com/JesusFreke/) for dexlib2.
+5. [skylot](https://github.com/skylot) for JaDX.
