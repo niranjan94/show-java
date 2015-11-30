@@ -26,7 +26,7 @@
     <string name="title_activity_error">Integrity Check Failed</string> <!-- Just some title ... Donno what to say :P_-->
 
     <string-array name="decompilers">
-        <item>CFR 0.108</item>
+        <item>CFR 0.110</item>
         <item>JaDX 0.6.1</item>
     </string-array>
 

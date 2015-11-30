@@ -98,7 +98,7 @@ dependencies {
     compile files('libs/jsr305-1.3.9.jar')
 
     // CLASS FILE READER - JAVA DECOMPILER
-    compile files('libs/cfr_0_108.jar')
+    compile files('libs/cfr_0_110.jar')
 
     // APK PARSER AND BINARY XML DECODER
     compile 'net.dongliu:apk-parser:2.0.15'
