@@ -14,6 +14,13 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+def props = new Properties()
+props.load(new FileInputStream('app/keys.properties'))
+
+props.each { key, val ->
+    project.set(key, val)
+}
+
 def versionMajor = 2
 def versionMinor = 0
 def versionPatch = 6
@@ -21,7 +28,7 @@ def versionBuild = 10
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "com.njlabs.showjava"
@@ -38,16 +45,8 @@ android {
     productFlavors {
         free {
             resValue "string", "app_name", "Show Java"
-
-            buildConfigField "boolean", "IS_FREE", "true"
-            buildConfigField "boolean", "IS_PRO", "false"
-        }
-        pro {
-            applicationId "com.njlabs.showjava.pro"
-            resValue "string", "app_name", "Show Java Pro"
-
-            buildConfigField "boolean", "IS_FREE", "false"
-            buildConfigField "boolean", "IS_PRO", "true"
+            buildConfigField "String" , "GOOGLE_PLAY_LICENSE_KEY" , GooglePlayLicenseKey
+            buildConfigField "String" , "IAP_PRODUCT_ID" , IapProductKey
         }
     }
     compileOptions {
@@ -130,4 +129,6 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'uk.com.robust-it:cloning:1.9.2'
     compile files('libs/android-5.1-clst-core.jar')
+
+    compile 'com.anjlab.android.iab.v3:library:1.0.+@aar'
 }

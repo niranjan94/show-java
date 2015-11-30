@@ -4,6 +4,8 @@
 *.ap_
 
 /releases
+/local.properties
+/app/keys.properties
 # files for the dex VM
 *.dex
 
