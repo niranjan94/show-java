@@ -13,7 +13,7 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 ## Features ##
 
-- Select either **CFR 0.102** or **JaDX 0.6.1** to use as the decompiler (more to come).
+- Select either **CFR 0.110** or **JaDX 0.6.1** to use as the decompiler (more to come).
 - Runs directly on an android device (4.x and above).
 - Select apk from sdcard (or) from a list of installed applications.
 - Easy to use.
@@ -26,7 +26,7 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 ## Known Issues ##
 1. Does not work with system applications in most of the phones (especially ones that are not de-odexed).
-2. java.lang.OutOfMemoryError crashes when decompiling large apps on a mobile phone with low ram and Java VM Heap space.
+2. Slow on phones with single core processors.
 
 ## Contributing to ShowJava ##
 
