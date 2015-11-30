@@ -120,6 +120,8 @@ dependencies {
         transitive = true
     }
 
+    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
+
     // FILE PICKER
     compile 'com.nononsenseapps:filepicker:2.2.3'
     

@@ -21,6 +21,8 @@ import com.google.android.gms.ads.AdView;
 import com.njlabs.showjava.BuildConfig;
 import com.njlabs.showjava.R;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 @SuppressWarnings("unused")
 @SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity {
@@ -29,6 +31,11 @@ public class BaseActivity extends AppCompatActivity {
     public Toolbar toolbar;
     protected SharedPreferences prefs;
     private AdView mAdView;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
