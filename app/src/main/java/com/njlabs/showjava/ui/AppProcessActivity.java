@@ -171,7 +171,6 @@ public class AppProcessActivity extends BaseActivity {
             } else {
                 finish();
             }
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
     }
 
@@ -182,7 +181,6 @@ public class AppProcessActivity extends BaseActivity {
     private void exitWithError() {
         Toast.makeText(baseContext, R.string.decompiler_initialise_error, Toast.LENGTH_LONG).show();
         finish();
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     @Override
@@ -237,7 +235,6 @@ public class AppProcessActivity extends BaseActivity {
                         iOne.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
                         iOne.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
                         startActivityForResult(iOne, 1);
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
                     break;
 
@@ -248,14 +245,12 @@ public class AppProcessActivity extends BaseActivity {
                         iTwo.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
                         iTwo.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
                         startActivityForResult(iTwo, 1);
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
                     break;
 
                 case "exit_process_on_error":
                     Toast.makeText(baseContext, R.string.error_exiting, Toast.LENGTH_SHORT).show();
                     finish();
-                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     break;
 
                 case "finaldex":
@@ -277,7 +272,6 @@ public class AppProcessActivity extends BaseActivity {
 
                 case "exit":
                     finish();
-                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     break;
 
                 default:

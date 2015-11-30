@@ -102,15 +102,13 @@ public class Landing extends BaseActivity {
                             case 2:
                                 Uri uri = Uri.parse("https://github.com/niranjan94/show-java/issues/new");
                                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                 break;
                             case 3:
                                 startActivity(new Intent(baseContext, About.class));
-                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                                 break;
                             case 4:
                                 startActivity(new Intent(baseContext, SettingsActivity.class));
-                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                                 break;
                         }
                         return false;
@@ -190,7 +188,6 @@ public class Landing extends BaseActivity {
                     i.putExtra("java_source_dir", sourceDir + "/");
                     i.putExtra("package_id", holder.packageName.getText().toString());
                     startActivity(i);
-                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 }
             });
 
@@ -202,7 +199,6 @@ public class Landing extends BaseActivity {
     public void OpenAppListing(View v) {
         Intent i = new Intent(getApplicationContext(), AppListing.class);
         startActivity(i);
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     public void OpenFilePicker(View v) {
@@ -215,7 +211,6 @@ public class Landing extends BaseActivity {
         i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
 
         startActivityForResult(i, FILE_PICKER);
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     @Override
@@ -262,7 +257,6 @@ public class Landing extends BaseActivity {
                                 i.putExtra("package_file_path", PackageDir);
                                 i.putExtra("decompiler", (item==1?"jadx":"cfr"));
                                 startActivity(i);
-                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                             }
                         });
                         AlertDialog alert = builder.create();
@@ -274,7 +268,6 @@ public class Landing extends BaseActivity {
                         i.putExtra("package_file_path", PackageDir);
                         i.putExtra("decompiler", prefs.getString("decompiler", "cfr"));
                         startActivity(i);
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
                 }
             }

@@ -18,7 +18,6 @@ import android.view.View;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.njlabs.showjava.BuildConfig;
 import com.njlabs.showjava.R;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -82,23 +81,21 @@ public class BaseActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
 
             case R.id.about_option:
                 startActivity(new Intent(getBaseContext(), About.class));
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
 
             case R.id.bug_report_option:
                 Uri uri = Uri.parse("https://github.com/niranjan94/show-java/issues/new");
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
                 return true;
 
             case R.id.settings_option:
                 startActivity(new Intent(getBaseContext(), SettingsActivity.class));
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
         }
 
@@ -112,7 +109,6 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     @Override
@@ -141,6 +137,10 @@ public class BaseActivity extends AppCompatActivity {
         return status;
     }
 
+    public boolean hasPurchased(){
+        return true;
+    }
+    
     public boolean isLollipop() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
@@ -149,19 +149,11 @@ public class BaseActivity extends AppCompatActivity {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
-    public boolean isPro() {
-        return BuildConfig.IS_PRO;
-    }
-
-    public boolean isFree() {
-        return BuildConfig.IS_FREE;
-    }
-
     private void setupGoogleAds() {
         mAdView = (AdView) findViewById(R.id.adView);
         if (mAdView != null) {
             mAdView.setVisibility(View.GONE);
-            if (isFree()) {
+            if (hasPurchased()) {
                 AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
                 mAdView.setAdListener(new AdListener() {
                     @Override

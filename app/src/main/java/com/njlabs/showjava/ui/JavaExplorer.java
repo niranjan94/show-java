@@ -63,7 +63,6 @@ public class JavaExplorer extends BaseActivity {
                 fill(currentDir);
             } else {
                 finish();
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
         }
 
@@ -144,13 +143,11 @@ public class JavaExplorer extends BaseActivity {
             i.putExtra("file_path", o.getPath());
             i.putExtra("package_id", packageID);
             startActivity(i);
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         } else {
             Intent i = new Intent(getApplicationContext(), SourceViewer.class);
             i.putExtra("file_path", o.getPath());
             i.putExtra("package_id", packageID);
             startActivity(i);
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
     }
 
@@ -209,7 +206,6 @@ public class JavaExplorer extends BaseActivity {
             Intent returnIntent = new Intent();
             setResult(RESULT_CANCELED, returnIntent);
             finish();
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
     }
 
@@ -233,7 +229,6 @@ public class JavaExplorer extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
 
             case R.id.action_delete:
@@ -247,7 +242,6 @@ public class JavaExplorer extends BaseActivity {
                 }
                 Toast.makeText(baseContext, "The source code has been deleted from sdcard", Toast.LENGTH_SHORT).show();
                 finish();
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
 
             case R.id.action_share:

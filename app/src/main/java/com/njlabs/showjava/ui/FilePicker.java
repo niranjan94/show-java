@@ -47,7 +47,6 @@ public class FilePicker extends AbstractFilePickerActivity<File> {
         // If at top most level, normal behaviour
         if (currentFragment == null || currentFragment.isBackTop()) {
             finish();
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         } else {
             // Else go up
             currentFragment.goUp();
@@ -59,7 +58,6 @@ public class FilePicker extends AbstractFilePickerActivity<File> {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
         }
         return super.onOptionsItemSelected(item);

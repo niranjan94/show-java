@@ -244,7 +244,6 @@ public class AppListing extends BaseActivity {
                 i.putExtra("java_source_dir", sourceDir + "/");
                 i.putExtra("package_id", holder.packageName.getText().toString());
                 startActivity(i);
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
         });
 
@@ -267,7 +266,6 @@ public class AppListing extends BaseActivity {
         i.putExtra("package_file_path", holder.packageFilePath.getText().toString());
         i.putExtra("decompiler", decompiler);
         startActivity(i);
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     private void showDecompilerSelection(final ViewHolder holder){
