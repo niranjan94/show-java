@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -33,6 +34,8 @@ public class AppProcessActivity extends BaseActivity {
     private String packageFilePath;
     private BroadcastReceiver processStatusReceiver;
     private String decompilerToUse = "cfr";
+
+    private boolean processStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,20 @@ public class AppProcessActivity extends BaseActivity {
         setupGears();
 
         registerBroadcastReceiver();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(!processStarted) {
+                    unregisterReceiver(processStatusReceiver);
+                    Utils.forceKillAllProcessorServices(baseContext);
+                    final Intent mainIntent = new Intent(baseContext, ErrorActivity.class);
+                    mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(mainIntent);
+                    finish();
+                }
+            }
+        }, 5000);
     }
 
     private void setupGears(){
@@ -171,7 +188,11 @@ public class AppProcessActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(processStatusReceiver);
+        try {
+            unregisterReceiver(processStatusReceiver);
+        } catch (Exception ignored) {
+
+        }
     }
 
     private class ProcessStatus extends BroadcastReceiver {
@@ -192,10 +213,12 @@ public class AppProcessActivity extends BaseActivity {
             switch (statusKey) {
                 case "optimise_dex_start":
                     CurrentStatus.setText("Optimising dex file");
+                    processStarted = true;
                     break;
 
                 case "optimising":
                     CurrentStatus.setText("Optimising dex file");
+                    processStarted = true;
                     CurrentLine.setText("");
                     break;
 

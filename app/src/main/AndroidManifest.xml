@@ -92,6 +92,11 @@
             android:exported="false"
             android:process=":service" />
 
+        <activity
+            android:name=".ui.ErrorActivity"
+            android:label="@string/title_activity_error"
+            android:theme="@style/FilePickerTheme"/>
+
     </application>
 
 </manifest>
