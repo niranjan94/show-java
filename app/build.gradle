@@ -63,8 +63,8 @@ android {
             shrinkResources true
         }
         debug {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
         }
     }
 
