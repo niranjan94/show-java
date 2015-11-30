@@ -14,12 +14,7 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-def props = new Properties()
-props.load(new FileInputStream('app/keys.properties'))
 
-props.each { key, val ->
-    project.set(key, val)
-}
 
 def versionMajor = 2
 def versionMinor = 0
@@ -44,6 +39,22 @@ android {
     }
     productFlavors {
         free {
+
+            def props = new Properties()
+            props.load(new FileInputStream('app/keys.properties'))
+
+            props.each { key, val ->
+                project.set(key, val)
+            }
+
+            resValue "string", "app_name", "Show Java"
+            buildConfigField "String" , "GOOGLE_PLAY_LICENSE_KEY" , GooglePlayLicenseKey
+            buildConfigField "String" , "IAP_PRODUCT_ID" , IapProductKey
+        }
+
+        travis {
+            def GooglePlayLicenseKey = '"GOOGLE_PLAY_LICENSE_KEY"'
+            def IapProductKey = '"IAP_PRODUCT_ID"'
             resValue "string", "app_name", "Show Java"
             buildConfigField "String" , "GOOGLE_PLAY_LICENSE_KEY" , GooglePlayLicenseKey
             buildConfigField "String" , "IAP_PRODUCT_ID" , IapProductKey

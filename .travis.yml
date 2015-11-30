@@ -3,7 +3,7 @@ android:
    components:
    - platform-tools
    - android-23
-   - build-tools-23.0.1
+   - build-tools-23.0.2
    - extra
    
 env:
@@ -27,4 +27,4 @@ addons:
 script:
   - MALLOC_ARENA_MAX=1
   - chmod a+x gradlew
-  - ./gradlew clean assembleFreeRelease --stacktrace
+  - ./gradlew clean assembleTravisRelease --stacktrace
