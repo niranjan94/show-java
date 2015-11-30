@@ -4,9 +4,10 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.19.2'
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
+
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
@@ -27,10 +28,12 @@ def versionPatch = 7
 def versionBuild = 10
 
 android {
+
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
     defaultConfig {
+
         applicationId "com.njlabs.showjava"
         minSdkVersion 14
         targetSdkVersion 23
@@ -38,19 +41,17 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         resConfigs "en"
         multiDexEnabled true
+
+        resValue "string", "app_name", "Show Java"
+        buildConfigField "String" , "GOOGLE_PLAY_LICENSE_KEY" , GooglePlayLicenseKey
+        buildConfigField "String" , "IAP_PRODUCT_ID" , IapProductKey
+        proguardFiles 'proguard-rules.pro'
     }
+
     dexOptions {
         javaMaxHeapSize "4g"
     }
-    productFlavors {
-        free {
 
-            resValue "string", "app_name", "Show Java"
-            buildConfigField "String" , "GOOGLE_PLAY_LICENSE_KEY" , GooglePlayLicenseKey
-            buildConfigField "String" , "IAP_PRODUCT_ID" , IapProductKey
-        }
-
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
@@ -58,20 +59,24 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
         }
         debug {
-            debuggable true
+            minifyEnabled true
+            shrinkResources true
         }
     }
+
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
+
     dexOptions {
         jumboMode = true
     }
+
     lintOptions {
         abortOnError false
     }

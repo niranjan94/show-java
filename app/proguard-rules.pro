@@ -1,83 +1,53 @@
+-dontobfuscate
 -optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
 -dontpreverify
 -verbose
--optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+-libraryjars libs
 
--dontobfuscate
--keepparameternames
--renamesourcefileattribute SourceFile
--keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*,!code/allocation/variable
+-allowaccessmodification
 
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
--keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
--keep public class com.android.vending.licensing.ILicensingService
-
--keep public class * extends android.view.View
--keep public class * extends android.app.Fragment
--keep public class * extends android.support.v4.Fragment
-
--keep public class * {
-    public protected *;
-}
-
--keep class android.support.** { *; }
-
--keep interface android.support.** { *; }
-
--keepclassmembernames class * {
-    java.lang.Class class$(java.lang.String);
-    java.lang.Class class$(java.lang.String, boolean);
-}
-
--keepclasseswithmembernames,includedescriptorclasses class * {
-    native <methods>;
-}
-
--keepclassmembers,allowoptimization enum * {
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
-}
-
--keepclassmembers class * implements java.io.Serializable {
-    static final long serialVersionUID;
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
-}
-
--keepclassmembernames class * {
-	public protected <methods>;
-}
-
--keepclasseswithmembernames class * {
-    native <methods>;
-}
-
--keepclasseswithmembernames class * {
+-keep public class com.android.vending.billing.IInAppBillingService
+-keep class com.android.vending.billing.**
+-keep public class * extends android.view.View {
+    public <init>(android.content.Context);
     public <init>(android.content.Context, android.util.AttributeSet);
-}
-
--keepclasseswithmembernames class * {
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
-
--keepclassmembers enum * {
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+-keepclassmembers class * extends android.content.Context {
+    public void *(android.view.View);
+    public void *(android.view.MenuItem);
 }
 
--keep class * implements android.os.Parcelable {
-    public static final android.os.Parcelable$Creator *;
-}
+-keep class android.support.v4.app.** { *; }
+-keep interface android.support.v4.app.** { *; }
+
+-keep class android.support.** { *; }
+-keep interface android.support.** { *; }
+
+-keep class jadx.** { *; }
+-keep class org.benf.cfr.reader.** { *; }
+-keep class com.googlecode.** { *; }
+-keep class com.android.** { *; }
+
+-keepattributes *Annotation*
+-keepattributes Signature
+-keepattributes InnerClasses
+-keepattributes InnerClasses,EnclosingMethod
 
 -dontwarn com.google.**
 -dontwarn com.android.**
@@ -90,3 +60,11 @@
 -dontwarn p.rn.**
 -dontwarn junit.runner.**
 -dontwarn net.dongliu.**
+-dontwarn com.**
+-dontwarn android.**
+-dontwarn org.**
+-dontwarn net.**
+-dontwarn uk.**
+-dontwarn io.**
+-dontwarn jadx.**
+-dontwarn java.**
