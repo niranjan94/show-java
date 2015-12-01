@@ -29,4 +29,4 @@ script:
   - printf 'GooglePlayLicenseKey="GooglePlayLicenseKey"\nIapProductKey="IapProductKey"' > app/keys.properties
   - MALLOC_ARENA_MAX=1
   - chmod a+x gradlew
-  - ./gradlew clean assembleFreeRelease --stacktrace
+  - ./gradlew clean assembleRelease --stacktrace
