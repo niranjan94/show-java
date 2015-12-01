@@ -74,7 +74,6 @@ public class PurchaseActivity extends BaseActivity implements BillingProcessor.I
     public void onBillingError(int i, Throwable throwable) {
         progressBar.setVisibility(View.GONE);
         mainLayout.setVisibility(View.VISIBLE);
-        Toast.makeText(this,"An error occurred while processing your payment. Please try again",Toast.LENGTH_SHORT).show();
 
         switch (i) {
             case Constants.BILLING_RESPONSE_RESULT_USER_CANCELED:
@@ -83,6 +82,8 @@ public class PurchaseActivity extends BaseActivity implements BillingProcessor.I
             case Constants.BILLING_RESPONSE_RESULT_ERROR:
                 Toast.makeText(this,"An error occurred while processing your payment. Please try again",Toast.LENGTH_SHORT).show();
                 break;
+            default:
+                Toast.makeText(this,"An error occurred while processing your request",Toast.LENGTH_SHORT).show();
         }
     }
 

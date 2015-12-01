@@ -26,7 +26,7 @@ props.each { key, val ->
 
 def versionMajor = 2
 def versionMinor = 0
-def versionPatch = 7
+def versionPatch = 8
 def versionBuild = 10
 
 android {
@@ -62,7 +62,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources true
         }
         debug {

@@ -51,6 +51,12 @@
 -keepattributes InnerClasses
 -keepattributes InnerClasses,EnclosingMethod
 
+-keep class com.crashlytics.** { *; }
+-keep class com.crashlytics.android.**
+-keepattributes SourceFile,LineNumberTable
+
+-keep public class * extends java.lang.Exception
+
 -dontwarn com.google.**
 -dontwarn com.android.**
 -dontwarn antlr.debug.**
