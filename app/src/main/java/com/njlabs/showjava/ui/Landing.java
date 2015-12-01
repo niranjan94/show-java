@@ -78,23 +78,29 @@ public class Landing extends BaseActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.navbar_header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(getResources().getString(R.string.app_name)).withEmail("Version " + BuildConfig.VERSION_NAME).setSelectable(false)
+                        new ProfileDrawerItem().withName(getResources().getString(R.string.app_name)+(isPro()?" Pro":"")).withEmail("Version " + BuildConfig.VERSION_NAME).setSelectable(false)
                 )
                 .withSelectionListEnabledForSingleProfile(false)
                 .build();
+
+        ArrayList<IDrawerItem> drawerItems = new ArrayList<>();
+
+        drawerItems.add(new PrimaryDrawerItem().withName("Home").withIcon(R.drawable.ic_action_home).withCheckable(false));
+        drawerItems.add(new DividerDrawerItem());
+        drawerItems.add(new PrimaryDrawerItem().withName("Report a Bug").withIcon(R.drawable.ic_action_bug_report).withCheckable(false));
+        drawerItems.add(new PrimaryDrawerItem().withName("About the app").withIcon(R.drawable.ic_action_info).withCheckable(false));
+        drawerItems.add(new PrimaryDrawerItem().withName("Settings").withIcon(R.drawable.ic_action_settings).withCheckable(false));
+
+        if(!isPro()) {
+            drawerItems.add(new DividerDrawerItem());
+            drawerItems.add(new PrimaryDrawerItem().withName("Get Show Java Pro").withIcon(R.mipmap.ic_logo_plain).withCheckable(false));
+        }
 
         Drawer result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
-                .addDrawerItems(
-                        new PrimaryDrawerItem().withName("Home").withIcon(R.drawable.ic_action_home).withCheckable(false),
-                        new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName("Report a Bug").withIcon(R.drawable.ic_action_bug_report).withCheckable(false),
-                        new PrimaryDrawerItem().withName("About the app").withIcon(R.drawable.ic_action_info).withCheckable(false),
-                        new PrimaryDrawerItem().withName("Settings").withIcon(R.drawable.ic_action_settings).withCheckable(false)
-
-                )
+                .withDrawerItems(drawerItems)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
@@ -109,6 +115,9 @@ public class Landing extends BaseActivity {
                                 break;
                             case 4:
                                 startActivity(new Intent(baseContext, SettingsActivity.class));
+                                break;
+                            case 6:
+                                startActivity(new Intent(baseContext, PurchaseActivity.class));
                                 break;
                         }
                         return false;

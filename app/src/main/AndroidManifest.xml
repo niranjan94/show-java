@@ -95,8 +95,12 @@
 
         <activity
             android:name=".ui.ErrorActivity"
-            android:label="@string/title_activity_error"
-            android:theme="@style/FilePickerTheme"/>
+            android:label="@string/title_activity_error"/>
+
+        <activity
+            android:name=".ui.PurchaseActivity"
+            android:label="@string/title_activity_purchase"/>
+
 
     </application>
 

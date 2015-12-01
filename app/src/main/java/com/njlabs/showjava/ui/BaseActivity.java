@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,6 +22,10 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.njlabs.showjava.R;
+import com.njlabs.showjava.utils.AesCbcWithIntegrity;
+
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -30,6 +37,9 @@ public class BaseActivity extends AppCompatActivity {
     public Toolbar toolbar;
     protected SharedPreferences prefs;
     private AdView mAdView;
+    public boolean isPro = false;
+    public boolean hawkLoaded;
+    private String androidID;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -41,6 +51,8 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         baseContext = this;
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        androidID =  Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        isPro = get();
     }
 
     public void setupLayout(int layoutRef) {
@@ -65,6 +77,19 @@ public class BaseActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (title != null) {
             getSupportActionBar().setTitle(title);
+        } else {
+            if(isPro()) {
+                ActivityInfo activityInfo = null;
+                try {
+                    activityInfo = getPackageManager().getActivityInfo(getComponentName(), PackageManager.GET_META_DATA);
+                    String currentTitle = activityInfo.loadLabel(getPackageManager()).toString();
+                    if(currentTitle.trim().equals("Show Java")){
+                        getSupportActionBar().setTitle("Show Java Pro");
+                    }
+                } catch (PackageManager.NameNotFoundException ignored) {
+
+                }
+            }
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -137,8 +162,8 @@ public class BaseActivity extends AppCompatActivity {
         return status;
     }
 
-    public boolean hasPurchased(){
-        return true;
+    public boolean isPro(){
+        return isPro;
     }
     
     public boolean isLollipop() {
@@ -153,7 +178,7 @@ public class BaseActivity extends AppCompatActivity {
         mAdView = (AdView) findViewById(R.id.adView);
         if (mAdView != null) {
             mAdView.setVisibility(View.GONE);
-            if (hasPurchased()) {
+            if (!isPro()) {
                 AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
                 mAdView.setAdListener(new AdListener() {
                     @Override
@@ -175,4 +200,28 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void put(boolean val){
+        try {
+            AesCbcWithIntegrity.SecretKeys keys = new AesCbcWithIntegrity.SecretKeys(getResources().getString(R.string.cc),getResources().getString(R.string.ii));
+            AesCbcWithIntegrity.CipherTextIvMac cipherTextIvMac;
+            cipherTextIvMac = AesCbcWithIntegrity.encrypt(val ? "true" : "false", keys);
+            String ciphertextString = cipherTextIvMac.toString();
+            prefs.edit().putString(androidID,ciphertextString ).apply();
+        } catch (UnsupportedEncodingException | GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean get(){
+        try {
+            AesCbcWithIntegrity.SecretKeys keys = new AesCbcWithIntegrity.SecretKeys(getResources().getString(R.string.cc),getResources().getString(R.string.ii));
+            String plainText = AesCbcWithIntegrity.decryptString(prefs.getString(androidID,""), keys);
+            return (plainText.equals("true"));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
 }

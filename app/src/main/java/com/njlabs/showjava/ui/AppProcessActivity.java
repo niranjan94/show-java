@@ -106,7 +106,11 @@ public class AppProcessActivity extends BaseActivity {
             @Override
             public void run() {
                 if(!processStarted) {
-                    unregisterReceiver(processStatusReceiver);
+                    try {
+                        unregisterReceiver(processStatusReceiver);
+                    } catch (Exception ignored) {
+
+                    }
                     Utils.forceKillAllProcessorServices(baseContext);
                     final Intent mainIntent = new Intent(baseContext, ErrorActivity.class);
                     mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

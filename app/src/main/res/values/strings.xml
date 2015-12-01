@@ -23,7 +23,9 @@
 
     <string name="incomplete_source">An error occurred. Generated source may be incomplete.</string>
     <string name="error_exiting">Exiting with error.</string>
-    <string name="title_activity_error">Integrity Check Failed</string> <!-- Just some title ... Donno what to say :P_-->
+    <string name="title_activity_error">Integrity Check Failed</string>
+    <string name="title_activity_purchase">Get Show java Pro</string>
+    <!-- Just some title ... Donno what to say :P_-->
 
     <string-array name="decompilers">
         <item>CFR 0.110</item>

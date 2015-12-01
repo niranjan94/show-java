@@ -24,6 +24,7 @@ public class SettingsActivity extends BaseActivity {
         PrefsFragment mPrefsFragment = new PrefsFragment();
         mFragmentTransaction.replace(R.id.container, mPrefsFragment);
         mFragmentTransaction.commit();
+
     }
 
     public static class PrefsFragment extends PreferenceFragment {
