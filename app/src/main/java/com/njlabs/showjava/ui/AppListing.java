@@ -38,8 +38,8 @@ import java.util.List;
 
 public class AppListing extends BaseActivity {
 
-    ProgressDialog packageLoadDialog;
-    ListView listView = null;
+    private ProgressDialog packageLoadDialog;
+    private ListView listView = null;
     private boolean isDestroyed;
 
     @Override
@@ -72,7 +72,7 @@ public class AppListing extends BaseActivity {
         }
     }
 
-    public void setupList(ArrayList<PackageInfoHolder> AllPackages) {
+    private void setupList(ArrayList<PackageInfoHolder> AllPackages) {
         ArrayAdapter<PackageInfoHolder> aa = new ArrayAdapter<PackageInfoHolder>(getBaseContext(), R.layout.package_list_item, AllPackages) {
             @SuppressLint("InflateParams")
             @Override

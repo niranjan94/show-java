@@ -20,9 +20,9 @@ import java.security.GeneralSecurityException;
 
 public class PurchaseActivity extends BaseActivity implements BillingProcessor.IBillingHandler {
 
-    BillingProcessor bp;
-    ProgressBar progressBar;
-    LinearLayout mainLayout;
+    private BillingProcessor bp;
+    private ProgressBar progressBar;
+    private LinearLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

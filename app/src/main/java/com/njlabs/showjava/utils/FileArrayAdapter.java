@@ -18,9 +18,9 @@ import java.util.List;
 
 public class FileArrayAdapter extends ArrayAdapter<Item> {
 
-    private Context context;
-    private int id;
-    private List<Item> items;
+    private final Context context;
+    private final int id;
+    private final List<Item> items;
 
     public FileArrayAdapter(Context context, int textViewResourceId,
                             List<Item> objects) {

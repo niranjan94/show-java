@@ -15,11 +15,11 @@ import java.io.IOException;
  */
 public class SourceInfo {
 
-    public String packageLabel;
-    public String packageName;
-    public boolean hasSource;
+    private String packageLabel;
+    private String packageName;
+    private final boolean hasSource;
 
-    public SourceInfo(String packageLabel, String packageName) {
+    private SourceInfo(String packageLabel, String packageName) {
         this.packageLabel = packageLabel;
         this.packageName = packageName;
         this.hasSource = true;

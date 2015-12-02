@@ -58,18 +58,21 @@ public class AppProcessActivity extends BaseActivity {
             appNameView.setText(extras.getString("package_label"));
             packageFilePath = extras.getString("package_file_path");
 
-            try {
-                ApkParser apkParser = new ApkParser(new File(packageFilePath));
-                appNameView.setText(apkParser.getApkMeta().getLabel());
-            } catch (Exception e) {
-                Ln.e(e);
-                exitWithError();
-            }
+            if(packageFilePath != null ){
+                try {
+                    ApkParser apkParser = new ApkParser(new File(packageFilePath));
+                    appNameView.setText(apkParser.getApkMeta().getLabel());
+                } catch (Exception e) {
+                    Ln.e(e);
+                    exitWithError();
+                }
 
-            if(extras.containsKey("decompiler")){
-                decompilerToUse = extras.getString("decompiler");
+                if(extras.containsKey("decompiler")){
+                    decompilerToUse = extras.getString("decompiler");
+                }
+            } else {
+                finish();
             }
-
         } else {
             packageFilePath = (new File(URI.create(getIntent().getDataString()))).getAbsolutePath();
             if (FilenameUtils.isExtension(packageFilePath, "apk")) {

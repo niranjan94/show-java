@@ -26,7 +26,7 @@ import jadx.api.JadxDecompiler;
  */
 public class ResourcesExtractor extends ProcessServiceHelper {
 
-    ApkParser apkParser;
+    private final ApkParser apkParser;
 
     public ResourcesExtractor(ProcessService processService) {
         this.processService = processService;

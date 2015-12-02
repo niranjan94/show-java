@@ -36,9 +36,9 @@ import java.util.List;
 
 public class JavaExplorer extends BaseActivity {
 
-    ListView lv;
-    String packageID;
-    ActionBar actionBar;
+    private ListView lv;
+    private String packageID;
+    private ActionBar actionBar;
     private File currentDir;
     private FileArrayAdapter adapter;
     private String sourceDir;
@@ -169,16 +169,12 @@ public class JavaExplorer extends BaseActivity {
         }
     }
 
-    public class SourceArchiver extends AsyncTask<String, String, File> {
+    private class SourceArchiver extends AsyncTask<String, String, File> {
 
         @Override
         protected File doInBackground(String... params) {
             publishProgress("Compressing source files ...");
             return Utils.zipDir(new File(sourceDir), packageID);
-        }
-
-        public void doProgress(String progress){
-            publishProgress(progress);
         }
 
         @Override

@@ -6,7 +6,6 @@ import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
-import com.njlabs.showjava.R;
 import com.nononsenseapps.filepicker.AbstractFilePickerActivity;
 import com.nononsenseapps.filepicker.AbstractFilePickerFragment;
 
@@ -16,7 +15,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class FilePicker extends AbstractFilePickerActivity<File> {
 
-    FilePickerFragment currentFragment;
+    private FilePickerFragment currentFragment;
 
     @Override
     protected void attachBaseContext(Context newBase) {

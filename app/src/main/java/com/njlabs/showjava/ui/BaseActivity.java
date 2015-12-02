@@ -79,7 +79,7 @@ public class BaseActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(title);
         } else {
             if(isPro()) {
-                ActivityInfo activityInfo = null;
+                ActivityInfo activityInfo;
                 try {
                     activityInfo = getPackageManager().getActivityInfo(getComponentName(), PackageManager.GET_META_DATA);
                     String currentTitle = activityInfo.loadLabel(getPackageManager()).toString();
