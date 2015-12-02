@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Get Show Java Pro"
+            android:text="@string/get_pro"
             android:layout_marginTop="16dp"
             android:layout_gravity="center_horizontal"/>
 
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="No Advertisements"
+            android:text="@string/no_ads"
             android:layout_marginTop="8dp"
             android:layout_gravity="center_horizontal"/>
 
@@ -54,14 +54,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Early access to new features"
+            android:text="@string/early_access"
             android:layout_marginTop="2dp"
             android:layout_gravity="center_horizontal"/>
 
         <android.support.v7.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Buy Now via Google Play"
+            android:text="@string/buy_now"
             android:layout_marginTop="12dp"
             android:onClick="initiateBuy"
             android:layout_gravity="center_horizontal"/>

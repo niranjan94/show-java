@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Version 2.0"
+                android:text="@string/space"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="15sp" />
 
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="\@niranjan94"
+                android:text="@string/niranjan94"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </LinearLayout>
@@ -79,7 +79,7 @@
             android:layout_alignLeft="@+id/divider"
             android:layout_below="@+id/divider"
             android:layout_marginTop="5dp"
-            android:text="3rd Party Softwares"
+            android:text="@string/third_party_title"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ScrollView
@@ -100,7 +100,7 @@
                     android:id="@+id/ThirdPartySoftwaresList"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="• dex2jar\n• dexlib2\n• baksmali\n• smali\n• apache-commons-cli 1.3\n• apache-commons-io 2.4\n• guava 18.0\n• cfr 0.108\n• ANTLR 3.5.2\n• JSR-305 1.3.9"
+                    android:text="@string/third_party_list"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </LinearLayout>

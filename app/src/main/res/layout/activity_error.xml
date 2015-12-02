@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="An error has occurred"
+            android:text="@string/an_error_occured"
             android:layout_marginTop="16dp"
             android:layout_gravity="center_horizontal"/>
 
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Goto to Application settings"
+            android:text="@string/goto_app_settings"
             android:layout_marginTop="8dp"
             android:layout_gravity="center_horizontal"/>
 
@@ -43,14 +43,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Clear cache and data to fix"
+            android:text="@string/clear_cache_data"
             android:layout_marginTop="2dp"
             android:layout_gravity="center_horizontal"/>
 
         <android.support.v7.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Open application settings"
+            android:text="@string/open_app_settings"
             android:layout_marginTop="12dp"
             android:onClick="openAppInfoPage"
             android:layout_gravity="center_horizontal"/>

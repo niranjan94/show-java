@@ -15,14 +15,14 @@
         android:id="@+id/pkg_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" "
+        android:text="@string/space"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/pkg_dir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" "
+        android:text="@string/space"
         android:visibility="gone" />
 
 
@@ -39,7 +39,7 @@
             android:id="@+id/pkg_name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Amrita Info Desk v2"
+            android:text="@string/space"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -47,7 +47,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingTop="2dp"
-            android:text="Version 1.2b"
+            android:text="@string/space"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </LinearLayout>

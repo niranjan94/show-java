@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text="Name"
+            android:text="@string/space"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="123 kb" />
+            android:text="@string/space" />
 
     </LinearLayout>
 
