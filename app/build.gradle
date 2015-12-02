@@ -138,6 +138,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'uk.com.robust-it:cloning:1.9.2'
     compile files('libs/android-5.1-clst-core.jar')
+    compile 'com.intellij:annotations:+@jar'
 
     compile 'com.anjlab.android.iab.v3:library:1.0.+@aar'
 }

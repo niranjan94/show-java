@@ -1,7 +1,8 @@
 package jadx.core.clsp;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jadx.core.dex.nodes.ClassNode;
+import jadx.core.utils.exceptions.DecodeException;
+import jadx.core.utils.exceptions.JadxRuntimeException;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -12,9 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import jadx.core.dex.nodes.ClassNode;
-import jadx.core.utils.exceptions.DecodeException;
-import jadx.core.utils.exceptions.JadxRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Classes hierarchy graph
@@ -73,7 +73,7 @@ public class ClspGraph {
 		}
 		NClass cls = nameMap.get(implClsName);
 		if (cls == null) {
-			LOG.debug("Missing class: " + implClsName);
+			LOG.debug("Missing class: {}", implClsName);
 			return null;
 		}
 		if (isImplements(clsName, implClsName)) {
@@ -104,7 +104,7 @@ public class ClspGraph {
 		}
 		NClass cls = nameMap.get(clsName);
 		if (cls == null) {
-			LOG.debug("Missing class: " + clsName);
+			LOG.debug("Missing class: {}", clsName);
 			return Collections.emptySet();
 		}
 		result = new HashSet<String>();

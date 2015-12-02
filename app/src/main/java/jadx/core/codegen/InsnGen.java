@@ -1,17 +1,5 @@
 package jadx.core.codegen;
 
-import android.support.annotation.Nullable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import jadx.core.dex.attributes.AFlag;
 import jadx.core.dex.attributes.AType;
 import jadx.core.dex.attributes.nodes.FieldReplaceAttr;
@@ -53,6 +41,17 @@ import jadx.core.utils.RegionUtils;
 import jadx.core.utils.StringUtils;
 import jadx.core.utils.exceptions.CodegenException;
 import jadx.core.utils.exceptions.JadxRuntimeException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InsnGen {
 	private static final Logger LOG = LoggerFactory.getLogger(InsnGen.class);
@@ -511,7 +510,18 @@ public class InsnGen {
 			case NEW_INSTANCE:
 				// only fallback - make new instance in constructor invoke
 				fallbackOnlyInsn(insn);
-				code.add("new " + insn.getResult().getType());
+				code.add("new ").add(insn.getResult().getType().toString());
+				break;
+
+			case PHI:
+			case MERGE:
+				fallbackOnlyInsn(insn);
+				code.add(insn.getType().toString()).add("(");
+				for (InsnArg insnArg : insn.getArguments()) {
+					addArg(code, insnArg);
+					code.add(' ');
+				}
+				code.add(")");
 				break;
 
 			default:

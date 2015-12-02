@@ -1,17 +1,5 @@
 package jadx.core.dex.nodes;
 
-import android.support.annotation.Nullable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import jadx.api.IJadxArgs;
 import jadx.api.ResourceFile;
 import jadx.api.ResourceType;
@@ -22,8 +10,20 @@ import jadx.core.utils.ErrorsCounter;
 import jadx.core.utils.exceptions.DecodeException;
 import jadx.core.utils.exceptions.JadxException;
 import jadx.core.utils.files.InputFile;
+import jadx.core.xmlgen.ResContainer;
 import jadx.core.xmlgen.ResTableParser;
 import jadx.core.xmlgen.ResourceStorage;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RootNode {
 	private static final Logger LOG = LoggerFactory.getLogger(RootNode.class);
@@ -75,7 +75,7 @@ public class RootNode {
 		try {
 			ResourcesLoader.decodeStream(arsc, new ResourcesLoader.ResourceDecoder() {
 				@Override
-				public Object decode(long size, InputStream is) throws IOException {
+				public ResContainer decode(long size, InputStream is) throws IOException {
 					parser.decode(is);
 					return null;
 				}

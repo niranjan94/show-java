@@ -1,22 +1,5 @@
 package jadx.core.dex.nodes;
 
-import android.support.annotation.Nullable;
-
-import com.android.dex.ClassData.Method;
-import com.android.dex.Code;
-import com.android.dex.Code.CatchHandler;
-import com.android.dex.Code.Try;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import jadx.core.dex.attributes.AFlag;
 import jadx.core.dex.attributes.AType;
 import jadx.core.dex.attributes.nodes.JumpInfo;
@@ -43,6 +26,23 @@ import jadx.core.dex.trycatch.TryCatchBlock;
 import jadx.core.utils.Utils;
 import jadx.core.utils.exceptions.DecodeException;
 import jadx.core.utils.exceptions.JadxRuntimeException;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.android.dex.ClassData.Method;
+import com.android.dex.Code;
+import com.android.dex.Code.CatchHandler;
+import com.android.dex.Code.Try;
 
 public class MethodNode extends LineAttrNode implements ILoadable {
 	private static final Logger LOG = LoggerFactory.getLogger(MethodNode.class);
@@ -554,14 +554,24 @@ public class MethodNode extends LineAttrNode implements ILoadable {
 		return debugInfoOffset;
 	}
 
-	public SSAVar makeNewSVar(int regNum, int[] versions, RegisterArg arg) {
-		SSAVar var = new SSAVar(regNum, versions[regNum], arg);
-		versions[regNum]++;
+	public SSAVar makeNewSVar(int regNum, int version, @NotNull RegisterArg assignArg) {
+		SSAVar var = new SSAVar(regNum, version, assignArg);
 		if (sVars.isEmpty()) {
 			sVars = new ArrayList<SSAVar>();
 		}
 		sVars.add(var);
 		return var;
+	}
+
+	public int getNextSVarVersion(int regNum) {
+		int v = -1;
+		for (SSAVar sVar : sVars) {
+			if (sVar.getRegNum() == regNum) {
+				v = Math.max(v, sVar.getVersion());
+			}
+		}
+		v++;
+		return v;
 	}
 
 	public void removeSVar(SSAVar var) {

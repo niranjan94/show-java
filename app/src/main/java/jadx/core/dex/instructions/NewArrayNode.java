@@ -5,11 +5,13 @@ import jadx.core.dex.instructions.args.InsnArg;
 import jadx.core.dex.instructions.args.RegisterArg;
 import jadx.core.dex.nodes.InsnNode;
 
+import org.jetbrains.annotations.NotNull;
+
 public class NewArrayNode extends InsnNode {
 
 	private final ArgType arrType;
 
-	public NewArrayNode(ArgType arrType, RegisterArg res, InsnArg size) {
+	public NewArrayNode(@NotNull ArgType arrType, RegisterArg res, InsnArg size) {
 		super(InsnType.NEW_ARRAY, 1);
 		this.arrType = arrType;
 		setResult(res);

@@ -1,12 +1,13 @@
 package jadx.core.dex.instructions.args;
 
-import android.support.annotation.Nullable;
+import jadx.core.dex.attributes.AttrNode;
+import jadx.core.dex.instructions.PhiInsn;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jadx.core.dex.attributes.AttrNode;
-import jadx.core.dex.instructions.PhiInsn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SSAVar extends AttrNode {
 
@@ -17,6 +18,7 @@ public class SSAVar extends AttrNode {
 	private int startUseAddr;
 	private int endUseAddr;
 
+	@NotNull
 	private RegisterArg assign;
 	private final List<RegisterArg> useList = new ArrayList<RegisterArg>(2);
 	@Nullable
@@ -25,7 +27,7 @@ public class SSAVar extends AttrNode {
 	private ArgType type;
 	private boolean typeImmutable;
 
-	public SSAVar(int regNum, int v, RegisterArg assign) {
+	public SSAVar(int regNum, int v, @NotNull RegisterArg assign) {
 		this.regNum = regNum;
 		this.version = v;
 		this.assign = assign;
@@ -83,11 +85,12 @@ public class SSAVar extends AttrNode {
 		return version;
 	}
 
+	@NotNull
 	public RegisterArg getAssign() {
 		return assign;
 	}
 
-	public void setAssign(RegisterArg assign) {
+	public void setAssign(@NotNull RegisterArg assign) {
 		this.assign = assign;
 	}
 

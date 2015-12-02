@@ -1,10 +1,12 @@
 package jadx.core.xmlgen;
 
+import jadx.api.ResourcesLoader;
 import jadx.core.codegen.CodeWriter;
 import jadx.core.dex.instructions.args.ArgType;
 import jadx.core.dex.nodes.DexNode;
 import jadx.core.dex.nodes.FieldNode;
 import jadx.core.dex.nodes.RootNode;
+import jadx.core.utils.StringUtils;
 import jadx.core.utils.exceptions.JadxRuntimeException;
 import jadx.core.xmlgen.entry.ValuesParser;
 
@@ -32,6 +34,7 @@ public class BinaryXMLParser extends CommonBinaryParser {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BinaryXMLParser.class);
 	private static final String ANDROID_R_STYLE_CLS = "android.R$style";
+	private static final boolean ATTR_NEW_LINE = false;
 
 	private CodeWriter writer;
 	private String[] strings;
@@ -74,29 +77,37 @@ public class BinaryXMLParser extends CommonBinaryParser {
 			resNames = root.getResourcesNames();
 
 			attributes = new ManifestAttributes();
-			attributes.parse();
+			attributes.parseAll();
 		} catch (Exception e) {
 			throw new JadxRuntimeException("BinaryXMLParser init error", e);
 		}
 	}
 
 	public synchronized CodeWriter parse(InputStream inputStream) throws IOException {
+		is = new ParserStream(inputStream);
+		if (!isBinaryXml()) {
+			return ResourcesLoader.loadToCodeWriter(inputStream);
+		}
 		writer = new CodeWriter();
 		writer.add("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-		is = new ParserStream(inputStream);
 		firstElement = true;
 		decode();
 		writer.finish();
 		return writer;
 	}
 
+	private boolean isBinaryXml() throws IOException {
+		is.mark(4);
+		int v = is.readInt16(); // version
+		int h = is.readInt16(); // header size
+		if (v == 0x0003 && h == 0x0008) {
+			return true;
+		}
+		is.reset();
+		return false;
+	}
+
 	void decode() throws IOException {
-		if (is.readInt16() != 0x0003) {
-			die("Version is not 3");
-		}
-		if (is.readInt16() != 0x0008) {
-			die("Size of header is not 8");
-		}
 		int size = is.readInt32();
 		while (is.getPos() < size) {
 			int type = is.readInt16();
@@ -113,6 +124,9 @@ public class BinaryXMLParser extends CommonBinaryParser {
 					break;
 				case RES_XML_START_NAMESPACE_TYPE:
 					parseNameSpace();
+					break;
+				case RES_XML_CDATA_TYPE:
+					parseCData();
 					break;
 				case RES_XML_END_NAMESPACE_TYPE:
 					parseNameSpaceEnd();
@@ -172,6 +186,27 @@ public class BinaryXMLParser extends CommonBinaryParser {
 		nsURI = strings[endURI];
 	}
 
+	private void parseCData() throws IOException {
+		if (is.readInt16() != 0x10) {
+			die("CDATA header is not 0x10");
+		}
+		if (is.readInt32() != 0x1C) {
+			die("CDATA header chunk is not 0x1C");
+		}
+		int lineNumber = is.readInt32();
+		is.skip(4);
+
+		int strIndex = is.readInt32();
+		String str = strings[strIndex];
+
+		writer.startLine().addIndent();
+		writer.attachSourceLine(lineNumber);
+		writer.add(StringUtils.escapeXML(str.trim())); // TODO: wrap into CDATA for easier reading
+
+		int size = is.readInt16();
+		is.skip(size - 2);
+	}
+
 	private void parseElement() throws IOException {
 		if (firstElement) {
 			firstElement = false;
@@ -187,12 +222,13 @@ public class BinaryXMLParser extends CommonBinaryParser {
 		int comment = is.readInt32();
 		int startNS = is.readInt32();
 		int startNSName = is.readInt32(); // actually is elementName...
-		if (!wasOneLiner && !"ERROR".equals(currentTag) && !currentTag.equals(strings[startNSName])) {
+		if (!wasOneLiner && !"ERROR".equals(currentTag)
+				&& !currentTag.equals(strings[startNSName])) {
 			writer.add(">");
 		}
 		wasOneLiner = false;
 		currentTag = strings[startNSName];
-		writer.startLine("<").add(strings[startNSName]);
+		writer.startLine("<").add(currentTag);
 		writer.attachSourceLine(elementBegLineNumber);
 		int attributeStart = is.readInt16();
 		if (attributeStart != 0x14) {
@@ -206,22 +242,16 @@ public class BinaryXMLParser extends CommonBinaryParser {
 		int idIndex = is.readInt16();
 		int classIndex = is.readInt16();
 		int styleIndex = is.readInt16();
-		if ("manifest".equals(strings[startNSName])) {
-			writer.add(" xmlns:\"").add(nsURI).add("\"");
+		if ("manifest".equals(currentTag) || writer.getIndent() == 0) {
+			writer.add(" xmlns:android=\"").add(nsURI).add("\"");
 		}
-		if (attributeCount > 0) {
-			writer.add(" ");
-		}
+		boolean attrNewLine = attributeCount == 1 ? false : ATTR_NEW_LINE;
 		for (int i = 0; i < attributeCount; i++) {
-			parseAttribute(i);
-			writer.add('"');
-			if (i + 1 < attributeCount) {
-				writer.add(" ");
-			}
+			parseAttribute(i, attrNewLine);
 		}
 	}
 
-	private void parseAttribute(int i) throws IOException {
+	private void parseAttribute(int i, boolean newLine) throws IOException {
 		int attributeNS = is.readInt32();
 		int attributeName = is.readInt32();
 		int attributeRawValue = is.readInt32();
@@ -234,10 +264,16 @@ public class BinaryXMLParser extends CommonBinaryParser {
 		}
 		int attrValDataType = is.readInt8();
 		int attrValData = is.readInt32();
+
+		String attrName = strings[attributeName];
+		if (newLine) {
+			writer.startLine().addIndent();
+		} else {
+			writer.add(' ');
+		}
 		if (attributeNS != -1) {
 			writer.add(nsPrefix).add(':');
 		}
-		String attrName = strings[attributeName];
 		writer.add(attrName).add("=\"");
 		String decodedAttr = attributes.decode(attrName, attrValData);
 		if (decodedAttr != null) {
@@ -245,6 +281,7 @@ public class BinaryXMLParser extends CommonBinaryParser {
 		} else {
 			decodeAttribute(attributeNS, attrValDataType, attrValData);
 		}
+		writer.add('"');
 	}
 
 	private void decodeAttribute(int attributeNS, int attrValDataType, int attrValData) {
@@ -261,7 +298,11 @@ public class BinaryXMLParser extends CommonBinaryParser {
 				FieldNode field = localStyleMap.get(attrValData);
 				if (field != null) {
 					String cls = field.getParentClass().getShortName().toLowerCase();
-					writer.add("@").add(cls).add("/").add(field.getName());
+					writer.add("@");
+					if ("id".equals(cls)) {
+						writer.add('+');
+					}
+					writer.add(cls).add("/").add(field.getName());
 				} else {
 					String resName = resNames.get(attrValData);
 					if (resName != null) {
