@@ -111,7 +111,7 @@ public class JavaExtractor extends ProcessServiceHelper {
                     JadxDecompiler jadx = new JadxDecompiler();
                     jadx.setOutputDir(javaOutputDir);
                     jadx.loadFile(dexInputFile);
-                    jadx.save();
+                    jadx.saveSources();
                 } catch (Exception | StackOverflowError e) {
                     Ln.e(e);
                     javaError = true;

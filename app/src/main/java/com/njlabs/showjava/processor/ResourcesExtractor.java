@@ -59,7 +59,7 @@ public class ResourcesExtractor extends ProcessServiceHelper {
                     JadxDecompiler jadx = new JadxDecompiler();
                     jadx.setOutputDir(resDir);
                     jadx.loadFile(new File(packageFilePath));
-                    jadx.save(false, true);
+                    jadx.saveResources();
 
                     ZipFile zipFile = new ZipFile(packageFilePath);
                     Enumeration<? extends ZipEntry> entries = zipFile.entries();
