@@ -49,10 +49,8 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
             TextView fileSizeView = (TextView) v.findViewById(R.id.file_size);
 
             ImageView fileIconView = (ImageView) v.findViewById(R.id.file_icon);
-            String uri = "drawable/" + o.getImage();
-            int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
-            //noinspection deprecation
-            Drawable image = context.getResources().getDrawable(imageResource);
+
+            Drawable image = context.getResources().getDrawable(o.getImage());
 
             if (FilenameUtils.getExtension(o.getPath()).equals("png") || FilenameUtils.getExtension(o.getPath()).equals("jpg")) {
                 image = Drawable.createFromPath(o.getPath());

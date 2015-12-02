@@ -8,9 +8,9 @@ public class Item implements Comparable<Item> {
     private String data;
     private String date;
     private String path;
-    private String image;
+    private int image;
 
-    public Item(String n, String d, String dt, String p, String img) {
+    public Item(String n, String d, String dt, String p, int img) {
         name = n;
         data = d;
         date = dt;
@@ -34,7 +34,7 @@ public class Item implements Comparable<Item> {
         return path;
     }
 
-    public String getImage() {
+    public int getImage() {
         return image;
     }
 

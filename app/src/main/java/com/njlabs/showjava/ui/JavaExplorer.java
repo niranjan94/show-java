@@ -97,18 +97,18 @@ public class JavaExplorer extends BaseActivity {
                     String num_item = String.valueOf(buf);
                     if (buf == 0) num_item = num_item + " item";
                     else num_item = num_item + " items";
-                    dir.add(new Item(ff.getName(), num_item, date_modify, ff.getAbsolutePath(), "viewer_folder"));
+                    dir.add(new Item(ff.getName(), num_item, date_modify, ff.getAbsolutePath(), R.drawable.viewer_folder));
                 } else {
                     String extension = FilenameUtils.getExtension(ff.getName());
                     String fileSize = StringUtils.humanReadableByteCount(ff.length(), true);
                     if (extension.equalsIgnoreCase("java")) {
-                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), "viewer_java"));
+                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), R.drawable.viewer_java));
                     } else if (extension.equalsIgnoreCase("xml")) {
-                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), "viewer_xml"));
+                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), R.drawable.viewer_xml));
                     } else if (extension.equalsIgnoreCase("txt")) {
-                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), "viewer_summary"));
+                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(),R.drawable.viewer_summary));
                     } else if (extension.equalsIgnoreCase("png") | extension.equalsIgnoreCase("jpg")) {
-                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), "viewer_image"));
+                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), R.drawable.viewer_image));
                     }
                 }
             }
@@ -120,14 +120,14 @@ public class JavaExplorer extends BaseActivity {
         dir.addAll(fls);
 
         if (!f.equals(new File(sourceDir)))
-            dir.add(0, new Item("..", "Parent Directory", "", f.getParent(), "directory_up"));
+            dir.add(0, new Item("..", "Parent Directory", "", f.getParent(), R.drawable.directory_up));
 
         adapter = new FileArrayAdapter(JavaExplorer.this, R.layout.java_explorer_list_item, dir);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Item o = adapter.getItem(position);
-                if (o.getImage().equalsIgnoreCase("viewer_folder") || o.getImage().equalsIgnoreCase("directory_up")) {
+                if (o.getImage() == R.drawable.viewer_folder || o.getImage() == R.drawable.directory_up) {
                     currentDir = new File(o.getPath());
                     fill(currentDir);
                 } else {

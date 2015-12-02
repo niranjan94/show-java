@@ -26,7 +26,7 @@ props.each { key, val ->
 
 def versionMajor = 2
 def versionMinor = 0
-def versionPatch = 8
+def versionPatch = 85
 def versionBuild = 10
 
 android {
