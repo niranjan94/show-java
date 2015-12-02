@@ -1,29 +1,38 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<!doctype html>
+<html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Show Java by niranjan94</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
   <body>
-    <section class="page-header">
-      <h1 class="project-name">Show Java</h1>
-      <h2 class="project-tagline">An apk decompiler for android</h2>
-      <a href="https://github.com/niranjan94/show-java" class="btn">View on GitHub</a>
-      <a href="https://github.com/niranjan94/show-java/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/niranjan94/show-java/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+    <div class="wrapper">
+      <header>
+        <h1>Show Java</h1>
+        <p>An apk decompiler for android</p>
 
-    <section class="main-content">
-      <p><a href="https://travis-ci.org/niranjan94/show-java"><img src="https://img.shields.io/travis/niranjan94/show-java.svg?style=flat-square" alt="Build Status"></a> <a href="https://github.com/niranjan94/show-java"><img src="https://img.shields.io/badge/license-Apache_License_2.0-blue.svg?style=flat-square" alt="License Info"></a> <a href="https://play.google.com/store/apps/details?id=com.njlabs.showjava"><img src="https://img.shields.io/badge/Play_Store-v2.0.4-36B0C1.svg?style=flat-square" alt="Play Store Info"></a> <a href="https://github.com/niranjan94/show-java"><img src="https://img.shields.io/badge/GitHub-v2.0.4-yellow.svg?style=flat-square" alt="GitHub app version"></a></p>
+        <p class="view"><a href="https://github.com/niranjan94/show-java">View the Project on GitHub <small>niranjan94/show-java</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/niranjan94/show-java/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/niranjan94/show-java/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/niranjan94/show-java">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p><a href="https://travis-ci.org/niranjan94/show-java"><img src="https://img.shields.io/travis/niranjan94/show-java.svg?style=flat-square" alt="Build Status"></a> <a href="https://github.com/niranjan94/show-java"><img src="https://img.shields.io/badge/license-Apache_License_2.0-blue.svg?style=flat-square" alt="License Info"></a> <a href="https://play.google.com/store/apps/details?id=com.njlabs.showjava"><img src="https://img.shields.io/badge/Play_Store-v2.0.7-36B0C1.svg?style=flat-square" alt="Play Store Info"></a> <a href="https://github.com/niranjan94/show-java"><img src="https://img.shields.io/badge/GitHub-v2.0.7-yellow.svg?style=flat-square" alt="GitHub app version"></a> <a href="https://play.google.com/store/apps/details?id=com.njlabs.showjava"><img src="https://img.shields.io/badge/downloads-109k%20total-E04253.svg?style=flat-square" alt="Play Store downloads"></a></p>
 
 <p><img src="https://raw.githubusercontent.com/niranjan94/show-java/master/banner.png" alt="ShowJava Banner v0.1"></p>
 
-<p>An apk decompiler for android. Build on Android Studio 1.4 Beta with gradle 2.4.</p>
+<p>An apk decompiler for android. Built on Android Studio 1.5 with gradle 2.8</p>
 
 <blockquote>
 <p>The current GitHub master branch may be ahead of the Play Store version (and could be unstable/incomplete/buggy at some places)</p>
@@ -40,24 +49,24 @@
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
 
 <ul>
-<li>Select either <strong>CFR 0.102</strong> or <strong>JaDX 0.6.1</strong> to use as the decompiler (more to come)</li>
-<li>Runs directly on an android device (4.x and above)</li>
-<li>Select apk from sdcard (or) from a list of installed applications</li>
-<li>Easy to use</li>
-<li>Decompiles resources too (layouts, Drawables, Menus, AndroidManifest, image assets)</li>
-<li>Displays code in a clean-syntax-highlighted form</li>
-<li>The decompiled source can easily be copied from the sdcard (source is stored in ShowJava folder in the sdcard)</li>
-<li>Simple source browser with a summary of all decompilation errors</li>
-<li>Each decompiled source file has commented references to classes that could not be decompiled</li>
-<li>Share the decompiled source easily with the built in archive + share mechanism</li>
+<li>Select either <strong>CFR 0.110</strong> or <strong>JaDX 0.6.1</strong> to use as the decompiler (more to come).</li>
+<li>Runs directly on an android device (4.x and above).</li>
+<li>Select apk from sdcard (or) from a list of installed applications.</li>
+<li>Easy to use.</li>
+<li>Decompiles resources too (layouts, Drawables, Menus, AndroidManifest, image assets).</li>
+<li>Displays code in a clean-syntax-highlighted form.</li>
+<li>The decompiled source can easily be copied from the sdcard (source is stored in ShowJava folder in the sdcard).</li>
+<li>Simple source browser with a summary of all decompilation errors.</li>
+<li>Each decompiled source file has commented references to classes that could not be decompiled.</li>
+<li>Share the decompiled source easily with the built in archive + share mechanism.</li>
 </ul>
 
 <h2>
-<a id="know-issues" class="anchor" href="#know-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Know Issues</h2>
+<a id="known-issues" class="anchor" href="#known-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Known Issues</h2>
 
 <ol>
-<li>Does not work with system applications in most of the phones (especially ones that are not de-odexed)</li>
-<li>java.lang.OutOfMemoryError crashes when decompiling large apps on a mobile phone with low ram and Java VM Heap space.</li>
+<li>Does not work with system applications in most of the phones (especially ones that are not de-odexed).</li>
+<li>Slow on phones with single core processors.</li>
 </ol>
 
 <h2>
@@ -74,7 +83,7 @@
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+You may obtain a copy of the License at : 
 
 http://www.apache.org/licenses/LICENSE-2.0
 
@@ -90,23 +99,21 @@ limitations under the License.
 
 <ol>
 <li>A Big-Huge Thanks to Lee Benfield (<a href="mailto:lee@benf.org">lee@benf.org</a>) for his awesome CFR - Class File Reader</li>
-<li>Panxiaobo (<a href="mailto:pxb1988@gmail.com">pxb1988@gmail.com</a>) for dex2jar</li>
+<li>Panxiaobo (<a href="mailto:pxb1988@gmail.com">pxb1988@gmail.com</a>) for dex2jar.</li>
 <li>
-<a href="https://github.com/xiaxiaocao">Liu Dong</a> for apk-parser</li>
+<a href="https://github.com/xiaxiaocao">Liu Dong</a> for apk-parser.</li>
 <li>
-<a href="https://github.com/JesusFreke/">Ben Gruver</a> for dexlib2</li>
+<a href="https://github.com/JesusFreke/">Ben Gruver</a> for dexlib2.</li>
 <li>
-<a href="https://github.com/skylot">skylot</a> for JaDX </li>
+<a href="https://github.com/skylot">skylot</a> for JaDX.</li>
 </ol>
-
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/niranjan94/show-java">Show Java</a> is maintained by <a href="https://github.com/niranjan94">niranjan94</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/niranjan94">niranjan94</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
-
-    </section>
-
-  
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
   </body>
 </html>
