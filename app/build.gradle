@@ -82,6 +82,15 @@ android {
     lintOptions {
         abortOnError false
     }
+    productFlavors {
+        standard {
+            buildConfigField "boolean", "is_travis", "false"
+        }
+
+        travis {
+            buildConfigField "boolean", "is_travis", "true"
+        }
+    }
 }
 
 dependencies {
