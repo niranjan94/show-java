@@ -53,6 +53,9 @@
 
 -keep class com.crashlytics.** { *; }
 -keep class com.crashlytics.android.**
+-keep class org.jetbrains.java.decompiler.** { *; }
+-keep class org.jetbrains.java.decompiler.**
+
 -keepattributes SourceFile,LineNumberTable
 
 -keep public class * extends java.lang.Exception
@@ -76,3 +79,4 @@
 -dontwarn io.**
 -dontwarn jadx.**
 -dontwarn java.**
+-dontwarn org.jetbrains.java.decompiler.**
