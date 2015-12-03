@@ -169,6 +169,7 @@ public final class JadxDecompiler {
 				executor.execute(new Runnable() {
 					@Override
 					public void run() {
+                        LOG.info("Processing "+cls.getFullName());
 						cls.decompile();
 						SaveCode.save(outDir, args, cls.getClassNode());
 					}
