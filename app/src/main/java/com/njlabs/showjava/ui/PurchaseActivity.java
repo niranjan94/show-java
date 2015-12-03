@@ -45,12 +45,6 @@ public class PurchaseActivity extends BaseActivity implements BillingProcessor.I
             finish();
         }
 
-        if(Verify.good(baseContext)) {
-            Toast.makeText(baseContext, "Good", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(baseContext, "Bad", Toast.LENGTH_SHORT).show();
-        }
-
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 
