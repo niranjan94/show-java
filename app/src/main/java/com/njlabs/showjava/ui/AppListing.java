@@ -45,7 +45,7 @@ public class AppListing extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupLayout(R.layout.activity_app_listing, "Show Java");
+        setupLayout(R.layout.activity_app_listing, "Show Java"+(isPro()?" Pro":""));
 
         listView = (ListView) findViewById(R.id.list);
 
@@ -270,13 +270,14 @@ public class AppListing extends BaseActivity {
 
     private void showDecompilerSelection(final ViewHolder holder){
         if(!prefs.getBoolean("hide_decompiler_select", false)){
-            final CharSequence[] items = { "CFR 0.102", "JaDX 0.6.1" };
+            final CharSequence[] items = getResources().getTextArray(R.array.decompilers);
+            final CharSequence[] itemsVals = getResources().getTextArray(R.array.decompilers_values);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Pick a decompiler");
             builder.setItems(items, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int item) {
-                    openProcessActivity(holder, (item==1?"jadx":"cfr"));
+                    openProcessActivity(holder, itemsVals[item].toString());
                 }
             });
             AlertDialog alert = builder.create();

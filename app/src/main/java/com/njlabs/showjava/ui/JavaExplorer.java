@@ -20,7 +20,7 @@ import com.njlabs.showjava.R;
 import com.njlabs.showjava.modals.Item;
 import com.njlabs.showjava.utils.FileArrayAdapter;
 import com.njlabs.showjava.utils.StringUtils;
-import com.njlabs.showjava.utils.Utils;
+import com.njlabs.showjava.utils.ZipUtils;
 import com.njlabs.showjava.utils.logging.Ln;
 
 import org.apache.commons.io.FileUtils;
@@ -174,7 +174,7 @@ public class JavaExplorer extends BaseActivity {
         @Override
         protected File doInBackground(String... params) {
             publishProgress("Compressing source files ...");
-            return Utils.zipDir(new File(sourceDir), packageID);
+            return ZipUtils.zipDir(new File(sourceDir), packageID);
         }
 
         @Override

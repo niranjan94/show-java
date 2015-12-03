@@ -42,6 +42,12 @@ public class JarExtractor extends ProcessServiceHelper {
         this.sourceOutputDir = processService.sourceOutputDir;
         this.javaSourceOutputDir = processService.javaSourceOutputDir;
         ignoredLibs = new ArrayList<>();
+
+        //////
+        printStream = new PrintStream(new ProgressStream());
+        System.setErr(printStream);
+        System.setOut(printStream);
+        //////
     }
 
     public void extract() {
@@ -52,7 +58,7 @@ public class JarExtractor extends ProcessServiceHelper {
             public void run() {
                 loadIgnoredLibs();
                 apkToDex();
-                if(processService.decompilerToUse.equals("cfr")){
+                if(processService.decompilerToUse.equals("cfr") || processService.decompilerToUse.equals("fernflower")){
                     dexToJar();
                 }
                 startJavaExtractor();
@@ -102,11 +108,7 @@ public class JarExtractor extends ProcessServiceHelper {
             UIHandler.post(new ToastRunnable("The app you selected cannot be decompiled. Please select another app."));
         }
 
-        //////
-        PrintStream printStream = new PrintStream(new ProgressStream());
-        System.setErr(printStream);
-        System.setOut(printStream);
-        //////
+
     }
 
     private void dexToJar() {

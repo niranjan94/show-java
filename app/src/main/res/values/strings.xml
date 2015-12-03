@@ -48,14 +48,17 @@
     <string name="tap_plus">tap the plus button to begin</string>
     <string name="third_party_title">3rd Party Softwares</string>
     <string name="third_party_list">• dex2jar\n• dexlib2\n• baksmali\n• smali\n• apache-commons-cli 1.3\n• apache-commons-io 2.4\n• guava 18.0\n• cfr 0.110\n• ANTLR 3.5.2\n• JSR-305 1.3.9\n• JaDX 0.6.1</string>
+    <string name="loading_installed_app">Loading installed applications...</string>
 
     <string-array name="decompilers">
         <item>CFR 0.110</item>
         <item>JaDX 0.6.1</item>
+        <item>Fernflower</item>
     </string-array>
 
     <string-array name="decompilers_values">
         <item>cfr</item>
         <item>jadx</item>
+        <item>fernflower</item>
     </string-array>
 </resources>

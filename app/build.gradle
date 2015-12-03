@@ -143,4 +143,7 @@ dependencies {
 
     // IN-APP PURCHASE LIBRARY v3
     compile 'com.anjlab.android.iab.v3:library:1.0.+@aar'
+
+    // FERNFLOWER
+    compile files('libs/fernflower.jar')
 }
