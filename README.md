@@ -13,7 +13,7 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 ## Features ##
 
-- Select either **CFR 0.110** or **JaDX 0.6.1** to use as the decompiler (more to come).
+- Select either **CFR 0.110**, **JaDX 0.6.1** or **FernFlower (analytical decompiler)** to use as the decompiler (more to come).
 - Runs directly on an android device (4.x and above).
 - Select apk from sdcard (or) from a list of installed applications.
 - Easy to use.
@@ -57,3 +57,4 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 3. [Liu Dong](https://github.com/xiaxiaocao) for apk-parser.
 4. [Ben Gruver](https://github.com/JesusFreke/) for dexlib2.
 5. [skylot](https://github.com/skylot) for JaDX.
+6. [JetBrains](https://github.com/JetBrains) for FernFlower analytical decompiler.

@@ -71,7 +71,7 @@ public class JavaExtractor extends ProcessServiceHelper {
                 break;
 
             case "fernflower":
-                decompileWithFernflower(jarInputFile, javaOutputDir);
+                decompileWithFernFlower(jarInputFile, javaOutputDir);
                 break;
         }
 
@@ -151,7 +151,7 @@ public class JavaExtractor extends ProcessServiceHelper {
         javaExtractionThread.start();
     }
 
-    private void decompileWithFernflower(final File jarInputFile, final File javaOutputDir){
+    private void decompileWithFernFlower(final File jarInputFile, final File javaOutputDir){
 
         ThreadGroup group = new ThreadGroup("Jar 2 Java Group");
         Thread javaExtractionThread = new Thread(group, new Runnable() {
