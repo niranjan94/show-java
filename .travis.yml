@@ -28,6 +28,7 @@ addons:
 script:
   - rm settings.gradle
   - mv travis.gradle settings.gradle
+  - sed -i -e 's/apl\'/apl_clone\'/g' app/build.gradle
   - touch app/extra.gradle
   - printf 'GooglePlayLicenseKey="GooglePlayLicenseKey"\nIapProductKey="IapProductKey"\ncc="cc"\nii="ii"' > app/keys.properties
   - MALLOC_ARENA_MAX=1
