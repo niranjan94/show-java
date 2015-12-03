@@ -155,4 +155,7 @@ dependencies {
 
     // FERNFLOWER
     compile files('libs/fernflower.jar')
+
+    travisCompile project(':apl_clone')
+    standardCompile project(':apl')
 }

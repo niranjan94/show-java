@@ -26,8 +26,10 @@ addons:
     - ia32-libs-multiarch
 
 script:
+  - rm settings.gradle
+  - mv travis.gradle settings.gradle
   - touch app/extra.gradle
   - printf 'GooglePlayLicenseKey="GooglePlayLicenseKey"\nIapProductKey="IapProductKey"\ncc="cc"\nii="ii"' > app/keys.properties
   - MALLOC_ARENA_MAX=1
   - chmod a+x gradlew
-  - ./gradlew clean assembleDebug --stacktrace
+  - ./gradlew clean assembleTravisDebug --stacktrace
