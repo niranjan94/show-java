@@ -29,6 +29,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.TransactionDetails;
+import com.crashlytics.android.Crashlytics;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
@@ -40,8 +43,10 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.njlabs.showjava.BuildConfig;
 import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.R;
+import com.njlabs.showjava.utils.AesCbcWithIntegrity;
 import com.njlabs.showjava.utils.SourceInfo;
 import com.njlabs.showjava.utils.Utils;
+import com.njlabs.showjava.utils.Verify;
 import com.njlabs.showjava.utils.logging.Ln;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 
@@ -50,17 +55,22 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @SuppressWarnings("unused")
-public class Landing extends BaseActivity {
+public class Landing extends BaseActivity  implements BillingProcessor.IBillingHandler{
 
     private static final int FILE_PICKER = 0;
 
     private LinearLayout welcomeLayout;
     private ListView listView;
+
+    private BillingProcessor bp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +104,26 @@ public class Landing extends BaseActivity {
         if(!isPro()) {
             drawerItems.add(new DividerDrawerItem());
             drawerItems.add(new PrimaryDrawerItem().withName("Get Show Java Pro").withIcon(R.mipmap.ic_logo_plain).withCheckable(false));
+        } else {
+            if(!Verify.good(baseContext)){
+                put(false);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(baseContext, R.style.AlertDialog);
+                alertDialog.setCancelable(false);
+                alertDialog.setMessage("Show Java Pro has been disabled. Either you have Lucky Patcher (or) Freedom (or) the apk has been tampered with. If you have really purchased Pro, please fix the above mentioned errors to get the purchase restored.");
+                alertDialog.setPositiveButton("I Understand", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Toast.makeText(baseContext, "Thanks for understanding ... :)", Toast.LENGTH_LONG).show();
+                    }
+                });
+                alertDialog.setNegativeButton("I'm a Pirate", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(baseContext, "Well... I'm not :)", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                });
+                alertDialog.show();
+            }
         }
 
         Drawer result = new DrawerBuilder()
@@ -137,6 +167,15 @@ public class Landing extends BaseActivity {
         }
 
 
+        try {
+
+            AesCbcWithIntegrity.SecretKeys keys = new AesCbcWithIntegrity.SecretKeys(getResources().getString(R.string.cc),getResources().getString(R.string.ii));
+            String plainText = AesCbcWithIntegrity.decryptString(BuildConfig.GOOGLE_PLAY_LICENSE_KEY, keys);
+            bp = new BillingProcessor(this, plainText, this);
+
+        } catch (GeneralSecurityException | UnsupportedEncodingException e) {
+            Crashlytics.logException(e);
+        }
     }
 
     public void initHistoryLoader(){
@@ -280,6 +319,8 @@ public class Landing extends BaseActivity {
                     }
                 }
             }
+        } else {
+            bp.handleActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -404,5 +445,44 @@ public class Landing extends BaseActivity {
             }
 
         }
+    }
+
+    @Override
+    public void onBillingInitialized() {
+        bp.loadOwnedPurchasesFromGoogle();
+    }
+
+    @Override
+    public void onProductPurchased(String productId, TransactionDetails transactionDetails) {
+
+    }
+
+    @Override
+    public void onBillingError(int i, Throwable throwable) {
+        Ln.e(throwable);
+    }
+
+    @Override
+    public void onPurchaseHistoryRestored() {
+        try {
+            TransactionDetails transactionDetails = bp.getPurchaseTransactionDetails(BuildConfig.IAP_PRODUCT_ID);
+            if(transactionDetails.productId.equals(BuildConfig.IAP_PRODUCT_ID)) {
+                if(Verify.good(baseContext)) {
+                    put(true);
+                    Toast.makeText(this, "Thank you for purchasing Show Java Pro :)", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                put(false);
+            }
+        } catch (Exception ignored) {
+            put(false);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (bp != null)
+            bp.release();
+        super.onDestroy();
     }
 }
