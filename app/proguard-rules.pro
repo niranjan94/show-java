@@ -55,6 +55,9 @@
 -keep class org.jetbrains.java.decompiler.** { *; }
 -keep class org.jetbrains.java.decompiler.**
 
+-keep class cz.msebera.android.httpclient.** { *; }
+-keep class com.loopj.android.http.** { *; }
+
 -keepattributes SourceFile,LineNumberTable
 
 -keep public class * extends java.lang.Exception

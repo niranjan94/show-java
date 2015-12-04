@@ -26,7 +26,7 @@ props.each { key, val ->
 
 def versionMajor = 2
 def versionMinor = 1
-def versionPatch = 0
+def versionPatch = 1
 def versionBuild = 2
 
 android {
@@ -155,6 +155,8 @@ dependencies {
 
     // FERNFLOWER
     compile files('libs/fernflower.jar')
+
+    compile 'com.loopj.android:android-async-http:1.4.9'
 
     travisCompile project(':apl_clone')
     standardCompile project(':apl')

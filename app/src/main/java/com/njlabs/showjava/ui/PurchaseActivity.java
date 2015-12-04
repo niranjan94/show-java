@@ -13,13 +13,22 @@ import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.Constants;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.crashlytics.android.Crashlytics;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.njlabs.showjava.BuildConfig;
 import com.njlabs.showjava.R;
 import com.njlabs.showjava.utils.AesCbcWithIntegrity;
 import com.njlabs.showjava.utils.Verify;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+
+import cz.msebera.android.httpclient.Header;
+import xyz.codezero.apl.SV;
 
 public class PurchaseActivity extends BaseActivity implements BillingProcessor.IBillingHandler {
 
@@ -33,8 +42,13 @@ public class PurchaseActivity extends BaseActivity implements BillingProcessor.I
 
         setupLayout(R.layout.activity_purchase);
 
-        try {
+        if(!checkDataConnection()) {
+            Toast.makeText(this,"Internet connection is required to purchase",Toast.LENGTH_LONG).show();
+            finish();
+        }
 
+
+        try {
             AesCbcWithIntegrity.SecretKeys keys = new AesCbcWithIntegrity.SecretKeys(getResources().getString(R.string.cc),getResources().getString(R.string.ii));
             String plainText = AesCbcWithIntegrity.decryptString(BuildConfig.GOOGLE_PLAY_LICENSE_KEY, keys);
             bp = new BillingProcessor(this, plainText, this);
@@ -47,7 +61,6 @@ public class PurchaseActivity extends BaseActivity implements BillingProcessor.I
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
-
 
         if(!Verify.good(baseContext)){
             put(false);
@@ -83,14 +96,48 @@ public class PurchaseActivity extends BaseActivity implements BillingProcessor.I
     }
 
     @Override
-    public void onProductPurchased(String productId, TransactionDetails transactionDetails) {
-        if(transactionDetails.productId.equals(BuildConfig.IAP_PRODUCT_ID)) {
-            put(true);
-            Toast.makeText(this, "Thank you for purchasing Show Java Pro :)", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(baseContext, Landing.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+    public void onProductPurchased(String productId, final TransactionDetails transactionDetails) {
+        if(transactionDetails.productId.equals(BuildConfig.IAP_PRODUCT_ID) && transactionDetails.productId.equals(productId) && productId.equals(BuildConfig.IAP_PRODUCT_ID)) {
+
+            AsyncHttpClient client = new AsyncHttpClient();
+            RequestParams params = new RequestParams();
+
+            params.put("payload", SV.gen(baseContext,transactionDetails.purchaseToken));
+            params.put("order_id", transactionDetails.orderId);
+
+            client.post(com.njlabs.showjava.Constants.VERIFICATION_URL, params,
+                    new JsonHttpResponseHandler() {
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                if(response.has("status") && response.getString("status").equals("ok")) {
+                                    if(response.has("payload")){
+                                        if(SV.good(baseContext,response.getString("payload"),transactionDetails.purchaseToken)){
+                                            showPurchased();
+                                        } else {
+                                            showError();
+                                        }
+                                    } else {
+                                        showError();
+                                    }
+                                } else {
+                                    showError();
+                                }
+                            } catch (JSONException e) {
+                                showError();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            if(checkDataConnection()) {
+                                Toast.makeText(baseContext, "An error occurred while verifying your purchase.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(baseContext, "Lost internet connection while verifying your purchase.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }
     }
 
@@ -113,20 +160,67 @@ public class PurchaseActivity extends BaseActivity implements BillingProcessor.I
 
     @Override
     public void onPurchaseHistoryRestored() {
+        Toast.makeText(baseContext, "Checking if you have already bought Pro :)", Toast.LENGTH_SHORT).show();
+        progressBar.setVisibility(View.VISIBLE);
+        mainLayout.setVisibility(View.GONE);
+
         try {
-            TransactionDetails transactionDetails = bp.getPurchaseTransactionDetails(BuildConfig.IAP_PRODUCT_ID);
+            final TransactionDetails transactionDetails = bp.getPurchaseTransactionDetails(BuildConfig.IAP_PRODUCT_ID);
             if(transactionDetails.productId.equals(BuildConfig.IAP_PRODUCT_ID)) {
-                put(true);
-                Toast.makeText(this, "Thank you for purchasing Show Java Pro :)", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(baseContext, Landing.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
+
+                AsyncHttpClient client = new AsyncHttpClient();
+                RequestParams params = new RequestParams();
+
+                params.put("payload", SV.gen(baseContext,transactionDetails.purchaseToken));
+                params.put("order_id", transactionDetails.orderId);
+
+                client.post(com.njlabs.showjava.Constants.VERIFICATION_URL, params,
+                        new JsonHttpResponseHandler() {
+
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                try {
+                                    if (response.has("status") && response.getString("status").equals("ok")) {
+                                        if (response.has("payload")) {
+                                            if (SV.good(baseContext,response.getString("payload"),transactionDetails.purchaseToken)) {
+                                                showPurchased();
+                                            } else {
+                                                showError();
+                                            }
+                                        } else {
+                                            showError();
+                                        }
+                                    } else {
+                                        showError();
+                                    }
+                                } catch (JSONException e) {
+                                    showError();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                progressBar.setVisibility(View.GONE);
+                                mainLayout.setVisibility(View.VISIBLE);
+
+                                if(checkDataConnection()) {
+                                    Toast.makeText(baseContext, "An error occurred while restoring your purchases.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(baseContext, "Lost internet connection while restoring your purchases.", Toast.LENGTH_SHORT).show();
+                                }
+
+
+                            }
+                        });
             } else {
                 put(false);
+                progressBar.setVisibility(View.GONE);
+                mainLayout.setVisibility(View.VISIBLE);
             }
         } catch (Exception ignored) {
             put(false);
+            progressBar.setVisibility(View.GONE);
+            mainLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -141,5 +235,21 @@ public class PurchaseActivity extends BaseActivity implements BillingProcessor.I
         if (bp != null)
             bp.release();
         super.onDestroy();
+    }
+
+    public void showPurchased() {
+        put(true);
+        Toast.makeText(this, "Thank you for purchasing Show Java Pro :)", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(baseContext, Landing.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    public void showError() {
+        progressBar.setVisibility(View.GONE);
+        mainLayout.setVisibility(View.VISIBLE);
+
+        Toast.makeText(this, "Your purchase could not be verified.", Toast.LENGTH_SHORT).show();
     }
 }

@@ -32,6 +32,9 @@ import android.widget.Toast;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.crashlytics.android.Crashlytics;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
@@ -52,6 +55,8 @@ import com.nononsenseapps.filepicker.FilePickerActivity;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +64,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
+import xyz.codezero.apl.SV;
 
 
 @SuppressWarnings("unused")
@@ -449,7 +457,9 @@ public class Landing extends BaseActivity  implements BillingProcessor.IBillingH
 
     @Override
     public void onBillingInitialized() {
-        bp.loadOwnedPurchasesFromGoogle();
+        if(!isPro()) {
+            bp.loadOwnedPurchasesFromGoogle();
+        }
     }
 
     @Override
@@ -465,12 +475,44 @@ public class Landing extends BaseActivity  implements BillingProcessor.IBillingH
     @Override
     public void onPurchaseHistoryRestored() {
         try {
-            TransactionDetails transactionDetails = bp.getPurchaseTransactionDetails(BuildConfig.IAP_PRODUCT_ID);
+            final TransactionDetails transactionDetails = bp.getPurchaseTransactionDetails(BuildConfig.IAP_PRODUCT_ID);
             if(transactionDetails.productId.equals(BuildConfig.IAP_PRODUCT_ID)) {
-                if(Verify.good(baseContext)) {
-                    put(true);
-                    Toast.makeText(this, "Thank you for purchasing Show Java Pro :)", Toast.LENGTH_SHORT).show();
-                }
+
+                AsyncHttpClient client = new AsyncHttpClient();
+                RequestParams params = new RequestParams();
+
+                params.put("payload", SV.gen(baseContext,transactionDetails.purchaseToken));
+                params.put("order_id", transactionDetails.orderId);
+
+                client.post(com.njlabs.showjava.Constants.VERIFICATION_URL, params,
+                        new JsonHttpResponseHandler() {
+
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                try {
+                                    if (response.has("status") && response.getString("status").equals("ok")) {
+                                        if (response.has("payload")) {
+                                            if (SV.good(baseContext, response.getString("payload"), transactionDetails.purchaseToken)) {
+                                                showPurchased();
+                                            } else {
+                                                showError();
+                                            }
+                                        } else {
+                                            showError();
+                                        }
+                                    } else {
+                                        showError();
+                                    }
+                                } catch (JSONException e) {
+                                    showError();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                Ln.e(throwable);
+                            }
+                        });
             } else {
                 put(false);
             }
@@ -485,4 +527,15 @@ public class Landing extends BaseActivity  implements BillingProcessor.IBillingH
             bp.release();
         super.onDestroy();
     }
+
+    public void showError() {
+        Toast.makeText(this, "Your purchase could not be verified.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void showPurchased() {
+        put(true);
+        Toast.makeText(this, "Thank you for purchasing Show Java Pro :)", Toast.LENGTH_SHORT).show();
+    }
+
+
 }

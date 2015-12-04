@@ -108,17 +108,19 @@ public class AppProcessActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(!processStarted) {
-                    try {
-                        unregisterReceiver(processStatusReceiver);
-                    } catch (Exception ignored) {
+                if(!fromNotification()) {
+                    if(!processStarted) {
+                        try {
+                            unregisterReceiver(processStatusReceiver);
+                        } catch (Exception ignored) {
 
+                        }
+                        Utils.forceKillAllProcessorServices(baseContext);
+                        final Intent mainIntent = new Intent(baseContext, ErrorActivity.class);
+                        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(mainIntent);
+                        finish();
                     }
-                    Utils.forceKillAllProcessorServices(baseContext);
-                    final Intent mainIntent = new Intent(baseContext, ErrorActivity.class);
-                    mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(mainIntent);
-                    finish();
                 }
             }
         }, 5000);

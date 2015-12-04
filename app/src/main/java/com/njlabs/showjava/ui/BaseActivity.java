@@ -151,7 +151,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private boolean checkDataConnection() {
+    public boolean checkDataConnection() {
         boolean status = false;
         ConnectivityManager connectivityMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityMgr.getActiveNetworkInfo() != null &&
