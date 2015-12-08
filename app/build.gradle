@@ -151,7 +151,7 @@ dependencies {
     compile 'com.intellij:annotations:+@jar'
 
     // IN-APP PURCHASE LIBRARY v3
-    compile 'com.anjlab.android.iab.v3:library:1.0.+@aar'
+    compile 'com.anjlab.android.iab.v3:library:1.0.+'
 
     // FERNFLOWER
     compile files('libs/fernflower.jar')
