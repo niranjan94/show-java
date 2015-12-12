@@ -31,7 +31,7 @@ import java.util.List;
 @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
 public class JarExtractor extends ProcessServiceHelper {
 
-    private ArrayList<String> ignoredLibs;
+    private final ArrayList<String> ignoredLibs;
 
     public JarExtractor(ProcessService processService) {
         this.processService = processService;
@@ -42,6 +42,12 @@ public class JarExtractor extends ProcessServiceHelper {
         this.sourceOutputDir = processService.sourceOutputDir;
         this.javaSourceOutputDir = processService.javaSourceOutputDir;
         ignoredLibs = new ArrayList<>();
+
+        //////
+        printStream = new PrintStream(new ProgressStream());
+        System.setErr(printStream);
+        System.setOut(printStream);
+        //////
     }
 
     public void extract() {
@@ -52,7 +58,7 @@ public class JarExtractor extends ProcessServiceHelper {
             public void run() {
                 loadIgnoredLibs();
                 apkToDex();
-                if(processService.decompilerToUse.equals("cfr")){
+                if(!processService.decompilerToUse.equals("jadx")){
                     dexToJar();
                 }
                 startJavaExtractor();
@@ -64,7 +70,7 @@ public class JarExtractor extends ProcessServiceHelper {
         extractionThread.start();
     }
 
-    public void apkToDex() {
+    private void apkToDex() {
         DexFile dexFile = null;
         try {
             dexFile = DexFileFactory.loadDexFile(packageFilePath, 19);
@@ -102,14 +108,10 @@ public class JarExtractor extends ProcessServiceHelper {
             UIHandler.post(new ToastRunnable("The app you selected cannot be decompiled. Please select another app."));
         }
 
-        //////
-        PrintStream printStream = new PrintStream(new ProgressStream());
-        System.setErr(printStream);
-        System.setOut(printStream);
-        //////
+
     }
 
-    public void dexToJar() {
+    private void dexToJar() {
         Log.i("STATUS", "Jar Extraction Started");
 
         broadcastStatus("dex2jar");
@@ -187,7 +189,7 @@ public class JarExtractor extends ProcessServiceHelper {
         return false;
     }
 
-    class DexExceptionHandlerMod implements DexExceptionHandler {
+    private class DexExceptionHandlerMod implements DexExceptionHandler {
         @Override
         public void handleFileException(Exception e) {
             Ln.d("Dex2Jar Exception " + e);

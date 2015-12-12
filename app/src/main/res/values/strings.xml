@@ -1,27 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="action_settings">Settings</string>
+    
     <string name="title_activity_app_process">Decompile with Show Java</string>
     <string name="title_activity_java_explorer">Java Explorer</string>
     <string name="title_activity_source_viewer">Source Viewer</string>
-    <string name="crash_toast_text">Unfortunately Show Java has Crashed. A report has automatically been sent to the developer.</string>
     <string name="title_activity_landing">@string/app_name</string>
-    <string name="title_activity_about">About</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="folder">Folder</string>
-    <string name="parentDirectory">Parent Directory</string>
-    <string name="fileSize">File Size</string>
-    <string name="currentDir">Current Dir</string>
+    <string name="title_activity_about">@string/about</string>
+    <string name="title_activity_settings">@string/settings</string>
     <string name="title_activity_image_resource_viewer">Image Resource Viewer</string>
 
+    <string name="decompiler_initialise_error">There was an error initialising the decompiler with the app you selected.</string>
+
+    <string name="status_starting_decompiler">Starting Decompiler</string>
+    <string name="status_processing">Processing …</string>
+    <string name="status_optimising_dex">Optimising dex file</string>
+    <string name="status_optimising_dex_finish">Finishing optimisation</string>
+    <string name="status_merging_classes">Merging classes</string>
+    <string name="status_dex2jar">Decompiling dex to jar</string>
+    <string name="status_jar2java">Decompiling to java</string>
+    <string name="status_extracting_res">Extracting Resources</string>
+
+    <string name="incomplete_source">An error occurred. Generated source may be incomplete.</string>
+    <string name="error_exiting">Exiting with error.</string>
+    <string name="title_activity_error">Integrity Check Failed</string>
+    <string name="title_activity_purchase">Get Show java Pro</string>
+    <string name="report_a_bug">Report a Bug</string>
+    <string name="about">About</string>
+    <string name="settings">Settings</string>
+    <string name="invert_background_color">Invert Background Color</string>
+    <string name="zip_and_share">Zip and share</string>
+    <string name="delete_source">Delete Source</string>
+    <string name="pick_app_to_explore">Pick an app to explore</string>
+    <string name="space"> </string>
+    <string name="waiting_for_app">Waiting for App</string>
+    <string name="processing">Processing</string>
+    <string name="getting_ready">Getting Ready</string>
+    <string name="an_error_occured">An error has occurred</string>
+    <string name="goto_app_settings">Goto to Application settings</string>
+    <string name="clear_cache_data">Clear cache and data to fix</string>
+    <string name="open_app_settings">Open application settings</string>
+    <string name="get_pro">Get Show Java Pro</string>
+    <string name="no_ads">No Advertisements</string>
+    <string name="early_access">Early access to new features</string>
+    <string name="buy_now">Buy Now via Google Play</string>
+    <string name="niranjan94">\@niranjan94</string>
+    <string name="welcome">Welcome</string>
+    <string name="tap_plus">tap the plus button to begin</string>
+    <string name="third_party_title">3rd Party Softwares</string>
+    <string name="third_party_list">• dex2jar\n• dexlib2\n• baksmali\n• smali\n• apache-commons-cli 1.3\n• apache-commons-io 2.4\n• guava 18.0\n• cfr 0.110\n• ANTLR 3.5.2\n• JSR-305 1.3.9\n• JaDX 0.6.1\n• FernFlower</string>
+    <string name="loading_installed_app">Loading installed applications…</string>
+
     <string-array name="decompilers">
-        <item>CFR 0.102</item>
+        <item>CFR 0.110</item>
         <item>JaDX 0.6.1</item>
+        <item>FernFlower (analytical decompiler)</item>
     </string-array>
 
     <string-array name="decompilers_values">
         <item>cfr</item>
         <item>jadx</item>
+        <item>fernflower</item>
     </string-array>
 </resources>

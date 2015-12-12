@@ -38,14 +38,14 @@
                     android:id="@+id/history_item_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Large Text"
+                    android:text="@string/space"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
                     android:id="@+id/history_item_package"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Subtext"
+                    android:text="@string/space"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </LinearLayout>

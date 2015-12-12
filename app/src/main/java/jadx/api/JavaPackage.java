@@ -1,9 +1,8 @@
 package jadx.api;
 
-import android.support.annotation.NonNull;
-
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 
 public final class JavaPackage implements JavaNode, Comparable<JavaPackage> {
 	private final String name;
@@ -45,7 +44,7 @@ public final class JavaPackage implements JavaNode, Comparable<JavaPackage> {
 	}
 
 	@Override
-	public int compareTo(@NonNull JavaPackage o) {
+	public int compareTo(@NotNull JavaPackage o) {
 		return name.compareTo(o.name);
 	}
 

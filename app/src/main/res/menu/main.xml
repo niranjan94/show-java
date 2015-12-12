@@ -4,26 +4,26 @@
     <item
         android:id="@+id/bug_report_option"
         android:orderInCategory="1"
-        android:title="Report a Bug"
+        android:title="@string/report_a_bug"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/about_option"
         android:orderInCategory="2"
-        android:title="About"
+        android:title="@string/about"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/settings_option"
         android:orderInCategory="2"
-        android:title="Settings"
+        android:title="@string/settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/invert_colors"
         android:icon="@drawable/ic_action_invert_colors"
         android:orderInCategory="2"
-        android:title="Invert Background Color"
+        android:title="@string/invert_background_color"
         android:visible="false"
         app:showAsAction="always" />
 

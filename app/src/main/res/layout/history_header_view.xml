@@ -11,6 +11,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
         android:layout_marginTop="6dp"
-        android:text="Pick an app to explore"
+        android:text="@string/pick_app_to_explore"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 </LinearLayout>

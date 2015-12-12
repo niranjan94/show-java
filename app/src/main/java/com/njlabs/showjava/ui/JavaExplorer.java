@@ -20,7 +20,7 @@ import com.njlabs.showjava.R;
 import com.njlabs.showjava.modals.Item;
 import com.njlabs.showjava.utils.FileArrayAdapter;
 import com.njlabs.showjava.utils.StringUtils;
-import com.njlabs.showjava.utils.Utils;
+import com.njlabs.showjava.utils.ZipUtils;
 import com.njlabs.showjava.utils.logging.Ln;
 
 import org.apache.commons.io.FileUtils;
@@ -36,9 +36,9 @@ import java.util.List;
 
 public class JavaExplorer extends BaseActivity {
 
-    ListView lv;
-    String packageID;
-    ActionBar actionBar;
+    private ListView lv;
+    private String packageID;
+    private ActionBar actionBar;
     private File currentDir;
     private FileArrayAdapter adapter;
     private String sourceDir;
@@ -63,7 +63,6 @@ public class JavaExplorer extends BaseActivity {
                 fill(currentDir);
             } else {
                 finish();
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
         }
 
@@ -98,18 +97,18 @@ public class JavaExplorer extends BaseActivity {
                     String num_item = String.valueOf(buf);
                     if (buf == 0) num_item = num_item + " item";
                     else num_item = num_item + " items";
-                    dir.add(new Item(ff.getName(), num_item, date_modify, ff.getAbsolutePath(), "viewer_folder"));
+                    dir.add(new Item(ff.getName(), num_item, date_modify, ff.getAbsolutePath(), R.drawable.viewer_folder));
                 } else {
                     String extension = FilenameUtils.getExtension(ff.getName());
                     String fileSize = StringUtils.humanReadableByteCount(ff.length(), true);
                     if (extension.equalsIgnoreCase("java")) {
-                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), "viewer_java"));
+                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), R.drawable.viewer_java));
                     } else if (extension.equalsIgnoreCase("xml")) {
-                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), "viewer_xml"));
+                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), R.drawable.viewer_xml));
                     } else if (extension.equalsIgnoreCase("txt")) {
-                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), "viewer_summary"));
+                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(),R.drawable.viewer_summary));
                     } else if (extension.equalsIgnoreCase("png") | extension.equalsIgnoreCase("jpg")) {
-                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), "viewer_image"));
+                        fls.add(new Item(ff.getName(), fileSize, date_modify, ff.getAbsolutePath(), R.drawable.viewer_image));
                     }
                 }
             }
@@ -121,14 +120,14 @@ public class JavaExplorer extends BaseActivity {
         dir.addAll(fls);
 
         if (!f.equals(new File(sourceDir)))
-            dir.add(0, new Item("..", "Parent Directory", "", f.getParent(), "directory_up"));
+            dir.add(0, new Item("..", "Parent Directory", "", f.getParent(), R.drawable.directory_up));
 
         adapter = new FileArrayAdapter(JavaExplorer.this, R.layout.java_explorer_list_item, dir);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Item o = adapter.getItem(position);
-                if (o.getImage().equalsIgnoreCase("viewer_folder") || o.getImage().equalsIgnoreCase("directory_up")) {
+                if (o.getImage() == R.drawable.viewer_folder || o.getImage() == R.drawable.directory_up) {
                     currentDir = new File(o.getPath());
                     fill(currentDir);
                 } else {
@@ -144,13 +143,11 @@ public class JavaExplorer extends BaseActivity {
             i.putExtra("file_path", o.getPath());
             i.putExtra("package_id", packageID);
             startActivity(i);
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         } else {
             Intent i = new Intent(getApplicationContext(), SourceViewer.class);
             i.putExtra("file_path", o.getPath());
             i.putExtra("package_id", packageID);
             startActivity(i);
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
     }
 
@@ -172,16 +169,12 @@ public class JavaExplorer extends BaseActivity {
         }
     }
 
-    public class SourceArchiver extends AsyncTask<String, String, File> {
+    private class SourceArchiver extends AsyncTask<String, String, File> {
 
         @Override
         protected File doInBackground(String... params) {
             publishProgress("Compressing source files ...");
-            return Utils.zipDir(new File(sourceDir), packageID);
-        }
-
-        public void doProgress(String progress){
-            publishProgress(progress);
+            return ZipUtils.zipDir(new File(sourceDir), packageID);
         }
 
         @Override
@@ -209,7 +202,6 @@ public class JavaExplorer extends BaseActivity {
             Intent returnIntent = new Intent();
             setResult(RESULT_CANCELED, returnIntent);
             finish();
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
     }
 
@@ -233,7 +225,6 @@ public class JavaExplorer extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
 
             case R.id.action_delete:
@@ -247,7 +238,6 @@ public class JavaExplorer extends BaseActivity {
                 }
                 Toast.makeText(baseContext, "The source code has been deleted from sdcard", Toast.LENGTH_SHORT).show();
                 finish();
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 return true;
 
             case R.id.action_share:

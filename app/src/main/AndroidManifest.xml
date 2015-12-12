@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:name="com.njlabs.showjava.MainApplication"
@@ -91,6 +92,15 @@
             android:name=".processor.ProcessService"
             android:exported="false"
             android:process=":service" />
+
+        <activity
+            android:name=".ui.ErrorActivity"
+            android:label="@string/title_activity_error"/>
+
+        <activity
+            android:name=".ui.PurchaseActivity"
+            android:label="@string/title_activity_purchase"/>
+
 
     </application>
 

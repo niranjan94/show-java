@@ -1,9 +1,12 @@
+/apl
 /captures
 #built application files
 *.apk
 *.ap_
 
 /releases
+/local.properties
+/app/keys.properties
 # files for the dex VM
 *.dex
 
@@ -15,7 +18,7 @@ bin/
 gen/
 
 # Local configuration file (sdk path, etc)
-local.properties
+/app/extra.gradle
 
 # Windows thumbnail db
 Thumbs.db

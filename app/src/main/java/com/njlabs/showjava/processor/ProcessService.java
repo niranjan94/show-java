@@ -45,12 +45,12 @@ public class ProcessService extends Service {
 
     public Handler UIHandler;
 
-    public Notify processNotify;
+    private Notify processNotify;
     public ApkParser apkParser;
 
     public String decompilerToUse = "cfr";
 
-    public int startID;
+    private int startID;
 
     public void onCreate() {
         super.onCreate();
@@ -106,7 +106,7 @@ public class ProcessService extends Service {
         return START_NOT_STICKY;
     }
 
-    protected void handleIntent(Intent workIntent) {
+    private void handleIntent(Intent workIntent) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         STACK_SIZE = Integer.valueOf(prefs.getString("thread_stack_size", String.valueOf(20 * 1024 * 1024)));
@@ -345,14 +345,14 @@ public class ProcessService extends Service {
         return null;
     }
 
-    public void kill() {
+    private void kill() {
         stopForeground(true);
         stopSelf();
     }
 
     private class ToastRunnable implements Runnable {
 
-        String mText;
+        final String mText;
 
         public ToastRunnable(String text) {
             mText = text;

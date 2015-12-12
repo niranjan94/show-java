@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 import jadx.core.Jadx;
 import jadx.core.ProcessClass;
 import jadx.core.codegen.CodeGen;
-import jadx.core.codegen.CodeWriter;
 import jadx.core.dex.nodes.ClassNode;
 import jadx.core.dex.nodes.FieldNode;
 import jadx.core.dex.nodes.MethodNode;
@@ -30,6 +29,7 @@ import jadx.core.utils.exceptions.JadxException;
 import jadx.core.utils.exceptions.JadxRuntimeException;
 import jadx.core.utils.files.InputFile;
 import jadx.core.xmlgen.BinaryXMLParser;
+import jadx.core.xmlgen.ResourcesSaver;
 
 /**
  * Jadx API usage example:
@@ -69,7 +69,7 @@ public final class JadxDecompiler {
 	private Map<FieldNode, JavaField> fieldsMap = new HashMap<FieldNode, JavaField>();
 
 	public JadxDecompiler() {
-		this(new DefaultJadxArgs());
+		this(new JadxArgs());
 	}
 
 	public JadxDecompiler(IJadxArgs jadxArgs) {
@@ -86,7 +86,7 @@ public final class JadxDecompiler {
 
 	void init() {
 		if (outDir == null) {
-			outDir = new DefaultJadxArgs().getOutDir();
+			outDir = new JadxArgs().getOutDir();
 		}
 		this.passes = Jadx.getPassesList(args, outDir);
 		this.codeGen = new CodeGen(args);
@@ -116,7 +116,12 @@ public final class JadxDecompiler {
 		inputFiles.clear();
 		for (File file : files) {
 			try {
-				inputFiles.add(new InputFile(file));
+				InputFile inputFile = new InputFile(file);
+				inputFiles.add(inputFile);
+				while (inputFile.nextDexIndex != -1) {
+					inputFile = new InputFile(file, inputFile.nextDexIndex);
+					inputFiles.add(inputFile);
+				}
 			} catch (IOException e) {
 				throw new JadxException("Error load file: " + file, e);
 			}
@@ -136,7 +141,7 @@ public final class JadxDecompiler {
 		save(false, true);
 	}
 
-    public void save(boolean saveSources, boolean saveResources) {
+	private void save(boolean saveSources, boolean saveResources) {
 		try {
 			ExecutorService ex = getSaveExecutor(saveSources, saveResources);
 			ex.shutdown();
@@ -150,12 +155,12 @@ public final class JadxDecompiler {
 		return getSaveExecutor(!args.isSkipSources(), !args.isSkipResources());
 	}
 
-	private ExecutorService getSaveExecutor(boolean saveSources, boolean saveResources) {
+	private ExecutorService getSaveExecutor(boolean saveSources, final boolean saveResources) {
 		if (root == null) {
 			throw new JadxRuntimeException("No loaded files");
 		}
 		int threadsCount = args.getThreadsCount();
-		LOG.debug("processing threads count: " + threadsCount);
+		LOG.debug("processing threads count: {}", threadsCount);
 
 		LOG.info("processing ...");
 		ExecutorService executor = Executors.newFixedThreadPool(threadsCount);
@@ -164,8 +169,8 @@ public final class JadxDecompiler {
 				executor.execute(new Runnable() {
 					@Override
 					public void run() {
+                        LOG.info("Processing "+cls.getFullName());
 						cls.decompile();
-                        LOG.info("Processing " + cls.getFullName());
 						SaveCode.save(outDir, args, cls.getClassNode());
 					}
 				});
@@ -173,18 +178,7 @@ public final class JadxDecompiler {
 		}
 		if (saveResources) {
 			for (final ResourceFile resourceFile : getResources()) {
-				executor.execute(new Runnable() {
-					@Override
-					public void run() {
-						if (ResourceType.isSupportedForUnpack(resourceFile.getType())) {
-							CodeWriter cw = resourceFile.getContent();
-							if (cw != null) {
-								cw.save(new File(outDir, resourceFile.getName()));
-                                LOG.info("Processing " + resourceFile.getName());
-							}
-						}
-					}
-				});
+				executor.execute(new ResourcesSaver(outDir, resourceFile));
 			}
 		}
 		return executor;
@@ -283,7 +277,7 @@ public final class JadxDecompiler {
 			try {
 				pass.init(root);
 			} catch (Exception e) {
-				LOG.error("Visitor init failed: " + pass.getClass().getSimpleName() , e);
+				LOG.error("Visitor init failed: {}", pass.getClass().getSimpleName(), e);
 			}
 		}
 	}
@@ -296,7 +290,7 @@ public final class JadxDecompiler {
 		return root;
 	}
 
-	BinaryXMLParser getXmlParser() {
+	synchronized BinaryXMLParser getXmlParser() {
 		if (xmlParser == null) {
 			xmlParser = new BinaryXMLParser(root);
 		}
@@ -323,4 +317,5 @@ public final class JadxDecompiler {
 	public String toString() {
 		return "jadx decompiler " + getVersion();
 	}
+
 }

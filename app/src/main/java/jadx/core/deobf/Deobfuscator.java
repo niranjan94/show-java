@@ -1,20 +1,5 @@
 package jadx.core.deobf;
 
-import android.support.annotation.Nullable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
 import jadx.api.IJadxArgs;
 import jadx.core.dex.attributes.AType;
 import jadx.core.dex.attributes.nodes.SourceFileAttr;
@@ -27,6 +12,21 @@ import jadx.core.dex.nodes.DexNode;
 import jadx.core.dex.nodes.FieldNode;
 import jadx.core.dex.nodes.MethodNode;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Deobfuscator {
 	private static final Logger LOG = LoggerFactory.getLogger(Deobfuscator.class);
 
@@ -36,7 +36,7 @@ public class Deobfuscator {
 	public static final String INNER_CLASS_SEPARATOR = "$";
 
 	private final IJadxArgs args;
-
+	@NotNull
 	private final List<DexNode> dexNodes;
 	private final DeobfPresets deobfPresets;
 
@@ -59,7 +59,7 @@ public class Deobfuscator {
 	private int fldIndex = 0;
 	private int mthIndex = 0;
 
-	public Deobfuscator(IJadxArgs args, List<DexNode> dexNodes, File deobfMapFile) {
+	public Deobfuscator(IJadxArgs args, @NotNull List<DexNode> dexNodes, File deobfMapFile) {
 		this.args = args;
 		this.dexNodes = dexNodes;
 

@@ -24,6 +24,7 @@ public class SettingsActivity extends BaseActivity {
         PrefsFragment mPrefsFragment = new PrefsFragment();
         mFragmentTransaction.replace(R.id.container, mPrefsFragment);
         mFragmentTransaction.commit();
+
     }
 
     public static class PrefsFragment extends PreferenceFragment {
@@ -38,7 +39,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
 
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private static final Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();

@@ -18,4 +18,6 @@ public final class Constants {
         String STOP_PROCESS_FOR_NEW = "com.njlabs.showjava.process.action.STOP_FOR_NEW";
     }
 
+    public static final String VERIFICATION_URL = "https://api.codezero.xyz/com.njlabs.showjava/iap/verify/";
+
 }

@@ -58,9 +58,19 @@ public class ResTableParser extends CommonBinaryParser {
 		resStorage.finish();
 	}
 
-	public CodeWriter decodeToCodeWriter(InputStream inputStream) throws IOException {
+	public ResContainer decodeFiles(InputStream inputStream) throws IOException {
 		decode(inputStream);
 
+		ValuesParser vp = new ValuesParser(strings, resStorage.getResourcesNames());
+		ResXmlGen resGen = new ResXmlGen(resStorage, vp);
+
+		ResContainer res = ResContainer.multiFile("res");
+		res.setContent(makeDump());
+		res.getSubFiles().addAll(resGen.makeResourcesXml());
+		return res;
+	}
+
+	public CodeWriter makeDump() throws IOException {
 		CodeWriter writer = new CodeWriter();
 		writer.add("app package: ").add(resStorage.getAppPackage());
 		writer.startLine();
@@ -159,12 +169,8 @@ public class ResTableParser extends CommonBinaryParser {
 	}
 
 	private void parseTypeChunk(long start, PackageChunk pkg) throws IOException {
-		int headerSize = is.readInt16();
-		if (headerSize != 0x34 && headerSize != 0x38 && headerSize != 0x44) {
-			die("Unexpected type header size: 0x" + Integer.toHexString(headerSize));
-		}
-		/*int size =*/
-		is.readInt32();
+		/*int headerSize = */ is.readInt16();
+		/*int size = */ is.readInt32();
 
 		int id = is.readInt8();
 		is.checkInt8(0, "type chunk, res0");

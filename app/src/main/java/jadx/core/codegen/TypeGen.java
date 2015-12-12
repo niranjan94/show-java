@@ -1,13 +1,13 @@
 package jadx.core.codegen;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jadx.core.dex.instructions.args.ArgType;
 import jadx.core.dex.instructions.args.PrimitiveType;
 import jadx.core.utils.StringUtils;
 import jadx.core.utils.Utils;
 import jadx.core.utils.exceptions.JadxRuntimeException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TypeGen {
 	private static final Logger LOG = LoggerFactory.getLogger(TypeGen.class);
@@ -63,7 +63,7 @@ public class TypeGen {
 			case OBJECT:
 			case ARRAY:
 				if (lit != 0) {
-					LOG.warn("Wrong object literal: "+lit+" for type: " + type);
+					LOG.warn("Wrong object literal: {} for type: {}", lit, type);
 					return Long.toString(lit);
 				}
 				return "null";

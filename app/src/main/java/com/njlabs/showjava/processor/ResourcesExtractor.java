@@ -26,7 +26,7 @@ import jadx.api.JadxDecompiler;
  */
 public class ResourcesExtractor extends ProcessServiceHelper {
 
-    ApkParser apkParser;
+    private final ApkParser apkParser;
 
     public ResourcesExtractor(ProcessService processService) {
         this.processService = processService;
@@ -59,7 +59,7 @@ public class ResourcesExtractor extends ProcessServiceHelper {
                     JadxDecompiler jadx = new JadxDecompiler();
                     jadx.setOutputDir(resDir);
                     jadx.loadFile(new File(packageFilePath));
-                    jadx.save(false, true);
+                    jadx.saveResources();
 
                     ZipFile zipFile = new ZipFile(packageFilePath);
                     Enumeration<? extends ZipEntry> entries = zipFile.entries();

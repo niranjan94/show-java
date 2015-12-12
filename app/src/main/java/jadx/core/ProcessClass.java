@@ -1,17 +1,16 @@
 package jadx.core;
 
-import android.support.annotation.Nullable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-
 import jadx.core.codegen.CodeGen;
 import jadx.core.dex.nodes.ClassNode;
 import jadx.core.dex.visitors.DepthTraversal;
 import jadx.core.dex.visitors.IDexTreeVisitor;
 import jadx.core.utils.ErrorsCounter;
+
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static jadx.core.dex.nodes.ProcessState.GENERATED;
 import static jadx.core.dex.nodes.ProcessState.NOT_LOADED;

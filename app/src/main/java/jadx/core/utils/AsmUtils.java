@@ -1,10 +1,10 @@
 package jadx.core.utils;
 
-import org.objectweb.asm.ClassReader;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
+import org.objectweb.asm.ClassReader;
 
 public class AsmUtils {
 

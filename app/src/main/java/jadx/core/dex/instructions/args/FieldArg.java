@@ -1,8 +1,8 @@
 package jadx.core.dex.instructions.args;
 
-import android.support.annotation.Nullable;
-
 import jadx.core.dex.info.FieldInfo;
+
+import org.jetbrains.annotations.Nullable;
 
 // TODO: don't extend RegisterArg (now used as a result of instruction)
 public final class FieldArg extends RegisterArg {

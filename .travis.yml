@@ -1,9 +1,10 @@
 language: android
 android:
    components:
+   - tools
    - platform-tools
    - android-23
-   - build-tools-23.0.1
+   - build-tools-23.0.2
    - extra
    
 env:
@@ -25,6 +26,11 @@ addons:
     - ia32-libs-multiarch
 
 script:
+  - rm settings.gradle
+  - mv travis.gradle settings.gradle
+  - sed -i -e "s/apl'/apl_clone'/g" app/build.gradle
+  - touch app/extra.gradle
+  - printf 'GooglePlayLicenseKey="GooglePlayLicenseKey"\nIapProductKey="IapProductKey"\ncc="cc"\nii="ii"' > app/keys.properties
   - MALLOC_ARENA_MAX=1
   - chmod a+x gradlew
-  - ./gradlew clean assembleFreeRelease --stacktrace
+  - ./gradlew clean assembleTravisDebug --stacktrace

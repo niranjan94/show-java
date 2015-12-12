@@ -1,15 +1,5 @@
 package jadx.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.jar.Manifest;
-
 import jadx.api.IJadxArgs;
 import jadx.core.dex.visitors.ClassModifier;
 import jadx.core.dex.visitors.CodeShrinker;
@@ -42,6 +32,16 @@ import jadx.core.dex.visitors.ssa.EliminatePhiNodes;
 import jadx.core.dex.visitors.ssa.SSATransform;
 import jadx.core.dex.visitors.typeinference.FinishTypeInference;
 import jadx.core.dex.visitors.typeinference.TypeInference;
+
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.jar.Manifest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Jadx {
 	private static final Logger LOG = LoggerFactory.getLogger(Jadx.class);

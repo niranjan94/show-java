@@ -1,9 +1,8 @@
 package jadx.core.codegen;
 
-import android.support.annotation.Nullable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jadx.api.CodePosition;
+import jadx.core.dex.attributes.nodes.LineAttrNode;
+import jadx.core.utils.files.FileUtils;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -13,9 +12,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import jadx.api.CodePosition;
-import jadx.core.dex.attributes.nodes.LineAttrNode;
-import jadx.core.utils.files.FileUtils;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CodeWriter {
 	private static final Logger LOG = LoggerFactory.getLogger(CodeWriter.class);

@@ -1,7 +1,11 @@
 package jadx.core.clsp;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jadx.core.dex.instructions.args.ArgType;
+import jadx.core.dex.nodes.ClassNode;
+import jadx.core.dex.nodes.RootNode;
+import jadx.core.utils.exceptions.DecodeException;
+import jadx.core.utils.exceptions.JadxRuntimeException;
+import jadx.core.utils.files.FileUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -20,12 +24,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import jadx.core.dex.instructions.args.ArgType;
-import jadx.core.dex.nodes.ClassNode;
-import jadx.core.dex.nodes.RootNode;
-import jadx.core.utils.exceptions.DecodeException;
-import jadx.core.utils.exceptions.JadxRuntimeException;
-import jadx.core.utils.files.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Classes list for import into classpath graph
@@ -96,7 +96,7 @@ public class ClsSet {
 	private static NClass getCls(String fullName, Map<String, NClass> names) {
 		NClass id = names.get(fullName);
 		if (id == null && !names.containsKey(fullName)) {
-			LOG.debug("Class not found: " + fullName);
+			LOG.debug("Class not found: {}", fullName);
 		}
 		return id;
 	}
@@ -131,7 +131,7 @@ public class ClsSet {
 			out.writeBytes(JADX_CLS_SET_HEADER);
 			out.writeByte(VERSION);
 
-			LOG.info("Classes count: +" + classes.length);
+			LOG.info("Classes count: {}", classes.length);
 			out.writeInt(classes.length);
 			for (NClass cls : classes) {
 				writeString(out, cls.getName());

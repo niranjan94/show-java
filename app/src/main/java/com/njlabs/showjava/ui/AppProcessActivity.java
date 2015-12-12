@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -34,6 +35,8 @@ public class AppProcessActivity extends BaseActivity {
     private BroadcastReceiver processStatusReceiver;
     private String decompilerToUse = "cfr";
 
+    private boolean processStarted = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +49,7 @@ public class AppProcessActivity extends BaseActivity {
 
         TextView appNameView = (TextView) findViewById(R.id.current_package_name);
 
-        CurrentStatus.setText("Starting Decompiler");
+        CurrentStatus.setText(R.string.status_starting_decompiler);
 
         if (getIntent().getDataString() == null || getIntent().getDataString().equals("")) {
 
@@ -55,18 +58,21 @@ public class AppProcessActivity extends BaseActivity {
             appNameView.setText(extras.getString("package_label"));
             packageFilePath = extras.getString("package_file_path");
 
-            try {
-                ApkParser apkParser = new ApkParser(new File(packageFilePath));
-                appNameView.setText(apkParser.getApkMeta().getLabel());
-            } catch (Exception e) {
-                Ln.e(e);
-                exitWithError();
-            }
+            if(packageFilePath != null ){
+                try {
+                    ApkParser apkParser = new ApkParser(new File(packageFilePath));
+                    appNameView.setText(apkParser.getApkMeta().getLabel());
+                } catch (Exception e) {
+                    Ln.e(e);
+                    exitWithError();
+                }
 
-            if(extras.containsKey("decompiler")){
-                decompilerToUse = extras.getString("decompiler");
+                if(extras.containsKey("decompiler")){
+                    decompilerToUse = extras.getString("decompiler");
+                }
+            } else {
+                finish();
             }
-
         } else {
             packageFilePath = (new File(URI.create(getIntent().getDataString()))).getAbsolutePath();
             if (FilenameUtils.isExtension(packageFilePath, "apk")) {
@@ -81,7 +87,7 @@ public class AppProcessActivity extends BaseActivity {
         }
 
         if(fromNotification()&&Utils.isProcessorServiceRunning(this)){
-            CurrentStatus.setText("Processing ...");
+            CurrentStatus.setText(getResources().getString(R.string.status_processing));
             CurrentLine.setText("");
         } else {
             startProcessorService();
@@ -98,6 +104,26 @@ public class AppProcessActivity extends BaseActivity {
         setupGears();
 
         registerBroadcastReceiver();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(!fromNotification()) {
+                    if(!processStarted) {
+                        try {
+                            unregisterReceiver(processStatusReceiver);
+                        } catch (Exception ignored) {
+
+                        }
+                        Utils.forceKillAllProcessorServices(baseContext);
+                        final Intent mainIntent = new Intent(baseContext, ErrorActivity.class);
+                        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(mainIntent);
+                        finish();
+                    }
+                }
+            }
+        }, 5000);
     }
 
     private void setupGears(){
@@ -154,7 +180,6 @@ public class AppProcessActivity extends BaseActivity {
             } else {
                 finish();
             }
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
     }
 
@@ -163,15 +188,18 @@ public class AppProcessActivity extends BaseActivity {
     }
 
     private void exitWithError() {
-        Toast.makeText(baseContext, "There was an error initialising the decompiler with the app you selected.", Toast.LENGTH_LONG).show();
+        Toast.makeText(baseContext, R.string.decompiler_initialise_error, Toast.LENGTH_LONG).show();
         finish();
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(processStatusReceiver);
+        try {
+            unregisterReceiver(processStatusReceiver);
+        } catch (Exception ignored) {
+
+        }
     }
 
     private class ProcessStatus extends BroadcastReceiver {
@@ -191,20 +219,22 @@ public class AppProcessActivity extends BaseActivity {
             }
             switch (statusKey) {
                 case "optimise_dex_start":
-                    CurrentStatus.setText("Optimising dex file");
+                    processStarted = true;
+                    CurrentStatus.setText(R.string.status_optimising_dex);
                     break;
 
                 case "optimising":
-                    CurrentStatus.setText("Optimising dex file");
+                    processStarted = true;
+                    CurrentStatus.setText(R.string.status_optimising_dex);
                     CurrentLine.setText("");
                     break;
 
                 case "optimise_dex_finish":
-                    CurrentStatus.setText("Finishing optimisation");
+                    CurrentStatus.setText(R.string.status_optimising_dex_finish);
                     break;
 
                 case "merging_classes":
-                    CurrentStatus.setText("Merging classes");
+                    CurrentStatus.setText(R.string.status_merging_classes);
                     CurrentLine.setText("");
                     break;
 
@@ -214,47 +244,43 @@ public class AppProcessActivity extends BaseActivity {
                         iOne.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
                         iOne.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
                         startActivityForResult(iOne, 1);
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
                     break;
 
                 case "start_activity_with_error":
-                    Toast.makeText(baseContext, "An error occurred. Generated source may be incomplete.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(baseContext, R.string.incomplete_source, Toast.LENGTH_SHORT).show();
                     if (intent.getStringExtra(Constants.PROCESS_DIR) != null && intent.getStringExtra(Constants.PROCESS_PACKAGE_ID) != null) {
                         Intent iTwo = new Intent(getApplicationContext(), JavaExplorer.class);
                         iTwo.putExtra("java_source_dir", intent.getStringExtra(Constants.PROCESS_DIR));
                         iTwo.putExtra("package_id", intent.getStringExtra(Constants.PROCESS_PACKAGE_ID));
                         startActivityForResult(iTwo, 1);
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
                     break;
 
                 case "exit_process_on_error":
-                    Toast.makeText(baseContext, "Exiting with error.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(baseContext, R.string.error_exiting, Toast.LENGTH_SHORT).show();
                     finish();
-                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     break;
 
                 case "finaldex":
-                    CurrentStatus.setText("Finishing optimisation");
+                    CurrentStatus.setText(R.string.status_optimising_dex_finish);
                     CurrentLine.setText("");
                     break;
 
                 case "dex2jar":
-                    CurrentStatus.setText("Decompiling dex to jar");
+                    CurrentStatus.setText(R.string.status_dex2jar);
                     break;
 
                 case "jar2java":
-                    CurrentStatus.setText("Decompiling to java");
+                    CurrentStatus.setText(R.string.status_jar2java);
                     break;
 
                 case "res":
-                    CurrentStatus.setText("Extracting Resources");
+                    CurrentStatus.setText(R.string.status_extracting_res);
                     break;
 
                 case "exit":
                     finish();
-                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     break;
 
                 default:

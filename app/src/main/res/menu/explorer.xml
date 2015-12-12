@@ -5,14 +5,14 @@
         android:id="@+id/action_share"
         android:icon="@drawable/ic_action_share"
         android:orderInCategory="0"
-        android:title="Zip and share"
+        android:title="@string/zip_and_share"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_delete"
         android:icon="@drawable/ic_action_delete"
         android:orderInCategory="1"
-        android:title="Delete Source"
+        android:title="@string/delete_source"
         app:showAsAction="always" />
 
 </menu>

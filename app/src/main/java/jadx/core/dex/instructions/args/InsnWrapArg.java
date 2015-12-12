@@ -3,12 +3,13 @@ package jadx.core.dex.instructions.args;
 import jadx.core.dex.nodes.InsnNode;
 import jadx.core.utils.exceptions.JadxRuntimeException;
 
+import org.jetbrains.annotations.NotNull;
 
 public final class InsnWrapArg extends InsnArg {
 
 	private final InsnNode wrappedInsn;
 
-	public InsnWrapArg(InsnNode insn) {
+	public InsnWrapArg(@NotNull InsnNode insn) {
 		RegisterArg result = insn.getResult();
 		this.type = result != null ? result.getType() : ArgType.VOID;
 		this.wrappedInsn = insn;

@@ -24,8 +24,8 @@ import java.io.InputStream;
 
 public class SourceViewer extends BaseActivity {
 
-    String sourceFilePath;
-    String sourceFilename;
+    private String sourceFilePath;
+    private String sourceFilename;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

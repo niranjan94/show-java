@@ -1,18 +1,17 @@
 package jadx.core.dex.instructions.args;
 
-import android.support.annotation.Nullable;
-
-import com.android.dx.io.instructions.DecodedInstruction;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jadx.core.dex.attributes.AFlag;
+import jadx.core.dex.nodes.InsnNode;
+import jadx.core.utils.InsnUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jadx.core.dex.attributes.AFlag;
-import jadx.core.dex.nodes.InsnNode;
-import jadx.core.utils.InsnUtils;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.android.dx.io.instructions.DecodedInstruction;
 
 /**
  * Instruction argument,
@@ -22,7 +21,7 @@ public abstract class InsnArg extends Typed {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InsnArg.class);
 
-	@Nullable
+	@Nullable("Null for method arguments")
 	protected InsnNode parentInsn;
 
 	public static RegisterArg reg(int regNum, ArgType type) {

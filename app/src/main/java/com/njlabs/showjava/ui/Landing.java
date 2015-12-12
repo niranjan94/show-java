@@ -29,6 +29,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.TransactionDetails;
+import com.crashlytics.android.Crashlytics;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
@@ -40,27 +46,39 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.njlabs.showjava.BuildConfig;
 import com.njlabs.showjava.Constants;
 import com.njlabs.showjava.R;
+import com.njlabs.showjava.utils.AesCbcWithIntegrity;
 import com.njlabs.showjava.utils.SourceInfo;
 import com.njlabs.showjava.utils.Utils;
+import com.njlabs.showjava.utils.Verify;
 import com.njlabs.showjava.utils.logging.Ln;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
+import xyz.codezero.apl.SV;
+
 
 @SuppressWarnings("unused")
-public class Landing extends BaseActivity {
+public class Landing extends BaseActivity  implements BillingProcessor.IBillingHandler{
 
     private static final int FILE_PICKER = 0;
 
     private LinearLayout welcomeLayout;
     private ListView listView;
+
+    private BillingProcessor bp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,23 +96,49 @@ public class Landing extends BaseActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.navbar_header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(getResources().getString(R.string.app_name)).withEmail("Version " + BuildConfig.VERSION_NAME).setSelectable(false)
+                        new ProfileDrawerItem().withName(getResources().getString(R.string.app_name)+(isPro()?" Pro":"")).withEmail("Version " + BuildConfig.VERSION_NAME).setSelectable(false)
                 )
                 .withSelectionListEnabledForSingleProfile(false)
                 .build();
+
+        ArrayList<IDrawerItem> drawerItems = new ArrayList<>();
+
+        drawerItems.add(new PrimaryDrawerItem().withName("Home").withIcon(R.drawable.ic_action_home).withCheckable(false));
+        drawerItems.add(new DividerDrawerItem());
+        drawerItems.add(new PrimaryDrawerItem().withName("Report a Bug").withIcon(R.drawable.ic_action_bug_report).withCheckable(false));
+        drawerItems.add(new PrimaryDrawerItem().withName("About the app").withIcon(R.drawable.ic_action_info).withCheckable(false));
+        drawerItems.add(new PrimaryDrawerItem().withName("Settings").withIcon(R.drawable.ic_action_settings).withCheckable(false));
+
+        if(!isPro()) {
+            drawerItems.add(new DividerDrawerItem());
+            drawerItems.add(new PrimaryDrawerItem().withName("Get Show Java Pro").withIcon(R.mipmap.ic_logo_plain).withCheckable(false));
+        } else {
+            if(!Verify.good(baseContext)){
+                put(false);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(baseContext, R.style.AlertDialog);
+                alertDialog.setCancelable(false);
+                alertDialog.setMessage("Show Java Pro has been disabled. Either you have Lucky Patcher (or) Freedom (or) the apk has been tampered with. If you have really purchased Pro, please fix the above mentioned errors to get the purchase restored.");
+                alertDialog.setPositiveButton("I Understand", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Toast.makeText(baseContext, "Thanks for understanding ... :)", Toast.LENGTH_LONG).show();
+                    }
+                });
+                alertDialog.setNegativeButton("I'm a Pirate", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(baseContext, "Well... I'm not :)", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                });
+                alertDialog.show();
+            }
+        }
 
         Drawer result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
-                .addDrawerItems(
-                        new PrimaryDrawerItem().withName("Home").withIcon(R.drawable.ic_action_home).withCheckable(false),
-                        new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName("Report a Bug").withIcon(R.drawable.ic_action_bug_report).withCheckable(false),
-                        new PrimaryDrawerItem().withName("About the app").withIcon(R.drawable.ic_action_info).withCheckable(false),
-                        new PrimaryDrawerItem().withName("Settings").withIcon(R.drawable.ic_action_settings).withCheckable(false)
-
-                )
+                .withDrawerItems(drawerItems)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
@@ -102,15 +146,16 @@ public class Landing extends BaseActivity {
                             case 2:
                                 Uri uri = Uri.parse("https://github.com/niranjan94/show-java/issues/new");
                                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                 break;
                             case 3:
                                 startActivity(new Intent(baseContext, About.class));
-                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                                 break;
                             case 4:
                                 startActivity(new Intent(baseContext, SettingsActivity.class));
-                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                break;
+                            case 6:
+                                startActivity(new Intent(baseContext, PurchaseActivity.class));
                                 break;
                         }
                         return false;
@@ -130,6 +175,15 @@ public class Landing extends BaseActivity {
         }
 
 
+        try {
+
+            AesCbcWithIntegrity.SecretKeys keys = new AesCbcWithIntegrity.SecretKeys(getResources().getString(R.string.cc),getResources().getString(R.string.ii));
+            String plainText = AesCbcWithIntegrity.decryptString(BuildConfig.GOOGLE_PLAY_LICENSE_KEY, keys);
+            bp = new BillingProcessor(this, plainText, this);
+
+        } catch (GeneralSecurityException | UnsupportedEncodingException e) {
+            Crashlytics.logException(e);
+        }
     }
 
     public void initHistoryLoader(){
@@ -190,7 +244,6 @@ public class Landing extends BaseActivity {
                     i.putExtra("java_source_dir", sourceDir + "/");
                     i.putExtra("package_id", holder.packageName.getText().toString());
                     startActivity(i);
-                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 }
             });
 
@@ -202,7 +255,6 @@ public class Landing extends BaseActivity {
     public void OpenAppListing(View v) {
         Intent i = new Intent(getApplicationContext(), AppListing.class);
         startActivity(i);
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     public void OpenFilePicker(View v) {
@@ -215,7 +267,6 @@ public class Landing extends BaseActivity {
         i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
 
         startActivityForResult(i, FILE_PICKER);
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     @Override
@@ -262,7 +313,6 @@ public class Landing extends BaseActivity {
                                 i.putExtra("package_file_path", PackageDir);
                                 i.putExtra("decompiler", (item==1?"jadx":"cfr"));
                                 startActivity(i);
-                                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                             }
                         });
                         AlertDialog alert = builder.create();
@@ -274,10 +324,11 @@ public class Landing extends BaseActivity {
                         i.putExtra("package_file_path", PackageDir);
                         i.putExtra("decompiler", prefs.getString("decompiler", "cfr"));
                         startActivity(i);
-                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
                 }
             }
+        } else {
+            bp.handleActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -403,4 +454,88 @@ public class Landing extends BaseActivity {
 
         }
     }
+
+    @Override
+    public void onBillingInitialized() {
+        if(!isPro()) {
+            bp.loadOwnedPurchasesFromGoogle();
+        }
+    }
+
+    @Override
+    public void onProductPurchased(String productId, TransactionDetails transactionDetails) {
+
+    }
+
+    @Override
+    public void onBillingError(int i, Throwable throwable) {
+        Ln.e(throwable);
+    }
+
+    @Override
+    public void onPurchaseHistoryRestored() {
+        try {
+            final TransactionDetails transactionDetails = bp.getPurchaseTransactionDetails(BuildConfig.IAP_PRODUCT_ID);
+            if(transactionDetails.productId.equals(BuildConfig.IAP_PRODUCT_ID)) {
+
+                AsyncHttpClient client = new AsyncHttpClient();
+                RequestParams params = new RequestParams();
+
+                params.put("payload", SV.gen(baseContext,transactionDetails.purchaseToken));
+                params.put("order_id", transactionDetails.orderId);
+
+                client.post(com.njlabs.showjava.Constants.VERIFICATION_URL, params,
+                        new JsonHttpResponseHandler() {
+
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                try {
+                                    if (response.has("status") && response.getString("status").equals("ok")) {
+                                        if (response.has("payload")) {
+                                            if (SV.good(baseContext, response.getString("payload"), transactionDetails.purchaseToken)) {
+                                                showPurchased();
+                                            } else {
+                                                showError();
+                                            }
+                                        } else {
+                                            showError();
+                                        }
+                                    } else {
+                                        showError();
+                                    }
+                                } catch (JSONException e) {
+                                    showError();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                Ln.e(throwable);
+                            }
+                        });
+            } else {
+                put(false);
+            }
+        } catch (Exception ignored) {
+            put(false);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (bp != null)
+            bp.release();
+        super.onDestroy();
+    }
+
+    public void showError() {
+        Toast.makeText(this, "Your purchase could not be verified.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void showPurchased() {
+        put(true);
+        Toast.makeText(this, "Thank you for purchasing Show Java Pro :)", Toast.LENGTH_SHORT).show();
+    }
+
+
 }

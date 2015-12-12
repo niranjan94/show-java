@@ -10,42 +10,48 @@
         android:layout_margin="10dp"
         android:scaleType="fitCenter" />
 
-    <TextView
-        android:id="@+id/pkg_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/pkg_img"
-        android:paddingRight="6dip"
-        android:paddingTop="6dip"
-        android:text="Amrita Info Desk v2"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/pkg_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" "
+        android:text="@string/space"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/pkg_dir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" "
+        android:text="@string/space"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/pkg_version"
-        android:layout_width="fill_parent"
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_below="@id/pkg_name"
-        android:layout_toRightOf="@id/pkg_img"
-        android:paddingRight="6dp"
-        android:paddingTop="2dp"
-        android:text="Version 1.2b"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_toRightOf="@+id/pkg_img"
+        android:layout_toEndOf="@+id/pkg_img"
+        android:layout_centerVertical="true">
+
+
+        <TextView
+            android:id="@+id/pkg_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/space"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/pkg_version"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:text="@string/space"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>
 

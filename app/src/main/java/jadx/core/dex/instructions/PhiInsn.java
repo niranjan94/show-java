@@ -1,8 +1,5 @@
 package jadx.core.dex.instructions;
 
-import java.util.IdentityHashMap;
-import java.util.Map;
-
 import jadx.core.dex.attributes.AFlag;
 import jadx.core.dex.instructions.args.ArgType;
 import jadx.core.dex.instructions.args.InsnArg;
@@ -12,6 +9,11 @@ import jadx.core.dex.nodes.InsnNode;
 import jadx.core.utils.InstructionRemover;
 import jadx.core.utils.Utils;
 import jadx.core.utils.exceptions.JadxRuntimeException;
+
+import java.util.IdentityHashMap;
+import java.util.Map;
+
+import org.jetbrains.annotations.NotNull;
 
 public final class PhiInsn extends InsnNode {
 
@@ -47,6 +49,7 @@ public final class PhiInsn extends InsnNode {
 	}
 
 	@Override
+	@NotNull
 	public RegisterArg getArg(int n) {
 		return (RegisterArg) super.getArg(n);
 	}

@@ -36,7 +36,7 @@ public class FilePickerFragment extends com.nononsenseapps.filepicker.FilePicker
      * For consistency, the top level the back button checks against should be the start path.
      * But it will fall back on /.
      */
-    public File getBackTop() {
+    private File getBackTop() {
         if (getArguments().containsKey(KEY_START_PATH)) {
             String keyStartPath = getArguments().getString(KEY_START_PATH);
             return getPath((keyStartPath != null ? keyStartPath : "/"));
