@@ -164,7 +164,7 @@ public class AppListing extends BaseActivity {
         }
         Comparator<PackageInfoHolder> AppNameComparator = new Comparator<PackageInfoHolder>() {
             public int compare(PackageInfoHolder o1, PackageInfoHolder o2) {
-                return o1.getPackageLabel().compareTo(o2.getPackageLabel());
+                return o1.getPackageLabel().toLowerCase().compareTo(o2.getPackageLabel().toLowerCase());
             }
         };
         Collections.sort(res, AppNameComparator);
