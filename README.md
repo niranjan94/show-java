@@ -59,3 +59,5 @@ An unmodified copy of the above license text must be included in all forks.
 4. [Ben Gruver](https://github.com/JesusFreke/) for dexlib2.
 5. [skylot](https://github.com/skylot) for JaDX.
 6. [JetBrains](https://github.com/JetBrains) for FernFlower analytical decompiler.
+
+> Android, Google Play and the Google Play logo are trademarks of Google Inc.
