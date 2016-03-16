@@ -18,13 +18,6 @@ sudo: false
 notifications:
   email: false
 
-addons:
-  apt:
-    packages:
-    - libgd2-xpm
-    - ia32-libs
-    - ia32-libs-multiarch
-
 script:
   - rm settings.gradle
   - mv travis.gradle settings.gradle
