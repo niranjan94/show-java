@@ -119,7 +119,7 @@ dependencies {
     compile files('libs/cfr_0_110.jar')
 
     // APK PARSER AND BINARY XML DECODER
-    compile 'net.dongliu:apk-parser:2.0.15'
+    compile 'net.dongliu:apk-parser:2.1.1'
 
     // GOOGLE PLAY SERVICES ADS SDK
     compile 'com.google.android.gms:play-services-ads:+'
