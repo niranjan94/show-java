@@ -19,6 +19,7 @@ notifications:
   email: false
 
 script:
+  - ulimit -s 1082768
   - rm settings.gradle
   - mv travis.gradle settings.gradle
   - sed -i -e "s/apl'/apl_clone'/g" app/build.gradle
