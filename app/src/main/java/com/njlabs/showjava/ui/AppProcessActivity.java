@@ -109,7 +109,7 @@ public class AppProcessActivity extends BaseActivity {
             @Override
             public void run() {
                 if(!fromNotification()) {
-                    if(!processStarted) {
+                    if(!processStarted || Utils.isProcessorServiceRunning(baseContext)) {
                         try {
                             unregisterReceiver(processStatusReceiver);
                         } catch (Exception ignored) {
