@@ -1,12 +1,14 @@
 package com.njlabs.showjava.ui;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,8 +67,6 @@ public class JavaExplorer extends BaseActivity {
                 finish();
             }
         }
-
-
     }
 
     private void fill(File f) {
@@ -211,7 +211,6 @@ public class JavaExplorer extends BaseActivity {
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(zipFile));
         shareIntent.setType("application/zip");
         startActivity(Intent.createChooser(shareIntent, "Send source via"));
-
     }
 
     @Override
@@ -228,16 +227,15 @@ public class JavaExplorer extends BaseActivity {
                 return true;
 
             case R.id.action_delete:
-                try {
-                    final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + packageID);
-                    if (sourceDir.exists()) {
-                        FileUtils.deleteDirectory(sourceDir);
-                    }
-                } catch (IOException e) {
-                    Crashlytics.logException(e);
-                }
-                Toast.makeText(baseContext, "The source code has been deleted from sdcard", Toast.LENGTH_SHORT).show();
-                finish();
+                new AlertDialog.Builder(this)
+                        .setMessage("Are you sure want to delete ?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                deleteSource();
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
+
                 return true;
 
             case R.id.action_share:
@@ -247,6 +245,19 @@ public class JavaExplorer extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteSource() {
+        try {
+            final File sourceDir = new File(Environment.getExternalStorageDirectory() + "/ShowJava/sources/" + packageID);
+            if (sourceDir.exists()) {
+                FileUtils.deleteDirectory(sourceDir);
+            }
+        } catch (IOException e) {
+            Crashlytics.logException(e);
+        }
+        Toast.makeText(baseContext, "The source code has been deleted from sdcard", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
 }
