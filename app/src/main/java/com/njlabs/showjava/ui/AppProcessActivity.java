@@ -58,7 +58,7 @@ public class AppProcessActivity extends BaseActivity {
             appNameView.setText(extras.getString("package_label"));
             packageFilePath = extras.getString("package_file_path");
 
-            if(packageFilePath != null ){
+            if (packageFilePath != null) {
                 try {
                     ApkParser apkParser = new ApkParser(new File(packageFilePath));
                     appNameView.setText(apkParser.getApkMeta().getLabel());
@@ -67,7 +67,7 @@ public class AppProcessActivity extends BaseActivity {
                     exitWithError();
                 }
 
-                if(extras.containsKey("decompiler")){
+                if (extras.containsKey("decompiler")) {
                     decompilerToUse = extras.getString("decompiler");
                 }
             } else {
@@ -86,7 +86,7 @@ public class AppProcessActivity extends BaseActivity {
             }
         }
 
-        if(fromNotification()&&Utils.isProcessorServiceRunning(this)){
+        if (fromNotification() && Utils.isProcessorServiceRunning(this)) {
             CurrentStatus.setText(getResources().getString(R.string.status_processing));
             CurrentLine.setText("");
         } else {
@@ -108,8 +108,8 @@ public class AppProcessActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(!fromNotification()) {
-                    if(!processStarted || Utils.isProcessorServiceRunning(baseContext)) {
+                if (!fromNotification()) {
+                    if (!processStarted || Utils.isProcessorServiceRunning(baseContext)) {
                         try {
                             unregisterReceiver(processStatusReceiver);
                         } catch (Exception ignored) {
@@ -126,7 +126,7 @@ public class AppProcessActivity extends BaseActivity {
         }, 5000);
     }
 
-    private void setupGears(){
+    private void setupGears() {
         final ImageView GearProgressLeft = (ImageView) findViewById(R.id.gear_progress_left);
         final ImageView GearProgressRight = (ImageView) findViewById(R.id.gear_progress_right);
 
@@ -161,6 +161,7 @@ public class AppProcessActivity extends BaseActivity {
         mServiceIntent.putExtra("package_file_path", packageFilePath);
         mServiceIntent.putExtra("decompiler", decompilerToUse);
         startService(mServiceIntent);
+        processStarted = true;
     }
 
     private void registerBroadcastReceiver() {

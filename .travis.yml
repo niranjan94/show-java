@@ -3,15 +3,15 @@ android:
    components:
    - tools
    - platform-tools
-   - android-23
-   - build-tools-23.0.2
+   - android-24
+   - build-tools-24.0.2
    - extra
    
 env:
   global:
     MALLOC_ARENA_MAX=1
    
-jdk: oraclejdk7
+jdk: oraclejdk8
 
 sudo: false
 
