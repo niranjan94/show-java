@@ -33,7 +33,7 @@ Head over [here](https://github.com/niranjan94/show-java/blob/master/CONTRIBUTIN
 
 ## Open Source License
 
-Unless explicitly stated otherwise all files in this repository are licensed under the [Apache Software License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html). All projects **must** properly attribute [The Original Source](https://github.com/niranjan94/show-java). You are **not** allowed to release unofficial/forked versions of Show Java without the permission of the [Original Author](https://www.github.com/niranjan94).
+Unless explicitly stated otherwise all files in this repository are licensed under the [Apache Software License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html). All projects **must** properly attribute [The Original Source](https://github.com/niranjan94/show-java). 
     
     Copyright 2015 Niranjan Rajendran
     
