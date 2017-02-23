@@ -397,29 +397,30 @@ public class Landing extends BaseActivity  implements BillingProcessor.IBillingH
 
             if (dir.exists()) {
                 File[] files = dir.listFiles();
-                for (File file : files) {
-                    if (Utils.sourceExists(file)) {
-                        historyItems.add(Utils.getSourceInfoFromSourcePath(file));
-                    } else {
-                        if (!Utils.isProcessorServiceRunning(baseContext)) {
-                            try {
-                                if(file.exists()){
-                                    if(file.isDirectory()){
-                                        FileUtils.deleteDirectory(file);
-                                    } else {
-                                        file.delete();
+                if (files != null && files.length > 0)
+                    for (File file : files) {
+                        if (Utils.sourceExists(file)) {
+                            historyItems.add(Utils.getSourceInfoFromSourcePath(file));
+                        } else {
+                            if (!Utils.isProcessorServiceRunning(baseContext)) {
+                                try {
+                                    if (file.exists()) {
+                                        if (file.isDirectory()) {
+                                            FileUtils.deleteDirectory(file);
+                                        } else {
+                                            file.delete();
+                                        }
                                     }
-                                }
 
-                            } catch (Exception e) {
-                                Ln.d(e);
+                                } catch (Exception e) {
+                                    Ln.d(e);
+                                }
+                            }
+                            if (file.exists() && !file.isDirectory()) {
+                                file.delete();
                             }
                         }
-                        if (file.exists()&&!file.isDirectory()) {
-                            file.delete();
-                        }
                     }
-                }
             }
 
             return historyItems;
