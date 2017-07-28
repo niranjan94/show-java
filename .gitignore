@@ -38,5 +38,6 @@ ShowJava.iml
 /app/src/pro
 app/app.iml
 .iml
+/*.iml
 
 crashlytics.properties

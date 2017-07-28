@@ -1,28 +1,8 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-}
-
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
-apply from: 'extra.gradle'
 
-repositories {
-    maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://jitpack.io" }
-}
+apply plugin: 'kotlin-android'
 
-def props = new Properties()
-props.load(new FileInputStream('app/keys.properties'))
-
-props.each { key, val ->
-    project.set(key, val)
-}
+apply plugin: 'kotlin-android-extensions'
 
 def versionMajor = 2
 def versionMinor = 1
@@ -30,23 +10,18 @@ def versionPatch = 1
 def versionBuild = 2
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
-
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "com.njlabs.showjava"
-        minSdkVersion 14
+        minSdkVersion 15
+        targetSdkVersion 26
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
-        targetSdkVersion 24
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resConfigs "en"
         multiDexEnabled true
         resValue "string", "app_name", "Show Java"
-        buildConfigField "String", "GOOGLE_PLAY_LICENSE_KEY", GooglePlayLicenseKey
-        buildConfigField "String", "IAP_PRODUCT_ID", IapProductKey
-        resValue "string", "cc", cc
-        resValue "string", "ii", ii
-        proguardFiles 'proguard-rules.pro'
     }
 
     dexOptions {
@@ -65,92 +40,40 @@ android {
     lintOptions {
         abortOnError false
     }
-    productFlavors {
-        standard {
-            buildConfigField "boolean", "is_travis", "false"
-        }
-
-        travis {
-            buildConfigField "boolean", "is_travis", "true"
-        }
-    }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-        }
-        debug {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
+
+ext.support_version = '26.0.0'
+ext.firebase_version = '11.0.4'
 
 dependencies {
     // MULTI-DEX SUPPORT FOR PRE LOLLIPOP
-    compile 'com.android.support:multidex:1.0.1'
+    implementation 'com.android.support:multidex:1.0.2'
 
-    // ANDROID SUPPORT LIBRARIES
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.android.support:cardview-v7:24.2.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.google.firebase:firebase-core:$firebase_version"
+    implementation "com.google.firebase:firebase-crash:$firebase_version"
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "com.android.support:appcompat-v7:$support_version"
+    implementation "com.android.support:design:$support_version"
+    implementation "com.android.support:cardview-v7:$support_version"
+    implementation "com.android.support.constraint:constraint-layout:1.0.2"
+    testImplementation 'junit:junit:4.12'
 
-    // APACHE COMMONS LIBRARIES
-    compile 'commons-cli:commons-cli:1.3.1'
-    compile 'commons-io:commons-io:2.5'
-
-    // DEX2JAR AND IT's DEPENDENCIES
-    compile 'com.google.guava:guava:18.0'
-    compile 'asm:asm-all:3.3.1'
-    compile files('libs/antlr-3.1.1.jar')
-    compile files('libs/dex-ir-1.12.jar')
-    compile files('libs/dex-reader-1.15.jar')
-    compile files('libs/dex-tools-0.0.9.15.jar')
-    compile files('libs/dex-translator-0.0.9.15.jar')
-    compile files('libs/jsr305-1.3.9.jar')
-
-    // CLASS FILE READER - JAVA DECOMPILER
-    compile files('libs/cfr_0_117.jar')
-
-    // APK PARSER AND BINARY XML DECODER
-    compile 'net.dongliu:apk-parser:2.1.3'
-
-    // GOOGLE PLAY SERVICES ADS SDK
-    compile 'com.google.android.gms:play-services-ads:9.4.0'
-
-    // CRASHLYTICS BUG REPORTING SDK
-    compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
-        transitive = true;
-    }
-
-    // FLOATING ACTION BUTTON SUPPORT LIBRARY
-    compile 'com.github.clans:fab:1.6.4'
-
-    // MATERIAL DESIGN STYLED DRAWER
-    compile('com.mikepenz:materialdrawer:3.1.2@aar') {
-        transitive = true
-    }
-
-    // CALLIGRAPHY
-    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
-
-    // FILE PICKER
-    compile 'com.nononsenseapps:filepicker:2.5.3'
-
-    // DEPENDENCIES FOR JaDX
-    compile files('libs/dx-1.10.jar')
-    compile files('libs/android-5.1-clst-core.jar')
-    compile 'org.slf4j:slf4j-api:1.7.21'
-    compile 'uk.com.robust-it:cloning:1.9.2'
-    compile 'com.intellij:annotations:12.0@jar'
-
-    // IN-APP PURCHASE LIBRARY v3
-    compile 'com.anjlab.android.iab.v3:library:1.0.32'
-
-    // FERNFLOWER
-    compile files('libs/fernflower.jar')
-
-    compile 'com.loopj.android:android-async-http:1.4.9'
-
-    travisCompile project(':apl_clone')
-    standardCompile project(':apl')
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'com.jakewharton.timber:timber:4.5.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
+    implementation 'org.solovyev.android:checkout:1.0.1'
 }
+
+apply plugin: 'com.google.gms.google-services'
