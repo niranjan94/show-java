@@ -16,10 +16,14 @@ import android.view.MenuItem
 import android.preference.PreferenceManager
 import android.os.Bundle
 import android.widget.Toast
+import com.google.android.gms.ads.*
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
+import com.njlabs.showjava.utils.Tools
+import timber.log.Timber
+
 
 abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
@@ -50,11 +54,13 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     fun setupLayout(layoutRef: Int) {
         setContentView(layoutRef)
         setupToolbar(null)
+        setupGoogleAds()
     }
 
     fun setupLayout(layoutRef: Int, title: String) {
         setContentView(layoutRef)
         setupToolbar(title)
+        setupGoogleAds()
     }
 
     fun setupLayoutNoActionBar(layoutRef: Int) {
@@ -83,6 +89,34 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
+
+    private fun setupGoogleAds() {
+        val mAdView = findViewById<AdView>(R.id.adView)
+        if (mAdView != null) {
+            mAdView.visibility = View.GONE
+            if (!isPro()) {
+                val adRequest = AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        .addTestDevice(getString(R.string.adUnitId))
+                        .build()
+                mAdView.adListener = object : AdListener() {
+                    override fun onAdFailedToLoad(errorCode: Int) {
+                        super.onAdFailedToLoad(errorCode)
+                        mAdView.visibility = View.GONE
+                    }
+
+                    override fun onAdLoaded() {
+                        super.onAdLoaded()
+                        mAdView.visibility = View.VISIBLE
+                    }
+                }
+                mAdView.loadAd(adRequest)
+                if (!Tools.checkDataConnection(context)) {
+                    mAdView.visibility = View.GONE
+                }
+            }
+        }
     }
 
     private fun isPro(): Boolean {

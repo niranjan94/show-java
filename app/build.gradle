@@ -9,6 +9,9 @@ def versionMinor = 1
 def versionPatch = 1
 def versionBuild = 2
 
+def props = new Properties()
+props.load(new FileInputStream('app/keys.properties'))
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
@@ -22,6 +25,8 @@ android {
         resConfigs "en"
         multiDexEnabled true
         resValue "string", "app_name", "Show Java"
+        resValue "string", "deviceId", props.getProperty('deviceId')
+        resValue "string", "adUnitId", props.getProperty('adUnitId')
     }
 
     dexOptions {
@@ -63,11 +68,13 @@ dependencies {
     // FIREBASE LIBRARIES
     implementation "com.google.firebase:firebase-core:$firebase_version"
     implementation "com.google.firebase:firebase-crash:$firebase_version"
+    implementation "com.google.firebase:firebase-ads:$firebase_version"
 
     // ANDROID SUPPORT LIBRARIES
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support:cardview-v7:$support_version"
+    implementation "com.android.support:recyclerview-v7:$support_version"
     implementation "com.android.support.constraint:constraint-layout:1.0.2"
 
     // APACHE COMMONS LIBRARIES

@@ -7,6 +7,10 @@
     <string name="settings">Settings</string>
     <string name="invert_background_color">Invert background color</string>
     <string name="storage_permission_rationale">Show Java requires storage permission to store decompiled sources</string>
+    <string name="welcome">Welcome</string>
+    <string name="tap_plus">tap the plus button to begin</string>
+    <string name="space" />
+    <string name="app_icon">App icon</string>
 
     <string-array name="decompilers">
         <item>CFR 0.110</item>

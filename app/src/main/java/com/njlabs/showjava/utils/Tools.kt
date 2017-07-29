@@ -9,6 +9,9 @@ import com.njlabs.showjava.models.SourceInfo
 import com.njlabs.showjava.services.processor.ProcessorService
 
 import java.io.File
+import android.net.ConnectivityManager
+
+
 
 object Tools {
 
@@ -80,4 +83,16 @@ object Tools {
         }
         return size
     }
+
+    fun checkDataConnection(context: Context): Boolean {
+        var status = false
+        val connectivityMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityMgr.activeNetworkInfo != null &&
+                connectivityMgr.activeNetworkInfo.isAvailable &&
+                connectivityMgr.activeNetworkInfo.isConnected) {
+            status = true
+        }
+        return status
+    }
+
 }
