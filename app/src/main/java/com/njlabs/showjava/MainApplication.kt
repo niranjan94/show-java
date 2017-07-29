@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.support.multidex.MultiDex
 import com.njlabs.showjava.utils.logging.ProductionTree
+import com.squareup.leakcanary.LeakCanary
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import timber.log.Timber
 
@@ -11,6 +12,10 @@ class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return
+        }
+        LeakCanary.install(this)
         CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/lato-light.ttf")
                 .setFontAttrId(R.attr.fontPath)

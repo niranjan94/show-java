@@ -1,12 +1,23 @@
 language: android
+
 android:
-   components:
-   - tools
-   - platform-tools
-   - android-26
-   - build-tools-26.0.0
-   - extra
-   
+  components:
+    - tools
+    - android-26
+    - build-tools-26.0.1
+    - platform-tools
+    - extra-google-m2repository
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+cache:
+    directories:
+      - "${TRAVIS_BUILD_DIR}/gradle/caches/"
+      - "${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/"
+      - "$HOME/.gradle/caches/"
+      - "$HOME/.gradle/wrapper/"
+
 env:
   global:
     MALLOC_ARENA_MAX=1
@@ -15,16 +26,18 @@ jdk: oraclejdk8
 
 sudo: false
 
-notifications:
-  email: false
+install:
+  - ulimit -s 1082768
+  - touch app/keys.properties
+  - printf 'GooglePlayLicenseKey="GooglePlayLicenseKey"\nIapProductKey="IapProductKey"\ncc="cc"\nii="ii"' > app/keys.properties
 
 script:
-  - ulimit -s 1082768
-  - rm settings.gradle
-  - mv travis.gradle settings.gradle
-  - sed -i -e "s/apl'/apl_clone'/g" app/build.gradle
-  - touch app/extra.gradle
-  - printf 'GooglePlayLicenseKey="GooglePlayLicenseKey"\nIapProductKey="IapProductKey"\ncc="cc"\nii="ii"' > app/keys.properties
-  - MALLOC_ARENA_MAX=1
-  - chmod a+x gradlew
-  - ./gradlew clean assembleTravisDebug --stacktrace
+  - ./gradlew build
+  - ./gradlew assembleTravisRelease --stacktrace
+
+after_failure:
+  # tests
+  - cat app/build/reports/tests/testDebugUnitTest/index.html
+  # app
+  - cat app/build/reports/lint-results.xml
+  - cat app/build/reports/lint-results.html

@@ -52,7 +52,7 @@ class SourceInfo {
                 val infoFile = File(sourceOutputDir + "/info.json")
                 val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
                 json.put("has_java_sources", status)
-                FileUtils.writeStringToFile(infoFile, json.toString())
+                FileUtils.writeStringToFile(infoFile, json.toString(), "UTF-8")
             } catch (e: IOException) {
                 e.printStackTrace()
             } catch (e: JSONException) {
@@ -66,7 +66,7 @@ class SourceInfo {
                 val infoFile = File(sourceOutputDir + "/info.json")
                 val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
                 json.put("has_xml_sources", status)
-                FileUtils.writeStringToFile(infoFile, json.toString())
+                FileUtils.writeStringToFile(infoFile, json.toString(), "UTF-8")
             } catch (e: IOException) {
                 e.printStackTrace()
             } catch (e: JSONException) {

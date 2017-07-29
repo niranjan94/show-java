@@ -4,10 +4,10 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-def versionMajor = 2
-def versionMinor = 1
-def versionPatch = 1
-def versionBuild = 2
+def versionMajor = 3
+def versionMinor = 0
+def versionPatch = 0
+def versionBuild = 0
 
 def props = new Properties()
 props.load(new FileInputStream('app/keys.properties'))
@@ -24,33 +24,60 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resConfigs "en"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary true
+
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         resValue "string", "app_name", "Show Java"
         resValue "string", "deviceId", props.getProperty('deviceId')
         resValue "string", "adUnitId", props.getProperty('adUnitId')
     }
 
+    testOptions {
+        unitTests {
+            includeAndroidResources true
+        }
+    }
+
     dexOptions {
+        jumboMode true
         javaMaxHeapSize "4g"
     }
 
     packagingOptions {
+        exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/MANIFEST.MF'
         exclude 'META-INF/rxjava.properties'
-    }
-
-    dexOptions {
-        jumboMode = true
     }
 
     lintOptions {
         abortOnError false
     }
 
+    flavorDimensions "type"
+
+    productFlavors {
+        standard {
+            buildConfigField "boolean", "is_travis", "false"
+            dimension = "type"
+        }
+
+        travis {
+            buildConfigField "boolean", "is_travis", "true"
+            dimension = "type"
+        }
+    }
+
     buildTypes {
         release {
+            minifyEnabled true
+            shrinkResources true
+        }
+        debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources false
         }
     }
 }
@@ -98,7 +125,6 @@ dependencies {
     implementation files('libs/android-5.1-clst-core.jar')
     implementation 'org.slf4j:slf4j-api:1.7.21'
     implementation 'uk.com.robust-it:cloning:1.9.2'
-    implementation 'com.intellij:annotations:12.0@jar'
 
     // APK PARSER AND BINARY XML DECODER
     implementation 'net.dongliu:apk-parser:2.2.0'
@@ -115,6 +141,11 @@ dependencies {
     implementation 'com.droidninja:filepicker:2.0.7'
     implementation 'pub.devrel:easypermissions:0.4.3'
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+
+    testImplementation "org.robolectric:robolectric:3.4"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
