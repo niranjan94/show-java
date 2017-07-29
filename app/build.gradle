@@ -11,7 +11,7 @@ def versionBuild = 2
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.njlabs.showjava"
         minSdkVersion 15
@@ -31,6 +31,7 @@ android {
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/rxjava.properties'
     }
 
     dexOptions {
@@ -56,24 +57,61 @@ dependencies {
     // MULTI-DEX SUPPORT FOR PRE LOLLIPOP
     implementation 'com.android.support:multidex:1.0.2'
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // KOTLIN STANDARD LIBRARY
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    // FIREBASE LIBRARIES
     implementation "com.google.firebase:firebase-core:$firebase_version"
     implementation "com.google.firebase:firebase-crash:$firebase_version"
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    // ANDROID SUPPORT LIBRARIES
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support:cardview-v7:$support_version"
     implementation "com.android.support.constraint:constraint-layout:1.0.2"
-    testImplementation 'junit:junit:4.12'
+
+    // APACHE COMMONS LIBRARIES
+    implementation 'commons-io:commons-io:2.5'
+    implementation 'commons-cli:commons-cli:1.4'
+
+    // DEX2JAR AND IT's DEPENDENCIES
+    implementation 'com.google.guava:guava:21.0'
+    implementation 'asm:asm-all:3.3.1'
+    implementation files('libs/antlr-3.1.1.jar')
+    implementation files('libs/dex-ir-1.12.jar')
+    implementation files('libs/dex-reader-1.15.jar')
+    implementation files('libs/dex-tools-0.0.9.15.jar')
+    implementation files('libs/dex-translator-0.0.9.15.jar')
+
+    // CLASS FILE READER - JAVA DECOMPILER
+    implementation files('libs/cfr_0_117.jar')
+
+    // DEPENDENCIES FOR JaDX
+    implementation files('libs/dx-1.10.jar')
+    implementation files('libs/android-5.1-clst-core.jar')
+    implementation 'org.slf4j:slf4j-api:1.7.21'
+    implementation 'uk.com.robust-it:cloning:1.9.2'
+    implementation 'com.intellij:annotations:12.0@jar'
+
+    // APK PARSER AND BINARY XML DECODER
+    implementation 'net.dongliu:apk-parser:2.2.0'
+
+    // FERN FLOWER
+    implementation files('libs/fernflower.jar')
 
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.jakewharton.timber:timber:4.5.1'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
     implementation 'org.solovyev.android:checkout:1.0.1'
+    implementation 'com.github.softwee:codeview-android:1.2.0'
+    implementation 'com.droidninja:filepicker:2.0.7'
+    implementation 'pub.devrel:easypermissions:0.4.3'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 }
 
 apply plugin: 'com.google.gms.google-services'

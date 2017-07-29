@@ -19,7 +19,7 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         android:fullBackupContent="true"
-        tools:replace="android:icon,android:allowBackup"
+        tools:replace="android:icon,android:allowBackup,android:supportsRtl"
         tools:ignore="GoogleAppIndexingWarning">
 
         <meta-data
@@ -27,7 +27,7 @@
             android:value="37243dbea20e385bdebdc999bef0715ef594e382"/>
 
         <activity
-            android:name=".LandingActivity"
+            android:name=".activites.landing.LandingActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.WithDrawer">
             <intent-filter>
@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
 
-
+        <service android:name=".services.processor.ProcessorService" />
     </application>
 
 </manifest>

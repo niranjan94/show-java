@@ -2,4 +2,21 @@
     <string name="action_settings">Settings</string>
     <string name="drawer_close">Close drawer</string>
     <string name="drawer_open">Open drawer</string>
+    <string name="report_a_bug">Report a bug</string>
+    <string name="about">About</string>
+    <string name="settings">Settings</string>
+    <string name="invert_background_color">Invert background color</string>
+    <string name="storage_permission_rationale">Show Java requires storage permission to store decompiled sources</string>
+
+    <string-array name="decompilers">
+        <item>CFR 0.110</item>
+        <item>JaDX 0.6.1</item>
+        <item>FernFlower (analytical decompiler)</item>
+    </string-array>
+
+    <string-array name="decompilers_values">
+        <item>cfr</item>
+        <item>jadx</item>
+        <item>fernflower</item>
+    </string-array>
 </resources>
