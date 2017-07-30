@@ -1,7 +1,6 @@
 package com.njlabs.showjava.activities.apps
 
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.njlabs.showjava.R
@@ -20,11 +19,26 @@ class AppsActivity: BaseActivity() {
 
     private lateinit var appsHandler: AppsHandler
 
+    private var apps = ArrayList<PackageInfo>()
+
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_apps)
         appsHandler = AppsHandler(context)
         loadingView.visibility = View.VISIBLE
         appsList.visibility = View.GONE
+        if (savedInstanceState != null) {
+            val apps = savedInstanceState.getParcelableArrayList<PackageInfo>("apps")
+            if (apps != null) {
+                this.apps = apps
+                setupList()
+            }
+        }
+        if (this.apps.isEmpty()) {
+            loadApps()
+        }
+    }
+
+    private fun loadApps() {
         appsHandler.loadApps()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -37,7 +51,10 @@ class AppsActivity: BaseActivity() {
                                 secondaryStatusText.text = processStatus.secondaryStatus
                             }
                         } else {
-                            setupList(processStatus.result)
+                            if (processStatus.result != null) {
+                                apps = processStatus.result
+                            }
+                            setupList()
                         }
                     }
 
@@ -55,20 +72,24 @@ class AppsActivity: BaseActivity() {
                 })
     }
 
-    private fun setupList(apps: ArrayList<PackageInfo>?) {
+    private fun setupList() {
         loadingView.visibility = View.GONE
-        if (apps != null) {
+        apps.let {
             appsList.visibility = View.VISIBLE
             appsList.setHasFixedSize(true)
             appsList.layoutManager =  LinearLayoutManager(context)
-            /**appsList.addItemDecoration(DividerItemDecoration(
-                    appsList.context,
-                    (appsList.layoutManager as LinearLayoutManager).orientation
-            ))**/
             val historyListAdapter = AppsListAdapter(apps) { selectedApp ->
                 Timber.d(selectedApp.packageName)
             }
             appsList.adapter = historyListAdapter
         }
     }
+
+    override fun onSaveInstanceState(bundle: Bundle) {
+        super.onSaveInstanceState(bundle)
+        apps.let {
+            bundle.putParcelableArrayList("apps", apps)
+        }
+    }
+
 }

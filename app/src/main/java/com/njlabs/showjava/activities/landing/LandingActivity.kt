@@ -24,6 +24,7 @@ import com.njlabs.showjava.activities.filepicker.FilePickerActivity
 import android.app.Activity
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.activities.apps.AppsActivity
+import com.njlabs.showjava.models.PackageInfo
 import com.nononsenseapps.filepicker.Utils
 
 
@@ -31,6 +32,8 @@ class LandingActivity : BaseActivity() {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var landingHandler: LandingHandler
+
+    private var historyItems = ArrayList<SourceInfo>()
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_landing)
@@ -43,6 +46,13 @@ class LandingActivity : BaseActivity() {
         drawerLayout.addDrawerListener(drawerToggle)
         landingHandler = LandingHandler(context)
         setupFab()
+        if (savedInstanceState != null) {
+            val historyItems = savedInstanceState.getParcelableArrayList<SourceInfo>("historyItems")
+            if (historyItems != null) {
+                this.historyItems = historyItems
+                SetupList()
+            }
+        }
     }
 
     private fun setupFab() {
@@ -79,8 +89,9 @@ class LandingActivity : BaseActivity() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : Observer<ArrayList<SourceInfo>> {
-                    override fun onNext(historyItems: ArrayList<SourceInfo>) {
-                        SetupList(historyItems)
+                    override fun onNext(_historyItems: ArrayList<SourceInfo>) {
+                        historyItems = _historyItems
+                        SetupList()
                     }
 
                     override fun onComplete() {
@@ -105,7 +116,7 @@ class LandingActivity : BaseActivity() {
         welcomeLayout.visibility = defaultGroupVisibility
     }
 
-    fun SetupList(historyItems: List<SourceInfo>) {
+    fun SetupList() {
         if (historyItems.isEmpty()) {
             setListVisibility(false)
         } else {
@@ -117,6 +128,13 @@ class LandingActivity : BaseActivity() {
                 Timber.d(sourceDir.absolutePath)
             }
             historyListView.adapter = historyListAdapter
+        }
+    }
+
+    override fun onSaveInstanceState(bundle: Bundle) {
+        super.onSaveInstanceState(bundle)
+        historyItems.let {
+            bundle.putParcelableArrayList("historyItems", historyItems)
         }
     }
 

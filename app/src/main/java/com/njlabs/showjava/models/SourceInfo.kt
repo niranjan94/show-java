@@ -1,26 +1,26 @@
 package com.njlabs.showjava.models
 
-import org.apache.commons.io.FileUtils
-import org.json.JSONException
-import org.json.JSONObject
+import android.os.Parcel
+import android.os.Parcelable
 
-import java.io.File
-import java.io.IOException
-
-import timber.log.Timber
-
-class SourceInfo  {
+class SourceInfo() : Parcelable {
 
     lateinit var packageLabel: String
     lateinit var packageName: String
     var hasSource = true
 
-    private constructor(packageLabel: String, packageName: String) {
+    constructor(parcel: Parcel) : this() {
+        packageLabel = parcel.readString()
+        packageName = parcel.readString()
+        hasSource = parcel.readByte() != 0.toByte()
+    }
+
+    constructor(packageLabel: String, packageName: String) : this() {
         this.packageLabel = packageLabel
         this.packageName = packageName
     }
 
-    constructor(hasSource: Boolean) {
+    constructor(hasSource: Boolean) : this() {
         this.hasSource = hasSource
     }
 
@@ -28,90 +28,24 @@ class SourceInfo  {
         return hasSource
     }
 
-    companion object {
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(packageLabel)
+        parcel.writeString(packageName)
+        parcel.writeByte(if (hasSource) 1 else 0)
+    }
 
-        fun initialise(packageLabel: String, packageName: String, sourceOutputDir: String) {
-            try {
-                val json = JSONObject()
-                json.put("package_label", packageLabel)
-                json.put("package_name", packageName)
-                json.put("has_java_sources", false)
-                json.put("has_xml_sources", false)
-                val filePath = sourceOutputDir + "/info.json"
-                FileUtils.writeStringToFile(File(filePath), json.toString(), "UTF-8")
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
+    override fun describeContents(): Int {
+        return 0
+    }
 
+    companion object CREATOR : Parcelable.Creator<SourceInfo> {
+        override fun createFromParcel(parcel: Parcel): SourceInfo {
+            return SourceInfo(parcel)
         }
 
-        fun setjavaSourceStatus(sourceOutputDir: String, status: Boolean?) {
-            try {
-                val infoFile = File(sourceOutputDir + "/info.json")
-                val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
-                json.put("has_java_sources", status)
-                FileUtils.writeStringToFile(infoFile, json.toString(), "UTF-8")
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-
-        }
-
-        fun setXmlSourceStatus(sourceOutputDir: String, status: Boolean?) {
-            try {
-                val infoFile = File(sourceOutputDir + "/info.json")
-                val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
-                json.put("has_xml_sources", status)
-                FileUtils.writeStringToFile(infoFile, json.toString(), "UTF-8")
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-
-        }
-
-        fun delete(sourceOutputDir: String) {
-            try {
-                val infoFile = File(sourceOutputDir + "/info.json")
-                infoFile.delete()
-            } catch (e: Exception) {
-                Timber.e(e)
-            }
-
-        }
-
-        fun getLabel(directory: String): String? {
-            try {
-                val infoFile = File(directory + "/info.json")
-                val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
-                return json.getString("package_label")
-            } catch (e: IOException) {
-                return null
-            } catch (e: JSONException) {
-                return null
-            }
-
-        }
-
-        fun getSourceInfo(infoFile: File): SourceInfo? {
-            try {
-                val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
-                if (json.getBoolean("has_java_sources") || json.getBoolean("has_xml_sources")) {
-                    return SourceInfo(json.getString("package_label"), json.getString("package_name"))
-                } else {
-                    return null
-                }
-            } catch (e: IOException) {
-                return null
-            } catch (e: JSONException) {
-                return null
-            }
-
+        override fun newArray(size: Int): Array<SourceInfo?> {
+            return arrayOfNulls(size)
         }
     }
+
 }

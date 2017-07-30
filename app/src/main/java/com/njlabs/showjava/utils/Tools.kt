@@ -57,7 +57,7 @@ object Tools {
         if (sourceDir.exists() && sourceDir.isDirectory) {
             val infoFile = File(sourceDir.toString() + "/info.json")
             if (infoFile.exists() && infoFile.isFile) {
-                val sourceInfo = SourceInfo.getSourceInfo(infoFile)
+                val sourceInfo = SourceInfoHelper.getSourceInfo(infoFile)
                 if (sourceInfo != null) {
                     return true
                 }
@@ -70,7 +70,7 @@ object Tools {
         if (sourceDir.isDirectory) {
             val infoFile = File(sourceDir.toString() + "/info.json")
             if (infoFile.exists() && infoFile.isFile) {
-                return SourceInfo.getSourceInfo(infoFile)
+                return SourceInfoHelper.getSourceInfo(infoFile)
             }
         }
         return null
