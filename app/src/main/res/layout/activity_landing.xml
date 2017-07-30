@@ -75,16 +75,45 @@
             </android.support.v7.widget.CardView>
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/pickAppText"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/pick_app_to_explore"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:visibility="gone" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/historyListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/adView"
-            android:layout_below="@+id/toolbar"
+            android:layout_below="@+id/pickAppText"
             android:divider="@null"
             android:listSelector="@android:color/transparent"
             android:scrollbarStyle="outsideOverlay"
             android:visibility="gone" />
+
+        <io.github.yavski.fabspeeddial.FabSpeedDial
+            android:id="@+id/selectionFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_above="@id/adView"
+            app:fabGravity="bottom_end"
+            app:fabMenu="@menu/menu_fab"
+            app:miniFabBackgroundTint="?attr/colorAccent"
+            app:miniFabDrawableTint="@color/white"
+            app:miniFabTitleTextColor="@color/grey_900"
+            android:layout_alignParentRight="true" />
 
         <include
             android:id="@+id/adView"

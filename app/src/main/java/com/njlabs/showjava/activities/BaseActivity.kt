@@ -1,4 +1,4 @@
-package com.njlabs.showjava.activites
+package com.njlabs.showjava.activities
 
 import android.Manifest
 import android.content.Context
@@ -22,7 +22,6 @@ import com.njlabs.showjava.R
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import com.njlabs.showjava.utils.Tools
-import timber.log.Timber
 
 
 abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -177,7 +176,11 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
             if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(this, R.string.storage_permission_rationale, Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                        this,
+                        R.string.storage_permission_rationale,
+                        Toast.LENGTH_LONG
+                ).show()
                 finish()
             } else {
                 postPermissionsGrant()

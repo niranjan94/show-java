@@ -1,4 +1,4 @@
-package com.njlabs.showjava.activites.landing
+package com.njlabs.showjava.activities.landing
 
 import android.content.Context
 import android.os.Environment
@@ -30,7 +30,7 @@ class LandingHandler(private var context: Context) {
             if (dir.exists()) {
                 val files = dir.listFiles()
                 if (files != null && files.isNotEmpty())
-                    for (file in files) {
+                    files.forEach { file ->
                         Timber.d(file.absolutePath)
                         if (Tools.sourceExists(file)) {
                             Tools.getSourceInfoFromSourcePath(file)?.let { historyItems.add(it) }

@@ -9,7 +9,7 @@ import java.io.IOException
 
 import timber.log.Timber
 
-class SourceInfo {
+class SourceInfo  {
 
     lateinit var packageLabel: String
     lateinit var packageName: String

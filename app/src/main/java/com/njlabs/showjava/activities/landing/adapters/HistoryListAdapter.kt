@@ -1,4 +1,4 @@
-package com.njlabs.showjava.activites.landing.adapters
+package com.njlabs.showjava.activities.landing.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

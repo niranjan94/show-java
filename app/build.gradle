@@ -60,12 +60,12 @@ android {
 
     productFlavors {
         standard {
-            buildConfigField "boolean", "is_travis", "false"
+            buildConfigField "boolean", "IS_TRAVIS", "false"
             dimension = "type"
         }
 
         travis {
-            buildConfigField "boolean", "is_travis", "true"
+            buildConfigField "boolean", "IS_TRAVIS", "true"
             dimension = "type"
         }
     }
@@ -109,7 +109,7 @@ dependencies {
     implementation 'commons-cli:commons-cli:1.4'
 
     // DEX2JAR AND IT's DEPENDENCIES
-    implementation 'com.google.guava:guava:21.0'
+    implementation 'com.google.guava:guava:22.0'
     implementation 'asm:asm-all:3.3.1'
     implementation files('libs/antlr-3.1.1.jar')
     implementation files('libs/dex-ir-1.12.jar')
@@ -138,8 +138,9 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
     implementation 'org.solovyev.android:checkout:1.0.1'
     implementation 'com.github.softwee:codeview-android:1.2.0'
-    implementation 'com.droidninja:filepicker:2.0.7'
+    implementation 'com.nononsenseapps:filepicker:4.1.0'
     implementation 'pub.devrel:easypermissions:0.4.3'
+    implementation 'io.github.yavski:fab-speed-dial:1.0.6'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'

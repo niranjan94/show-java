@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.njlabs.showjava.activites.landing.LandingActivity">
+    tools:context="com.njlabs.showjava.activities.landing.LandingActivity">
 
     <item
         android:id="@+id/bug_report_option"

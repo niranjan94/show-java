@@ -1,4 +1,4 @@
-package com.njlabs.showjava.activites.landing
+package com.njlabs.showjava.activities.landing
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -8,9 +8,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.view.View
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activites.BaseActivity
-import com.njlabs.showjava.activites.landing.adapters.HistoryListAdapter
+import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.models.SourceInfo
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -18,12 +19,18 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
 import java.io.File
+import android.widget.Toast
+import android.content.Intent
+import com.njlabs.showjava.activities.filepicker.FilePickerActivity
+import android.app.Activity
+import com.nononsenseapps.filepicker.Utils
 
 
 class LandingActivity : BaseActivity() {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var landingHandler: LandingHandler
+    private val FILE_PICKER_RESULT = 9600
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_landing)
@@ -35,6 +42,30 @@ class LandingActivity : BaseActivity() {
         )
         drawerLayout.addDrawerListener(drawerToggle)
         landingHandler = LandingHandler(context)
+        setupFab()
+    }
+
+    private fun setupFab() {
+        selectionFab.setMenuListener(object : SimpleMenuListenerAdapter() {
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.action_pick_installed -> {
+                        Toast.makeText(context, "Picking from installed", Toast.LENGTH_SHORT).show()
+                        return true
+                    }
+                    R.id.action_pick_sdcard -> {
+                        pickFile()
+                        return true
+                    }
+                }
+                return false
+            }
+        })
+    }
+
+    private fun pickFile() {
+        val i = Intent(context, FilePickerActivity::class.java)
+        startActivityForResult(i, FILE_PICKER_RESULT)
     }
 
     override fun postPermissionsGrant() {
@@ -45,36 +76,44 @@ class LandingActivity : BaseActivity() {
         landingHandler.loadHistory()
                 ?.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe(object: Observer<ArrayList<SourceInfo>>{
+                ?.subscribe(object : Observer<ArrayList<SourceInfo>> {
                     override fun onNext(historyItems: ArrayList<SourceInfo>) {
                         SetupList(historyItems)
                     }
+
                     override fun onComplete() {
 
                     }
+
                     override fun onSubscribe(d: Disposable) {
 
                     }
+
                     override fun onError(e: Throwable) {
                         Timber.e(e)
                     }
                 })
     }
 
+    private fun setListVisibility(isListVisible: Boolean = true) {
+        val listGroupVisibility = if (isListVisible) View.VISIBLE else View.GONE
+        val defaultGroupVisibility = if (isListVisible) View.GONE else View.VISIBLE
+        historyListView.visibility = listGroupVisibility
+        pickAppText.visibility = listGroupVisibility
+        welcomeLayout.visibility = defaultGroupVisibility
+    }
+
     fun SetupList(historyItems: List<SourceInfo>) {
         if (historyItems.isEmpty()) {
-            historyListView.visibility = View.GONE
-            welcomeLayout.visibility = View.VISIBLE
+            setListVisibility(false)
         } else {
-            welcomeLayout.visibility = View.GONE
-            historyListView.visibility = View.VISIBLE
+            setListVisibility(true)
             historyListView.setHasFixedSize(true)
-
             val mLayoutManager = LinearLayoutManager(context)
             historyListView.layoutManager = mLayoutManager
 
-            val historyListAdapter = HistoryListAdapter(historyItems) {
-                val sourceDir = File("${Environment.getExternalStorageDirectory()}/ShowJava/sources/${it.packageName}")
+            val historyListAdapter = HistoryListAdapter(historyItems) { selectedHistoryItem ->
+                val sourceDir = File("${Environment.getExternalStorageDirectory()}/ShowJava/sources/${selectedHistoryItem.packageName}")
                 Timber.d(sourceDir.absolutePath)
             }
             historyListView.adapter = historyListAdapter
@@ -97,4 +136,17 @@ class LandingActivity : BaseActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == FILE_PICKER_RESULT && resultCode == Activity.RESULT_OK) {
+            data?.let {
+                Utils.getSelectedFilesFromResult(data)
+                        .map { Utils.getFileForUri(it) }
+                        .forEach { Timber.d(it.absolutePath) }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
 }

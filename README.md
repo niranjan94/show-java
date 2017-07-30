@@ -1,9 +1,9 @@
-[![Dependency Status](https://www.versioneye.com/user/projects/5749244fce8d0e004505f807/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5749244fce8d0e004505f807)  [![Build Status](https://img.shields.io/travis/niranjan94/show-java.svg?style=flat-square)](https://travis-ci.org/niranjan94/show-java) [![License Info](https://img.shields.io/badge/license-GNU_AGPLv3-blue.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store Info](https://img.shields.io/badge/Play_Store-v2.1.0-36B0C1.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava) [![GitHub app version](https://img.shields.io/badge/GitHub-v2.1.0-yellow.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store downloads](https://img.shields.io/badge/downloads-260k%20total-E04253.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava)
+[![Dependency Status](https://www.versioneye.com/user/projects/5749244fce8d0e004505f807/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5749244fce8d0e004505f807)  [![Build Status](https://img.shields.io/travis/niranjan94/show-java.svg?style=flat-square)](https://travis-ci.org/niranjan94/show-java) [![License Info](https://img.shields.io/badge/license-Apache_License_2.0-blue.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store Info](https://img.shields.io/badge/Play_Store-v2.1.0-36B0C1.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava) [![GitHub app version](https://img.shields.io/badge/GitHub-v2.1.0-yellow.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store downloads](https://img.shields.io/badge/downloads-300k%20total-E04253.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava)
 
 
 ![ShowJava Banner v0.1](https://raw.githubusercontent.com/niranjan94/show-java/master/banner.png?v1)
 
-An apk decompiler for android. Built on Android Studio 1.5 with gradle 2.8
+An apk decompiler for android.
 
 > The current GitHub master branch may be ahead of the Play Store version (and could be unstable/incomplete/buggy at some places)
 

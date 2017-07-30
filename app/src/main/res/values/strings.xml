@@ -11,6 +11,9 @@
     <string name="tap_plus">tap the plus button to begin</string>
     <string name="space" />
     <string name="app_icon">App icon</string>
+    <string name="pick_app_to_explore">Pick an app to explore</string>
+    <string name="action_pick_sdcard">Pick from SD Card</string>
+    <string name="action_pick_installed">Pick from installed</string>
 
     <string-array name="decompilers">
         <item>CFR 0.110</item>

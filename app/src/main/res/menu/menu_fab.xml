@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.njlabs.showjava.activities.landing.LandingActivity">
+    <item
+        android:id="@+id/action_pick_installed"
+        android:orderInCategory="1"
+        android:title="@string/action_pick_installed"
+        android:icon="@drawable/ic_apps_white"/>
+    <item
+        android:id="@+id/action_pick_sdcard"
+        android:orderInCategory="2"
+        android:title="@string/action_pick_sdcard"
+        android:icon="@drawable/ic_sd_card_white"/>
+</menu>

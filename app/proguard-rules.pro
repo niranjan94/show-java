@@ -32,8 +32,6 @@
     public void *(android.view.MenuItem);
 }
 
--keep class com.njlabs.showjava.utils.AesCbcWithIntegrity$PrngFixes$* { *; }
-
 -keep class android.support.v4.app.** { *; }
 -keep interface android.support.v4.app.** { *; }
 
