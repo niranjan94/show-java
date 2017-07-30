@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="70dp">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/historyItemCard"
+        android:id="@+id/itemCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="3dp"
@@ -23,7 +24,7 @@
             android:padding="5dp">
 
             <ImageView
-                android:id="@+id/historyItemIcon"
+                android:id="@+id/itemIcon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
@@ -39,14 +40,14 @@
                 android:layout_marginStart="6dp">
 
                 <TextView
-                    android:id="@+id/historyItemLabel"
+                    android:id="@+id/itemLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/space"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
-                    android:id="@+id/historyItemPackage"
+                    android:id="@+id/itemSecondaryLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/space"

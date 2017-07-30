@@ -19,10 +19,11 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
 import java.io.File
-import android.widget.Toast
 import android.content.Intent
 import com.njlabs.showjava.activities.filepicker.FilePickerActivity
 import android.app.Activity
+import com.njlabs.showjava.Constants
+import com.njlabs.showjava.activities.apps.AppsActivity
 import com.nononsenseapps.filepicker.Utils
 
 
@@ -30,7 +31,6 @@ class LandingActivity : BaseActivity() {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var landingHandler: LandingHandler
-    private val FILE_PICKER_RESULT = 9600
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_landing)
@@ -50,7 +50,9 @@ class LandingActivity : BaseActivity() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when (menuItem.itemId) {
                     R.id.action_pick_installed -> {
-                        Toast.makeText(context, "Picking from installed", Toast.LENGTH_SHORT).show()
+                        startActivity(
+                                Intent(context, AppsActivity::class.java)
+                        )
                         return true
                     }
                     R.id.action_pick_sdcard -> {
@@ -65,7 +67,7 @@ class LandingActivity : BaseActivity() {
 
     private fun pickFile() {
         val i = Intent(context, FilePickerActivity::class.java)
-        startActivityForResult(i, FILE_PICKER_RESULT)
+        startActivityForResult(i, Constants.FILE_PICKER_RESULT)
     }
 
     override fun postPermissionsGrant() {
@@ -74,9 +76,9 @@ class LandingActivity : BaseActivity() {
 
     private fun populateHistory() {
         landingHandler.loadHistory()
-                ?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe(object : Observer<ArrayList<SourceInfo>> {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Observer<ArrayList<SourceInfo>> {
                     override fun onNext(historyItems: ArrayList<SourceInfo>) {
                         SetupList(historyItems)
                     }
@@ -109,9 +111,7 @@ class LandingActivity : BaseActivity() {
         } else {
             setListVisibility(true)
             historyListView.setHasFixedSize(true)
-            val mLayoutManager = LinearLayoutManager(context)
-            historyListView.layoutManager = mLayoutManager
-
+            historyListView.layoutManager = LinearLayoutManager(context)
             val historyListAdapter = HistoryListAdapter(historyItems) { selectedHistoryItem ->
                 val sourceDir = File("${Environment.getExternalStorageDirectory()}/ShowJava/sources/${selectedHistoryItem.packageName}")
                 Timber.d(sourceDir.absolutePath)
@@ -138,7 +138,7 @@ class LandingActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == FILE_PICKER_RESULT && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Constants.FILE_PICKER_RESULT && resultCode == Activity.RESULT_OK) {
             data?.let {
                 Utils.getSelectedFilesFromResult(data)
                         .map { Utils.getFileForUri(it) }

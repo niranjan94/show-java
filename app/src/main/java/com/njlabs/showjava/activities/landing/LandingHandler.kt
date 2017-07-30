@@ -12,7 +12,7 @@ import java.io.IOException
 
 class LandingHandler(private var context: Context) {
 
-    fun loadHistory(): Observable<ArrayList<SourceInfo>>? {
+    fun loadHistory(): Observable<ArrayList<SourceInfo>> {
         return Observable.fromCallable {
             val historyItems = ArrayList<SourceInfo>()
             val showJavaDir = File("${Environment.getExternalStorageDirectory()}/ShowJava/")
@@ -24,7 +24,6 @@ class LandingHandler(private var context: Context) {
                 } catch (e: IOException) {
                     Timber.d(e)
                 }
-
             }
             val dir = File("${Environment.getExternalStorageDirectory()}/ShowJava/sources")
             if (dir.exists()) {

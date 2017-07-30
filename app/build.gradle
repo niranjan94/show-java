@@ -141,6 +141,7 @@ dependencies {
     implementation 'com.nononsenseapps:filepicker:4.1.0'
     implementation 'pub.devrel:easypermissions:0.4.3'
     implementation 'io.github.yavski:fab-speed-dial:1.0.6'
+    implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'

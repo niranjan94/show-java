@@ -10,8 +10,8 @@ import com.njlabs.showjava.services.processor.ProcessorService
 
 import java.io.File
 import android.net.ConnectivityManager
-
-
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 
 object Tools {
 
@@ -35,6 +35,10 @@ object Tools {
                 break
             }
         }
+    }
+
+    fun isSystemPackage(pkgInfo: PackageInfo): Boolean {
+        return pkgInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
     }
 
     fun isProcessorServiceRunning(context: Context): Boolean {

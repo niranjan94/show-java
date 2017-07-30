@@ -5,6 +5,8 @@ import java.io.File
 
 class FilePickerFragment : com.nononsenseapps.filepicker.FilePickerFragment() {
 
+    private val EXTENSIONS = arrayOf(".apk", ".jar")
+
     /**
      * @param file input file
      * *
@@ -20,12 +22,13 @@ class FilePickerFragment : com.nononsenseapps.filepicker.FilePickerFragment() {
         }
     }
 
+    /**
+     * Allow only selected extensions.
+     */
     override fun isItemVisible(file: File?): Boolean {
-        // Default behavior
-        // return isDir(file) || (mode == MODE_FILE || mode == MODE_FILE_AND_DIR);
         if (file != null) {
-            if (!isDir(file) && (mode == AbstractFilePickerFragment.MODE_FILE || mode == AbstractFilePickerFragment.MODE_FILE_AND_DIR)) {
-                return EXTENSION.equals(getExtension(file), ignoreCase = true)
+            if (!isDir(file) && (mode == MODE_FILE || mode == MODE_FILE_AND_DIR)) {
+                return EXTENSIONS.contains(getExtension(file)?.toLowerCase())
             }
             return isDir(file)
         }
@@ -60,9 +63,5 @@ class FilePickerFragment : com.nononsenseapps.filepicker.FilePickerFragment() {
         mCheckedItems.clear()
         mCheckedVisibleViewHolders.clear()
         refresh(mCurrentPath)
-    }
-
-    companion object {
-        private val EXTENSION = ".apk"
     }
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.apps.AppsActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <include
+        android:id="@+id/adView"
+        layout="@layout/admob" />
+
+    <LinearLayout
+        android:id="@+id/loadingView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:ellipsize="end"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="4dp"
+            android:text="@string/loading_applications"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/grey_700" />
+
+        <com.daimajia.numberprogressbar.NumberProgressBar
+            android:id="@+id/progressBar"
+            style="@style/NumberProgressBar_Default"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/secondaryStatusText"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:ellipsize="end"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="5dp"
+            android:text=""
+            android:textSize="12sp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/grey_700" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/appsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@id/adView"
+        android:visibility="gone">
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

@@ -14,6 +14,7 @@
     <string name="pick_app_to_explore">Pick an app to explore</string>
     <string name="action_pick_sdcard">Pick from SD Card</string>
     <string name="action_pick_installed">Pick from installed</string>
+    <string name="loading_applications">Loading installed applications …</string>
 
     <string-array name="decompilers">
         <item>CFR 0.110</item>
