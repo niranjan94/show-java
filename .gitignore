@@ -41,3 +41,4 @@ app/app.iml
 /*.iml
 
 crashlytics.properties
+/app/google-services.json

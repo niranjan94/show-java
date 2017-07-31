@@ -24,7 +24,6 @@ import com.njlabs.showjava.activities.filepicker.FilePickerActivity
 import android.app.Activity
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.activities.apps.AppsActivity
-import com.njlabs.showjava.models.PackageInfo
 import com.nononsenseapps.filepicker.Utils
 
 
@@ -50,7 +49,7 @@ class LandingActivity : BaseActivity() {
             val historyItems = savedInstanceState.getParcelableArrayList<SourceInfo>("historyItems")
             if (historyItems != null) {
                 this.historyItems = historyItems
-                SetupList()
+                setupList()
             }
         }
     }
@@ -91,7 +90,7 @@ class LandingActivity : BaseActivity() {
                 .subscribe(object : Observer<ArrayList<SourceInfo>> {
                     override fun onNext(_historyItems: ArrayList<SourceInfo>) {
                         historyItems = _historyItems
-                        SetupList()
+                        setupList()
                     }
 
                     override fun onComplete() {
@@ -116,7 +115,7 @@ class LandingActivity : BaseActivity() {
         welcomeLayout.visibility = defaultGroupVisibility
     }
 
-    fun SetupList() {
+    private fun setupList() {
         if (historyItems.isEmpty()) {
             setListVisibility(false)
         } else {
