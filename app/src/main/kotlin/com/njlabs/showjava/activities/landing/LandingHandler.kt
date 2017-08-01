@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Environment
 import io.reactivex.Observable
 import com.njlabs.showjava.models.SourceInfo
+import com.njlabs.showjava.utils.PackageSourceTools
 import com.njlabs.showjava.utils.Tools
 import org.apache.commons.io.FileUtils
 import timber.log.Timber
@@ -31,8 +32,8 @@ class LandingHandler(private var context: Context) {
                 if (files != null && files.isNotEmpty())
                     files.forEach { file ->
                         Timber.d(file.absolutePath)
-                        if (Tools.sourceExists(file)) {
-                            Tools.getSourceInfoFromSourcePath(file)?.let { historyItems.add(it) }
+                        if (PackageSourceTools.sourceExists(file)) {
+                            PackageSourceTools.getSourceInfoFromSourcePath(file)?.let { historyItems.add(it) }
                         } else {
                             if (!Tools.isProcessorServiceRunning(context)) {
                                 try {

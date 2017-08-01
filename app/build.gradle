@@ -80,6 +80,12 @@ android {
             shrinkResources false
         }
     }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
 }
 
 ext.support_version = '26.0.0'

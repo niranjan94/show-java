@@ -37,10 +37,6 @@ object Tools {
         }
     }
 
-    fun isSystemPackage(pkgInfo: PackageInfo): Boolean {
-        return pkgInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
-    }
-
     fun isProcessorServiceRunning(context: Context): Boolean {
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val runningAppProcesses = am.runningAppProcesses
@@ -51,29 +47,6 @@ object Tools {
             }
         }
         return false
-    }
-
-    fun sourceExists(sourceDir: File): Boolean {
-        if (sourceDir.exists() && sourceDir.isDirectory) {
-            val infoFile = File(sourceDir.toString() + "/info.json")
-            if (infoFile.exists() && infoFile.isFile) {
-                val sourceInfo = SourceInfoHelper.getSourceInfo(infoFile)
-                if (sourceInfo != null) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-
-    fun getSourceInfoFromSourcePath(sourceDir: File): SourceInfo? {
-        if (sourceDir.isDirectory) {
-            val infoFile = File(sourceDir.toString() + "/info.json")
-            if (infoFile.exists() && infoFile.isFile) {
-                return SourceInfoHelper.getSourceInfo(infoFile)
-            }
-        }
-        return null
     }
 
     fun getFolderSize(f: File): Long {
