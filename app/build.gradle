@@ -138,10 +138,12 @@ dependencies {
     // FERN FLOWER
     implementation files('libs/fernflower.jar')
 
-    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
-    implementation 'com.jakewharton.timber:timber:4.5.1'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
+    implementation 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
+
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'com.jakewharton.timber:timber:4.5.1'
     implementation 'org.solovyev.android:checkout:1.0.1'
     implementation 'com.github.softwee:codeview-android:1.2.0'
     implementation 'com.nononsenseapps:filepicker:4.1.0'
