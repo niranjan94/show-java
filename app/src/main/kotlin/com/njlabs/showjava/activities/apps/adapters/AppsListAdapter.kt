@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.njlabs.showjava.R
-import kotlinx.android.synthetic.main.app_list_item.view.*
 import com.njlabs.showjava.models.PackageInfo
+import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
 class AppsListAdapter(private val apps: List<PackageInfo>, private val itemClick: (PackageInfo) -> Unit) : RecyclerView.Adapter<AppsListAdapter.ViewHolder>() {
 
@@ -23,7 +23,7 @@ class AppsListAdapter(private val apps: List<PackageInfo>, private val itemClick
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppsListAdapter.ViewHolder? {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.app_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_app_list_item, parent, false)
         return ViewHolder(view, itemClick)
     }
 

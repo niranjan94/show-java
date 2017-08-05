@@ -2,10 +2,10 @@ package com.njlabs.showjava.activities.landing
 
 import android.content.Context
 import android.os.Environment
-import io.reactivex.Observable
 import com.njlabs.showjava.models.SourceInfo
 import com.njlabs.showjava.utils.PackageSourceTools
 import com.njlabs.showjava.utils.Tools
+import io.reactivex.Observable
 import org.apache.commons.io.FileUtils
 import timber.log.Timber
 import java.io.File
@@ -23,7 +23,7 @@ class LandingHandler(private var context: Context) {
                 try {
                     nomedia.createNewFile()
                 } catch (e: IOException) {
-                    Timber.d(e)
+                    Timber.e(e)
                 }
             }
             val dir = File("${Environment.getExternalStorageDirectory()}/ShowJava/sources")
@@ -31,7 +31,6 @@ class LandingHandler(private var context: Context) {
                 val files = dir.listFiles()
                 if (files != null && files.isNotEmpty())
                     files.forEach { file ->
-                        Timber.d(file.absolutePath)
                         if (PackageSourceTools.sourceExists(file)) {
                             PackageSourceTools.getSourceInfoFromSourcePath(file)?.let { historyItems.add(it) }
                         } else {

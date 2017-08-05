@@ -5,8 +5,8 @@ import android.content.Context
 import android.support.multidex.MultiDex
 import com.njlabs.showjava.utils.logging.ProductionTree
 import com.squareup.leakcanary.LeakCanary
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import timber.log.Timber
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 
 class MainApplication : Application() {
 

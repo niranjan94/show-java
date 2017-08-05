@@ -4,13 +4,10 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Environment
 import android.view.MenuItem
-
 import com.nononsenseapps.filepicker.AbstractFilePickerActivity
 import com.nononsenseapps.filepicker.AbstractFilePickerFragment
-
-import java.io.File
-
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
+import java.io.File
 
 class FilePickerActivity : AbstractFilePickerActivity<File>() {
 

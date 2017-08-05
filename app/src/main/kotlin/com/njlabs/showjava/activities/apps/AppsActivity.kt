@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_apps.*
 import timber.log.Timber
 
-class AppsActivity: BaseActivity() {
+class AppsActivity : BaseActivity() {
 
     private lateinit var appsHandler: AppsHandler
 
@@ -77,7 +77,7 @@ class AppsActivity: BaseActivity() {
         apps.let {
             appsList.visibility = View.VISIBLE
             appsList.setHasFixedSize(true)
-            appsList.layoutManager =  LinearLayoutManager(context)
+            appsList.layoutManager = LinearLayoutManager(context)
             val historyListAdapter = AppsListAdapter(apps) { selectedApp ->
                 Timber.d(selectedApp.packageName)
             }

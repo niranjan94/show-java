@@ -8,11 +8,11 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/layout_toolbar" />
 
     <include
         android:id="@+id/adView"
-        layout="@layout/admob" />
+        layout="@layout/layout_admob" />
 
     <LinearLayout
         android:id="@+id/loadingView"

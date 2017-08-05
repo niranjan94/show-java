@@ -1,7 +1,6 @@
 package com.njlabs.showjava.utils.rx.bus
 
 import com.jakewharton.rxrelay2.PublishRelay
-import com.jakewharton.rxrelay2.Relay
 
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -22,7 +21,9 @@ class RxBus private constructor() {
         return _bus.hasObservers()
     }
 
-    private object SingletonHolder { val INSTANCE = RxBus() }
+    private object SingletonHolder {
+        val INSTANCE = RxBus()
+    }
 
     companion object {
         val instance: RxBus by lazy { SingletonHolder.INSTANCE }

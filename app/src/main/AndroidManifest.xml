@@ -18,6 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/AppTheme.NoActionBar"
+        android:largeHeap="true"
         android:fullBackupContent="true"
         tools:replace="android:icon,android:allowBackup,android:supportsRtl"
         tools:ignore="GoogleAppIndexingWarning">
@@ -56,13 +57,23 @@
         <activity
             android:name=".activities.apps.AppsActivity"
             android:label="@string/app_name">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.landing.LandingActivity" />
         </activity>
 
-        <service android:name=".services.processor.ProcessorService" />
+        <activity
+            android:name=".activities.decompiler.DecompilerActivity"
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.apps.AppsActivity" />
+        </activity>
+
+        <service
+            android:name=".services.processor.ProcessorService"
+            android:exported="false"
+            android:process=":service" />
     </application>
 
 </manifest>

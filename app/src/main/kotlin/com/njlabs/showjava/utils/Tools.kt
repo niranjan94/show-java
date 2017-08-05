@@ -3,15 +3,10 @@ package com.njlabs.showjava.utils
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-
-import com.njlabs.showjava.Constants
-import com.njlabs.showjava.models.SourceInfo
-import com.njlabs.showjava.services.processor.ProcessorService
-
-import java.io.File
 import android.net.ConnectivityManager
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInfo
+import com.njlabs.showjava.Constants
+import com.njlabs.showjava.services.processor.ProcessorService
+import java.io.File
 
 object Tools {
 

@@ -15,6 +15,11 @@
     <string name="action_pick_sdcard">Pick from SD Card</string>
     <string name="action_pick_installed">Pick from installed</string>
     <string name="loading_applications">Loading installed applications …</string>
+    <string name="loading_gear">Loading gear</string>
+    <string name="waiting_for_app">Waiting for app</string>
+    <string name="processing">Processing</string>
+    <string name="getting_ready">Getting ready</string>
+    <string name="cancel">Cancel</string>
 
     <string-array name="decompilers">
         <item>CFR 0.110</item>

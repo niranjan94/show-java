@@ -2,26 +2,29 @@ package com.njlabs.showjava.activities
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v7.app.AppCompatActivity
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
-import android.content.pm.PackageManager
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Bundle
+import android.preference.PreferenceManager
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
-import android.view.View
-import android.content.Intent
-import android.net.Uri
 import android.view.MenuItem
-import android.preference.PreferenceManager
-import android.os.Bundle
+import android.view.View
 import android.widget.Toast
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
+import com.njlabs.showjava.activities.decompiler.DecompilerActivity
+import com.njlabs.showjava.utils.Tools
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
-import com.njlabs.showjava.utils.Tools
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 
 abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -38,7 +41,12 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            EasyPermissions.requestPermissions(this, getString(R.string.storage_permission_rationale), Constants.STORAGE_PERMISSION_REQUEST, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.storage_permission_rationale),
+                    Constants.STORAGE_PERMISSION_REQUEST,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
             init(savedInstanceState)
         } else {
             init(savedInstanceState)
@@ -134,6 +142,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                 return true
             }
             R.id.about_option -> {
+                startActivity(Intent(baseContext, DecompilerActivity::class.java))
                 // startActivity(Intent(baseContext, About::class.java))
                 return true
             }
@@ -153,7 +162,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         return super.onOptionsItemSelected(item)
     }
 
-    open fun postPermissionsGrant() { }
+    open fun postPermissionsGrant() {}
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>?) {
         postPermissionsGrant()

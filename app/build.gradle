@@ -115,9 +115,9 @@ dependencies {
     implementation 'commons-cli:commons-cli:1.4'
 
     // DEX2JAR AND IT's DEPENDENCIES
-    implementation 'com.google.guava:guava:22.0'
+    //noinspection GradleDependency
     implementation 'asm:asm-all:3.3.1'
-    implementation files('libs/antlr-3.1.1.jar')
+    implementation files('libs/smali-2.2.1.jar')
     implementation files('libs/dex-ir-1.12.jar')
     implementation files('libs/dex-reader-1.15.jar')
     implementation files('libs/dex-tools-0.0.9.15.jar')
@@ -144,7 +144,9 @@ dependencies {
 
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.jakewharton.timber:timber:4.5.1'
-    implementation 'org.solovyev.android:checkout:1.0.1'
+    implementation('org.solovyev.android:checkout:1.0.1', {
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    })
     implementation 'com.github.softwee:codeview-android:1.2.0'
     implementation 'com.nononsenseapps:filepicker:4.1.0'
     implementation 'pub.devrel:easypermissions:0.4.3'
@@ -158,6 +160,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
 }
 

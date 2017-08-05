@@ -1,5 +1,7 @@
 package com.njlabs.showjava.activities.landing
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Environment
@@ -7,10 +9,14 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.view.View
+import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.activities.apps.AppsActivity
+import com.njlabs.showjava.activities.filepicker.FilePickerActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.models.SourceInfo
+import com.nononsenseapps.filepicker.Utils
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,12 +25,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
 import java.io.File
-import android.content.Intent
-import com.njlabs.showjava.activities.filepicker.FilePickerActivity
-import android.app.Activity
-import com.njlabs.showjava.Constants
-import com.njlabs.showjava.activities.apps.AppsActivity
-import com.nononsenseapps.filepicker.Utils
 
 
 class LandingActivity : BaseActivity() {

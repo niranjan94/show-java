@@ -1,15 +1,15 @@
 package com.njlabs.showjava.activities.landing.adapters
 
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.njlabs.showjava.R
 import com.njlabs.showjava.models.SourceInfo
-import kotlinx.android.synthetic.main.app_list_item.view.*
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.BitmapFactory
-import android.os.Environment
+import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import java.io.File
 
 class HistoryListAdapter(private val historyItems: List<SourceInfo>, private val itemClick: (SourceInfo) -> Unit) : RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
@@ -34,7 +34,7 @@ class HistoryListAdapter(private val historyItems: List<SourceInfo>, private val
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryListAdapter.ViewHolder? {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.app_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_app_list_item, parent, false)
         return ViewHolder(view, itemClick)
     }
 
