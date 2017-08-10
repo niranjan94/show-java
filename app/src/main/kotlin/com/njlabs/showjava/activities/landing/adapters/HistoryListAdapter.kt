@@ -12,7 +12,7 @@ import com.njlabs.showjava.models.SourceInfo
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import java.io.File
 
-class HistoryListAdapter(private val historyItems: List<SourceInfo>, private val itemClick: (SourceInfo) -> Unit) : RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
+class HistoryListAdapter(private var historyItems: List<SourceInfo>, private val itemClick: (SourceInfo) -> Unit) : RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, val itemClick: (SourceInfo) -> Unit) : RecyclerView.ViewHolder(view) {
 
@@ -31,6 +31,11 @@ class HistoryListAdapter(private val historyItems: List<SourceInfo>, private val
                 itemView.itemCard.setOnClickListener { itemClick(this) }
             }
         }
+    }
+
+    public fun updateData(historyItems: List<SourceInfo>) {
+        this.historyItems = historyItems;
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryListAdapter.ViewHolder? {

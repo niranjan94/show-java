@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Environment
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
@@ -13,24 +12,24 @@ import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.AppsActivity
+import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.activities.filepicker.FilePickerActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.models.SourceInfo
 import com.nononsenseapps.filepicker.Utils
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
-import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
-import java.io.File
 
 
 class LandingActivity : BaseActivity() {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var landingHandler: LandingHandler
+
+    private var  historyListAdapter: HistoryListAdapter? = null
 
     private var historyItems = ArrayList<SourceInfo>()
 
@@ -51,6 +50,14 @@ class LandingActivity : BaseActivity() {
                 this.historyItems = historyItems
                 setupList()
             }
+        }
+        startActivity(Intent(context, NavigatorActivity::class.java))
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        if (hasValidPermissions()) {
+            populateHistory(true)
         }
     }
 
@@ -83,28 +90,20 @@ class LandingActivity : BaseActivity() {
         populateHistory()
     }
 
-    private fun populateHistory() {
+    private fun populateHistory(resume: Boolean = false) {
         landingHandler.loadHistory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<ArrayList<SourceInfo>> {
-                    override fun onNext(_historyItems: ArrayList<SourceInfo>) {
-                        historyItems = _historyItems
+                .doOnError { Timber.e(it) }
+                .subscribe {
+                    historyItems = it
+                    if (resume) {
+                        historyListAdapter?.updateData(historyItems)
+                    } else {
                         setupList()
                     }
 
-                    override fun onComplete() {
-
-                    }
-
-                    override fun onSubscribe(d: Disposable) {
-
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Timber.e(e)
-                    }
-                })
+                }
     }
 
     private fun setListVisibility(isListVisible: Boolean = true) {
@@ -115,6 +114,7 @@ class LandingActivity : BaseActivity() {
         welcomeLayout.visibility = defaultGroupVisibility
     }
 
+
     private fun setupList() {
         if (historyItems.isEmpty()) {
             setListVisibility(false)
@@ -122,9 +122,11 @@ class LandingActivity : BaseActivity() {
             setListVisibility(true)
             historyListView.setHasFixedSize(true)
             historyListView.layoutManager = LinearLayoutManager(context)
-            val historyListAdapter = HistoryListAdapter(historyItems) { selectedHistoryItem ->
-                val sourceDir = File("${Environment.getExternalStorageDirectory()}/ShowJava/sources/${selectedHistoryItem.packageName}")
-                Timber.d(sourceDir.absolutePath)
+            historyListAdapter = HistoryListAdapter(historyItems) { selectedHistoryItem ->
+                val intent = Intent(context, NavigatorActivity::class.java)
+                intent.putExtra("selectedApp", selectedHistoryItem)
+                startActivity(intent)
+                Timber.d(selectedHistoryItem.sourceDirectory.absolutePath)
             }
             historyListView.adapter = historyListAdapter
         }
@@ -132,9 +134,7 @@ class LandingActivity : BaseActivity() {
 
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)
-        historyItems.let {
-            bundle.putParcelableArrayList("historyItems", historyItems)
-        }
+        bundle.putParcelableArrayList("historyItems", historyItems)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -157,7 +157,7 @@ class LandingActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Constants.FILE_PICKER_RESULT && resultCode == Activity.RESULT_OK) {
             data?.let {
-                Utils.getSelectedFilesFromResult(data)
+                Utils.getSelectedFilesFromResult(it)
                         .map { Utils.getFileForUri(it) }
                         .forEach { Timber.d(it.absolutePath) }
             }

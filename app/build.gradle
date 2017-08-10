@@ -112,7 +112,7 @@ dependencies {
 
     // APACHE COMMONS LIBRARIES
     implementation 'commons-io:commons-io:2.5'
-    implementation 'commons-cli:commons-cli:1.4'
+    implementation  'commons-cli:commons-cli:1.4'
 
     // DEX2JAR AND IT's DEPENDENCIES
     //noinspection GradleDependency

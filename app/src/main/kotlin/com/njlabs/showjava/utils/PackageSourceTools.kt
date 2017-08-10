@@ -2,6 +2,7 @@ package com.njlabs.showjava.utils
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
+import android.os.Environment
 import com.njlabs.showjava.models.SourceInfo
 import org.apache.commons.io.FileUtils
 import org.json.JSONException
@@ -16,6 +17,9 @@ object PackageSourceTools {
         return pkgInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
     }
 
+    fun sourceDir(packageName: String): File {
+        return File("${Environment.getExternalStorageDirectory()}/ShowJava/sources/$packageName")
+    }
 
     fun initialise(packageLabel: String, packageName: String, sourceOutputDir: String) {
         try {

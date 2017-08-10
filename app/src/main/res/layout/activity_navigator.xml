@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.explorer.navigator.NavigatorActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
+
+    <include
+        android:id="@+id/adView"
+        layout="@layout/layout_admob" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/filesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@id/adView">
+    </android.support.v7.widget.RecyclerView>
+</RelativeLayout>

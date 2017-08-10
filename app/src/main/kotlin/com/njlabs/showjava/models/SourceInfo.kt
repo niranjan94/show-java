@@ -2,12 +2,22 @@ package com.njlabs.showjava.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.njlabs.showjava.utils.PackageSourceTools
+import java.io.File
 
 class SourceInfo() : Parcelable {
 
     lateinit var packageLabel: String
     lateinit var packageName: String
     var hasSource = true
+
+    private var _sourceDirectory: File? = null
+
+    val sourceDirectory: File
+        get() {
+            _sourceDirectory = _sourceDirectory ?: PackageSourceTools.sourceDir(packageName)
+            return _sourceDirectory as File
+        }
 
     constructor(parcel: Parcel) : this() {
         packageLabel = parcel.readString()
