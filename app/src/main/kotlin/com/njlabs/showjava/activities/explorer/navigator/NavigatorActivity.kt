@@ -1,5 +1,6 @@
 package com.njlabs.showjava.activities.explorer.navigator
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.widget.LinearLayoutManager
@@ -7,6 +8,7 @@ import android.view.View
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.explorer.navigator.adapters.FilesListAdapter
+import com.njlabs.showjava.activities.explorer.viewer.ImageViewerActivity
 import com.njlabs.showjava.models.FileItem
 import com.njlabs.showjava.models.SourceInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -26,12 +28,12 @@ class NavigatorActivity : BaseActivity() {
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_navigator)
-        selectedApp = intent.extras?.getParcelable<SourceInfo>("selectedApp")
+        selectedApp = intent.extras?.getParcelable("selectedApp")
         navigationHandler = NavigatorHandler(this)
 
         if (savedInstanceState != null) {
             fileItems = savedInstanceState.getParcelableArrayList<FileItem>("fileItems")
-            selectedApp = selectedApp ?: savedInstanceState.getParcelable<SourceInfo>("selectedApp")
+            selectedApp = selectedApp ?: savedInstanceState.getParcelable("selectedApp")
             val currentDirectoryString = savedInstanceState.getString("currentDirectory")
             currentDirectoryString?.let {
                 currentDirectory = File(it)
@@ -55,7 +57,7 @@ class NavigatorActivity : BaseActivity() {
         filesList.visibility = listGroupVisibility
     }
 
-    fun populateList(startDirectory: File) {
+    private fun populateList(startDirectory: File) {
         supportActionBar?.title = startDirectory.name
         currentDirectory = startDirectory
         navigationHandler.loadFiles(startDirectory)
@@ -70,7 +72,7 @@ class NavigatorActivity : BaseActivity() {
                 }
     }
 
-    fun updateList(fileItems: ArrayList<FileItem>) {
+    private fun updateList(fileItems: ArrayList<FileItem>) {
         this.fileItems = fileItems
         filesListAdapter.updateData(fileItems)
         if (fileItems.isEmpty()) {
@@ -86,6 +88,13 @@ class NavigatorActivity : BaseActivity() {
         filesListAdapter = FilesListAdapter(fileItems) { selectedFile ->
             if (selectedFile.file.isDirectory) {
                 populateList(selectedFile.file)
+            } else {
+                if (arrayOf("jpeg", "jpg", "png").contains(selectedFile.file.extension)) {
+                    val intent = Intent(context, ImageViewerActivity::class.java)
+                    intent.putExtra("filePath", selectedFile.file.absolutePath)
+                    intent.putExtra("packageName", selectedApp?.packageName)
+                    startActivity(intent)
+                }
             }
             Timber.d(selectedFile.file.absolutePath)
         }

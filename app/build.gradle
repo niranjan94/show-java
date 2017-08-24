@@ -15,15 +15,19 @@ props.load(new FileInputStream('app/keys.properties'))
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
+
     defaultConfig {
-        applicationId "com.njlabs.showjava"
         minSdkVersion 15
         targetSdkVersion 26
+
+        applicationId "com.njlabs.showjava"
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        resConfigs "en"
         multiDexEnabled true
+
+        resConfigs "en"
         vectorDrawables.useSupportLibrary true
 
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -88,8 +92,8 @@ android {
     }
 }
 
-ext.support_version = '26.0.0'
-ext.firebase_version = '11.0.4'
+ext.support_version = '26.0.1'
+ext.firebase_version = '11.2.0'
 
 dependencies {
     // MULTI-DEX SUPPORT FOR PRE LOLLIPOP
@@ -114,8 +118,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.5'
     implementation  'commons-cli:commons-cli:1.4'
 
-    // DEX2JAR AND IT's DEPENDENCIES
-    //noinspection GradleDependency
+    // DEX2JAR AND FRIENDS
     implementation 'asm:asm-all:3.3.1'
     implementation files('libs/smali-2.2.1.jar')
     implementation files('libs/dex-ir-1.12.jar')
@@ -138,6 +141,7 @@ dependencies {
     // FERN FLOWER
     implementation files('libs/fernflower.jar')
 
+    // RxJAVA AND FRIENDS
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
@@ -152,7 +156,9 @@ dependencies {
     implementation 'pub.devrel:easypermissions:0.4.3'
     implementation 'io.github.yavski:fab-speed-dial:1.0.6'
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
 
+    // LEAKCANARY AND FRIENDS
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'

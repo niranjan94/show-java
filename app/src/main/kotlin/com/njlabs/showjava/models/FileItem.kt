@@ -6,7 +6,6 @@ import com.njlabs.showjava.R
 import org.apache.commons.io.FilenameUtils
 import java.io.File
 
-
 class FileItem() : Parcelable {
 
     var file: File = File("/")
@@ -24,7 +23,8 @@ class FileItem() : Parcelable {
             if (file.isDirectory) {
                 return R.drawable.type_folder
             }
-            val extension = FilenameUtils.getExtension(file.name) ?: return R.drawable.type_file
+            var extension = FilenameUtils.getExtension(file.name) ?: return R.drawable.type_file
+            extension = if (extension === "jpeg") "jpg" else extension
             try {
                 val res = R.drawable::class.java
                 val drawableField = res.getField("type_$extension")
@@ -66,6 +66,4 @@ class FileItem() : Parcelable {
             return arrayOfNulls(size)
         }
     }
-
-
 }

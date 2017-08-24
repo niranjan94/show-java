@@ -70,13 +70,14 @@
                 android:value=".activities.apps.AppsActivity" />
         </activity>
 
-        <activity android:name=".activities.explorer.viewer.ViewerActivity" />
+        <activity android:name=".activities.explorer.viewer.CodeViewerActivity" />
 
         <activity android:name=".activities.explorer.navigator.NavigatorActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.landing.LandingActivity" />
         </activity>
+        <activity android:name=".activities.explorer.viewer.ImageViewerActivity" />
 
         <service
             android:name=".services.processor.ProcessorService"
