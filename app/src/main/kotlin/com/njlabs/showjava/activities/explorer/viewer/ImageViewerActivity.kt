@@ -32,12 +32,6 @@ class ImageViewerActivity : BaseActivity() {
             val filePath = it.getString("filePath")
             val packageName = it.getString("packageName")
             val fileName = FilenameUtils.getName(filePath)
-            imageView.setImage(ImageSource.uri(filePath), imageViewState)
-            imageView.orientation = SubsamplingScaleImageView.ORIENTATION_USE_EXIF
-            imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_CENTER)
-            imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM)
-            imageView.setMinimumDpi(100)
-            imageView.setMaximumDpi(600)
             supportActionBar?.title = fileName
             val subtitle = FilenameUtils.getFullPath(filePath)
                     .replace("${Environment.getExternalStorageDirectory()}/ShowJava/sources/$packageName/", "")
@@ -45,6 +39,13 @@ class ImageViewerActivity : BaseActivity() {
             if (fileName.trim().equals("icon.png", true)) {
                 supportActionBar?.subtitle = packageName
             }
+
+            imageView.setImage(ImageSource.uri(filePath), imageViewState)
+            imageView.orientation = SubsamplingScaleImageView.ORIENTATION_USE_EXIF
+            imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_CENTER)
+            imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM)
+            imageView.setMinimumDpi(100)
+            imageView.setMaximumDpi(600)
         }
 
     }

@@ -14,6 +14,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="SourceViewerTheme" parent="AppTheme.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/grey_900</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/grey_900</item>
+    </style>
+
     <style name="FilePickerTheme" parent="NNF_BaseTheme.Light"><!-- Setting a divider is entirely optional -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

@@ -51,7 +51,7 @@ class LandingActivity : BaseActivity() {
                 setupList()
             }
         }
-        startActivity(Intent(context, NavigatorActivity::class.java))
+        //startActivity(Intent(context, NavigatorActivity::class.java))
     }
 
     public override fun onResume() {
@@ -126,7 +126,6 @@ class LandingActivity : BaseActivity() {
                 val intent = Intent(context, NavigatorActivity::class.java)
                 intent.putExtra("selectedApp", selectedHistoryItem)
                 startActivity(intent)
-                Timber.d(selectedHistoryItem.sourceDirectory.absolutePath)
             }
             historyListView.adapter = historyListAdapter
         }

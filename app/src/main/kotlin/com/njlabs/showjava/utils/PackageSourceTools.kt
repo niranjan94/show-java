@@ -77,30 +77,30 @@ object PackageSourceTools {
     }
 
     fun getLabel(directory: String): String? {
-        try {
+        return try {
             val infoFile = File(directory + "/info.json")
             val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
-            return json.getString("package_label")
+            json.getString("package_label")
         } catch (e: IOException) {
-            return null
+            null
         } catch (e: JSONException) {
-            return null
+            null
         }
 
     }
 
     fun getSourceInfo(infoFile: File): SourceInfo? {
-        try {
+        return try {
             val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
             if (json.getBoolean("has_java_sources") || json.getBoolean("has_xml_sources")) {
-                return SourceInfo(json.getString("package_label"), json.getString("package_name"))
+                SourceInfo(json.getString("package_label"), json.getString("package_name"))
             } else {
-                return null
+                null
             }
         } catch (e: IOException) {
-            return null
+            null
         } catch (e: JSONException) {
-            return null
+            null
         }
 
     }
