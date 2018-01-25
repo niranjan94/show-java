@@ -33,8 +33,8 @@ class HistoryListAdapter(private var historyItems: List<SourceInfo>, private val
         }
     }
 
-    public fun updateData(historyItems: List<SourceInfo>) {
-        this.historyItems = historyItems;
+    fun updateData(historyItems: List<SourceInfo>) {
+        this.historyItems = historyItems
         notifyDataSetChanged()
     }
 

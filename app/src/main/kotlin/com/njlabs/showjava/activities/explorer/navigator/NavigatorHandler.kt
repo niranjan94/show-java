@@ -4,7 +4,6 @@ import android.content.Context
 import com.njlabs.showjava.models.FileItem
 import com.njlabs.showjava.utils.StringTools
 import io.reactivex.Observable
-import timber.log.Timber
 import java.io.File
 import java.text.DateFormat
 import java.util.*

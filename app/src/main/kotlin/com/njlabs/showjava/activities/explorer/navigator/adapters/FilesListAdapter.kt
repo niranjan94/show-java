@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
 class FilesListAdapter(private var fileItems: List<FileItem>, private val itemClick: (FileItem) -> Unit) : RecyclerView.Adapter<FilesListAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View, val itemClick: (FileItem) -> Unit) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, private val itemClick: (FileItem) -> Unit) : RecyclerView.ViewHolder(view) {
         fun bindSourceInfo(fileItem: FileItem) {
             with(fileItem) {
                 itemView.itemLabel.text = fileItem.name

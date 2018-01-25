@@ -23,7 +23,6 @@ import com.google.firebase.crash.FirebaseCrash
 import org.apache.commons.io.FileUtils
 import java.io.IOException
 
-
 class AppsActivity : BaseActivity() {
 
     private lateinit var appsHandler: AppsHandler
@@ -144,7 +143,6 @@ class AppsActivity : BaseActivity() {
     private fun openProcessActivity(holder: PackageInfo, string: String) {
 
     }
-
 
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)

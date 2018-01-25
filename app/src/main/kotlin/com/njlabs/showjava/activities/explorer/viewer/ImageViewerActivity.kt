@@ -16,7 +16,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 
 class ImageViewerActivity : BaseActivity() {
     private var isBlack: Boolean = true
-    private val BUNDLE_STATE = "ImageViewState"
+    private val bundleState = "ImageViewState"
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_image_viewer)
@@ -25,8 +25,8 @@ class ImageViewerActivity : BaseActivity() {
         extras?.let {
 
             var imageViewState: ImageViewState? = null
-            if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_STATE)) {
-                imageViewState = savedInstanceState.getSerializable(BUNDLE_STATE) as ImageViewState
+            if (savedInstanceState != null && savedInstanceState.containsKey(bundleState)) {
+                imageViewState = savedInstanceState.getSerializable(bundleState) as ImageViewState
             }
 
             val filePath = it.getString("filePath")
@@ -72,9 +72,10 @@ class ImageViewerActivity : BaseActivity() {
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
         val state = imageView.state
         if (state != null) {
-            outState.putSerializable(BUNDLE_STATE, imageView.state)
+            outState.putSerializable(bundleState, imageView.state)
         }
     }
 }

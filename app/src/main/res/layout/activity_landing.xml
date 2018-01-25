@@ -34,7 +34,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/showjava_logo"
-                android:contentDescription="@string/app_name" />
+                android:contentDescription="@string/appName" />
 
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"

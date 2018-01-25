@@ -14,5 +14,5 @@
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/navbar_header"
-        android:contentDescription="@string/app_name" />
+        android:contentDescription="@string/appName" />
 </RelativeLayout>

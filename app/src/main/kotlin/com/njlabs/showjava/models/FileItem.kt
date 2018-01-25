@@ -25,12 +25,12 @@ class FileItem() : Parcelable {
             }
             var extension = FilenameUtils.getExtension(file.name) ?: return R.drawable.type_file
             extension = if (extension === "jpeg") "jpg" else extension
-            try {
+            return try {
                 val res = R.drawable::class.java
                 val drawableField = res.getField("type_$extension")
-                return drawableField.getInt(null)
+                drawableField.getInt(null)
             } catch (e: Exception) {
-                return R.drawable.type_file
+                R.drawable.type_file
             }
         }
 

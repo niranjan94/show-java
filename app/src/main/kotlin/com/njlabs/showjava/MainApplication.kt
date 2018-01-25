@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.support.multidex.MultiDex
 import com.njlabs.showjava.utils.logging.ProductionTree
-import com.squareup.leakcanary.LeakCanary
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 
@@ -12,10 +11,16 @@ class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        /**
+
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return
         }
         LeakCanary.install(this)
+
+        **/
+
         CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/lato-light.ttf")
                 .setFontAttrId(R.attr.fontPath)
@@ -30,9 +35,5 @@ class MainApplication : Application() {
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         MultiDex.install(this)
-    }
-
-    override fun onTerminate() {
-        super.onTerminate()
     }
 }

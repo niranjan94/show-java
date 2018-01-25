@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Environment
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
@@ -16,6 +17,7 @@ import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.activities.filepicker.FilePickerActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.models.SourceInfo
+import com.nononsenseapps.filepicker.AbstractFilePickerActivity.EXTRA_START_PATH
 import com.nononsenseapps.filepicker.Utils
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -83,6 +85,7 @@ class LandingActivity : BaseActivity() {
 
     private fun pickFile() {
         val i = Intent(context, FilePickerActivity::class.java)
+        i.putExtra(EXTRA_START_PATH, Environment.getExternalStorageDirectory())
         startActivityForResult(i, Constants.FILE_PICKER_RESULT)
     }
 

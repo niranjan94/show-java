@@ -37,13 +37,15 @@ class CodeViewerActivity : BaseActivity() {
             }
 
             val assetBaseUrl = "file:///android_asset/code_viewer/"
-
             val sourceCodeText = HtmlEscapers.htmlEscaper().escape(file.readText())
+
             codeView.settings.javaScriptEnabled = true
             codeView.settings.defaultTextEncodingName = "utf-8"
             codeView.webViewClient = object : WebViewClient() {
+                @Suppress("OverridingDeprecatedMember")
                 override fun shouldInterceptRequest(view: WebView, url: String): WebResourceResponse {
                     val stream = inputStreamForAndroidResource(url)
+                    @Suppress("DEPRECATION")
                     return if (stream != null) {
                         WebResourceResponse("text/javascript", "utf-8", stream)
                     } else super.shouldInterceptRequest(view, url)
