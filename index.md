@@ -1,4 +1,5 @@
-[![Build Status](https://img.shields.io/travis/niranjan94/show-java.svg?style=flat-square)](https://travis-ci.org/niranjan94/show-java) [![License Info](https://img.shields.io/badge/license-Apache_License_2.0-blue.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store Info](https://img.shields.io/badge/Play_Store-v2.1.0-36B0C1.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava) [![GitHub app version](https://img.shields.io/badge/GitHub-v2.1.0-yellow.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store downloads](https://img.shields.io/badge/downloads-146k%20total-E04253.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/show-java/localized.svg)](https://crowdin.com/project/show-java)
+[![Dependency Status](https://www.versioneye.com/user/projects/5749244fce8d0e004505f807/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5749244fce8d0e004505f807)  [![Build Status](https://img.shields.io/travis/niranjan94/show-java.svg?style=flat-square)](https://travis-ci.org/niranjan94/show-java) [![License Info](https://img.shields.io/badge/license-GNU_AGPLv3-blue.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store Info](https://img.shields.io/badge/Play_Store-v2.1.0-36B0C1.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava) [![GitHub app version](https://img.shields.io/badge/GitHub-v2.1.0-yellow.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store downloads](https://img.shields.io/badge/downloads-260k%20total-E04253.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava)
+
 
 ![ShowJava Banner v0.1](https://raw.githubusercontent.com/niranjan94/show-java/master/banner.png?v1)
 
@@ -33,23 +34,27 @@ Head over [here](https://github.com/niranjan94/show-java/blob/master/CONTRIBUTIN
 
 ## Open Source License
 
-Unless explicitly stated otherwise all files in this repository are licensed under the [Apache Software License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html). All projects **must** properly attribute [The Original Source](https://github.com/niranjan94/show-java). You are **not** allowed to release unofficial/forked versions of Show Java without the permission of the [Original Author](https://www.github.com/niranjan94).
+Unless explicitly stated otherwise all files in this repository are licensed under the [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.txt). All projects **must** properly attribute [The Original Source](https://github.com/niranjan94/show-java). 
     
-    Copyright 2015 Niranjan Rajendran
-    
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at : 
-    
-    http://www.apache.org/licenses/LICENSE-2.0
-    
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-    
+    Show Java - A java/apk decompiler for android
+    Copyright (C) 2017 Niranjan Rajendran
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 An unmodified copy of the above license text must be included in all forks.
+
+To obtain the software under a different license, please contact [Niranjan Rajendran](https://niranjan.io) at `me <at> niranjan.io`.
 
 ## External Credits
 
