@@ -1,0 +1,8 @@
+title: Show Java
+description: An apk decompiler for android
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-minimal
+
+gems:
+  - jekyll-mentions
