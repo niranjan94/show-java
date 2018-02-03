@@ -4,11 +4,11 @@
     <item
         android:id="@+id/action_pick_sdcard"
         android:orderInCategory="1"
-        android:title="@string/action_pick_sdcard"
+        android:title="@string/pickFromSdCard"
         android:icon="@drawable/ic_sd_card_white"/>
     <item
         android:id="@+id/action_pick_installed"
         android:orderInCategory="2"
-        android:title="@string/action_pick_installed"
+        android:title="@string/pickInstalled"
         android:icon="@drawable/ic_apps_white"/>
 </menu>

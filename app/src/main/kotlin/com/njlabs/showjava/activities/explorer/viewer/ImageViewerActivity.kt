@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_image_viewer.*
 import org.apache.commons.io.FilenameUtils
 import com.davemorrissey.labs.subscaleview.ImageViewState
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.njlabs.showjava.utils.StringTools
 
 
 class ImageViewerActivity : BaseActivity() {
@@ -33,8 +34,12 @@ class ImageViewerActivity : BaseActivity() {
             val packageName = it.getString("packageName")
             val fileName = FilenameUtils.getName(filePath)
             supportActionBar?.title = fileName
-            val subtitle = FilenameUtils.getFullPath(filePath)
-                    .replace("${Environment.getExternalStorageDirectory()}/ShowJava/sources/$packageName/", "")
+            val subtitle = FilenameUtils
+                    .getFullPath(filePath)
+                    .replace(
+                            "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+                            ""
+                    )
             supportActionBar?.subtitle = subtitle
             if (fileName.trim().equals("icon.png", true)) {
                 supportActionBar?.subtitle = packageName

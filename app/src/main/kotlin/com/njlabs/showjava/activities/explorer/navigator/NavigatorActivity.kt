@@ -49,7 +49,7 @@ class NavigatorActivity : BaseActivity() {
         currentDirectory = currentDirectory ?: selectedApp?.sourceDirectory
         // currentDirectory ?: finish()
 
-        // currentDirectory = File("${Environment.getExternalStorageDirectory()}/ShowJava/")
+        // currentDirectory = File("${Environment.getExternalStorageDirectory()}/show-java/")
         setupList()
         filesListAdapter.updateData(fileItems)
         Timber.d(currentDirectory?.absolutePath)
@@ -121,7 +121,7 @@ class NavigatorActivity : BaseActivity() {
                         try {
                             context.startActivity(fileIntent)
                         } catch (e: ActivityNotFoundException) {
-                            Toast.makeText(context, "No supported applications for this file type.", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, getString(R.string.noSupportedHandlerForFileType), Toast.LENGTH_LONG).show()
                         }
                     }
                 }

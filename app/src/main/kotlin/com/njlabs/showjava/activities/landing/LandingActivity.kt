@@ -40,8 +40,8 @@ class LandingActivity : BaseActivity() {
         drawerToggle = ActionBarDrawerToggle(
                 this,
                 drawerLayout,
-                R.string.drawer_open,
-                R.string.drawer_close
+                R.string.drawerOpen,
+                R.string.drawerClose
         )
         drawerLayout.addDrawerListener(drawerToggle)
         landingHandler = LandingHandler(context)

@@ -87,9 +87,8 @@ class AppsActivity : BaseActivity() {
         appsList.layoutManager = LinearLayoutManager(context)
         val historyListAdapter = AppsListAdapter(apps) { selectedApp ->
             Timber.d(selectedApp.packageName)
-            val myApp = "com.njlabs.showjava"
-            if (selectedApp.packageName.toLowerCase().contains(myApp.toLowerCase())) {
-                Toast.makeText(applicationContext, "You might want to checkout the source code on GitHub instead ;)", Toast.LENGTH_SHORT).show()
+            if (selectedApp.packageName.toLowerCase().contains(getString(R.string.originalApplicationId).toLowerCase())) {
+                Toast.makeText(applicationContext, getString(R.string.checkoutSourceLink), Toast.LENGTH_SHORT).show()
             }
             val sourceDir = PackageSourceTools.sourceDir(selectedApp.packageName)
             Timber.d(sourceDir.absolutePath)
@@ -104,16 +103,16 @@ class AppsActivity : BaseActivity() {
 
     private fun showAlreadyExistsDialog(app: PackageInfo, sourceDir: File) {
         val alertDialog = AlertDialog.Builder(context, R.style.AlertDialog)
-        alertDialog.setTitle("This Package has already been decompiled")
-        alertDialog.setMessage("This application has already been decompiled once and the source exists on your sdcard. What would you like to do ?")
-        alertDialog.setPositiveButton("View Source", { _, _ ->
+        alertDialog.setTitle(getString(R.string.appAlreadyDecompiled))
+        alertDialog.setMessage(getString(R.string.actionAppAlreadyDecompiled))
+        alertDialog.setPositiveButton(getString(R.string.viewSource), { _, _ ->
             val i = Intent(applicationContext, AppsActivity::class.java)
             i.putExtra("java_source_dir", sourceDir.toString() + "/")
             i.putExtra("package_id", app.packageName)
             startActivity(i)
         })
 
-        alertDialog.setNegativeButton("Decompile", { _, _ ->
+        alertDialog.setNegativeButton(getString(R.string.decompile), { _, _ ->
             try {
                 FileUtils.deleteDirectory(sourceDir)
             } catch (e: IOException) {
@@ -127,9 +126,9 @@ class AppsActivity : BaseActivity() {
     private fun showDecompilerSelection(app: PackageInfo) {
         if (!prefs.getBoolean("hide_decompiler_select", false)) {
             val decompilerLabels = resources.getTextArray(R.array.decompilers)
-            val decompilerValues = resources.getTextArray(R.array.decompilers_values)
+            val decompilerValues = resources.getTextArray(R.array.decompilersValues)
             val builder = AlertDialog.Builder(this, R.style.AlertDialog)
-            builder.setTitle("Pick a decompiler")
+            builder.setTitle(getString(R.string.pickDecompiler))
             builder.setItems(decompilerLabels) { _, item ->
                 openProcessActivity(app, decompilerValues[item].toString())
             }

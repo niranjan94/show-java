@@ -8,12 +8,6 @@
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*,!code/allocation/variable
 -allowaccessmodification
 
--keep public class * extends android.app.Activity
--keep public class * extends android.app.Application
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.content.ContentProvider
--keep public class * extends android.preference.Preference
 -keep public class com.android.vending.billing.IInAppBillingService
 -keep class com.android.vending.billing.**
 -keep public class * extends android.view.View {

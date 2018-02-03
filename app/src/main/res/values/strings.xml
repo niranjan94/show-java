@@ -1,35 +1,49 @@
-<resources>
-    <string name="action_settings">Settings</string>
-    <string name="drawer_close">Close drawer</string>
-    <string name="drawer_open">Open drawer</string>
-    <string name="report_a_bug">Report a bug</string>
-    <string name="about">About</string>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="settings">Settings</string>
-    <string name="invert_background_color">Invert background color</string>
-    <string name="storage_permission_rationale">Show Java requires storage permission to store decompiled sources</string>
+    <string name="drawerClose">Close drawer</string>
+    <string name="drawerOpen">Open drawer</string>
+    <string name="reportBug">Report a bug</string>
+    <string name="about">About</string>
+    <string name="invertBackgroundColor">Invert background color</string>
+    <string name="storagePermissionRationale">
+        <xliff:g id="appName">Show Java</xliff:g>
+        requires storage permission to store decompiled sources
+    </string>
     <string name="welcome">Welcome</string>
-    <string name="tap_plus">tap the plus button to begin</string>
+    <string name="tapPlus">tap the plus button to begin</string>
     <string name="space" />
-    <string name="app_icon">App icon</string>
-    <string name="pick_app_to_explore">Pick an app to explore</string>
-    <string name="action_pick_sdcard">Pick from SD Card</string>
-    <string name="action_pick_installed">Pick from installed</string>
-    <string name="loading_applications">Loading installed applications …</string>
-    <string name="loading_gear">Loading gear</string>
-    <string name="waiting_for_app">Waiting for app</string>
+    <string name="appIcon">App icon</string>
+    <string name="pickAppToExplore">Pick an app to explore</string>
+    <string name="pickFromSdCard">Pick from SD Card</string>
+    <string name="pickInstalled">Pick from installed</string>
+    <string name="loadingApplications">Loading installed applications …</string>
+    <string name="loadingGear">Loading gear</string>
+    <string name="loadingApp">Loading <xliff:g id="name_of_an_app" example="WhatsApp">%1$s</xliff:g></string>
+    <string name="loadingStatistic">
+        <xliff:g id="countCurrent" example="23">%1$d</xliff:g> of <xliff:g id="countTotal" example="345">%2$d</xliff:g>
+    </string>
+    <string name="waitingForAPp">Waiting for app</string>
     <string name="processing">Processing</string>
-    <string name="getting_ready">Getting ready</string>
+    <string name="gettingReady">Getting ready</string>
     <string name="cancel">Cancel</string>
-
+    <string name="decompile">Decompile</string>
+    <string name="viewSource">View source</string>
+    <string name="pickDecompiler">Pick a decompiler</string>
+    <string name="checkoutSourceLink">You might want to checkout the source code on <xliff:g id="github">GitHub</xliff:g> instead ;)</string>
+    <string name="appAlreadyDecompiled">This Package has already been decompiled</string>
+    <string name="actionAppAlreadyDecompiled">This application has already been decompiled once and the source exists on your sdcard. What would you like to do ?</string>
+    <string name="noSupportedHandlerForFileType">No supported applications for this file type.</string>
+    <string name="searchApps">Search apps</string>
+    <string name="niranjan94">niranjan94</string>
     <string-array name="decompilers">
-        <item>CFR 0.110</item>
-        <item>JaDX 0.6.1</item>
-        <item>FernFlower (analytical decompiler)</item>
+        <item><xliff:g>CFR 0.110</xliff:g></item>
+        <item><xliff:g>JaDX 0.6.1</xliff:g></item>
+        <item><xliff:g>FernFlower (analytical decompiler)</xliff:g></item>
     </string-array>
 
-    <string-array name="decompilers_values">
-        <item>cfr</item>
-        <item>jadx</item>
-        <item>fernflower</item>
+    <string-array name="decompilersValues">
+        <item><xliff:g>cfr</xliff:g></item>
+        <item><xliff:g>jadx</xliff:g></item>
+        <item><xliff:g>fernflower</xliff:g></item>
     </string-array>
 </resources>

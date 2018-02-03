@@ -3,6 +3,7 @@ package com.njlabs.showjava.utils
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.os.Environment
+import com.googlecode.dex2jar.ir.stmt.Stmt
 import com.njlabs.showjava.models.SourceInfo
 import org.apache.commons.io.FileUtils
 import org.json.JSONException
@@ -13,12 +14,22 @@ import java.io.IOException
 
 object PackageSourceTools {
 
+    private val appStoragePath: String
+            get() {
+                return "${Environment.getExternalStorageDirectory()}/show-java/"
+            }
+
+    fun getPath(relativePath: String): String {
+        return appStoragePath + (if (!relativePath.startsWith("/")) "/" else "") + relativePath
+    }
+
     fun isSystemPackage(pkgInfo: PackageInfo): Boolean {
         return pkgInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
     }
 
     fun sourceDir(packageName: String): File {
-        return File("${Environment.getExternalStorageDirectory()}/ShowJava/sources/$packageName")
+
+        return File(getPath("sources/$packageName"))
     }
 
     fun initialise(packageLabel: String, packageName: String, sourceOutputDir: String) {
@@ -38,7 +49,7 @@ object PackageSourceTools {
 
     }
 
-    fun setjavaSourceStatus(sourceOutputDir: String, status: Boolean?) {
+    fun setJavaSourceStatus(sourceOutputDir: String, status: Boolean?) {
         try {
             val infoFile = File(sourceOutputDir + "/info.json")
             val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))

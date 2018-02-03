@@ -1,43 +1,23 @@
 package com.njlabs.showjava.utils
 
+import java.text.Normalizer
+import java.util.Locale
+import java.util.regex.Pattern
+
 object StringTools {
-    fun replace(text: String, searchString: String, replacement: String): String {
-        return replace(text, searchString, replacement, -1)
-    }
 
-    fun replace(text: String, searchString: String, replacement: String?, _max: Int): String {
-        var max = _max
-        if (isEmpty(text) || isEmpty(searchString) || replacement == null || max == 0) {
-            return text
-        }
-        var start = 0
-        var end = text.indexOf(searchString, start)
-        if (end == -1) {
-            return text
-        }
-        val replLength = searchString.length
-        var increase = replacement.length - replLength
-        increase = if (increase < 0) 0 else increase
-        increase *= if (max < 0) 16 else if (max > 64) 64 else max
-        val buf = StringBuffer(text.length + increase)
-        while (end != -1) {
-            buf.append(text.substring(start, end)).append(replacement)
-            start = end + replLength
-            if (--max == 0) {
-                break
-            }
-            end = text.indexOf(searchString, start)
-        }
-        buf.append(text.substring(start))
-        return buf.toString()
-    }
-
-    fun isEmpty(testString: String): Boolean {
-        return "" == testString
-    }
+    private val NON_LATIN = Pattern.compile("[^\\w-]")
+    private val WHITESPACE = Pattern.compile("[\\s]")
 
     fun toClassName(packageName: String): String {
-        return "L" + replace(packageName.trim { it <= ' ' }, ".", "/")
+        return "L" + packageName.trim().replace(".", "/")
+    }
+
+    fun toSlug(input: String): String {
+        val noWhiteSpace = WHITESPACE.matcher(input).replaceAll("-")
+        val normalized = Normalizer.normalize(noWhiteSpace, Normalizer.Form.NFD)
+        val slug = NON_LATIN.matcher(normalized).replaceAll("")
+        return slug.toLowerCase(Locale.ENGLISH)
     }
 
     fun humanReadableByteCount(bytes: Long, si: Boolean): String {

@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
 class AppsListAdapter(private val apps: List<PackageInfo>, private val itemClick: (PackageInfo) -> Unit) : RecyclerView.Adapter<AppsListAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View, val itemClick: (PackageInfo) -> Unit) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, private val itemClick: (PackageInfo) -> Unit) : RecyclerView.ViewHolder(view) {
         fun bindPackageInfo(packageInfo: PackageInfo) {
             with(packageInfo) {
                 itemView.itemLabel.text = packageInfo.packageLabel

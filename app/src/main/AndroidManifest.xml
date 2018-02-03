@@ -20,7 +20,6 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:largeHeap="true"
         android:fullBackupContent="true"
-        tools:replace="android:icon,android:allowBackup,android:supportsRtl"
         tools:ignore="GoogleAppIndexingWarning">
 
         <provider
@@ -30,7 +29,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/nnf_provider_paths" />
+                android:resource="@xml/file_provider_paths" />
         </provider>
 
         <activity

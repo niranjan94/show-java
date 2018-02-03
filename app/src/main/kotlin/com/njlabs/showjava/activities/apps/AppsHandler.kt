@@ -1,6 +1,7 @@
 package com.njlabs.showjava.activities.apps
 
 import android.content.Context
+import com.njlabs.showjava.R
 import com.njlabs.showjava.models.PackageInfo
 import com.njlabs.showjava.utils.PackageSourceTools
 import com.njlabs.showjava.utils.rx.ProcessStatus
@@ -25,11 +26,12 @@ class AppsHandler(private var context: Context) {
                 packageInfo.packageIcon = pack.applicationInfo.loadIcon(context.packageManager)
                 installedApps.add(packageInfo)
                 val currentCount = index + 1
+
                 emitter.onNext(
                         ProcessStatus(
                                 (currentCount.toFloat() / packages.size.toFloat()) * 100f,
-                                "Loading ${packageInfo.packageLabel}",
-                                "$currentCount of ${packages.size}"
+                                context.getString(R.string.loadingApp, packageInfo.packageLabel),
+                                context.getString(R.string.loadingStatistic, currentCount, packages.size)
                         )
                 )
             }

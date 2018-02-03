@@ -43,7 +43,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             EasyPermissions.requestPermissions(
                     this,
-                    getString(R.string.storage_permission_rationale),
+                    getString(R.string.storagePermissionRationale),
                     Constants.STORAGE_PERMISSION_REQUEST,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
@@ -85,8 +85,8 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                 try {
                     activityInfo = packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA)
                     val currentTitle = activityInfo.loadLabel(packageManager).toString()
-                    if (currentTitle.trim { it <= ' ' } == "Show Java") {
-                        supportActionBar?.title = "Show Java Pro"
+                    if (currentTitle.trim() == getString(R.string.appName)) {
+                        supportActionBar?.title = "${getString(R.string.appName)} Pro"
                     }
                 } catch (ignored: PackageManager.NameNotFoundException) {
 
@@ -147,7 +147,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                 return true
             }
             R.id.bug_report_option -> {
-                val uri = Uri.parse("https://github.com/niranjan94/show-java/issues/new")
+                val uri = Uri.parse(getString(R.string.bugReportUri))
                 startActivity(Intent(Intent.ACTION_VIEW, uri))
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
 
@@ -191,7 +191,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
             if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 Toast.makeText(
                         this,
-                        R.string.storage_permission_rationale,
+                        R.string.storagePermissionRationale,
                         Toast.LENGTH_LONG
                 ).show()
                 finish()

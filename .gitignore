@@ -1,45 +1,22 @@
 /apl
 /captures
-#built application files
 *.apk
 *.ap_
-
 /releases
 /local.properties
 /app/keys.properties
-# files for the dex VM
 *.dex
-
-# Java class files
 *.class
-
-# generated files
 bin/
 gen/
-
-# Local configuration file (sdk path, etc)
 /app/extra.gradle
-
-# Windows thumbnail db
 Thumbs.db
-
-# OSX files
 .DS_Store
-
-# Eclipse project files
 .classpath
 .project
-
-# Android Studio
 .idea
 .gradle
-build/
-ShowJava.iml
-/app/src/pro
-app/app.iml
-.iml
-/*.iml
-
-crashlytics.properties
-/app/google-services.json
+build
+*.iml
+google-services.json
 /app/standard/

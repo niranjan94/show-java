@@ -16,7 +16,7 @@ class LandingHandler(private var context: Context) {
     fun loadHistory(): Observable<ArrayList<SourceInfo>> {
         return Observable.fromCallable {
             val historyItems = ArrayList<SourceInfo>()
-            val showJavaDir = File("${Environment.getExternalStorageDirectory()}/ShowJava/")
+            val showJavaDir = File("${Environment.getExternalStorageDirectory()}/show-java/")
             showJavaDir.mkdirs()
             val nomedia = File(showJavaDir, ".nomedia")
             if (!nomedia.exists() || !nomedia.isFile) {
@@ -26,7 +26,7 @@ class LandingHandler(private var context: Context) {
                     Timber.e(e)
                 }
             }
-            val dir = File("${Environment.getExternalStorageDirectory()}/ShowJava/sources")
+            val dir = File("${Environment.getExternalStorageDirectory()}/show-java/sources")
             if (dir.exists()) {
                 val files = dir.listFiles()
                 if (files != null && files.isNotEmpty())

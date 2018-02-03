@@ -30,7 +30,7 @@ class CodeViewerActivity : BaseActivity() {
             Timber.d(packageName)
 
             supportActionBar?.title = file.name
-            val subtitle = file.absolutePath.replace("${Environment.getExternalStorageDirectory()}/ShowJava/sources/$packageName/", "")
+            val subtitle = file.absolutePath.replace("${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/", "")
             supportActionBar?.subtitle = subtitle
             if (file.name.trim().equals("AndroidManifest.xml", true)) {
                 supportActionBar?.subtitle = packageName

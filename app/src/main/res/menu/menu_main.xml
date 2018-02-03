@@ -6,7 +6,7 @@
     <item
         android:id="@+id/bug_report_option"
         android:orderInCategory="1"
-        android:title="@string/report_a_bug"
+        android:title="@string/reportBug"
         app:showAsAction="never" />
 
     <item
@@ -25,7 +25,7 @@
         android:id="@+id/invert_colors"
         android:icon="@drawable/ic_action_invert_colors"
         android:orderInCategory="2"
-        android:title="@string/invert_background_color"
+        android:title="@string/invertBackgroundColor"
         android:visible="false"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />

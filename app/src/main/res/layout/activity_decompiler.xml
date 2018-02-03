@@ -23,7 +23,7 @@
             android:layout_marginBottom="7dp"
             app:srcCompat="@drawable/ic_gear_grey"
             android:layout_alignParentStart="true"
-            android:contentDescription="@string/loading_gear" />
+            android:contentDescription="@string/loadingGear" />
 
         <ImageView
             android:id="@+id/rightProgressGear"
@@ -35,7 +35,7 @@
             android:layout_marginEnd="10dp"
             app:srcCompat="@drawable/ic_gear_grey"
             android:layout_alignParentEnd="true"
-            android:contentDescription="@string/loading_gear" />
+            android:contentDescription="@string/loadingGear" />
 
     </RelativeLayout>
 
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/waiting_for_app"
+            android:text="@string/waitingForAPp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/grey_400" />
 
@@ -74,7 +74,7 @@
             android:layout_gravity="center_horizontal"
             android:ellipsize="none"
             android:singleLine="false"
-            android:text="@string/getting_ready"
+            android:text="@string/gettingReady"
             android:textAllCaps="false"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/grey_400" />
