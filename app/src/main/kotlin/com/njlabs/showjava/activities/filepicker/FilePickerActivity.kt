@@ -26,20 +26,22 @@ class FilePickerActivity : AbstractFilePickerActivity<File>() {
         }
     }
 
-    override fun getFragment(startPath: String?,
-                             mode: Int,
-                             allowMultiple: Boolean,
-                             allowCreateDir: Boolean,
-                             allowExistingFile: Boolean,
-                             singleClick: Boolean): AbstractFilePickerFragment<File> {
+    override fun getFragment(
+        startPath: String?,
+        mode: Int,
+        allowMultiple: Boolean,
+        allowCreateDir: Boolean,
+        allowExistingFile: Boolean,
+        singleClick: Boolean
+    ): AbstractFilePickerFragment<File> {
         currentFragment = FilePickerFragment()
         currentFragment?.setArgs(
-                startPath ?: Environment.getExternalStorageDirectory().path,
-                mode,
-                allowMultiple,
-                allowCreateDir,
-                allowExistingFile,
-                singleClick
+            startPath ?: Environment.getExternalStorageDirectory().path,
+            mode,
+            allowMultiple,
+            allowCreateDir,
+            allowExistingFile,
+            singleClick
         )
         return currentFragment as FilePickerFragment
     }

@@ -1,7 +1,7 @@
 package com.njlabs.showjava.utils
 
 import java.text.Normalizer
-import java.util.Locale
+import java.util.*
 import java.util.regex.Pattern
 
 object StringTools {

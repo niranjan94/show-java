@@ -6,13 +6,12 @@ import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import com.davemorrissey.labs.subscaleview.ImageSource
+import com.davemorrissey.labs.subscaleview.ImageViewState
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import kotlinx.android.synthetic.main.activity_image_viewer.*
 import org.apache.commons.io.FilenameUtils
-import com.davemorrissey.labs.subscaleview.ImageViewState
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-import com.njlabs.showjava.utils.StringTools
 
 
 class ImageViewerActivity : BaseActivity() {
@@ -35,11 +34,11 @@ class ImageViewerActivity : BaseActivity() {
             val fileName = FilenameUtils.getName(filePath)
             supportActionBar?.title = fileName
             val subtitle = FilenameUtils
-                    .getFullPath(filePath)
-                    .replace(
-                            "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
-                            ""
-                    )
+                .getFullPath(filePath)
+                .replace(
+                    "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+                    ""
+                )
             supportActionBar?.subtitle = subtitle
             if (fileName.trim().equals("icon.png", true)) {
                 supportActionBar?.subtitle = packageName

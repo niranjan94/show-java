@@ -58,13 +58,13 @@ object Tools {
 
     fun checkDataConnection(context: Context): Boolean {
         var status = false
-        val connectivityMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityMgr =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (connectivityMgr.activeNetworkInfo != null &&
-                connectivityMgr.activeNetworkInfo.isAvailable &&
-                connectivityMgr.activeNetworkInfo.isConnected) {
+            connectivityMgr.activeNetworkInfo.isAvailable &&
+            connectivityMgr.activeNetworkInfo.isConnected) {
             status = true
         }
         return status
     }
-
 }

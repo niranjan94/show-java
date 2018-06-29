@@ -12,18 +12,28 @@ import com.njlabs.showjava.models.SourceInfo
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import java.io.File
 
-class HistoryListAdapter(private var historyItems: List<SourceInfo>, private val itemClick: (SourceInfo) -> Unit) : RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
+class HistoryListAdapter(
+    private var historyItems: List<SourceInfo>,
+    private val itemClick: (SourceInfo) -> Unit
+) : RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View, val itemClick: (SourceInfo) -> Unit) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, private val itemClick: (SourceInfo) -> Unit) :
+        RecyclerView.ViewHolder(view) {
 
         fun bindSourceInfo(sourceInfo: SourceInfo) {
             with(sourceInfo) {
                 itemView.itemLabel.text = sourceInfo.packageLabel
                 itemView.itemSecondaryLabel.text = sourceInfo.packageName
-                val iconPath = "${Environment.getExternalStorageDirectory()}/show-java/sources/${sourceInfo.packageName}/icon.png"
+                val iconPath =
+                    "${Environment.getExternalStorageDirectory()}/show-java/sources/${sourceInfo.packageName}/icon.png"
                 if (File(iconPath).exists()) {
                     val iconBitmap = BitmapFactory.decodeFile(iconPath)
-                    itemView.itemIcon.setImageDrawable(BitmapDrawable(itemView.context.resources, iconBitmap))
+                    itemView.itemIcon.setImageDrawable(
+                        BitmapDrawable(
+                            itemView.context.resources,
+                            iconBitmap
+                        )
+                    )
                 } else {
                     itemView.itemIcon.setImageResource(R.drawable.ic_list_generic)
                 }
@@ -38,8 +48,12 @@ class HistoryListAdapter(private var historyItems: List<SourceInfo>, private val
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryListAdapter.ViewHolder? {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_app_list_item, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.layout_app_list_item, parent, false)
         return ViewHolder(view, itemClick)
     }
 

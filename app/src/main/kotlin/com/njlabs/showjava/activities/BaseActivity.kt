@@ -20,7 +20,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.decompiler.DecompilerActivity
+import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.utils.Tools
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -42,10 +42,10 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
 
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.storagePermissionRationale),
-                    Constants.STORAGE_PERMISSION_REQUEST,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                this,
+                getString(R.string.storagePermissionRationale),
+                Constants.STORAGE_PERMISSION_REQUEST,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
             init(savedInstanceState)
         } else {
@@ -83,7 +83,10 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
             if (isPro()) {
                 val activityInfo: ActivityInfo
                 try {
-                    activityInfo = packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA)
+                    activityInfo = packageManager.getActivityInfo(
+                        componentName,
+                        PackageManager.GET_META_DATA
+                    )
                     val currentTitle = activityInfo.loadLabel(packageManager).toString()
                     if (currentTitle.trim() == getString(R.string.appName)) {
                         supportActionBar?.title = "${getString(R.string.appName)} Pro"
@@ -104,9 +107,9 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
             mAdView.visibility = View.GONE
             if (!isPro()) {
                 val adRequest = AdRequest.Builder()
-                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                        .addTestDevice(getString(R.string.adUnitId))
-                        .build()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .addTestDevice(getString(R.string.adUnitId))
+                    .build()
                 mAdView.adListener = object : AdListener() {
                     override fun onAdFailedToLoad(errorCode: Int) {
                         super.onAdFailedToLoad(errorCode)
@@ -142,15 +145,13 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                 return true
             }
             R.id.about_option -> {
-                startActivity(Intent(baseContext, DecompilerActivity::class.java))
-                // startActivity(Intent(baseContext, About::class.java))
+                startActivity(Intent(baseContext, AboutActivity::class.java))
                 return true
             }
             R.id.bug_report_option -> {
                 val uri = Uri.parse(getString(R.string.bugReportUri))
                 startActivity(Intent(Intent.ACTION_VIEW, uri))
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-
                 return true
             }
             R.id.settings_option -> {
@@ -164,11 +165,15 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
 
     open fun postPermissionsGrant() {}
 
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>?) {
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
         postPermissionsGrant()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
@@ -176,8 +181,8 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
         if (perms.isNotEmpty() || EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             AppSettingsDialog.Builder(this)
-                    .build()
-                    .show()
+                .build()
+                .show()
         }
     }
 
@@ -190,9 +195,9 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
             if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 Toast.makeText(
-                        this,
-                        R.string.storagePermissionRationale,
-                        Toast.LENGTH_LONG
+                    this,
+                    R.string.storagePermissionRationale,
+                    Toast.LENGTH_LONG
                 ).show()
                 finish()
             } else {

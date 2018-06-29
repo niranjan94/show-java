@@ -32,7 +32,8 @@ class LandingHandler(private var context: Context) {
                 if (files != null && files.isNotEmpty())
                     files.forEach { file ->
                         if (PackageSourceTools.sourceExists(file)) {
-                            PackageSourceTools.getSourceInfoFromSourcePath(file)?.let { historyItems.add(it) }
+                            PackageSourceTools.getSourceInfoFromSourcePath(file)
+                                ?.let { historyItems.add(it) }
                         } else {
                             if (!Tools.isProcessorServiceRunning(context)) {
                                 try {

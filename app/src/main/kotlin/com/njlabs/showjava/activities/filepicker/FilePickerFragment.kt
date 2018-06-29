@@ -53,7 +53,10 @@ class FilePickerFragment : com.nononsenseapps.filepicker.FilePickerFragment() {
      * @return true if the current path is the start path or /
      */
     val isBackTop: Boolean
-        get() = 0 == compareFiles(mCurrentPath, backTop) || 0 == compareFiles(mCurrentPath, File("/"))
+        get() = 0 == compareFiles(mCurrentPath, backTop) || 0 == compareFiles(
+            mCurrentPath,
+            File("/")
+        )
 
     /**
      * Go up on level, same as pressing on "..".

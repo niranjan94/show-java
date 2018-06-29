@@ -1,9 +1,13 @@
 package com.njlabs.showjava.activities.explorer.navigator
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.webkit.MimeTypeMap
+import android.widget.Toast
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.explorer.navigator.adapters.FilesListAdapter
@@ -16,15 +20,11 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_navigator.*
 import timber.log.Timber
 import java.io.File
-import android.widget.Toast
-import android.content.ActivityNotFoundException
-import android.net.Uri
-import android.webkit.MimeTypeMap
 
 
 class NavigatorActivity : BaseActivity() {
 
-    private lateinit var  navigationHandler: NavigatorHandler
+    private lateinit var navigationHandler: NavigatorHandler
     private lateinit var filesListAdapter: FilesListAdapter
     private var currentDirectory: File? = null
 
@@ -66,15 +66,15 @@ class NavigatorActivity : BaseActivity() {
         supportActionBar?.title = startDirectory.name
         currentDirectory = startDirectory
         navigationHandler.loadFiles(startDirectory)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError { Timber.e(it) }
-                .subscribe {
-                    if (selectedApp?.sourceDirectory != startDirectory) {
-                        it.add(0, FileItem(File(startDirectory.parent), "Parent directory", "parent"))
-                    }
-                    updateList(it)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError { Timber.e(it) }
+            .subscribe {
+                if (selectedApp?.sourceDirectory != startDirectory) {
+                    it.add(0, FileItem(File(startDirectory.parent), "Parent directory", "parent"))
                 }
+                updateList(it)
+            }
     }
 
     private fun updateList(fileItems: ArrayList<FileItem>) {
@@ -102,10 +102,10 @@ class NavigatorActivity : BaseActivity() {
                         startActivity(intent)
                     }
                     arrayOf(
-                            "java", "xml", "json", "c",
-                            "cpp", "txt", "properties",
-                            "yml", "md", "kt", "html",
-                            "js", "css", "scss", "sass"
+                        "java", "xml", "json", "c",
+                        "cpp", "txt", "properties",
+                        "yml", "md", "kt", "html",
+                        "js", "css", "scss", "sass"
                     ).contains(selectedFile.file.extension) -> {
                         val intent = Intent(context, CodeViewerActivity::class.java)
                         intent.putExtra("filePath", selectedFile.file.absolutePath)
@@ -115,13 +115,18 @@ class NavigatorActivity : BaseActivity() {
                     else -> {
                         val mimeTypeDetector = MimeTypeMap.getSingleton()
                         val fileIntent = Intent(Intent.ACTION_VIEW)
-                        val mimeType = mimeTypeDetector.getMimeTypeFromExtension(selectedFile.file.extension)
+                        val mimeType =
+                            mimeTypeDetector.getMimeTypeFromExtension(selectedFile.file.extension)
                         fileIntent.setDataAndType(Uri.fromFile(selectedFile.file), mimeType)
                         fileIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         try {
                             context.startActivity(fileIntent)
                         } catch (e: ActivityNotFoundException) {
-                            Toast.makeText(context, getString(R.string.noSupportedHandlerForFileType), Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                context,
+                                getString(R.string.noSupportedHandlerForFileType),
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
                 }

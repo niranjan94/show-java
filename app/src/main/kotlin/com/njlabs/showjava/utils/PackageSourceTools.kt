@@ -3,7 +3,6 @@ package com.njlabs.showjava.utils
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.os.Environment
-import com.googlecode.dex2jar.ir.stmt.Stmt
 import com.njlabs.showjava.models.SourceInfo
 import org.apache.commons.io.FileUtils
 import org.json.JSONException
@@ -15,9 +14,9 @@ import java.io.IOException
 object PackageSourceTools {
 
     private val appStoragePath: String
-            get() {
-                return "${Environment.getExternalStorageDirectory()}/show-java/"
-            }
+        get() {
+            return "${Environment.getExternalStorageDirectory()}/show-java/"
+        }
 
     fun getPath(relativePath: String): String {
         return appStoragePath + (if (!relativePath.startsWith("/")) "/" else "") + relativePath
@@ -39,7 +38,7 @@ object PackageSourceTools {
             json.put("package_name", packageName)
             json.put("has_java_sources", false)
             json.put("has_xml_sources", false)
-            val filePath = sourceOutputDir + "/info.json"
+            val filePath = "$sourceOutputDir/info.json"
             FileUtils.writeStringToFile(File(filePath), json.toString(), "UTF-8")
         } catch (e: IOException) {
             e.printStackTrace()
@@ -51,7 +50,7 @@ object PackageSourceTools {
 
     fun setJavaSourceStatus(sourceOutputDir: String, status: Boolean?) {
         try {
-            val infoFile = File(sourceOutputDir + "/info.json")
+            val infoFile = File("$sourceOutputDir/info.json")
             val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
             json.put("has_java_sources", status)
             FileUtils.writeStringToFile(infoFile, json.toString(), "UTF-8")
@@ -65,7 +64,7 @@ object PackageSourceTools {
 
     fun setXmlSourceStatus(sourceOutputDir: String, status: Boolean?) {
         try {
-            val infoFile = File(sourceOutputDir + "/info.json")
+            val infoFile = File("$sourceOutputDir/info.json")
             val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
             json.put("has_xml_sources", status)
             FileUtils.writeStringToFile(infoFile, json.toString(), "UTF-8")
@@ -79,7 +78,7 @@ object PackageSourceTools {
 
     fun delete(sourceOutputDir: String) {
         try {
-            val infoFile = File(sourceOutputDir + "/info.json")
+            val infoFile = File("$sourceOutputDir/info.json")
             infoFile.delete()
         } catch (e: Exception) {
             Timber.e(e)
@@ -89,7 +88,7 @@ object PackageSourceTools {
 
     fun getLabel(directory: String): String? {
         return try {
-            val infoFile = File(directory + "/info.json")
+            val infoFile = File("$directory/info.json")
             val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
             json.getString("package_label")
         } catch (e: IOException) {

@@ -19,11 +19,12 @@ import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.models.SourceInfo
 import com.nononsenseapps.filepicker.AbstractFilePickerActivity.EXTRA_START_PATH
 import com.nononsenseapps.filepicker.Utils
-import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
+
+
 
 
 class LandingActivity : BaseActivity() {
@@ -31,17 +32,17 @@ class LandingActivity : BaseActivity() {
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var landingHandler: LandingHandler
 
-    private var  historyListAdapter: HistoryListAdapter? = null
+    private var historyListAdapter: HistoryListAdapter? = null
 
     private var historyItems = ArrayList<SourceInfo>()
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_landing)
         drawerToggle = ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                R.string.drawerOpen,
-                R.string.drawerClose
+            this,
+            drawerLayout,
+            R.string.drawerOpen,
+            R.string.drawerClose
         )
         drawerLayout.addDrawerListener(drawerToggle)
         landingHandler = LandingHandler(context)
@@ -64,23 +65,18 @@ class LandingActivity : BaseActivity() {
     }
 
     private fun setupFab() {
-        selectionFab.setMenuListener(object : SimpleMenuListenerAdapter() {
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                when (menuItem.itemId) {
-                    R.id.action_pick_installed -> {
-                        startActivity(
-                                Intent(context, AppsActivity::class.java)
-                        )
-                        return true
-                    }
-                    R.id.action_pick_sdcard -> {
-                        pickFile()
-                        return true
-                    }
+        selectionFab.addOnMenuItemClickListener { _, _, itemId ->
+            when (itemId) {
+                R.id.action_pick_installed -> {
+                    startActivity(
+                        Intent(context, AppsActivity::class.java)
+                    )
                 }
-                return false
+                R.id.action_pick_sdcard -> {
+                    pickFile()
+                }
             }
-        })
+        }
     }
 
     private fun pickFile() {
@@ -95,18 +91,18 @@ class LandingActivity : BaseActivity() {
 
     private fun populateHistory(resume: Boolean = false) {
         landingHandler.loadHistory()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError { Timber.e(it) }
-                .subscribe {
-                    historyItems = it
-                    if (resume) {
-                        historyListAdapter?.updateData(historyItems)
-                    } else {
-                        setupList()
-                    }
-
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError { Timber.e(it) }
+            .subscribe {
+                historyItems = it
+                if (resume) {
+                    historyListAdapter?.updateData(historyItems)
+                } else {
+                    setupList()
                 }
+
+            }
     }
 
     private fun setListVisibility(isListVisible: Boolean = true) {
@@ -160,8 +156,8 @@ class LandingActivity : BaseActivity() {
         if (requestCode == Constants.FILE_PICKER_RESULT && resultCode == Activity.RESULT_OK) {
             data?.let {
                 Utils.getSelectedFilesFromResult(it)
-                        .map { Utils.getFileForUri(it) }
-                        .forEach { Timber.d(it.absolutePath) }
+                    .map { Utils.getFileForUri(it) }
+                    .forEach { Timber.d(it.absolutePath) }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)

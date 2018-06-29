@@ -8,9 +8,13 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.models.PackageInfo
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
-class AppsListAdapter(private val apps: List<PackageInfo>, private val itemClick: (PackageInfo) -> Unit) : RecyclerView.Adapter<AppsListAdapter.ViewHolder>() {
+class AppsListAdapter(
+    private val apps: List<PackageInfo>,
+    private val itemClick: (PackageInfo) -> Unit
+) : RecyclerView.Adapter<AppsListAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View, private val itemClick: (PackageInfo) -> Unit) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, private val itemClick: (PackageInfo) -> Unit) :
+        RecyclerView.ViewHolder(view) {
         fun bindPackageInfo(packageInfo: PackageInfo) {
             with(packageInfo) {
                 itemView.itemLabel.text = packageInfo.packageLabel
@@ -22,8 +26,9 @@ class AppsListAdapter(private val apps: List<PackageInfo>, private val itemClick
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppsListAdapter.ViewHolder? {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_app_list_item, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.layout_app_list_item, parent, false)
         return ViewHolder(view, itemClick)
     }
 

@@ -17,11 +17,11 @@ class NavigatorHandler(private var context: Context) {
             val items = currentFile.listFiles()
             items.forEach { file ->
                 val lastModDate = DateFormat.getDateTimeInstance()
-                        .format(
-                                Date(
-                                        file.lastModified()
-                                )
+                    .format(
+                        Date(
+                            file.lastModified()
                         )
+                    )
                 if (file.isDirectory) {
                     val children = file.listFiles()
                     val noOfChildren = children?.size ?: 0

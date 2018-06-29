@@ -19,12 +19,14 @@ class MainApplication : Application() {
         }
         LeakCanary.install(this)
 
-        **/
+         **/
 
-        CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
+        CalligraphyConfig.initDefault(
+            CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/lato-light.ttf")
                 .setFontAttrId(R.attr.fontPath)
-                .build())
+                .build()
+        )
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         } else {

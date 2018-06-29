@@ -8,9 +8,13 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.models.FileItem
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
-class FilesListAdapter(private var fileItems: List<FileItem>, private val itemClick: (FileItem) -> Unit) : RecyclerView.Adapter<FilesListAdapter.ViewHolder>() {
+class FilesListAdapter(
+    private var fileItems: List<FileItem>,
+    private val itemClick: (FileItem) -> Unit
+) : RecyclerView.Adapter<FilesListAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View, private val itemClick: (FileItem) -> Unit) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, private val itemClick: (FileItem) -> Unit) :
+        RecyclerView.ViewHolder(view) {
         fun bindSourceInfo(fileItem: FileItem) {
             with(fileItem) {
                 itemView.itemLabel.text = fileItem.name
@@ -27,8 +31,9 @@ class FilesListAdapter(private var fileItems: List<FileItem>, private val itemCl
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder? {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_app_list_item, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.layout_app_list_item, parent, false)
         return ViewHolder(view, itemClick)
     }
 
