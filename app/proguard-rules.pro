@@ -74,3 +74,4 @@
 -dontwarn jadx.**
 -dontwarn java.**
 -dontwarn org.jetbrains.java.decompiler.**
+-dontwarn com.crashlytics.**

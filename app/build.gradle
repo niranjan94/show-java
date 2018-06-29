@@ -1,20 +1,35 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'io.fabric'
 
 def versionMajor = 3
 def versionMinor = 0
 def versionPatch = 0
 def versionBuild = 0
 
+def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone('UTC'))
+
+def isCi = 'true' == System.getenv('CI')
+def preDexEnabled = 'true' == System.getProperty('PRE_DEX', 'true')
+
+
 def props = new Properties()
-props.load(new FileInputStream('app/keys.properties'))
+try {
+    props.load(new FileInputStream('app/keys.properties'))
+} catch (e) {
+    props.load(new FileInputStream('app/keys.properties.example'))
+    println(e.message)
+}
 
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
+
+    dexOptions {
+        preDexLibraries = preDexEnabled && !isCi
+    }
 
     defaultConfig {
         minSdkVersion 16
@@ -33,10 +48,14 @@ android {
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
         resValue 'string', 'appName', 'Show Java'
-        resValue 'string', 'bugReportUri', 'Show Java'
+        resValue 'string', 'bugReportUri', 'https://github.com/niranjan94/show-java/issues'
         resValue 'string', 'originalApplicationId', 'com.njlabs.showjava'
         resValue 'string', 'deviceId', props.getProperty('deviceId')
         resValue 'string', 'adUnitId', props.getProperty('adUnitId')
+
+        buildConfigField 'String', 'GIT_SHA', "\"${gitSha}\""
+        buildConfigField 'String', 'BUILD_TIME', "\"${buildTime}\""
+        buildConfigField 'Boolean', 'IS_CI', "${isCi}"
     }
 
     testOptions {
@@ -66,12 +85,6 @@ android {
 
     productFlavors {
         standard {
-            buildConfigField 'boolean', 'IS_TRAVIS', 'false'
-            dimension = 'type'
-        }
-
-        travis {
-            buildConfigField 'boolean', 'IS_TRAVIS', 'true'
             dimension = 'type'
         }
     }
@@ -94,27 +107,39 @@ android {
     }
 }
 
-ext.support_version = '27.0.2'
-ext.firebase_version = '11.8.0'
+def support_version = '27.1.1'
 
 dependencies {
     // MULTI-DEX SUPPORT FOR PRE LOLLIPOP
-    implementation 'com.android.support:multidex:1.0.2'
+    implementation 'com.android.support:multidex:1.0.3'
+
     // KOTLIN STANDARD LIBRARY
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     // FIREBASE LIBRARIES
-    implementation "com.google.firebase:firebase-core:$firebase_version"
-    implementation "com.google.firebase:firebase-crash:$firebase_version"
-    implementation "com.google.firebase:firebase-ads:$firebase_version"
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-ads:15.0.1'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+
     // ANDROID SUPPORT LIBRARIES
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support:cardview-v7:$support_version"
     implementation "com.android.support:recyclerview-v7:$support_version"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta4'
+    implementation "com.android.support:support-core-utils:$support_version"
+    implementation "com.android.support:support-compat:$support_version"
+
+    implementation "com.android.support:customtabs:$support_version"
+    implementation "com.android.support:exifinterface:$support_version"
+
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+
+
     // APACHE COMMONS LIBRARIES
     implementation 'commons-io:commons-io:2.6'
     implementation 'commons-cli:commons-cli:1.4'
+
+
     // DEX2JAR AND FRIENDS
     implementation 'asm:asm-all:3.3.1'
     implementation files('libs/smali-2.2.1.jar')
@@ -122,34 +147,47 @@ dependencies {
     implementation files('libs/dex-reader-1.15.jar')
     implementation files('libs/dex-tools-0.0.9.15.jar')
     implementation files('libs/dex-translator-0.0.9.15.jar')
+
+
     // CLASS FILE READER - JAVA DECOMPILER
     implementation files('libs/cfr_0_117.jar')
+
+
     // DEPENDENCIES FOR JaDX
     implementation files('libs/dx-1.10.jar')
     implementation files('libs/android-5.1-clst-core.jar')
     implementation 'org.slf4j:slf4j-api:1.7.21'
-    implementation 'uk.com.robust-it:cloning:1.9.2'
+    implementation 'uk.com.robust-it:cloning:1.9.10'
+
+
     // APK PARSER AND BINARY XML DECODER
-    implementation 'net.dongliu:apk-parser:2.2.0'
+    implementation 'net.dongliu:apk-parser:2.5.3'
+
+
     // FERN FLOWER
     implementation files('libs/fernflower.jar')
+
+
     // RxJAVA AND FRIENDS
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
-    implementation 'com.jakewharton.timber:timber:4.5.1'
+    implementation 'com.jakewharton.timber:timber:4.7.0'
     implementation('org.solovyev.android:checkout:1.0.1', {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
-    implementation 'pub.devrel:easypermissions:0.4.3'
+    implementation 'pub.devrel:easypermissions:1.2.0'
     implementation('org.solovyev.android:checkout:1.2.1', {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
-    implementation 'com.nononsenseapps:filepicker:4.1.0'
-    implementation 'io.github.yavski:fab-speed-dial:1.0.6'
+    implementation 'com.github.javiersantos:PiracyChecker:1.2.2'
+    implementation 'com.nononsenseapps:filepicker:4.2.1'
+    implementation 'com.github.kobakei:MaterialFabSpeedDial:1.2.0'
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
-    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+
+
     // LEAKCANARY AND FRIENDS
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
