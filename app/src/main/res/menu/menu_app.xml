@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item android:id="@+id/search"
+        android:title="@string/searchApps"
+        android:icon="@drawable/ic_search_white"
+        app:showAsAction="collapseActionView|ifRoom" />
+
+    <item
+        android:id="@+id/bug_report_option"
+        android:orderInCategory="1"
+        android:title="@string/reportBug"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/about_option"
+        android:orderInCategory="2"
+        android:title="@string/about"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/settings_option"
+        android:orderInCategory="2"
+        android:title="@string/settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/invert_colors"
+        android:icon="@drawable/ic_action_invert_colors"
+        android:orderInCategory="2"
+        android:title="@string/invertBackgroundColor"
+        android:visible="false"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
+</menu>

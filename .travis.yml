@@ -1,39 +1,40 @@
 language: android
 
+jdk: oraclejdk8
+
+sudo: false
+
 android:
   components:
     - tools
-    - android-26
-    - build-tools-26.0.1
+    - android-27
+    - build-tools-27.0.3
     - platform-tools
     - extra-google-m2repository
+    - extra-android-m2repository
+    - extra-google-google_play_services
 
 before_cache:
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 
 cache:
-    directories:
-      - "${TRAVIS_BUILD_DIR}/gradle/caches/"
-      - "${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/"
-      - "$HOME/.gradle/caches/"
-      - "$HOME/.gradle/wrapper/"
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
 
 env:
   global:
     MALLOC_ARENA_MAX=1
    
-jdk: oraclejdk8
-
-sudo: false
-
 install:
   - ulimit -s 1082768
   - touch app/keys.properties
-  - printf 'GooglePlayLicenseKey="GooglePlayLicenseKey"\nIapProductKey="IapProductKey"\ncc="cc"\nii="ii"' > app/keys.properties
 
 script:
   - ./gradlew build
-  - ./gradlew assembleTravisRelease --stacktrace
+  - ./gradlew assembleStandardRelease --stacktrace
 
 after_failure:
   # tests

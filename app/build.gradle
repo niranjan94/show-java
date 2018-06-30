@@ -155,13 +155,14 @@ dependencies {
 
     // DEPENDENCIES FOR JaDX
     implementation files('libs/dx-1.10.jar')
-    implementation files('libs/android-5.1-clst-core.jar')
+    implementation files('libs/android-5.1.jar')
+    implementation files('libs/jadx-core-0.6.1.jar')
     implementation 'org.slf4j:slf4j-api:1.7.21'
     implementation 'uk.com.robust-it:cloning:1.9.10'
 
 
     // APK PARSER AND BINARY XML DECODER
-    implementation 'net.dongliu:apk-parser:2.5.3'
+    implementation 'net.dongliu:apk-parser:2.6.1'
 
 
     // FERN FLOWER

@@ -1,7 +1,10 @@
 package com.njlabs.showjava.activities.apps
 
+import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import com.njlabs.showjava.R
@@ -15,13 +18,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_apps.*
+import org.apache.commons.io.FileUtils
 import timber.log.Timber
 import java.io.File
-import android.content.Intent
-import android.support.v7.app.AlertDialog
-import com.google.firebase.crash.FirebaseCrash
-import org.apache.commons.io.FileUtils
 import java.io.IOException
+
 
 class AppsActivity : BaseActivity() {
 
@@ -48,36 +49,36 @@ class AppsActivity : BaseActivity() {
 
     private fun loadApps() {
         appsHandler.loadApps()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<ProcessStatus<ArrayList<PackageInfo>>> {
-                    override fun onNext(processStatus: ProcessStatus<ArrayList<PackageInfo>>) {
-                        if (!processStatus.isDone) {
-                            progressBar.progress = processStatus.progress.toInt()
-                            statusText.text = processStatus.status
-                            processStatus.secondaryStatus?.let {
-                                secondaryStatusText.text = it
-                            }
-                        } else {
-                            if (processStatus.result != null) {
-                                apps = processStatus.result
-                            }
-                            setupList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<ProcessStatus<ArrayList<PackageInfo>>> {
+                override fun onNext(processStatus: ProcessStatus<ArrayList<PackageInfo>>) {
+                    if (!processStatus.isDone) {
+                        progressBar.progress = processStatus.progress.toInt()
+                        statusText.text = processStatus.status
+                        processStatus.secondaryStatus?.let {
+                            secondaryStatusText.text = it
                         }
+                    } else {
+                        if (processStatus.result != null) {
+                            apps = processStatus.result
+                        }
+                        setupList()
                     }
+                }
 
-                    override fun onComplete() {
+                override fun onComplete() {
 
-                    }
+                }
 
-                    override fun onSubscribe(d: Disposable) {
+                override fun onSubscribe(d: Disposable) {
 
-                    }
+                }
 
-                    override fun onError(e: Throwable) {
-                        Timber.e(e)
-                    }
-                })
+                override fun onError(e: Throwable) {
+                    Timber.e(e)
+                }
+            })
     }
 
     private fun setupList() {
@@ -88,7 +89,11 @@ class AppsActivity : BaseActivity() {
         val historyListAdapter = AppsListAdapter(apps) { selectedApp ->
             Timber.d(selectedApp.packageName)
             if (selectedApp.packageName.toLowerCase().contains(getString(R.string.originalApplicationId).toLowerCase())) {
-                Toast.makeText(applicationContext, getString(R.string.checkoutSourceLink), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.checkoutSourceLink),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             val sourceDir = PackageSourceTools.sourceDir(selectedApp.packageName)
             Timber.d(sourceDir.absolutePath)
@@ -105,21 +110,21 @@ class AppsActivity : BaseActivity() {
         val alertDialog = AlertDialog.Builder(context, R.style.AlertDialog)
         alertDialog.setTitle(getString(R.string.appAlreadyDecompiled))
         alertDialog.setMessage(getString(R.string.actionAppAlreadyDecompiled))
-        alertDialog.setPositiveButton(getString(R.string.viewSource), { _, _ ->
+        alertDialog.setPositiveButton(getString(R.string.viewSource)) { _, _ ->
             val i = Intent(applicationContext, AppsActivity::class.java)
             i.putExtra("java_source_dir", sourceDir.toString() + "/")
             i.putExtra("package_id", app.packageName)
             startActivity(i)
-        })
+        }
 
-        alertDialog.setNegativeButton(getString(R.string.decompile), { _, _ ->
+        alertDialog.setNegativeButton(getString(R.string.decompile)) { _, _ ->
             try {
                 FileUtils.deleteDirectory(sourceDir)
             } catch (e: IOException) {
-                FirebaseCrash.report(e)
+                Timber.e(e)
             }
             showDecompilerSelection(app)
-        })
+        }
         alertDialog.show()
     }
 
@@ -139,13 +144,19 @@ class AppsActivity : BaseActivity() {
         }
     }
 
-    private fun openProcessActivity(holder: PackageInfo, string: String) {
-
+    private fun openProcessActivity(holder: PackageInfo, decompiler: String) {
+        Timber.d("FilePath:%s  Decompiler:%s", holder.packageFilePath, decompiler)
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)
         bundle.putParcelableArrayList("apps", apps)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_app, menu)
+        return true
+    }
+
 
 }

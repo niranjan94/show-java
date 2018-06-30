@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
@@ -80,7 +81,6 @@
             android:layout_width="match_parent"
             android:layout_below="@+id/toolbar"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:paddingLeft="5dp"
@@ -101,18 +101,16 @@
             android:scrollbarStyle="outsideOverlay"
             android:visibility="gone" />
 
-        <io.github.yavski.fabspeeddial.FabSpeedDial
+        <io.github.kobakei.materialfabspeeddial.FabSpeedDial
             android:id="@+id/selectionFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/welcomeLayout"
             android:layout_alignParentEnd="true"
-            android:layout_alignWithParentIfMissing="true"
-            android:layout_above="@id/adView"
-            app:fabGravity="bottom_end"
-            app:fabMenu="@menu/menu_fab"
-            app:miniFabBackgroundTint="?attr/colorAccent"
-            app:miniFabDrawableTint="@color/white"
-            app:miniFabTitleTextColor="@color/grey_900"
+            app:fab_menu="@menu/menu_fab"
+            app:fab_extraMargin="-8dp"
+            app:fab_miniFabTextBackground="@drawable/fab_label"
+            app:fab_miniFabTextBackgroundList="@array/fab_labels"
             android:layout_alignParentRight="true" />
 
         <include

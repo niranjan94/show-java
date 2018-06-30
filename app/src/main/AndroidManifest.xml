@@ -78,6 +78,7 @@
         </activity>
 
         <activity android:name=".activities.explorer.viewer.ImageViewerActivity" android:theme="@style/SourceViewerTheme" />
+        <activity android:name=".activities.about.AboutActivity" />
 
         <service
             android:name=".services.processor.ProcessorService"
