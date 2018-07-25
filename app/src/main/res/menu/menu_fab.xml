@@ -3,12 +3,12 @@
     tools:context="com.njlabs.showjava.activities.landing.LandingActivity">
     <item
         android:id="@+id/action_pick_sdcard"
+        android:icon="@drawable/ic_sd_card_white"
         android:orderInCategory="1"
-        android:title="@string/pickFromSdCard"
-        android:icon="@drawable/ic_sd_card_white"/>
+        android:title="@string/pickFromSdCard" />
     <item
         android:id="@+id/action_pick_installed"
+        android:icon="@drawable/ic_apps_white"
         android:orderInCategory="2"
-        android:title="@string/pickInstalled"
-        android:icon="@drawable/ic_apps_white"/>
+        android:title="@string/pickInstalled" />
 </menu>

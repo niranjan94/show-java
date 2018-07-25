@@ -24,7 +24,7 @@ try {
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '27.0.3'
 
     dexOptions {
@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
 
         applicationId 'com.njlabs.showjava'
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
@@ -107,7 +107,7 @@ android {
     }
 }
 
-def support_version = '27.1.1'
+def support_version = '28.0.0-alpha3'
 
 dependencies {
     // MULTI-DEX SUPPORT FOR PRE LOLLIPOP
@@ -125,20 +125,18 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support:cardview-v7:$support_version"
+    implementation "com.android.support:support-v4:$support_version"
     implementation "com.android.support:recyclerview-v7:$support_version"
     implementation "com.android.support:support-core-utils:$support_version"
     implementation "com.android.support:support-compat:$support_version"
-
+    implementation "com.android.support:support-media-compat:$support_version"
     implementation "com.android.support:customtabs:$support_version"
     implementation "com.android.support:exifinterface:$support_version"
-
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-
 
     // APACHE COMMONS LIBRARIES
     implementation 'commons-io:commons-io:2.6'
     implementation 'commons-cli:commons-cli:1.4'
-
 
     // DEX2JAR AND FRIENDS
     implementation 'asm:asm-all:3.3.1'
@@ -148,10 +146,8 @@ dependencies {
     implementation files('libs/dex-tools-0.0.9.15.jar')
     implementation files('libs/dex-translator-0.0.9.15.jar')
 
-
     // CLASS FILE READER - JAVA DECOMPILER
     implementation files('libs/cfr_0_117.jar')
-
 
     // DEPENDENCIES FOR JaDX
     implementation files('libs/dx-1.10.jar')
@@ -160,21 +156,30 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.21'
     implementation 'uk.com.robust-it:cloning:1.9.10'
 
-
     // APK PARSER AND BINARY XML DECODER
     implementation 'net.dongliu:apk-parser:2.6.1'
 
-
     // FERN FLOWER
     implementation files('libs/fernflower.jar')
-
 
     // RxJAVA AND FRIENDS
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
+
+    // LEAKCANARY AND FRIENDS
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    })
+
+    // EVERYBODY ELSE
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
-    implementation 'com.jakewharton.timber:timber:4.7.0'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation('org.solovyev.android:checkout:1.0.1', {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
@@ -182,22 +187,12 @@ dependencies {
     implementation('org.solovyev.android:checkout:1.2.1', {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
-    implementation 'com.github.javiersantos:PiracyChecker:1.2.2'
-    implementation 'com.nononsenseapps:filepicker:4.2.1'
+    implementation 'com.github.javiersantos:PiracyChecker:1.2.3'
     implementation 'com.github.kobakei:MaterialFabSpeedDial:1.2.0'
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+    implementation 'com.github.angads25:filepicker:1.1.1'
 
-
-    // LEAKCANARY AND FRIENDS
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.google.code.findbugs', module: 'jsr305'
-    })
 }
 
 apply plugin: 'com.google.gms.google-services'

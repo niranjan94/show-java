@@ -18,14 +18,16 @@ import java.io.File
 import java.io.PrintStream
 
 
-class JavaExtractor(private val processorService: ProcessorService) : BaseHandler(processorService) {
+class JavaExtractor(private val processorService: ProcessorService) :
+    BaseHandler(processorService) {
     private var ignoredLibs: ArrayList<String>? = null
 
     private val sourceOutputDirectory: File = File(processorService.sourceOutputDirectory)
     private val javaSourceOutputDirectory: File = File(processorService.javaSourceOutputDirectory)
 
     private var dexFile: File = File(sourceOutputDirectory, "optimised_classes.dex")
-    private var jarFile: File = File(javaSourceOutputDirectory, "${processorService.inputPackageName}.jar")
+    private var jarFile: File =
+        File(javaSourceOutputDirectory, "${processorService.inputPackageName}.jar")
 
     init {
         ignoredLibs = ArrayList()

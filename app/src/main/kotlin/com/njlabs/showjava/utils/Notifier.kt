@@ -1,10 +1,10 @@
 package com.njlabs.showjava.utils
 
-import android.app.PendingIntent
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.support.v4.app.NotificationCompat
 
-class Notifier (
+class Notifier(
     private val notificationManager: NotificationManager,
     private val notificationBuilder: NotificationCompat.Builder,
     private val notificationId: Int = 0

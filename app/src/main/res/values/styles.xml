@@ -22,24 +22,6 @@
         <item name="colorAccent">@color/grey_900</item>
     </style>
 
-    <style name="FilePickerTheme" parent="NNF_BaseTheme.Light"><!-- Setting a divider is entirely optional -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
-        <item name="nnf_toolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-        <item name="alertDialogTheme">@style/FilePickerAlertDialogTheme</item>
-    </style>
-
-    <style name="FilePickerAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
-    </style>
-
-
     <style name="AppTheme.WithDrawer" parent="AppTheme.NoActionBar">
 
     </style>

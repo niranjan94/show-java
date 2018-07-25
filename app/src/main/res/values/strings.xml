@@ -18,9 +18,9 @@
     <string name="pickInstalled">Pick from installed</string>
     <string name="loadingApplications">Loading installed applications …</string>
     <string name="loadingGear">Loading gear</string>
-    <string name="loadingApp">Loading <xliff:g id="name_of_an_app" example="WhatsApp">%1$s</xliff:g></string>
+    <string name="loadingApp">Loading <xliff:g example="WhatsApp" id="name_of_an_app">%1$s</xliff:g></string>
     <string name="loadingStatistic">
-        <xliff:g id="countCurrent" example="23">%1$d</xliff:g> of <xliff:g id="countTotal" example="345">%2$d</xliff:g>
+        <xliff:g example="23" id="countCurrent">%1$d</xliff:g> of <xliff:g example="345" id="countTotal">%2$d</xliff:g>
     </string>
     <string name="waitingForAPp">Waiting for app</string>
     <string name="processing">Processing</string>

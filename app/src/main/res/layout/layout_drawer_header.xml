@@ -12,7 +12,7 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/appName"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/navbar_header"
-        android:contentDescription="@string/appName" />
+        app:srcCompat="@drawable/navbar_header" />
 </RelativeLayout>

@@ -9,7 +9,11 @@ import java.io.PrintWriter
 import java.io.StringWriter
 
 
-class ExceptionHandler(private val context: Context, private val sourceDir: String, private val packageID: String ) : java.lang.Thread.UncaughtExceptionHandler {
+class ExceptionHandler(
+    private val context: Context,
+    private val sourceDir: String,
+    private val packageID: String
+) : java.lang.Thread.UncaughtExceptionHandler {
 
     private val LINE_SEPARATOR = "\n"
 

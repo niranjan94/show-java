@@ -9,7 +9,7 @@ import com.njlabs.showjava.models.PackageInfo
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
 class AppsListAdapter(
-    private val apps: List<PackageInfo>,
+    private var apps: List<PackageInfo>,
     private val itemClick: (PackageInfo) -> Unit
 ) : RecyclerView.Adapter<AppsListAdapter.ViewHolder>() {
 
@@ -38,5 +38,10 @@ class AppsListAdapter(
 
     override fun getItemCount(): Int {
         return apps.size
+    }
+
+    fun updateList(apps: List<PackageInfo>) {
+        this.apps = apps
+        notifyDataSetChanged()
     }
 }

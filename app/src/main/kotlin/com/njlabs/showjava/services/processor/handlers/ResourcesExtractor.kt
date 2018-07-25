@@ -16,7 +16,8 @@ import java.nio.charset.Charset
 import java.util.zip.ZipFile
 
 
-class ResourcesExtractor(private val processorService: ProcessorService) : BaseHandler(processorService) {
+class ResourcesExtractor(private val processorService: ProcessorService) :
+    BaseHandler(processorService) {
 
 
     private fun extractResourcesWithJadx() {
@@ -81,7 +82,11 @@ class ResourcesExtractor(private val processorService: ProcessorService) : BaseH
         var outputStream: FileOutputStream? = null
         try {
             val fileFolderPath =
-                processorService.sourceOutputDirectory + "/" + path.replace(FilenameUtils.getName(path), "")
+                processorService.sourceOutputDirectory + "/" + path.replace(
+                    FilenameUtils.getName(
+                        path
+                    ), ""
+                )
             val fileFolder = File(fileFolderPath)
             if (!fileFolder.exists() || !fileFolder.isDirectory) {
                 fileFolder.mkdirs()
@@ -90,7 +95,9 @@ class ResourcesExtractor(private val processorService: ProcessorService) : BaseH
             val buffer = ByteArray(1024)
             while (true) {
                 val read = fileStream.read(buffer)
-                if (read <= 0) { break }
+                if (read <= 0) {
+                    break
+                }
                 outputStream.write(buffer, 0, read)
             }
         } catch (e: IOException) {
@@ -116,12 +123,20 @@ class ResourcesExtractor(private val processorService: ProcessorService) : BaseH
         try {
             val xml = processorService.parsedInputApkFile.transBinaryXml(path)
             val fileFolderPath =
-                processorService.sourceOutputDirectory + "/" + path.replace(FilenameUtils.getName(path), "")
+                processorService.sourceOutputDirectory + "/" + path.replace(
+                    FilenameUtils.getName(
+                        path
+                    ), ""
+                )
             val fileFolder = File(fileFolderPath)
             if (!fileFolder.exists() || !fileFolder.isDirectory()) {
                 fileFolder.mkdirs()
             }
-            FileUtils.writeStringToFile(File(fileFolderPath + FilenameUtils.getName(path)), xml, Charset.defaultCharset())
+            FileUtils.writeStringToFile(
+                File(fileFolderPath + FilenameUtils.getName(path)),
+                xml,
+                Charset.defaultCharset()
+            )
         } catch (e: IOException) {
             Timber.e(e)
         }
@@ -136,7 +151,11 @@ class ResourcesExtractor(private val processorService: ProcessorService) : BaseH
     private fun writeManifest() {
         try {
             val manifestXml = processorService.parsedInputApkFile.manifestXml
-            FileUtils.writeStringToFile(File(processorService.sourceOutputDirectory + "/AndroidManifest.xml"), manifestXml, Charset.defaultCharset())
+            FileUtils.writeStringToFile(
+                File(processorService.sourceOutputDirectory + "/AndroidManifest.xml"),
+                manifestXml,
+                Charset.defaultCharset()
+            )
         } catch (e: IOException) {
             e.printStackTrace()
         }

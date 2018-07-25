@@ -1,6 +1,5 @@
 package com.njlabs.showjava.activities.landing
 
-import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -9,28 +8,26 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.view.View
-import com.njlabs.showjava.Constants
+import com.github.angads25.filepicker.model.DialogConfigs
+import com.github.angads25.filepicker.model.DialogProperties
+import com.github.angads25.filepicker.view.FilePickerDialog
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.AppsActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
-import com.njlabs.showjava.activities.filepicker.FilePickerActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.models.SourceInfo
-import com.nononsenseapps.filepicker.AbstractFilePickerActivity.EXTRA_START_PATH
-import com.nononsenseapps.filepicker.Utils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
 
 
-
-
 class LandingActivity : BaseActivity() {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var landingHandler: LandingHandler
+    private lateinit var filePickerDialog: FilePickerDialog
 
     private var historyListAdapter: HistoryListAdapter? = null
 
@@ -54,7 +51,22 @@ class LandingActivity : BaseActivity() {
                 setupList()
             }
         }
-        //startActivity(Intent(context, NavigatorActivity::class.java))
+
+        val properties = DialogProperties()
+        properties.selection_mode = DialogConfigs.SINGLE_MODE
+        properties.selection_type = DialogConfigs.FILE_SELECT
+        properties.root = Environment.getExternalStorageDirectory()
+        properties.error_dir = properties.root
+        properties.offset = properties.root
+        properties.extensions = arrayOf("apk")
+
+        filePickerDialog = FilePickerDialog(this, properties)
+        filePickerDialog.setTitle("Select a File")
+
+        filePickerDialog.setDialogSelectionListener {
+            //files is the array of the paths of files selected by the Application User.
+        }
+
     }
 
     public override fun onResume() {
@@ -80,9 +92,7 @@ class LandingActivity : BaseActivity() {
     }
 
     private fun pickFile() {
-        val i = Intent(context, FilePickerActivity::class.java)
-        i.putExtra(EXTRA_START_PATH, Environment.getExternalStorageDirectory())
-        startActivityForResult(i, Constants.FILE_PICKER_RESULT)
+        filePickerDialog.show()
     }
 
     override fun postPermissionsGrant() {
@@ -150,18 +160,6 @@ class LandingActivity : BaseActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == Constants.FILE_PICKER_RESULT && resultCode == Activity.RESULT_OK) {
-            data?.let {
-                Utils.getSelectedFilesFromResult(it)
-                    .map { Utils.getFileForUri(it) }
-                    .forEach { Timber.d(it.absolutePath) }
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
     }
 
 }

@@ -24,7 +24,8 @@ class JarExtractor(private val processorService: ProcessorService) : BaseHandler
     private val perAppWorkingDirectory: File = File(processorService.sourceOutputDirectory)
 
     private var dexFile: File = File(perAppWorkingDirectory, "optimised_classes.dex")
-    private var jarFile: File= File(perAppWorkingDirectory, "${processorService.inputPackageName}.jar")
+    private var jarFile: File =
+        File(perAppWorkingDirectory, "${processorService.inputPackageName}.jar")
 
     init {
         printStream = PrintStream(ProgressStream())
@@ -99,7 +100,8 @@ class JarExtractor(private val processorService: ProcessorService) : BaseHandler
 
         val reuseReg = false // reuse register while generate java .class file
         val topologicalSort1 = false // same with --topological-sort/-ts
-        val topologicalSort = false // sort block by topological, that will generate more readable code
+        val topologicalSort =
+            false // sort block by topological, that will generate more readable code
         val verbose = true // show progress
         val debugInfo = false // translate debug info
         val printIR = false // print ir to System.out
@@ -131,6 +133,7 @@ class JarExtractor(private val processorService: ProcessorService) : BaseHandler
         override fun handleFileException(e: Exception) {
             Timber.d("Dex2Jar Exception $e")
         }
+
         override fun handleMethodTranslateException(
             method: Method,
             irMethod: IrMethod,

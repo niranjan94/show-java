@@ -6,11 +6,19 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.models.PackageInfo
 import kotlinx.android.synthetic.main.activity_decompiler.*
 
 class DecompilerActivity : BaseActivity() {
     override fun init(savedInstanceState: Bundle?) {
         setupLayoutNoActionBar(R.layout.activity_decompiler)
+        val packageInfo = intent.getParcelableExtra<PackageInfo>("packageInfo")
+        val decompiler = intent.getStringExtra("decompiler")
+
+        if (packageInfo != null && decompiler != null) {
+            current_package_name.text = packageInfo.packageLabel
+        }
+
         setupGears()
     }
 

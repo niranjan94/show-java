@@ -52,6 +52,7 @@ open class BaseHandler(private val processorService: ProcessorService) {
                 broadcastStatus("progress_stream", str)
             }
         }
+
         override fun write(byte: Int) {
             // Just a stub. We aren't implementing this.
         }

@@ -17,15 +17,15 @@ import com.njlabs.showjava.utils.PackageSourceTools
 import net.dongliu.apk.parser.ApkFile
 import java.io.File
 
-
 class ProcessorService : BaseProcessorService() {
 
     var shouldIgnoreLibs: Boolean = false
 
     private lateinit var uiHandler: Handler
 
-    var stackSize: Long = 20 * 1024 * 1024
-    var shouldIgnoreLibraries: Boolean = true
+    private var stackSize: Long = 20 * 1024 * 1024
+    private var shouldIgnoreLibraries: Boolean = true
+
     var decompilerToUse: String = "jadx"
 
     lateinit var inputPackageFilePath: String
@@ -38,7 +38,6 @@ class ProcessorService : BaseProcessorService() {
 
     lateinit var exceptionHandler: ExceptionHandler
 
-
     private val notificationManager: NotificationManager
         get() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -50,7 +49,6 @@ class ProcessorService : BaseProcessorService() {
         super.onStartCommand(intent, flags, startId)
         this.startID = startId
         uiHandler = Handler()
-
         when {
             intent.action == Constants.ACTION.START_PROCESS -> {
                 startForeground(Constants.PROCESS_NOTIFICATION_ID, buildNotification())
@@ -96,7 +94,11 @@ class ProcessorService : BaseProcessorService() {
                     broadcastStatus("exit_process_on_error")
                 }
 
-                exceptionHandler = ExceptionHandler(applicationContext, sourceOutputDirectory, inputPackageName)
+                exceptionHandler = ExceptionHandler(
+                    applicationContext,
+                    sourceOutputDirectory,
+                    inputPackageName
+                )
 
                 uiHandler.post {
                     val resultIntent = Intent(applicationContext, DecompilerActivity::class.java)
@@ -115,10 +117,15 @@ class ProcessorService : BaseProcessorService() {
                     processNotifier?.updateIntent(resultPendingIntent)
                 }
 
-                sourceOutputDirectory = "${Environment.getExternalStorageState()}/ShowJava/sources/$packageName"
+                sourceOutputDirectory =
+                        "${Environment.getExternalStorageState()}/ShowJava/sources/$packageName"
                 javaSourceOutputDirectory = "$sourceOutputDirectory/java"
 
-                PackageSourceTools.initialise(inputPackageLabel, inputPackageName, sourceOutputDirectory)
+                PackageSourceTools.initialise(
+                    inputPackageLabel,
+                    inputPackageName,
+                    sourceOutputDirectory
+                )
 
                 uiHandler.post {
                     Thread.setDefaultUncaughtExceptionHandler(exceptionHandler)
@@ -135,7 +142,8 @@ class ProcessorService : BaseProcessorService() {
             val jarExtractor = JarExtractor(this@ProcessorService)
             jarExtractor.extract()
         }
-        val extractionThread = Thread(group, runProcess, "$inputPackageName-extractor-thread", stackSize)
+        val extractionThread =
+            Thread(group, runProcess, "$inputPackageName-extractor-thread", stackSize)
         extractionThread.priority = Thread.MAX_PRIORITY
         extractionThread.uncaughtExceptionHandler = exceptionHandler
         extractionThread.start()

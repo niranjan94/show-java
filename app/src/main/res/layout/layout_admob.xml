@@ -6,6 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
     ads:adSize="SMART_BANNER"
-    ads:adUnitId="ca-app-pub-5565459350927069/4392884759"
-    android:layout_alignParentStart="true" />
+    ads:adUnitId="ca-app-pub-5565459350927069/4392884759" />

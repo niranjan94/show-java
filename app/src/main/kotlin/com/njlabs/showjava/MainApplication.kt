@@ -15,7 +15,7 @@ class MainApplication : Application() {
         /**
 
         if (LeakCanary.isInAnalyzerProcess(this)) {
-            return
+        return
         }
         LeakCanary.install(this)
 
@@ -27,6 +27,7 @@ class MainApplication : Application() {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         )
+
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         } else {

@@ -46,7 +46,9 @@ object ZipUtils {
 
             while (true) {
                 val len = fileInputStream.read(buffer)
-                if (len <= 0) { break }
+                if (len <= 0) {
+                    break
+                }
                 zip.write(buffer, 0, len)
             }
         }
@@ -87,7 +89,9 @@ object ZipUtils {
                 fileOutputStream.use { out ->
                     while (true) {
                         val count = zis.read(buffer)
-                        if (count <= 0) { break }
+                        if (count <= 0) {
+                            break
+                        }
                         out.write(buffer, 0, count)
                     }
                 }

@@ -1,15 +1,20 @@
 package com.njlabs.showjava.activities.apps
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
+import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.models.PackageInfo
 import com.njlabs.showjava.utils.PackageSourceTools
 import com.njlabs.showjava.utils.rx.ProcessStatus
@@ -24,23 +29,27 @@ import java.io.File
 import java.io.IOException
 
 
-class AppsActivity : BaseActivity() {
-
+class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
     private lateinit var appsHandler: AppsHandler
+    private lateinit var historyListAdapter: AppsListAdapter
+
+    private var searchMenuItem: MenuItem? = null
 
     private var apps = ArrayList<PackageInfo>()
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_apps)
         appsHandler = AppsHandler(context)
-        loadingView.visibility = View.VISIBLE
-        appsList.visibility = View.GONE
         if (savedInstanceState != null) {
             val apps = savedInstanceState.getParcelableArrayList<PackageInfo>("apps")
             if (apps != null) {
                 this.apps = apps
                 setupList()
             }
+        } else {
+            loadingView.visibility = View.VISIBLE
+            appsList.visibility = View.GONE
+            searchMenuItem?.isVisible = false
         }
         if (this.apps.isEmpty()) {
             loadApps()
@@ -84,9 +93,10 @@ class AppsActivity : BaseActivity() {
     private fun setupList() {
         loadingView.visibility = View.GONE
         appsList.visibility = View.VISIBLE
+        searchMenuItem?.isVisible = true
         appsList.setHasFixedSize(true)
         appsList.layoutManager = LinearLayoutManager(context)
-        val historyListAdapter = AppsListAdapter(apps) { selectedApp ->
+        historyListAdapter = AppsListAdapter(apps) { selectedApp ->
             Timber.d(selectedApp.packageName)
             if (selectedApp.packageName.toLowerCase().contains(getString(R.string.originalApplicationId).toLowerCase())) {
                 Toast.makeText(
@@ -144,8 +154,12 @@ class AppsActivity : BaseActivity() {
         }
     }
 
-    private fun openProcessActivity(holder: PackageInfo, decompiler: String) {
-        Timber.d("FilePath:%s  Decompiler:%s", holder.packageFilePath, decompiler)
+    private fun openProcessActivity(packageInfo: PackageInfo, decompiler: String) {
+        Timber.d("FilePath:%s  Decompiler:%s", packageInfo.packageFilePath, decompiler)
+        val i = Intent(applicationContext, DecompilerActivity::class.java)
+        i.putExtra("packageInfo", packageInfo)
+        i.putExtra("decompiler", decompiler)
+        startActivity(i)
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {
@@ -155,8 +169,40 @@ class AppsActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_app, menu)
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchMenuItem = menu.findItem(R.id.search)
+        val searchView = searchMenuItem?.actionView as SearchView
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView.isSubmitButtonEnabled = true
+        searchView.setOnQueryTextListener(this)
+        searchView.setOnCloseListener(this)
         return true
     }
 
+    fun searchApps(query: String?) {
+        val filteredApps = ArrayList<PackageInfo>()
+        val cleanedQuery = query?.trim()?.toLowerCase() ?: ""
+        for (app in apps) {
+            if (cleanedQuery == "" || app.packageLabel.toLowerCase().contains(cleanedQuery)) {
+                filteredApps.add(app)
+            }
+        }
+        historyListAdapter.updateList(filteredApps)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        searchApps(query)
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        searchApps(query)
+        return true
+    }
+
+    override fun onClose(): Boolean {
+        searchApps(null)
+        return true
+    }
 
 }
