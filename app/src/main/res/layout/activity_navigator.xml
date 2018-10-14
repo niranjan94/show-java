@@ -13,10 +13,10 @@
         android:id="@+id/adView"
         layout="@layout/layout_admob" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/filesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/adView"
-        android:layout_below="@id/toolbar"></android.support.v7.widget.RecyclerView>
+        android:layout_below="@id/toolbar"></androidx.recyclerview.widget.RecyclerView>
 </RelativeLayout>

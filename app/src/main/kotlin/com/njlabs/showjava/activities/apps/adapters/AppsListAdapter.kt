@@ -1,6 +1,6 @@
 package com.njlabs.showjava.activities.apps.adapters
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +11,10 @@ import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 class AppsListAdapter(
     private var apps: List<PackageInfo>,
     private val itemClick: (PackageInfo) -> Unit
-) : RecyclerView.Adapter<AppsListAdapter.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<AppsListAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, private val itemClick: (PackageInfo) -> Unit) :
-        RecyclerView.ViewHolder(view) {
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         fun bindPackageInfo(packageInfo: PackageInfo) {
             with(packageInfo) {
                 itemView.itemLabel.text = packageInfo.packageLabel

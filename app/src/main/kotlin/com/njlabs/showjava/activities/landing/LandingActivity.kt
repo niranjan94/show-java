@@ -4,8 +4,8 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Environment
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.view.View
 import com.github.angads25.filepicker.model.DialogConfigs
@@ -130,7 +130,8 @@ class LandingActivity : BaseActivity() {
         } else {
             setListVisibility(true)
             historyListView.setHasFixedSize(true)
-            historyListView.layoutManager = LinearLayoutManager(context)
+            historyListView.layoutManager =
+                    androidx.recyclerview.widget.LinearLayoutManager(context)
             historyListAdapter = HistoryListAdapter(historyItems) { selectedHistoryItem ->
                 val intent = Intent(context, NavigatorActivity::class.java)
                 intent.putExtra("selectedApp", selectedHistoryItem)

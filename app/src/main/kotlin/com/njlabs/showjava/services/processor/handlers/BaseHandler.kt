@@ -1,6 +1,6 @@
 package com.njlabs.showjava.services.processor.handlers
 
-import android.support.annotation.NonNull
+import androidx.annotation.NonNull
 import android.widget.Toast
 import com.njlabs.showjava.services.processor.ProcessorService
 import timber.log.Timber

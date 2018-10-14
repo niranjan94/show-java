@@ -4,12 +4,11 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.SearchView
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
@@ -95,7 +94,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         appsList.visibility = View.VISIBLE
         searchMenuItem?.isVisible = true
         appsList.setHasFixedSize(true)
-        appsList.layoutManager = LinearLayoutManager(context)
+        appsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         historyListAdapter = AppsListAdapter(apps) { selectedApp ->
             Timber.d(selectedApp.packageName)
             if (selectedApp.packageName.toLowerCase().contains(getString(R.string.originalApplicationId).toLowerCase())) {

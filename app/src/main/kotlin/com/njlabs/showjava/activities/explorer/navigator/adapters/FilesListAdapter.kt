@@ -1,6 +1,6 @@
 package com.njlabs.showjava.activities.explorer.navigator.adapters
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +11,10 @@ import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 class FilesListAdapter(
     private var fileItems: List<FileItem>,
     private val itemClick: (FileItem) -> Unit
-) : RecyclerView.Adapter<FilesListAdapter.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<FilesListAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, private val itemClick: (FileItem) -> Unit) :
-        RecyclerView.ViewHolder(view) {
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         fun bindSourceInfo(fileItem: FileItem) {
             with(fileItem) {
                 itemView.itemLabel.text = fileItem.name

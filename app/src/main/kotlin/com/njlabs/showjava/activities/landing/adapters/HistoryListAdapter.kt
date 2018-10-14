@@ -3,7 +3,7 @@ package com.njlabs.showjava.activities.landing.adapters
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Environment
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +15,10 @@ import java.io.File
 class HistoryListAdapter(
     private var historyItems: List<SourceInfo>,
     private val itemClick: (SourceInfo) -> Unit
-) : RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, private val itemClick: (SourceInfo) -> Unit) :
-        RecyclerView.ViewHolder(view) {
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
 
         fun bindSourceInfo(sourceInfo: SourceInfo) {
             with(sourceInfo) {

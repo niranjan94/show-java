@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="70dp">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/itemCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,7 +13,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="3dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="0dp">
 
         <LinearLayout
@@ -28,7 +28,7 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
                 android:contentDescription="@string/appIcon"
-                android:src="@drawable/ic_list_generic" />
+                app:srcCompat="@drawable/ic_list_generic" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -54,7 +54,7 @@
 
             </LinearLayout>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </FrameLayout>
 
 

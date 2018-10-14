@@ -2,7 +2,7 @@ package com.njlabs.showjava.utils
 
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 
 class Notifier(
     private val notificationManager: NotificationManager,

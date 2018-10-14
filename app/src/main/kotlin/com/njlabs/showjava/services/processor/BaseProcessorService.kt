@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.IBinder
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.utils.Notifier

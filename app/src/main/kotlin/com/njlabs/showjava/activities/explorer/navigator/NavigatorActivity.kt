@@ -4,7 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.Toast
@@ -89,7 +89,7 @@ class NavigatorActivity : BaseActivity() {
 
     private fun setupList() {
         filesList.setHasFixedSize(true)
-        filesList.layoutManager = LinearLayoutManager(context)
+        filesList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         filesListAdapter = FilesListAdapter(fileItems) { selectedFile ->
             if (selectedFile.file.isDirectory) {
                 populateList(selectedFile.file)

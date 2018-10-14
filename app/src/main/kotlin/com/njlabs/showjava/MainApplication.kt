@@ -2,7 +2,7 @@ package com.njlabs.showjava
 
 import android.app.Application
 import android.content.Context
-import android.support.multidex.MultiDex
+import androidx.multidex.MultiDex
 import com.google.android.gms.ads.MobileAds
 import com.njlabs.showjava.utils.logging.ProductionTree
 import timber.log.Timber
