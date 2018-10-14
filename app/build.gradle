@@ -5,7 +5,7 @@ apply plugin: 'io.fabric'
 
 def versionMajor = 3
 def versionMinor = 0
-def versionPatch = 0
+def versionPatch = 1
 def versionBuild = 0
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()

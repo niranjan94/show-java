@@ -27,7 +27,7 @@ class NavigatorActivity : BaseActivity() {
     private lateinit var filesListAdapter: FilesListAdapter
     private var currentDirectory: File? = null
 
-    private var fileItems = ArrayList<FileItem>()
+    private var fileItems: ArrayList<FileItem>? = ArrayList()
     private var selectedApp: SourceInfo? = null
 
     override fun init(savedInstanceState: Bundle?) {
@@ -73,23 +73,26 @@ class NavigatorActivity : BaseActivity() {
                     it.add(0, FileItem(File(startDirectory.parent), "Parent directory", "parent"))
                 }
                 updateList(it)
-            }
+            }.dispose()
     }
 
-    private fun updateList(fileItems: ArrayList<FileItem>) {
-        this.fileItems = fileItems
-        filesListAdapter.updateData(fileItems)
-        if (fileItems.isEmpty()) {
-            setListVisibility(false)
-        } else {
-            setListVisibility(true)
+    private fun updateList(fileItems: ArrayList<FileItem>?) {
+        if (fileItems != null) {
+            this.fileItems = fileItems
+            filesListAdapter.updateData(fileItems)
+            if (fileItems.isEmpty()) {
+                setListVisibility(false)
+            } else {
+                setListVisibility(true)
+            }
+
         }
     }
 
     private fun setupList() {
         filesList.setHasFixedSize(true)
         filesList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-        filesListAdapter = FilesListAdapter(fileItems) { selectedFile ->
+        filesListAdapter = FilesListAdapter(fileItems!!) { selectedFile ->
             if (selectedFile.file.isDirectory) {
                 populateList(selectedFile.file)
             } else {

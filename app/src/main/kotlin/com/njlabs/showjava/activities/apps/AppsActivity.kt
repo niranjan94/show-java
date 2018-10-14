@@ -4,12 +4,11 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
@@ -22,10 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_apps.*
-import org.apache.commons.io.FileUtils
 import timber.log.Timber
-import java.io.File
-import java.io.IOException
 
 
 class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
@@ -74,18 +70,9 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
                         setupList()
                     }
                 }
-
-                override fun onComplete() {
-
-                }
-
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
-                override fun onError(e: Throwable) {
-                    Timber.e(e)
-                }
+                override fun onComplete() {}
+                override fun onSubscribe(d: Disposable) {}
+                override fun onError(e: Throwable) { Timber.e(e) }
             })
     }
 
@@ -106,58 +93,15 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
             }
             val sourceDir = PackageSourceTools.sourceDir(selectedApp.packageName)
             Timber.d(sourceDir.canonicalPath)
-            if (PackageSourceTools.sourceExists(sourceDir)) {
-                showAlreadyExistsDialog(selectedApp, sourceDir)
-            } else {
-                showDecompilerSelection(selectedApp)
-            }
+            openProcessActivity(selectedApp)
         }
         appsList.adapter = historyListAdapter
     }
 
-    private fun showAlreadyExistsDialog(app: PackageInfo, sourceDir: File) {
-        val alertDialog = AlertDialog.Builder(context, R.style.AlertDialog)
-        alertDialog.setTitle(getString(R.string.appAlreadyDecompiled))
-        alertDialog.setMessage(getString(R.string.actionAppAlreadyDecompiled))
-        alertDialog.setPositiveButton(getString(R.string.viewSource)) { _, _ ->
-            val i = Intent(applicationContext, AppsActivity::class.java)
-            i.putExtra("java_source_dir", sourceDir.toString() + "/")
-            i.putExtra("package_id", app.packageName)
-            startActivity(i)
-        }
-
-        alertDialog.setNegativeButton(getString(R.string.decompile)) { _, _ ->
-            try {
-                FileUtils.deleteDirectory(sourceDir)
-            } catch (e: IOException) {
-                Timber.e(e)
-            }
-            showDecompilerSelection(app)
-        }
-        alertDialog.show()
-    }
-
-    private fun showDecompilerSelection(app: PackageInfo) {
-        if (!prefs.getBoolean("hide_decompiler_select", false)) {
-            val decompilerLabels = resources.getTextArray(R.array.decompilers)
-            val decompilerValues = resources.getTextArray(R.array.decompilersValues)
-            val builder = AlertDialog.Builder(this, R.style.AlertDialog)
-            builder.setTitle(getString(R.string.pickDecompiler))
-            builder.setItems(decompilerLabels) { _, item ->
-                openProcessActivity(app, decompilerValues[item].toString())
-            }
-            val alert = builder.create()
-            alert.show()
-        } else {
-            openProcessActivity(app, prefs.getString("decompiler", "cfr"))
-        }
-    }
-
-    private fun openProcessActivity(packageInfo: PackageInfo, decompiler: String) {
-        Timber.d("FilePath:%s  Decompiler:%s", packageInfo.packageFilePath, decompiler)
+    private fun openProcessActivity(packageInfo: PackageInfo) {
+        Timber.d("FilePath:%s", packageInfo.packageFilePath)
         val i = Intent(applicationContext, DecompilerActivity::class.java)
         i.putExtra("packageInfo", packageInfo)
-        i.putExtra("decompiler", decompiler)
         startActivity(i)
     }
 

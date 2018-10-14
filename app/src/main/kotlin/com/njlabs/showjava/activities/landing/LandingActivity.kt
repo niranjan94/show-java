@@ -4,9 +4,9 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Environment
-import androidx.appcompat.app.ActionBarDrawerToggle
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
 import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
 import com.github.angads25.filepicker.view.FilePickerDialog
@@ -110,8 +110,7 @@ class LandingActivity : BaseActivity() {
                 } else {
                     setupList()
                 }
-
-            }
+            }.dispose()
     }
 
     private fun setListVisibility(isListVisible: Boolean = true) {

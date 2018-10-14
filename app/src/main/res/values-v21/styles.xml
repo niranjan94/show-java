@@ -2,7 +2,6 @@
 <resources>
 
     <style name="AppTheme.WithDrawer" parent="AppTheme.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>

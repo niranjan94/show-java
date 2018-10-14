@@ -13,15 +13,6 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        /**
-
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-        return
-        }
-        LeakCanary.install(this)
-
-         **/
-
         CalligraphyConfig.initDefault(
             CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/lato-light.ttf")

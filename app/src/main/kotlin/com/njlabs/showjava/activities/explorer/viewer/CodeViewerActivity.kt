@@ -17,6 +17,7 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStream
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class CodeViewerActivity : BaseActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun init(savedInstanceState: Bundle?) {

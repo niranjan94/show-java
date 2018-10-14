@@ -25,9 +25,11 @@ class FilesListAdapter(
         }
     }
 
-    fun updateData(fileItems: List<FileItem>) {
-        this.fileItems = fileItems
-        notifyDataSetChanged()
+    fun updateData(fileItems: List<FileItem>?) {
+        if (fileItems != null) {
+            this.fileItems = fileItems
+            notifyDataSetChanged()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

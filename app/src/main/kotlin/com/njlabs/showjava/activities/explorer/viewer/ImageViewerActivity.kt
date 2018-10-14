@@ -44,7 +44,7 @@ class ImageViewerActivity : BaseActivity() {
                 supportActionBar?.subtitle = packageName
             }
 
-            imageView.setImage(ImageSource.uri(filePath), imageViewState)
+            imageView.setImage(ImageSource.uri(filePath!!), imageViewState)
             imageView.orientation = SubsamplingScaleImageView.ORIENTATION_USE_EXIF
             imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_CENTER)
             imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM)

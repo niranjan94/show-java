@@ -5,8 +5,8 @@ import com.googlecode.dex2jar.ir.IrMethod
 import com.googlecode.dex2jar.reader.DexFileReader
 import com.googlecode.dex2jar.v3.Dex2jar
 import com.googlecode.dex2jar.v3.DexExceptionHandler
-import com.njlabs.showjava.workers.decompiler.BaseWorker
 import com.njlabs.showjava.utils.StringTools
+import com.njlabs.showjava.workers.decompiler.BaseWorker
 import org.jf.dexlib2.DexFileFactory
 import org.jf.dexlib2.Opcodes
 import org.jf.dexlib2.iface.ClassDef

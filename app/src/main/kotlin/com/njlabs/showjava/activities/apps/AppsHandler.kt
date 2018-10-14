@@ -28,7 +28,6 @@ class AppsHandler(private var context: Context) {
                 packageInfo.packageIcon = pack.applicationInfo.loadIcon(context.packageManager)
                 installedApps.add(packageInfo)
                 val currentCount = index + 1
-
                 emitter.onNext(
                     ProcessStatus(
                         (currentCount.toFloat() / packages.size.toFloat()) * 100f,
