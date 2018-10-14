@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import com.njlabs.showjava.Constants
-import com.njlabs.showjava.services.processor.ProcessorService
+import com.njlabs.showjava.workers.ProcessorService
 import java.io.File
 
 object Tools {

@@ -26,11 +26,11 @@ class CodeViewerActivity : BaseActivity() {
             val file = File(it.getString("filePath"))
             val packageName = it.getString("packageName")
 
-            Timber.d(file.absolutePath)
+            Timber.d(file.canonicalPath)
             Timber.d(packageName)
 
             supportActionBar?.title = file.name
-            val subtitle = file.absolutePath.replace(
+            val subtitle = file.canonicalPath.replace(
                 "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
                 ""
             )

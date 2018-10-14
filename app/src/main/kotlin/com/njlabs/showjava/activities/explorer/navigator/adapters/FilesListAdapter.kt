@@ -1,11 +1,10 @@
 package com.njlabs.showjava.activities.explorer.navigator.adapters
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.njlabs.showjava.R
-import com.njlabs.showjava.models.FileItem
+import com.njlabs.showjava.data.FileItem
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
 class FilesListAdapter(

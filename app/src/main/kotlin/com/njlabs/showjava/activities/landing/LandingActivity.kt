@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Environment
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.view.View
 import com.github.angads25.filepicker.model.DialogConfigs
@@ -16,7 +15,7 @@ import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.AppsActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
-import com.njlabs.showjava.models.SourceInfo
+import com.njlabs.showjava.data.SourceInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*

@@ -1,4 +1,4 @@
-package com.njlabs.showjava.models
+package com.njlabs.showjava.data
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -48,7 +48,7 @@ class FileItem() : Parcelable {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(file.absolutePath)
+        parcel.writeString(file.canonicalPath)
         parcel.writeString(fileSize)
         parcel.writeString(metaInfo)
     }

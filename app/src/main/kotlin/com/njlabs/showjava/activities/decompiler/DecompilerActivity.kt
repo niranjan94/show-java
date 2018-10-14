@@ -6,7 +6,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
-import com.njlabs.showjava.models.PackageInfo
+import com.njlabs.showjava.data.PackageInfo
 import kotlinx.android.synthetic.main.activity_decompiler.*
 
 class DecompilerActivity : BaseActivity() {

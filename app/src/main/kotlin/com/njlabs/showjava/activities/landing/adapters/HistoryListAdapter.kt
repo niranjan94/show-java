@@ -3,12 +3,11 @@ package com.njlabs.showjava.activities.landing.adapters
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Environment
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.njlabs.showjava.R
-import com.njlabs.showjava.models.SourceInfo
+import com.njlabs.showjava.data.SourceInfo
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import java.io.File
 

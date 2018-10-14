@@ -1,4 +1,4 @@
-package com.njlabs.showjava.services.processor
+package com.njlabs.showjava.workers
 
 import android.app.Notification
 import android.app.NotificationManager
@@ -86,6 +86,7 @@ abstract class BaseProcessorService : Service() {
      * Kill on-self
      */
     internal fun killSelf(shouldBroadcast: Boolean, startID: Int) {
+
         if (shouldBroadcast) {
             broadcastStatus("exit")
         }

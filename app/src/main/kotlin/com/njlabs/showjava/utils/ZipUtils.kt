@@ -78,7 +78,7 @@ object ZipUtils {
                 printStream.println(zipEntry.name)
                 val dir = if (zipEntry.isDirectory) file else file.parentFile
                 if (!dir.isDirectory && !dir.mkdirs()) {
-                    throw FileNotFoundException("Failed to ensure directory: " + dir.absolutePath)
+                    throw FileNotFoundException("Failed to ensure directory: " + dir.canonicalPath)
                 }
 
                 if (zipEntry.isDirectory) {

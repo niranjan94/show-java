@@ -1,4 +1,4 @@
-package com.njlabs.showjava.models
+package com.njlabs.showjava.data
 
 import android.os.Parcel
 import android.os.Parcelable

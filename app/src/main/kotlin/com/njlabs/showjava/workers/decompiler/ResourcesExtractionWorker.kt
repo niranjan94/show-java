@@ -1,10 +1,11 @@
-package com.njlabs.showjava.services.processor.handlers
-
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.njlabs.showjava.services.processor.ProcessorService
+import androidx.work.WorkerParameters
+import com.njlabs.showjava.workers.decompiler.BaseWorker
 import com.njlabs.showjava.utils.PackageSourceTools
 import jadx.api.JadxDecompiler
+import net.dongliu.apk.parser.ApkFile
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import timber.log.Timber
@@ -16,65 +17,60 @@ import java.nio.charset.Charset
 import java.util.zip.ZipFile
 
 
-class ResourcesExtractor(private val processorService: ProcessorService) :
-    BaseHandler(processorService) {
+class ResourcesExtractionWorker(context : Context, params : WorkerParameters) : BaseWorker(context, params) {
 
+    private var parsedInputApkFile = ApkFile(inputPackageFile)
 
     private fun extractResourcesWithJadx() {
         try {
-            val resDir = File(processorService.sourceOutputDirectory)
+            val resDir = outputResSrcDirectory
             val jadx = JadxDecompiler()
             jadx.setOutputDir(resDir)
-            jadx.loadFile(File(processorService.inputPackageFilePath))
+            jadx.loadFile(inputPackageFile)
             jadx.saveResources()
-            val zipFile = ZipFile(processorService.inputPackageFilePath)
+            val zipFile = ZipFile(inputPackageFile)
             val entries = zipFile.entries()
             while (entries.hasMoreElements()) {
                 val zipEntry = entries.nextElement()
                 if (!zipEntry.isDirectory && (FilenameUtils.getExtension(zipEntry.name) == "png" || FilenameUtils.getExtension(
                         zipEntry.name
                     ) == "jpg")) {
-                    broadcastStatus("progress_stream", zipEntry.name)
+                    sendStatus("progress_stream", zipEntry.name)
                     writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
                 }
             }
             zipFile.close()
-            saveIcon()
-            allDone()
-
         } catch (e: Exception) {
-            broadcastStatus("start_activity_with_error")
+            sendStatus("start_activity_with_error")
         } catch (e: StackOverflowError) {
-            broadcastStatus("start_activity_with_error")
+            sendStatus("start_activity_with_error")
         }
     }
 
     private fun extractResourcesWithParser() {
         try {
-            val zipFile = ZipFile(processorService.inputPackageFilePath)
+            val zipFile = ZipFile(inputPackageFile)
             val entries = zipFile.entries()
             while (entries.hasMoreElements()) {
                 val zipEntry = entries.nextElement()
                 if (!zipEntry.isDirectory && zipEntry.name != "AndroidManifest.xml" && FilenameUtils.getExtension(
                         zipEntry.name
                     ) == "xml") {
-                    broadcastStatus("progress_stream", zipEntry.name)
+                    sendStatus("progress_stream", zipEntry.name)
                     writeXML(zipEntry.name)
                 } else if (!zipEntry.isDirectory && (FilenameUtils.getExtension(zipEntry.name) == "png" || FilenameUtils.getExtension(
                         zipEntry.name
                     ) == "jpg")) {
-                    broadcastStatus("progress_stream", zipEntry.name)
+                    sendStatus("progress_stream", zipEntry.name)
                     writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
                 }
             }
             zipFile.close()
             writeManifest()
-            saveIcon()
-            allDone()
         } catch (e: Exception) {
-            broadcastStatus("start_activity_with_error")
+            sendStatus("start_activity_with_error")
         } catch (e: StackOverflowError) {
-            broadcastStatus("start_activity_with_error")
+            sendStatus("start_activity_with_error")
         }
     }
 
@@ -82,7 +78,7 @@ class ResourcesExtractor(private val processorService: ProcessorService) :
         var outputStream: FileOutputStream? = null
         try {
             val fileFolderPath =
-                processorService.sourceOutputDirectory + "/" + path.replace(
+                outputResSrcDirectory.canonicalPath + "/" + path.replace(
                     FilenameUtils.getName(
                         path
                     ), ""
@@ -121,15 +117,15 @@ class ResourcesExtractor(private val processorService: ProcessorService) :
 
     private fun writeXML(path: String) {
         try {
-            val xml = processorService.parsedInputApkFile.transBinaryXml(path)
+            val xml = parsedInputApkFile.transBinaryXml(path)
             val fileFolderPath =
-                processorService.sourceOutputDirectory + "/" + path.replace(
+                outputResSrcDirectory.canonicalPath + "/" + path.replace(
                     FilenameUtils.getName(
                         path
                     ), ""
                 )
             val fileFolder = File(fileFolderPath)
-            if (!fileFolder.exists() || !fileFolder.isDirectory()) {
+            if (!fileFolder.exists() || !fileFolder.isDirectory) {
                 fileFolder.mkdirs()
             }
             FileUtils.writeStringToFile(
@@ -143,16 +139,11 @@ class ResourcesExtractor(private val processorService: ProcessorService) :
 
     }
 
-    private fun allDone() {
-        PackageSourceTools.setXmlSourceStatus(processorService.sourceOutputDirectory, true)
-        broadcastStatus("start_activity")
-    }
-
     private fun writeManifest() {
         try {
-            val manifestXml = processorService.parsedInputApkFile.manifestXml
+            val manifestXml = parsedInputApkFile.manifestXml
             FileUtils.writeStringToFile(
-                File(processorService.sourceOutputDirectory + "/AndroidManifest.xml"),
+                File(workingDirectory.canonicalPath, "AndroidManifest.xml"),
                 manifestXml,
                 Charset.defaultCharset()
             )
@@ -163,11 +154,11 @@ class ResourcesExtractor(private val processorService: ProcessorService) :
 
     private fun saveIcon() {
         try {
-            val icon = processorService.parsedInputApkFile.iconFile.data ?: return
+            val icon = parsedInputApkFile.iconFile.data ?: return
             val bitmap = BitmapFactory.decodeByteArray(icon, 0, icon.size)
             var out: FileOutputStream? = null
             try {
-                out = FileOutputStream(processorService.sourceOutputDirectory + "/icon.png")
+                out = FileOutputStream(File(workingDirectory.canonicalPath, "icon.png"))
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
             } catch (e: Exception) {
                 Timber.e(e)
@@ -181,6 +172,20 @@ class ResourcesExtractor(private val processorService: ProcessorService) :
         } catch (e: IOException) {
             Timber.e(e)
         }
+    }
 
+    override fun doWork(): Result {
+        Timber.tag("ResourcesExtraction")
+        super.doWork()
+
+        when (decompiler) {
+            "jadx" -> extractResourcesWithJadx()
+            else -> extractResourcesWithParser()
+        }
+
+        saveIcon()
+        PackageSourceTools.setXmlSourceStatus(workingDirectory.canonicalPath, true)
+
+        return Result.SUCCESS
     }
 }

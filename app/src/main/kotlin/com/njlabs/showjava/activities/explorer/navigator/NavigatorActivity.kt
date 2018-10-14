@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.Toast
@@ -13,8 +12,8 @@ import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.explorer.navigator.adapters.FilesListAdapter
 import com.njlabs.showjava.activities.explorer.viewer.CodeViewerActivity
 import com.njlabs.showjava.activities.explorer.viewer.ImageViewerActivity
-import com.njlabs.showjava.models.FileItem
-import com.njlabs.showjava.models.SourceInfo
+import com.njlabs.showjava.data.FileItem
+import com.njlabs.showjava.data.SourceInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_navigator.*
@@ -52,7 +51,7 @@ class NavigatorActivity : BaseActivity() {
         // currentDirectory = File("${Environment.getExternalStorageDirectory()}/show-java/")
         setupList()
         filesListAdapter.updateData(fileItems)
-        Timber.d(currentDirectory?.absolutePath)
+        Timber.d(currentDirectory?.canonicalPath)
         currentDirectory?.let { populateList(it) }
     }
 
@@ -97,7 +96,7 @@ class NavigatorActivity : BaseActivity() {
                 when {
                     arrayOf("jpeg", "jpg", "png").contains(selectedFile.file.extension) -> {
                         val intent = Intent(context, ImageViewerActivity::class.java)
-                        intent.putExtra("filePath", selectedFile.file.absolutePath)
+                        intent.putExtra("filePath", selectedFile.file.canonicalPath)
                         intent.putExtra("packageName", selectedApp?.packageName)
                         startActivity(intent)
                     }
@@ -108,7 +107,7 @@ class NavigatorActivity : BaseActivity() {
                         "js", "css", "scss", "sass"
                     ).contains(selectedFile.file.extension) -> {
                         val intent = Intent(context, CodeViewerActivity::class.java)
-                        intent.putExtra("filePath", selectedFile.file.absolutePath)
+                        intent.putExtra("filePath", selectedFile.file.canonicalPath)
                         intent.putExtra("packageName", selectedApp?.packageName)
                         startActivity(intent)
                     }
@@ -143,7 +142,7 @@ class NavigatorActivity : BaseActivity() {
             bundle.putParcelable("selectedApp", it)
         }
         currentDirectory?.let {
-            bundle.putString("currentDirectory", it.absolutePath)
+            bundle.putString("currentDirectory", it.canonicalPath)
 
         }
     }

@@ -79,10 +79,6 @@
             android:theme="@style/SourceViewerTheme" />
         <activity android:name=".activities.about.AboutActivity" />
 
-        <service
-            android:name=".services.processor.ProcessorService"
-            android:exported="false"
-            android:process=":service" />
     </application>
 
 </manifest>

@@ -1,11 +1,11 @@
-package com.njlabs.showjava.services.processor.handlers
-
+import android.content.Context
+import androidx.work.WorkerParameters
 import com.googlecode.dex2jar.Method
 import com.googlecode.dex2jar.ir.IrMethod
 import com.googlecode.dex2jar.reader.DexFileReader
 import com.googlecode.dex2jar.v3.Dex2jar
 import com.googlecode.dex2jar.v3.DexExceptionHandler
-import com.njlabs.showjava.services.processor.ProcessorService
+import com.njlabs.showjava.workers.decompiler.BaseWorker
 import com.njlabs.showjava.utils.StringTools
 import org.jf.dexlib2.DexFileFactory
 import org.jf.dexlib2.Opcodes
@@ -14,38 +14,15 @@ import org.jf.dexlib2.iface.DexFile
 import org.jf.dexlib2.immutable.ImmutableDexFile
 import org.objectweb.asm.tree.MethodNode
 import timber.log.Timber
-import java.io.File
-import java.io.PrintStream
 
-
-class JarExtractor(private val processorService: ProcessorService) : BaseHandler(processorService) {
+class JarExtractionWorker(context: Context, params: WorkerParameters) : BaseWorker(context, params) {
 
     private var ignoredLibs: ArrayList<String>? = ArrayList()
-    private val perAppWorkingDirectory: File = File(processorService.sourceOutputDirectory)
-
-    private var dexFile: File = File(perAppWorkingDirectory, "optimised_classes.dex")
-    private var jarFile: File =
-        File(perAppWorkingDirectory, "${processorService.inputPackageName}.jar")
-
-    init {
-        printStream = PrintStream(ProgressStream())
-        System.setErr(printStream)
-        System.setOut(printStream)
-        Timber.tag("JarExtractor")
-    }
-
-    fun extract() {
-        loadIgnoredLibs()
-        convertApkToDex()
-        if (processorService.decompilerToUse != "jadx") {
-            convertDexToJar()
-        }
-    }
 
     private fun loadIgnoredLibs() {
         val ignoredList =
-            if (processorService.shouldIgnoreLibs) "ignored.list" else "ignored_basic.list"
-        processorService.application.assets.open(ignoredList).bufferedReader().useLines {
+            if (data.getBoolean("shouldIgnoreLibs", false)) "ignored.list" else "ignored_basic.list"
+        context.assets.open(ignoredList).bufferedReader().useLines {
             it.map { line -> ignoredLibs?.add(StringTools.toClassName(line)) }
         }
     }
@@ -58,16 +35,16 @@ class JarExtractor(private val processorService: ProcessorService) : BaseHandler
         try {
             dexFile = DexFileFactory.loadDexFile("", Opcodes.getDefault())
         } catch (e: Exception) {
-            broadcastStatus("exit")
+            sendStatus("exit")
         }
 
         val classes = ArrayList<ClassDef>()
-        broadcastStatus("optimising")
+        sendStatus("optimising")
 
         for (classDef in dexFile!!.classes) {
             if (!isIgnored(classDef.type)) {
                 val currentClass = classDef.type
-                broadcastStatus(
+                sendStatus(
                     "optimising_class",
                     currentClass.replace("Processing ".toRegex(), "")
                 )
@@ -75,28 +52,27 @@ class JarExtractor(private val processorService: ProcessorService) : BaseHandler
             }
         }
 
-        broadcastStatus("optimise_dex_finish")
-        Timber.i("Output directory: $perAppWorkingDirectory")
-        broadcastStatus("merging_classes")
+        sendStatus("optimise_dex_finish")
+        Timber.i("Output directory: $workingDirectory")
+        sendStatus("merging_classes")
         dexFile = ImmutableDexFile(Opcodes.getDefault(), classes)
 
         try {
-            this.dexFile = File(perAppWorkingDirectory, "optimised_classes.dex")
             DexFileFactory.writeDexFile(
-                this.dexFile.absolutePath,
+                this.outputDexFile.canonicalPath,
                 dexFile
             )
-            Timber.i("DEX file location: ${this.dexFile}")
+            Timber.i("DEX file location: ${this.outputDexFile}")
         } catch (e: Exception) {
             Timber.e(e)
-            broadcastStatus("exit", "cannot_decompile")
+            sendStatus("exit", "cannot_decompile")
         }
 
     }
 
     private fun convertDexToJar() {
         Timber.i("Starting DEX to JAR Conversion")
-        broadcastStatus("dex2jar")
+        sendStatus("dex2jar")
 
         val reuseReg = false // reuse register while generate java .class file
         val topologicalSort1 = false // same with --topological-sort/-ts
@@ -107,20 +83,20 @@ class JarExtractor(private val processorService: ProcessorService) : BaseHandler
         val printIR = false // print ir to System.out
         val optimizeSynchronized = true // Optimise-synchronised
 
-        if (dexFile.exists() && dexFile.isFile) {
+        if (outputDexFile.exists() && outputDexFile.isFile) {
             val dexExceptionHandlerMod = DexExceptionHandlerMod()
             try {
-                val reader = DexFileReader(dexFile)
+                val reader = DexFileReader(outputDexFile)
                 val dex2jar = Dex2jar.from(reader).reUseReg(reuseReg)
                     .topoLogicalSort(topologicalSort || topologicalSort1).skipDebug(!debugInfo)
                     .optimizeSynchronized(optimizeSynchronized).printIR(printIR).verbose(verbose)
                 dex2jar.exceptionHandler = dexExceptionHandlerMod
-                dex2jar.to(jarFile)
+                dex2jar.to(outputJarFile)
             } catch (e: Exception) {
-                broadcastStatus("exit_process_on_error")
+                sendStatus("exit_process_on_error")
             }
             Timber.i("Clearing cache")
-            dexFile.delete()
+            outputDexFile.delete()
         }
     }
 
@@ -143,5 +119,14 @@ class JarExtractor(private val processorService: ProcessorService) : BaseHandler
             Timber.d("Dex2Jar Exception $e")
         }
     }
-
+    override fun doWork(): Result {
+        Timber.tag("JarExtraction")
+        super.doWork()
+        loadIgnoredLibs()
+        convertApkToDex()
+        if (decompiler != "jadx") {
+            convertDexToJar()
+        }
+        return Result.SUCCESS
+    }
 }

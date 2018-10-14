@@ -1,4 +1,4 @@
-package com.njlabs.showjava.models
+package com.njlabs.showjava.data
 
 import android.graphics.drawable.Drawable
 import android.os.Parcel

@@ -1,4 +1,4 @@
-package com.njlabs.showjava.services.processor
+package com.njlabs.showjava.workers
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,7 +11,6 @@ import android.os.IBinder
 import android.preference.PreferenceManager
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
-import com.njlabs.showjava.services.processor.handlers.JarExtractor
 import com.njlabs.showjava.utils.ExceptionHandler
 import com.njlabs.showjava.utils.PackageSourceTools
 import net.dongliu.apk.parser.ApkFile
@@ -139,8 +138,8 @@ class ProcessorService : BaseProcessorService() {
     private fun startExtraction() {
         val group = ThreadGroup("$inputPackageName-extractor-thread-group")
         val runProcess = Runnable {
-            val jarExtractor = JarExtractor(this@ProcessorService)
-            jarExtractor.extract()
+            // val jarExtractor = JarExtractor(this@ProcessorService)
+            // jarExtractor.extract()
         }
         val extractionThread =
             Thread(group, runProcess, "$inputPackageName-extractor-thread", stackSize)

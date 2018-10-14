@@ -2,7 +2,7 @@ package com.njlabs.showjava.activities.landing
 
 import android.content.Context
 import android.os.Environment
-import com.njlabs.showjava.models.SourceInfo
+import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.utils.PackageSourceTools
 import com.njlabs.showjava.utils.Tools
 import io.reactivex.Observable

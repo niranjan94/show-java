@@ -109,7 +109,8 @@ android {
     }
 }
 
-def support_version = '1.0.0'
+def androidxVersion = '1.0.0'
+def workVersion = '1.0.0-alpha10'
 
 dependencies {
     // MULTI-DEX SUPPORT FOR PRE LOLLIPOP
@@ -124,17 +125,21 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
     // ANDROID SUPPORT LIBRARIES
-    implementation "androidx.appcompat:appcompat:$support_version"
-    implementation "com.google.android.material:material:$support_version"
-    implementation "androidx.cardview:cardview:$support_version"
-    implementation "androidx.legacy:legacy-support-v4:$support_version"
-    implementation "androidx.recyclerview:recyclerview:$support_version"
-    implementation "androidx.legacy:legacy-support-core-utils:$support_version"
-    implementation "androidx.core:core:$support_version"
-    implementation "androidx.media:media:$support_version"
-    implementation "androidx.browser:browser:$support_version"
-    implementation "androidx.exifinterface:exifinterface:$support_version"
+    implementation "androidx.appcompat:appcompat:$androidxVersion"
+    implementation "com.google.android.material:material:$androidxVersion"
+    implementation "androidx.cardview:cardview:$androidxVersion"
+    implementation "androidx.legacy:legacy-support-v4:$androidxVersion"
+    implementation "androidx.recyclerview:recyclerview:$androidxVersion"
+    implementation "androidx.legacy:legacy-support-core-utils:$androidxVersion"
+    implementation "androidx.core:core:$androidxVersion"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+
+    implementation("android.arch.work:work-runtime-ktx:$workVersion", {
+        exclude group: 'com.google.guava', module: 'listenablefuture'
+    })
+    implementation("android.arch.work:work-firebase:$workVersion", {
+        exclude group: 'com.google.guava', module: 'listenablefuture'
+    })
 
     // APACHE COMMONS LIBRARIES
     implementation 'commons-io:commons-io:2.6'
@@ -159,7 +164,7 @@ dependencies {
     implementation 'uk.com.robust-it:cloning:1.9.10'
 
     // APK PARSER AND BINARY XML DECODER
-    implementation 'net.dongliu:apk-parser:2.6.3'
+    implementation 'net.dongliu:apk-parser:2.6.4'
 
     // FERN FLOWER
     implementation files('libs/fernflower.jar')

@@ -1,7 +1,7 @@
 package com.njlabs.showjava.activities.explorer.navigator
 
 import android.content.Context
-import com.njlabs.showjava.models.FileItem
+import com.njlabs.showjava.data.FileItem
 import com.njlabs.showjava.utils.StringTools
 import io.reactivex.Observable
 import java.io.File

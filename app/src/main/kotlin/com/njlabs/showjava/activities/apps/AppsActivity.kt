@@ -14,7 +14,7 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
-import com.njlabs.showjava.models.PackageInfo
+import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.PackageSourceTools
 import com.njlabs.showjava.utils.rx.ProcessStatus
 import io.reactivex.Observer
@@ -105,7 +105,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
                 ).show()
             }
             val sourceDir = PackageSourceTools.sourceDir(selectedApp.packageName)
-            Timber.d(sourceDir.absolutePath)
+            Timber.d(sourceDir.canonicalPath)
             if (PackageSourceTools.sourceExists(sourceDir)) {
                 showAlreadyExistsDialog(selectedApp, sourceDir)
             } else {

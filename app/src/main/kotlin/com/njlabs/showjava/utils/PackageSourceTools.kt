@@ -3,7 +3,7 @@ package com.njlabs.showjava.utils
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.os.Environment
-import com.njlabs.showjava.models.SourceInfo
+import com.njlabs.showjava.data.SourceInfo
 import org.apache.commons.io.FileUtils
 import org.json.JSONException
 import org.json.JSONObject
