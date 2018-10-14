@@ -3,6 +3,7 @@ package com.njlabs.showjava
 import android.app.Application
 import android.content.Context
 import android.support.multidex.MultiDex
+import com.google.android.gms.ads.MobileAds
 import com.njlabs.showjava.utils.logging.ProductionTree
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
@@ -33,6 +34,8 @@ class MainApplication : Application() {
         } else {
             Timber.plant(ProductionTree())
         }
+
+        MobileAds.initialize(this, getString(R.string.admobAppId))
     }
 
     override fun attachBaseContext(base: Context) {

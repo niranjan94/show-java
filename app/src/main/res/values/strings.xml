@@ -35,6 +35,9 @@
     <string name="noSupportedHandlerForFileType">No supported applications for this file type.</string>
     <string name="searchApps">Search apps</string>
     <string name="niranjan94">niranjan94</string>
+    <string name="apk_parse_failed">Failed to parse the selected apk file</string>
+    <string name="jar_unsupported">Decompiling JAR files is unsupported. Will be available soon.</string>
+    <string name="unsupported_file">File is unsupported.</string>
     <string-array name="decompilers">
         <item><xliff:g>CFR 0.110</xliff:g></item>
         <item><xliff:g>JaDX 0.6.1</xliff:g></item>
