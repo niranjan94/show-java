@@ -5,28 +5,32 @@ import android.os.Parcel
 import android.os.Parcelable
 
 class PackageInfo() : Parcelable {
-    var packageLabel = ""
-    var packageName = ""
-    var packageVersion = ""
-    var packageFilePath = ""
-    var packageIcon: Drawable? = null
+    var label = ""
+    var name = ""
+    var version = ""
+    var filePath = ""
+    var icon: Drawable? = null
 
     constructor(parcel: Parcel) : this() {
-        packageLabel = parcel.readString()
-        packageName = parcel.readString()
-        packageVersion = parcel.readString()
-        packageFilePath = parcel.readString()
+        label = parcel.readString()
+        name = parcel.readString()
+        version = parcel.readString()
+        filePath = parcel.readString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(packageLabel)
-        parcel.writeString(packageName)
-        parcel.writeString(packageVersion)
-        parcel.writeString(packageFilePath)
+        parcel.writeString(label)
+        parcel.writeString(name)
+        parcel.writeString(version)
+        parcel.writeString(filePath)
     }
 
     override fun describeContents(): Int {
         return 0
+    }
+
+    override fun toString(): String {
+        return String.format("filePath: %s", filePath)
     }
 
     companion object CREATOR : Parcelable.Creator<PackageInfo> {

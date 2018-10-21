@@ -19,25 +19,25 @@ class AppsHandler(private var context: Context) {
             }
             packages.forEachIndexed { index, pack ->
                 val packageInfo = PackageInfo()
-                packageInfo.packageLabel =
+                packageInfo.label =
                         pack.applicationInfo.loadLabel(context.packageManager).toString()
-                packageInfo.packageName = pack.packageName
-                packageInfo.packageVersion =
+                packageInfo.name = pack.packageName
+                packageInfo.version =
                         if (pack.versionName != null) pack.versionName else pack.versionCode.toString()
-                packageInfo.packageFilePath = pack.applicationInfo.publicSourceDir
-                packageInfo.packageIcon = pack.applicationInfo.loadIcon(context.packageManager)
+                packageInfo.filePath = pack.applicationInfo.publicSourceDir
+                packageInfo.icon = pack.applicationInfo.loadIcon(context.packageManager)
                 installedApps.add(packageInfo)
                 val currentCount = index + 1
                 emitter.onNext(
                     ProcessStatus(
                         (currentCount.toFloat() / packages.size.toFloat()) * 100f,
-                        context.getString(R.string.loadingApp, packageInfo.packageLabel),
+                        context.getString(R.string.loadingApp, packageInfo.label),
                         context.getString(R.string.loadingStatistic, currentCount, packages.size)
                     )
                 )
             }
             installedApps.sortBy {
-                it.packageLabel.toLowerCase()
+                it.label.toLowerCase()
             }
             emitter.onNext(ProcessStatus(installedApps))
             emitter.onComplete()

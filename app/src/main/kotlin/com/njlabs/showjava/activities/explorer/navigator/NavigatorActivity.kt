@@ -100,7 +100,7 @@ class NavigatorActivity : BaseActivity() {
                     arrayOf("jpeg", "jpg", "png").contains(selectedFile.file.extension) -> {
                         val intent = Intent(context, ImageViewerActivity::class.java)
                         intent.putExtra("filePath", selectedFile.file.canonicalPath)
-                        intent.putExtra("packageName", selectedApp?.packageName)
+                        intent.putExtra("name", selectedApp?.packageName)
                         startActivity(intent)
                     }
                     arrayOf(
@@ -111,7 +111,7 @@ class NavigatorActivity : BaseActivity() {
                     ).contains(selectedFile.file.extension) -> {
                         val intent = Intent(context, CodeViewerActivity::class.java)
                         intent.putExtra("filePath", selectedFile.file.canonicalPath)
-                        intent.putExtra("packageName", selectedApp?.packageName)
+                        intent.putExtra("name", selectedApp?.packageName)
                         startActivity(intent)
                     }
                     else -> {

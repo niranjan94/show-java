@@ -36,15 +36,15 @@
                 android:contentDescription="@string/appName"
                 app:srcCompat="@drawable/showjava_logo" />
 
-            <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <androidx.cardview.widget.CardView
                 android:id="@+id/card_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
-                card_view:cardCornerRadius="4dp"
-                card_view:cardElevation="1dp"
-                card_view:cardUseCompatPadding="true">
+                app:cardCornerRadius="4dp"
+                app:cardElevation="1dp"
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"

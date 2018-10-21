@@ -30,7 +30,7 @@ class ImageViewerActivity : BaseActivity() {
             }
 
             val filePath = it.getString("filePath")
-            val packageName = it.getString("packageName")
+            val packageName = it.getString("name")
             val fileName = FilenameUtils.getName(filePath)
             supportActionBar?.title = fileName
             val subtitle = FilenameUtils

@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Environment
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.utils.PackageSourceTools
-import com.njlabs.showjava.utils.Tools
 import io.reactivex.Observable
 import org.apache.commons.io.FileUtils
 import timber.log.Timber
@@ -35,20 +34,17 @@ class LandingHandler(private var context: Context) {
                             PackageSourceTools.getSourceInfoFromSourcePath(file)
                                 ?.let { historyItems.add(it) }
                         } else {
-                            if (!Tools.isProcessorServiceRunning(context)) {
-                                try {
-                                    if (file.exists()) {
-                                        if (file.isDirectory) {
-                                            FileUtils.deleteDirectory(file)
-                                        } else {
-                                            file.delete()
-                                        }
+                            try {
+                                if (file.exists()) {
+                                    if (file.isDirectory) {
+                                        FileUtils.deleteDirectory(file)
+                                    } else {
+                                        file.delete()
                                     }
-
-                                } catch (e: Exception) {
-                                    Timber.d(e)
                                 }
 
+                            } catch (e: Exception) {
+                                Timber.d(e)
                             }
                             if (file.exists() && !file.isDirectory) {
                                 file.delete()

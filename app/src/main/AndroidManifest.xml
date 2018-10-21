@@ -50,6 +50,7 @@
             android:name=".activities.apps.AppsActivity"
             android:label="@string/appName"
             android:launchMode="singleTask"
+            android:theme="@style/AppTheme.WithTransition"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.app.searchable"
@@ -58,6 +59,7 @@
 
         <activity
             android:name=".activities.decompiler.DecompilerActivity"
+            android:theme="@style/AppTheme.WithTransition"
             android:label="@string/appName">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

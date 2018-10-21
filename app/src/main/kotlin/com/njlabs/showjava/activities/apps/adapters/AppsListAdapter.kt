@@ -9,18 +9,18 @@ import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
 class AppsListAdapter(
     private var apps: List<PackageInfo>,
-    private val itemClick: (PackageInfo) -> Unit
+    private val itemClick: (PackageInfo, View) -> Unit
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<AppsListAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View, private val itemClick: (PackageInfo) -> Unit) :
+    class ViewHolder(view: View, private val itemClick: (PackageInfo, View) -> Unit) :
         androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         fun bindPackageInfo(packageInfo: PackageInfo) {
             with(packageInfo) {
-                itemView.itemLabel.text = packageInfo.packageLabel
-                itemView.itemSecondaryLabel.text = packageInfo.packageVersion
-                itemView.itemIcon.setImageDrawable(packageInfo.packageIcon)
+                itemView.itemLabel.text = packageInfo.label
+                itemView.itemSecondaryLabel.text = packageInfo.version
+                itemView.itemIcon.setImageDrawable(packageInfo.icon)
                 itemView.itemCard.cardElevation = 1F
-                itemView.itemCard.setOnClickListener { itemClick(this) }
+                itemView.itemCard.setOnClickListener { itemClick(this, itemView) }
             }
         }
     }

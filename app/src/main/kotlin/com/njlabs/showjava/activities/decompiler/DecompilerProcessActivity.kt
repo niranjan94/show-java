@@ -18,7 +18,7 @@ class DecompilerProcessActivity : BaseActivity() {
         val decompiler = intent.getStringExtra("decompiler")
 
         if (packageInfo != null && decompiler != null) {
-            current_package_name.text = packageInfo.packageLabel
+            current_package_name.text = packageInfo.label
         }
 
         setupGears()

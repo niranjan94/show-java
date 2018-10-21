@@ -7,6 +7,7 @@ object Constants {
     const val PROCESS_DIR = "com.njlabs.showjava.process.DIR"
     const val PROCESS_PACKAGE_ID = "com.njlabs.showjava.process.PACKAGE_ID"
     const val PROCESS_NOTIFICATION_ID = 1
+    const val PROCESS_NOTIFICATION_CHANNEL_ID = "com.njlabs.showjava"
     const val STORAGE_PERMISSION_REQUEST = 3
     const val FILE_PICKER_RESULT = 9600
 

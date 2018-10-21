@@ -1,8 +1,10 @@
 package com.njlabs.showjava.activities.apps
 
+import android.app.ActivityOptions
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -82,26 +84,33 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         searchMenuItem?.isVisible = true
         appsList.setHasFixedSize(true)
         appsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-        historyListAdapter = AppsListAdapter(apps) { selectedApp ->
-            Timber.d(selectedApp.packageName)
-            if (selectedApp.packageName.toLowerCase().contains(getString(R.string.originalApplicationId).toLowerCase())) {
+        historyListAdapter = AppsListAdapter(apps) { selectedApp: PackageInfo, view: View ->
+            Timber.d(selectedApp.name)
+            if (selectedApp.name.toLowerCase().contains(getString(R.string.originalApplicationId).toLowerCase())) {
                 Toast.makeText(
                     applicationContext,
                     getString(R.string.checkoutSourceLink),
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            val sourceDir = PackageSourceTools.sourceDir(selectedApp.packageName)
+            val sourceDir = PackageSourceTools.sourceDir(selectedApp.name)
             Timber.d(sourceDir.canonicalPath)
-            openProcessActivity(selectedApp)
+            openProcessActivity(selectedApp, view)
         }
         appsList.adapter = historyListAdapter
     }
 
-    private fun openProcessActivity(packageInfo: PackageInfo) {
-        Timber.d("FilePath:%s", packageInfo.packageFilePath)
+    private fun openProcessActivity(packageInfo: PackageInfo, view: View) {
         val i = Intent(applicationContext, DecompilerActivity::class.java)
-        i.putExtra("packageInfo", packageInfo)
+        Timber.d("packageFilePath:%s", packageInfo.filePath)
+        i.putExtra("packageFilePath", packageInfo.filePath)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val options = ActivityOptions
+                .makeSceneTransitionAnimation(this, view.findViewById(R.id.itemCard), "appListItem")
+           return startActivity(i, options.toBundle())
+        }
+
         startActivity(i)
     }
 
@@ -126,7 +135,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         val filteredApps = ArrayList<PackageInfo>()
         val cleanedQuery = query?.trim()?.toLowerCase() ?: ""
         for (app in apps) {
-            if (cleanedQuery == "" || app.packageLabel.toLowerCase().contains(cleanedQuery)) {
+            if (cleanedQuery == "" || app.label.toLowerCase().contains(cleanedQuery)) {
                 filteredApps.add(app)
             }
         }

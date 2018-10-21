@@ -25,7 +25,7 @@ class CodeViewerActivity : BaseActivity() {
         val extras = intent.extras
         extras?.let {
             val file = File(it.getString("filePath"))
-            val packageName = it.getString("packageName")
+            val packageName = it.getString("name")
 
             Timber.d(file.canonicalPath)
             Timber.d(packageName)

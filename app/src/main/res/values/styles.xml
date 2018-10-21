@@ -13,7 +13,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!-- Base application theme. -->
+    <style name="AppTheme.WithTransition" parent="AppTheme.NoActionBar">
+    </style>
+
     <style name="SourceViewerTheme" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">@color/grey_900</item>
         <item name="colorPrimaryDark">@color/black</item>

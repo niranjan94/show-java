@@ -1,22 +1,27 @@
 package com.njlabs.showjava
 
 import android.app.Application
-import android.content.Context
-import androidx.multidex.MultiDex
 import com.google.android.gms.ads.MobileAds
 import com.njlabs.showjava.utils.logging.ProductionTree
+import io.github.inflationx.calligraphy3.CalligraphyConfig
+import io.github.inflationx.calligraphy3.CalligraphyInterceptor
+import io.github.inflationx.viewpump.ViewPump
 import timber.log.Timber
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 
 class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        CalligraphyConfig.initDefault(
-            CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/lato-light.ttf")
-                .setFontAttrId(R.attr.fontPath)
+        ViewPump.init(
+            ViewPump.builder()
+                .addInterceptor(
+                    CalligraphyInterceptor(
+                        CalligraphyConfig.Builder()
+                            .setDefaultFontPath("fonts/lato-light.ttf")
+                            .setFontAttrId(R.attr.fontPath)
+                            .build()
+                    )
+                )
                 .build()
         )
 
@@ -25,12 +30,6 @@ class MainApplication : Application() {
         } else {
             Timber.plant(ProductionTree())
         }
-
         MobileAds.initialize(this, getString(R.string.admobAppId))
-    }
-
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
     }
 }

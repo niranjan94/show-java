@@ -38,6 +38,12 @@
     <string name="apk_parse_failed">Failed to parse the selected apk file</string>
     <string name="jar_unsupported">Decompiling JAR files is unsupported. Will be available soon.</string>
     <string name="unsupported_file">File is unsupported.</string>
+    <string name="extractingJar">Extracting JAR from APK</string>
+    <string name="decompilingToJava">Decompiling to java</string>
+    <string name="extractingResources">Extracting resources</string>
+    <string name="optimizing">Optimizing</string>
+    <string name="optimizingClasses">Optimizing classes</string>
+    <string name="mergingClasses">Merging classes</string>
     <string-array name="decompilers">
         <item><xliff:g>CFR 0.110</xliff:g></item>
         <item><xliff:g>JaDX 0.6.1</xliff:g></item>

@@ -39,7 +39,6 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        multiDexEnabled true
 
         resConfigs "en"
         vectorDrawables.useSupportLibrary true
@@ -67,7 +66,6 @@ android {
     }
 
     dexOptions {
-        jumboMode true
         javaMaxHeapSize '4g'
     }
 
@@ -113,9 +111,6 @@ def androidxVersion = '1.0.0'
 def workVersion = '1.0.0-alpha10'
 
 dependencies {
-    // MULTI-DEX SUPPORT FOR PRE LOLLIPOP
-    implementation 'androidx.multidex:multidex:2.0.0'
-
     // KOTLIN STANDARD LIBRARY
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
@@ -182,7 +177,8 @@ dependencies {
     })
 
     // EVERYBODY ELSE
-    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'io.github.inflationx:calligraphy3:3.0.0'
+    implementation 'io.github.inflationx:viewpump:1.0.0'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation('org.solovyev.android:checkout:1.0.1', {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'

@@ -22,9 +22,9 @@ import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.utils.Tools
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 
 abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -55,7 +55,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     }
 
     override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
+        super.attachBaseContext(newBase?.let { ViewPumpContextWrapper.wrap(it) })
     }
 
     fun setupLayout(layoutRef: Int) {
