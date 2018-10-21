@@ -1,5 +1,6 @@
 com.google.apps
 android
+com.android.support
 com.android
 com.google.android.gms
 com.google.common
@@ -9,3 +10,8 @@ com.google.android.vending
 javax
 junit
 kotlin
+androidx
+sun.misc
+dalvik.system
+org.junit
+java

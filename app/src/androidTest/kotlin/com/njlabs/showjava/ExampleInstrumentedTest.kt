@@ -1,7 +1,7 @@
 package com.njlabs.showjava
 
-import androidx.test.InstrumentationRegistry
-import androidx.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,7 +15,7 @@ import org.junit.runner.RunWith
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
-        val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.njlabs.showjava", appContext.packageName)
+        val appContext = InstrumentationRegistry.getInstrumentation()
+        assertEquals("com.njlabs.showjava.test", appContext.context.packageName)
     }
 }

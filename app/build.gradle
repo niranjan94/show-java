@@ -33,6 +33,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
+        multiDexEnabled true
 
         applicationId 'com.njlabs.showjava'
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
@@ -111,6 +112,9 @@ def androidxVersion = '1.0.0'
 def workVersion = '1.0.0-alpha10'
 
 dependencies {
+    // Multi-dex
+    implementation 'androidx.multidex:multidex:2.0.0'
+
     // KOTLIN STANDARD LIBRARY
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
@@ -171,6 +175,7 @@ dependencies {
 
     // LEAKCANARY AND FRIENDS
     testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.0.0-beta02'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-beta02', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'

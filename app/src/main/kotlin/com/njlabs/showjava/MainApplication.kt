@@ -1,12 +1,16 @@
 package com.njlabs.showjava
 
 import android.app.Application
+import android.content.Context
 import com.google.android.gms.ads.MobileAds
 import com.njlabs.showjava.utils.logging.ProductionTree
 import io.github.inflationx.calligraphy3.CalligraphyConfig
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor
 import io.github.inflationx.viewpump.ViewPump
 import timber.log.Timber
+import androidx.multidex.MultiDex
+
+
 
 class MainApplication : Application() {
 
@@ -31,5 +35,11 @@ class MainApplication : Application() {
             Timber.plant(ProductionTree())
         }
         MobileAds.initialize(this, getString(R.string.admobAppId))
+    }
+
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
     }
 }

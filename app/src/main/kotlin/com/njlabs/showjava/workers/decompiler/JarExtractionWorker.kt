@@ -12,21 +12,27 @@ import com.njlabs.showjava.utils.StringTools
 import org.jf.dexlib2.DexFileFactory
 import org.jf.dexlib2.Opcodes
 import org.jf.dexlib2.iface.ClassDef
-import org.jf.dexlib2.iface.DexFile
 import org.jf.dexlib2.immutable.ImmutableDexFile
 import org.objectweb.asm.tree.MethodNode
 import timber.log.Timber
 import java.lang.Exception
+import org.apache.commons.io.FilenameUtils
+import org.jf.dexlib2.dexbacked.DexBackedDexFile
+import java.util.zip.ZipFile
+
 
 class JarExtractionWorker(context: Context, params: WorkerParameters) : BaseWorker(context, params) {
 
     private var ignoredLibs: ArrayList<String>? = ArrayList()
 
     private fun loadIgnoredLibs() {
-        val ignoredList =
-            if (data.getBoolean("shouldIgnoreLibs", false)) "ignored.list" else "ignored_basic.list"
-        context.assets.open(ignoredList).bufferedReader().useLines {
+        context.assets.open("ignored.basic.list").bufferedReader().useLines {
             it.map { line -> ignoredLibs?.add(StringTools.toClassName(line)) }
+        }
+        if (data.getBoolean("shouldIgnoreLibs", false)) {
+            context.assets.open("ignored.list").bufferedReader().useLines {
+                it.map { line -> ignoredLibs?.add(StringTools.toClassName(line)) }
+            }
         }
     }
 
@@ -34,26 +40,35 @@ class JarExtractionWorker(context: Context, params: WorkerParameters) : BaseWork
     private fun convertApkToDex() {
 
         Timber.i("Starting APK to DEX Conversion")
-
-        var dexFile: DexFile = DexFileFactory.loadDexFile("", Opcodes.getDefault())
-
-        val classes = ArrayList<ClassDef>()
         sendStatus(context.getString(R.string.optimizing))
 
-        for (classDef in dexFile.classes) {
-            if (!isIgnored(classDef.type)) {
-                val currentClass = classDef.type
-                sendStatus(
-                    context.getString(R.string.optimizingClasses),
-                    currentClass.replace("Processing ".toRegex(), "")
-                )
-                classes.add(classDef)
+        val classes = ArrayList<ClassDef>()
+
+        val zipFile = ZipFile(inputPackageFile)
+        val entries = zipFile.entries()
+
+        // In the case of APKs with multiple dex files, ensure all dex files are loaded
+        while (entries.hasMoreElements()) {
+            val zipEntry = entries.nextElement()
+            if (!zipEntry.isDirectory && FilenameUtils.isExtension(zipEntry.name, "dex")) {
+                val dexFile = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), zipFile.getInputStream(zipEntry))
+                for (classDef in dexFile.classes) {
+                    if (!isIgnored(classDef.type)) {
+                        val currentClass = classDef.type
+                        sendStatus(
+                            context.getString(R.string.optimizingClasses),
+                            currentClass.replace("Processing ".toRegex(), "")
+                        )
+                        classes.add(classDef)
+                    }
+                }
             }
         }
+        zipFile.close()
 
         Timber.i("Output directory: $workingDirectory")
         sendStatus(context.getString(R.string.mergingClasses))
-        dexFile = ImmutableDexFile(Opcodes.getDefault(), classes)
+        val dexFile = ImmutableDexFile(Opcodes.getDefault(), classes)
 
         DexFileFactory.writeDexFile(
             this.outputDexFile.canonicalPath,
