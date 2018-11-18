@@ -1,8 +1,7 @@
-package com.njlabs.showjava.workers.decompiler
+package com.njlabs.showjava.decompilers
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.work.WorkerParameters
 import com.njlabs.showjava.R
 import com.njlabs.showjava.utils.PackageSourceTools
 import jadx.api.JadxDecompiler
@@ -17,10 +16,11 @@ import java.nio.charset.Charset
 import java.util.zip.ZipFile
 import java.lang.Exception
 import android.graphics.drawable.BitmapDrawable
+import androidx.work.Data
+import androidx.work.ListenableWorker
 
 
-
-class ResourcesExtractionWorker(context : Context, params : WorkerParameters) : BaseWorker(context, params) {
+class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
     private var parsedInputApkFile = ApkFile(inputPackageFile)
 
@@ -131,7 +131,7 @@ class ResourcesExtractionWorker(context : Context, params : WorkerParameters) : 
         iconOutput.close()
     }
 
-    override fun doWork(): Result {
+    override fun doWork(): ListenableWorker.Result {
         Timber.tag("ResourcesExtraction")
         buildNotification(context.getString(R.string.extractingResources))
 
@@ -145,6 +145,6 @@ class ResourcesExtractionWorker(context : Context, params : WorkerParameters) : 
         // saveIcon()
         PackageSourceTools.setXmlSourceStatus(workingDirectory.canonicalPath, true)
 
-        return Result.SUCCESS
+        return ListenableWorker.Result.SUCCESS
     }
 }

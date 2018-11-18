@@ -5,7 +5,7 @@ import androidx.work.WorkManager
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
-import com.njlabs.showjava.workers.decompiler.BaseWorker
+import com.njlabs.showjava.decompilers.BaseDecompiler
 import kotlinx.android.synthetic.main.activity_decompiler.*
 
 
@@ -20,7 +20,6 @@ class DecompilerActivity : BaseActivity() {
         itemSecondaryLabel.text = if (packageInfo.versionName != null)
             packageInfo.versionName else packageInfo.versionCode.toString()
 
-
         if (intent.action == Constants.ACTION.STOP_PROCESS) {
             WorkManager.getInstance().cancelAllWorkByTag(intent.getStringExtra("id"))
         }
@@ -28,7 +27,7 @@ class DecompilerActivity : BaseActivity() {
     }
 
     fun startProcess() {
-        val id = BaseWorker.start(hashMapOf(
+        BaseDecompiler.start(hashMapOf(
             "shouldIgnoreLibs" to true,
             "decompiler" to "cfr",
             "name" to "",

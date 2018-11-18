@@ -1,7 +1,8 @@
-package com.njlabs.showjava.workers.decompiler
+package com.njlabs.showjava.decompilers
 
 import android.content.Context
-import androidx.work.WorkerParameters
+import androidx.work.Data
+import androidx.work.ListenableWorker
 import com.googlecode.dex2jar.Method
 import com.googlecode.dex2jar.ir.IrMethod
 import com.googlecode.dex2jar.reader.DexFileReader
@@ -18,22 +19,28 @@ import timber.log.Timber
 import java.lang.Exception
 import org.apache.commons.io.FilenameUtils
 import org.jf.dexlib2.dexbacked.DexBackedDexFile
+import java.io.BufferedInputStream
 import java.util.zip.ZipFile
 
+class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
-class JarExtractionWorker(context: Context, params: WorkerParameters) : BaseWorker(context, params) {
-
-    private var ignoredLibs: ArrayList<String>? = ArrayList()
+    private var ignoredLibs: ArrayList<String> = ArrayList()
 
     private fun loadIgnoredLibs() {
         context.assets.open("ignored.basic.list").bufferedReader().useLines {
-            it.map { line -> ignoredLibs?.add(StringTools.toClassName(line)) }
+            it.forEach { line -> ignoredLibs.add(StringTools.toClassName(line)) }
         }
-        if (data.getBoolean("shouldIgnoreLibs", false)) {
+        if (data.getBoolean("shouldIgnoreLibs", true)) {
             context.assets.open("ignored.list").bufferedReader().useLines {
-                it.map { line -> ignoredLibs?.add(StringTools.toClassName(line)) }
+                it.forEach { line -> ignoredLibs.add(StringTools.toClassName(line)) }
             }
         }
+        Timber.d("Total libs to ignore: ${ignoredLibs.size}")
+        ignoredLibs.forEach { Timber.d(it) }
+    }
+
+    private fun isIgnored(className: String): Boolean {
+        return ignoredLibs.any { className.startsWith(it) }
     }
 
     @Throws(Exception::class)
@@ -51,7 +58,7 @@ class JarExtractionWorker(context: Context, params: WorkerParameters) : BaseWork
         while (entries.hasMoreElements()) {
             val zipEntry = entries.nextElement()
             if (!zipEntry.isDirectory && FilenameUtils.isExtension(zipEntry.name, "dex")) {
-                val dexFile = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), zipFile.getInputStream(zipEntry))
+                val dexFile = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), BufferedInputStream(zipFile.getInputStream(zipEntry)))
                 for (classDef in dexFile.classes) {
                     if (!isIgnored(classDef.type)) {
                         val currentClass = classDef.type
@@ -108,11 +115,6 @@ class JarExtractionWorker(context: Context, params: WorkerParameters) : BaseWork
         }
     }
 
-
-    private fun isIgnored(className: String): Boolean {
-        return ignoredLibs!!.any { className.startsWith(it) }
-    }
-
     private inner class DexExceptionHandlerMod : DexExceptionHandler {
         override fun handleFileException(e: Exception) {
             Timber.d("Dex2Jar Exception $e")
@@ -127,7 +129,7 @@ class JarExtractionWorker(context: Context, params: WorkerParameters) : BaseWork
         }
     }
 
-    override fun doWork(): Result {
+    override fun doWork(): ListenableWorker.Result {
         Timber.tag("JarExtraction")
         buildNotification(context.getString(R.string.extractingJar))
 
@@ -143,6 +145,6 @@ class JarExtractionWorker(context: Context, params: WorkerParameters) : BaseWork
         if (decompiler != "jadx") {
             convertDexToJar()
         }
-        return Result.SUCCESS
+        return ListenableWorker.Result.SUCCESS
     }
 }

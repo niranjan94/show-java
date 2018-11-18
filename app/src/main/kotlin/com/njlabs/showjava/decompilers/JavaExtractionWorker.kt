@@ -1,39 +1,46 @@
-package com.njlabs.showjava.workers.decompiler
+package com.njlabs.showjava.decompilers
 
 import android.content.Context
-import androidx.work.WorkerParameters
+import androidx.work.Data
+import androidx.work.ListenableWorker
 import com.njlabs.showjava.R
 import com.njlabs.showjava.utils.PackageSourceTools
 import com.njlabs.showjava.utils.ZipUtils
 import jadx.api.JadxDecompiler
-import org.benf.cfr.reader.Main
-import org.benf.cfr.reader.state.ClassFileSourceImpl
-import org.benf.cfr.reader.state.DCCommonState
+import org.benf.cfr.reader.api.CfrDriver
 import org.benf.cfr.reader.util.getopt.GetOptParser
 import org.benf.cfr.reader.util.getopt.Options
 import org.benf.cfr.reader.util.getopt.OptionsImpl
-import org.benf.cfr.reader.util.output.DumperFactoryImpl
 import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler
 import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger
 import timber.log.Timber
 import java.io.File
 import java.lang.Exception
 
-class JavaExtractionWorker(context : Context, params : WorkerParameters) : BaseWorker(context, params) {
+class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
     @Throws(Exception::class)
     private fun decompileWithCFR(jarInputFile: File, javaOutputDir: File) {
         val args = arrayOf(jarInputFile.toString(), "--outputdir", javaOutputDir.toString())
+
         val getOptParser = GetOptParser()
         val options: Options?
-        options = getOptParser.parse<Options>(args, OptionsImpl.getFactory())
+        val files: List<String?>?
 
-        if (!options!!.optionIsSet(OptionsImpl.HELP) && options.getOption(OptionsImpl.FILENAME) != null) {
-            val classFileSource = ClassFileSourceImpl(options)
-            val dcCommonState = DCCommonState(options, classFileSource)
-            val path = options.getOption(OptionsImpl.FILENAME)
-            val dumperFactory = DumperFactoryImpl()
-            Main.doJar(dcCommonState, path, dumperFactory)
+        try {
+            val processedArgs = getOptParser.parse(args, OptionsImpl.getFactory())
+            files = processedArgs.first as List<String>
+            options = processedArgs.second as Options
+            if (files.isEmpty()) {
+                return sendStatus("exit_process_on_error")
+            }
+        } catch (e: Exception) {
+            return sendStatus("exit_process_on_error")
+        }
+
+        if (!options.optionIsSet(OptionsImpl.HELP) && !files.isEmpty()) {
+            val cfrDriver = CfrDriver.Builder().withBuiltOptions(options).build()
+            cfrDriver.analyse(files)
         } else {
             sendStatus("exit_process_on_error")
         }
@@ -67,7 +74,7 @@ class JavaExtractionWorker(context : Context, params : WorkerParameters) : BaseW
         }
     }
 
-    override fun doWork(): Result {
+    override fun doWork(): ListenableWorker.Result {
         Timber.tag("JavaExtraction")
         buildNotification(context.getString(R.string.decompilingToJava))
 
@@ -93,6 +100,6 @@ class JavaExtractionWorker(context : Context, params : WorkerParameters) : BaseW
         }
 
         PackageSourceTools.setJavaSourceStatus(workingDirectory.canonicalPath, false)
-        return Result.SUCCESS
+        return ListenableWorker.Result.SUCCESS
     }
 }

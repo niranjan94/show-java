@@ -90,6 +90,10 @@ android {
         }
     }
 
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -120,8 +124,8 @@ dependencies {
 
     // FIREBASE LIBRARIES
     implementation 'com.google.firebase:firebase-core:16.0.4'
-    implementation 'com.google.firebase:firebase-ads:17.0.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+    implementation 'com.google.firebase:firebase-ads:17.1.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
 
     // ANDROID SUPPORT LIBRARIES
     implementation "androidx.appcompat:appcompat:$androidxVersion"
@@ -153,7 +157,7 @@ dependencies {
     implementation files('libs/dex-translator-0.0.9.15.jar')
 
     // CLASS FILE READER - JAVA DECOMPILER
-    implementation files('libs/cfr_0_117.jar')
+    implementation files('libs/cfr-0.135.jar')
 
     // DEPENDENCIES FOR JaDX
     implementation files('libs/dx-1.10.jar')
@@ -175,8 +179,10 @@ dependencies {
 
     // LEAKCANARY AND FRIENDS
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.0.0-beta02'
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-beta02', {
+    testImplementation "androidx.test:core:$androidxVersion"
+    androidTestImplementation "androidx.test:rules:1.1.0"
+    androidTestImplementation "androidx.test.ext:junit:$androidxVersion"
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
@@ -193,7 +199,7 @@ dependencies {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
     implementation 'com.github.javiersantos:PiracyChecker:1.2.4'
-    implementation 'com.github.kobakei:MaterialFabSpeedDial:1.2.0'
+    implementation 'com.github.kobakei:MaterialFabSpeedDial:1.2.1'
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     implementation 'com.github.angads25:filepicker:1.1.1'

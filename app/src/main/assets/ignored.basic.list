@@ -6,6 +6,7 @@ com.google.android.gms
 com.google.common
 com.google.auto
 com.google.ads
+com.google.android
 com.google.android.vending
 javax
 junit
@@ -15,3 +16,5 @@ sun.misc
 dalvik.system
 org.junit
 java
+org.intellij.lang.annotations
+org.jetbrains.annotations

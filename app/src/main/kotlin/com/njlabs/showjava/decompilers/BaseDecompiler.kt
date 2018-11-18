@@ -1,32 +1,31 @@
-package com.njlabs.showjava.workers.decompiler
+package com.njlabs.showjava.decompilers
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Environment
 import androidx.core.app.NotificationCompat
 import androidx.work.*
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
+import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.utils.Notifier
 import com.njlabs.showjava.utils.streams.ProgressStream
+import com.njlabs.showjava.workers.DecompilerWorker
 import timber.log.Timber
 import java.io.File
 import java.io.PrintStream
 import java.lang.Exception
 import java.util.*
-import android.app.NotificationChannel
-import android.os.Build
-import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 
-
-abstract class BaseWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
+abstract class BaseDecompiler(val context: Context, val data: Data) {
     var printStream: PrintStream? = null
 
-    protected var data = params.inputData
     private var id = data.getString("id")
     private var processNotifier: Notifier? = null
 
@@ -49,10 +48,10 @@ abstract class BaseWorker(val context: Context, params: WorkerParameters) : Work
         System.setOut(printStream)
     }
 
-    override fun doWork(): Result {
+    open fun doWork(): ListenableWorker.Result {
         outputJavaSrcDirectory.mkdirs()
         outputResSrcDirectory.mkdirs()
-        return Result.SUCCESS
+        return ListenableWorker.Result.SUCCESS
     }
 
     protected fun sendStatus(title: String, message: String) {
@@ -66,8 +65,9 @@ abstract class BaseWorker(val context: Context, params: WorkerParameters) : Work
     protected fun exit(exception: Exception?): ListenableWorker.Result {
         Timber.e(exception)
         processNotifier?.cancel()
-        return Result.FAILURE
+        return ListenableWorker.Result.FAILURE
     }
+
 
     /**
      * Build a persistent notification
@@ -105,33 +105,38 @@ abstract class BaseWorker(val context: Context, params: WorkerParameters) : Work
         return notification
     }
 
-    override fun onStopped(cancelled: Boolean) {
-        super.onStopped(cancelled)
+    open fun onStopped(cancelled: Boolean) {
         processNotifier?.cancel()
     }
 
     companion object {
-        fun start(dataMap: Map<String, Any>): String {
-            val id = UUID.randomUUID().toString()
 
-            val data = Data.Builder()
+        fun formData(dataMap: Map<String, Any>): Data {
+            val id = UUID.randomUUID().toString()
+            return Data.Builder()
                 .putAll(dataMap)
                 .putString("id", id)
                 .build()
+        }
 
-            val jarExtractionWork = OneTimeWorkRequestBuilder<JarExtractionWorker>()
+        fun start(dataMap: Map<String, Any>): String {
+
+            val data = formData(dataMap)
+            val id = data.getString("id")!!
+
+            val jarExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
                 .addTag("decompile")
                 .addTag(id)
                 .setInputData(data)
                 .build()
 
-            val javaExtractionWork = OneTimeWorkRequestBuilder<JavaExtractionWorker>()
+            val javaExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
                 .addTag("decompile")
                 .addTag(id)
                 .setInputData(data)
                 .build()
 
-            val resourcesExtractionWork = OneTimeWorkRequestBuilder<ResourcesExtractionWorker>()
+            val resourcesExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
                 .addTag("decompile")
                 .addTag(id)
                 .setInputData(data)
