@@ -6,6 +6,7 @@ import androidx.work.ListenableWorker
 import com.njlabs.showjava.R
 import com.njlabs.showjava.utils.PackageSourceTools
 import com.njlabs.showjava.utils.ZipUtils
+import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
 import org.benf.cfr.reader.api.CfrDriver
 import org.benf.cfr.reader.util.getopt.GetOptParser
@@ -48,11 +49,12 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
     @Throws(Exception::class)
     private fun decompileWithJaDX(dexInputFile: File, javaOutputDir: File) {
-        val jadx = JadxDecompiler()
-        jadx.setOutputDir(javaOutputDir)
-        jadx.loadFile(dexInputFile)
+        val args = JadxArgs()
+        args.outDirSrc = javaOutputDir
+        args.inputFiles = mutableListOf(dexInputFile)
+        val jadx = JadxDecompiler(args)
+        jadx.load()
         jadx.saveSources()
-
         if (dexInputFile.exists() && dexInputFile.isFile) {
             dexInputFile.delete()
         }

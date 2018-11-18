@@ -2,8 +2,13 @@ package com.njlabs.showjava.decompilers
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import androidx.work.Data
+import androidx.work.ListenableWorker
 import com.njlabs.showjava.R
 import com.njlabs.showjava.utils.PackageSourceTools
+import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
 import net.dongliu.apk.parser.ApkFile
 import org.apache.commons.io.FileUtils
@@ -14,30 +19,27 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.nio.charset.Charset
 import java.util.zip.ZipFile
-import java.lang.Exception
-import android.graphics.drawable.BitmapDrawable
-import androidx.work.Data
-import androidx.work.ListenableWorker
 
 
 class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
     private var parsedInputApkFile = ApkFile(inputPackageFile)
+    private val images = listOf("jpg", "png", "gif", "jpeg", "webp", "tiff", "bmp")
 
     @Throws(Exception::class)
     private fun extractResourcesWithJadx() {
         val resDir = outputResSrcDirectory
-        val jadx = JadxDecompiler()
-        jadx.setOutputDir(resDir)
-        jadx.loadFile(inputPackageFile)
+        val args = JadxArgs()
+        args.outDirRes = resDir
+        args.inputFiles = mutableListOf(inputPackageFile)
+        val jadx = JadxDecompiler(args)
+        jadx.load()
         jadx.saveResources()
         val zipFile = ZipFile(inputPackageFile)
         val entries = zipFile.entries()
         while (entries.hasMoreElements()) {
             val zipEntry = entries.nextElement()
-            if (!zipEntry.isDirectory && (FilenameUtils.getExtension(zipEntry.name) == "png" || FilenameUtils.getExtension(
-                    zipEntry.name
-                ) == "jpg")) {
+            if (!zipEntry.isDirectory && FilenameUtils.isExtension(zipEntry.name, images)) {
                 sendStatus("progress_stream", zipEntry.name)
                 writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
             }
@@ -51,14 +53,12 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         val entries = zipFile.entries()
         while (entries.hasMoreElements()) {
             val zipEntry = entries.nextElement()
-            if (!zipEntry.isDirectory && zipEntry.name != "AndroidManifest.xml" && FilenameUtils.getExtension(
-                    zipEntry.name
-                ) == "xml") {
+            if (!zipEntry.isDirectory
+                && zipEntry.name != "AndroidManifest.xml"
+                && FilenameUtils.isExtension(zipEntry.name, "xml")) {
                 sendStatus("progress_stream", zipEntry.name)
                 writeXML(zipEntry.name)
-            } else if (!zipEntry.isDirectory && (FilenameUtils.getExtension(zipEntry.name) == "png" || FilenameUtils.getExtension(
-                    zipEntry.name
-                ) == "jpg")) {
+            } else if (!zipEntry.isDirectory && FilenameUtils.isExtension(zipEntry.name, images)) {
                 sendStatus("progress_stream", zipEntry.name)
                 writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
             }
@@ -122,10 +122,23 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         )
     }
 
+    // Borrowed from from https://stackoverflow.com/a/52453231/1562480
+    private fun getBitmapFromDrawable(drawable: Drawable): Bitmap {
+        val bmp = Bitmap.createBitmap(
+            drawable.intrinsicWidth,
+            drawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bmp)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bmp
+    }
+
     @Throws(Exception::class)
     private fun saveIcon() {
         val packageInfo = context.packageManager.getPackageArchiveInfo(inputPackageFile.canonicalPath, 0)
-        val bitmap = (packageInfo.applicationInfo.loadIcon(context.packageManager) as BitmapDrawable).bitmap
+        val bitmap = getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(context.packageManager))
         val iconOutput = FileOutputStream(File(workingDirectory.canonicalPath, "icon.png"))
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, iconOutput)
         iconOutput.close()
@@ -137,12 +150,16 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
 
         super.doWork()
 
-        when (decompiler) {
+        /* when (decompiler) {
             "jadx" -> extractResourcesWithJadx()
             else -> extractResourcesWithParser()
-        }
+        } */
 
-        // saveIcon()
+        // Not using JaDX for resource extraction.
+        // Due to its dependency on the javax.imageio.ImageIO class which is unavailable on android
+        extractResourcesWithParser()
+
+        saveIcon()
         PackageSourceTools.setXmlSourceStatus(workingDirectory.canonicalPath, true)
 
         return ListenableWorker.Result.SUCCESS

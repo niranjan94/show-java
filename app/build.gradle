@@ -60,10 +60,9 @@ android {
         manifestPlaceholders = [admobAppId: props.getProperty('admobAppId')]
     }
 
-    testOptions {
-        unitTests {
-            includeAndroidResources true
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     dexOptions {
@@ -160,9 +159,9 @@ dependencies {
     implementation files('libs/cfr-0.135.jar')
 
     // DEPENDENCIES FOR JaDX
-    implementation files('libs/dx-1.10.jar')
+    implementation files('libs/dx-1.14.jar')
     implementation files('libs/android-5.1.jar')
-    implementation files('libs/jadx-core-0.6.1.jar')
+    implementation files('libs/jadx-core-0.8.0.jar')
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'uk.com.robust-it:cloning:1.9.10'
 

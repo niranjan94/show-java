@@ -14,7 +14,7 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 ## Features
 
-- Select either **CFR 0.135**, **JaDX 0.6.1** or **FernFlower (analytical decompiler)** to use as the decompiler (more to come).
+- Select either **CFR 0.135**, **JaDX 0.8.0** or **FernFlower (analytical decompiler)** to use as the decompiler (more to come).
 - Runs directly on an android device (4.x and above).
 - Select apk from sdcard (or) from a list of installed applications.
 - Easy to use.
