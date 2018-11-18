@@ -169,7 +169,7 @@ dependencies {
     implementation 'net.dongliu:apk-parser:2.6.4'
 
     // FERN FLOWER
-    implementation files('libs/fernflower.jar')
+    implementation 'com.github.fesh0r:fernflower:e9989d15e3'
 
     // RxJAVA AND FRIENDS
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'

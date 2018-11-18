@@ -13,10 +13,8 @@ import org.benf.cfr.reader.util.getopt.GetOptParser
 import org.benf.cfr.reader.util.getopt.Options
 import org.benf.cfr.reader.util.getopt.OptionsImpl
 import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler
-import org.jetbrains.java.decompiler.main.decompiler.PrintStreamLogger
 import timber.log.Timber
 import java.io.File
-import java.lang.Exception
 
 class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
@@ -62,12 +60,11 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
     @Throws(Exception::class)
     private fun decompileWithFernFlower(jarInputFile: File, javaOutputDir: File) {
-        val mapOptions = HashMap<String, Any>()
-        val logger = PrintStreamLogger(printStream)
-        val decompiler = ConsoleDecompiler(javaOutputDir, mapOptions, logger)
-        decompiler.addSpace(jarInputFile, true)
-        decompiler.decompileContext()
-
+        ConsoleDecompiler.main(
+            arrayOf(
+                jarInputFile.canonicalPath, javaOutputDir.canonicalPath
+            )
+        )
         if (outputJarFile.exists()) {
             ZipUtils.unzip(outputJarFile, javaOutputDir, printStream!!)
             outputJarFile.delete()
@@ -90,6 +87,8 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
             }
         }
 
+        PackageSourceTools.initialise(packageLabel, packageName, workingDirectory.canonicalPath)
+
         try {
             when (decompiler) {
                 "jadx" -> decompileWithJaDX(outputDexFile, outputJavaSrcDirectory)
@@ -97,7 +96,6 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
                 "fernflower" -> decompileWithFernFlower(outputJarFile, outputJavaSrcDirectory)
             }
         } catch (e: Exception) {
-            PackageSourceTools.setJavaSourceStatus(workingDirectory.canonicalPath, true)
             return exit(e)
         }
 

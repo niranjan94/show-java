@@ -9,6 +9,7 @@ import com.njlabs.showjava.decompilers.JarExtractionWorker
 import com.njlabs.showjava.decompilers.JavaExtractionWorker
 import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
 import junit.framework.TestCase
+import org.junit.Before
 import org.junit.Rule
 import java.io.File
 
@@ -25,6 +26,16 @@ abstract class DecompilerTestBase {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
 
+    @Before
+    fun initializeEnvironment() {
+        val appContext = InstrumentationRegistry.getInstrumentation()
+        if (!testApplicationFile.exists()) {
+            testApplicationFile.outputStream().use {
+                appContext.context.assets.open("test-application.apk").copyTo(it)
+            }
+        }
+    }
+
     private val testApplicationFile: File
         get() = File(Environment.getExternalStorageDirectory(), "test-application.apk")
 
@@ -36,6 +47,15 @@ abstract class DecompilerTestBase {
             "label" to "TestApplication-$name",
             "inputPackageFile" to testApplicationFile.canonicalPath
         ))
+
+        val outputDirectory = File(
+            Environment.getExternalStorageDirectory(), "show-java/sources/${data.getString("name")}"
+        )
+
+        if (outputDirectory.exists()) {
+            outputDirectory.deleteRecursively()
+        }
+
         val appContext = InstrumentationRegistry.getInstrumentation()
 
         val jarExtractionWorker = JarExtractionWorker(appContext.targetContext, data)

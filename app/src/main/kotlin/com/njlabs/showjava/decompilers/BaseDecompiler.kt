@@ -31,8 +31,8 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
     protected val decompiler = data.getString("decompiler")
 
-    protected val packageName = data.getString("name")
-    private val packageLabel = data.getString("label")
+    protected val packageName: String = data.getString("name").toString()
+    protected val packageLabel: String = data.getString("label").toString()
 
     protected val workingDirectory: File = File(Environment.getExternalStorageDirectory().canonicalPath, "show-java/sources/$packageName/")
     protected val inputPackageFile: File = File(data.getString("inputPackageFile"))

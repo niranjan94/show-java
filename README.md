@@ -1,5 +1,5 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/niranjan94/show-java/badge.svg?style=flat-square)](https://snyk.io/test/github/niranjan94/show-java)
-  [![Build Status](https://img.shields.io/travis/niranjan94/show-java.svg?style=flat-square)](https://travis-ci.org/niranjan94/show-java) [![License Info](https://img.shields.io/badge/license-GNU_AGPLv3-blue.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store Info](https://img.shields.io/badge/Play_Store-v2.1.0-36B0C1.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava) [![GitHub app version](https://img.shields.io/badge/GitHub-v2.1.0-yellow.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store downloads](https://img.shields.io/badge/downloads-260k%20total-E04253.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava)
+  [![Build Status](https://img.shields.io/travis/niranjan94/show-java.svg?style=flat-square)](https://travis-ci.org/niranjan94/show-java) [![License Info](https://img.shields.io/badge/license-GNU_AGPLv3-blue.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store Info](https://img.shields.io/badge/Play_Store-v2.1.0-36B0C1.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava) [![GitHub app version](https://img.shields.io/badge/GitHub-v3.0.1-yellow.svg?style=flat-square)](https://github.com/niranjan94/show-java) [![Play Store downloads](https://img.shields.io/badge/downloads-260k%20total-E04253.svg?style=flat-square)](https://play.google.com/store/apps/details?id=com.njlabs.showjava)
 
 
 ![ShowJava Banner v0.1](https://res.cloudinary.com/niranjan94/image/upload/v1518341743/banner_lihb7z.png)
@@ -14,7 +14,7 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 ## Features
 
-- Select either **CFR 0.135**, **JaDX 0.8.0** or **FernFlower (analytical decompiler)** to use as the decompiler (more to come).
+- Select either **CFR 0.135**, **JaDX 0.8.0** or **FernFlower [e9989d15e3](https://github.com/fesh0r/fernflower/tree/e9989d15e3c1ad1ae28e168f306becfd0abe101c) (analytical decompiler)** to use as the decompiler (more to come).
 - Runs directly on an android device (4.x and above).
 - Select apk from sdcard (or) from a list of installed applications.
 - Easy to use.
