@@ -28,7 +28,11 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Environment
 import androidx.core.app.NotificationCompat
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.ListenableWorker
+import androidx.work.WorkManager
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
@@ -38,8 +42,7 @@ import com.njlabs.showjava.workers.DecompilerWorker
 import timber.log.Timber
 import java.io.File
 import java.io.PrintStream
-import java.lang.Exception
-import java.util.*
+import java.util.UUID
 
 abstract class BaseDecompiler(val context: Context, val data: Data) {
     var printStream: PrintStream? = null
@@ -52,7 +55,10 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected val packageName: String = data.getString("name").toString()
     protected val packageLabel: String = data.getString("label").toString()
 
-    protected val workingDirectory: File = File(Environment.getExternalStorageDirectory().canonicalPath, "show-java/sources/$packageName/")
+    protected val workingDirectory: File = File(
+        Environment.getExternalStorageDirectory().canonicalPath,
+        "show-java/sources/$packageName/"
+    )
     protected val inputPackageFile: File = File(data.getString("inputPackageFile"))
 
     protected val outputDexFile: File = File(workingDirectory, "classes.dex")
@@ -74,6 +80,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
     protected fun sendStatus(title: String, message: String) {
         processNotifier?.updateTitleText(title, message)
+        this.broadcastStatus(title, message)
     }
 
     protected fun sendStatus(title: String) {
@@ -86,6 +93,14 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         return ListenableWorker.Result.FAILURE
     }
 
+    private fun broadcastStatus(title: String, message: String) {
+        context.sendBroadcast(
+            Intent(Constants.PROCESS_BROADCAST_ACTION)
+                .putExtra(Constants.PROCESS_STATUS_KEY, title)
+                .putExtra(Constants.PROCESS_STATUS_MESSAGE, message)
+        )
+    }
+
 
     /**
      * Build a persistent notification
@@ -96,10 +111,11 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         stopIntent.putExtra("id", id)
         stopIntent.putExtra("packageFilePath", inputPackageFile.canonicalFile)
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val pendingIntentForStop = PendingIntent.getService(context, 0, stopIntent, 0)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel =  NotificationChannel(
+            val channel = NotificationChannel(
                 Constants.PROCESS_NOTIFICATION_CHANNEL_ID,
                 "Decompiler notification",
                 NotificationManager.IMPORTANCE_HIGH
@@ -108,6 +124,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         }
 
         val builder = NotificationCompat.Builder(context, Constants.PROCESS_NOTIFICATION_CHANNEL_ID)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setContentTitle(packageLabel)
             .setContentText(title)
             .setSmallIcon(R.drawable.ic_code_black)
@@ -119,7 +136,8 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
         val notification = builder.build()
         notificationManager.notify(id, Constants.PROCESS_NOTIFICATION_ID, notification)
-        processNotifier = Notifier(notificationManager, builder, Constants.PROCESS_NOTIFICATION_ID, id)
+        processNotifier =
+                Notifier(notificationManager, builder, Constants.PROCESS_NOTIFICATION_ID, id)
         return notification
     }
 
@@ -145,23 +163,30 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             val jarExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
                 .addTag("decompile")
                 .addTag(id)
+                .addTag(dataMap["name"] as String)
                 .setInputData(data)
                 .build()
 
             val javaExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
                 .addTag("decompile")
                 .addTag(id)
+                .addTag(dataMap["name"] as String)
                 .setInputData(data)
                 .build()
 
             val resourcesExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
                 .addTag("decompile")
                 .addTag(id)
+                .addTag(dataMap["name"] as String)
                 .setInputData(data)
                 .build()
 
             WorkManager.getInstance()
-                .beginUniqueWork(dataMap["name"] as String, ExistingWorkPolicy.KEEP, jarExtractionWork)
+                .beginUniqueWork(
+                    dataMap["name"] as String,
+                    ExistingWorkPolicy.KEEP,
+                    jarExtractionWork
+                )
                 .then(javaExtractionWork)
                 .then(resourcesExtractionWork)
                 .enqueue()

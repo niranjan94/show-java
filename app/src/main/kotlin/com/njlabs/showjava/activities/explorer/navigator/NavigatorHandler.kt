@@ -24,7 +24,7 @@ import com.njlabs.showjava.utils.StringTools
 import io.reactivex.Observable
 import java.io.File
 import java.text.DateFormat
-import java.util.*
+import java.util.Date
 
 class NavigatorHandler(private var context: Context) {
 
