@@ -123,9 +123,10 @@ android {
     }
 
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin/'
-        test.java.srcDirs += 'src/test/kotlin/'
-        androidTest.java.srcDirs += 'src/androidTest/kotlin/'
+        main.java.srcDirs += 'src/main/kotlin'
+        main.resources.srcDirs += 'src/main/config'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 }
 
@@ -181,6 +182,9 @@ dependencies {
     implementation files('libs/android-5.1.jar')
     implementation files('libs/jadx-core-0.8.0.jar')
     implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'ch.qos.logback:logback-core:1.2.3'
+
     implementation 'uk.com.robust-it:cloning:1.9.10'
 
     // APK PARSER AND BINARY XML DECODER
@@ -195,8 +199,8 @@ dependencies {
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
 
     // LEAKCANARY AND FRIENDS
-    testImplementation 'junit:junit:4.12'
-    testImplementation "androidx.test:core:$androidxVersion"
+    androidTestImplementation 'junit:junit:4.12'
+    androidTestImplementation "androidx.test:core:$androidxVersion"
     androidTestImplementation "androidx.test:rules:1.1.0"
     androidTestImplementation "androidx.test.ext:junit:$androidxVersion"
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {

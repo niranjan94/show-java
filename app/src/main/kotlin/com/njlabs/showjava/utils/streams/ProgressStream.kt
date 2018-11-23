@@ -21,13 +21,19 @@ package com.njlabs.showjava.utils.streams
 import androidx.annotation.NonNull
 import timber.log.Timber
 import java.io.OutputStream
+import java.nio.charset.Charset
+import java.util.Arrays
+
 
 /**
  * A custom output stream that strips unnecessary stuff from raw input stream
  */
 class ProgressStream : OutputStream() {
     override fun write(@NonNull data: ByteArray, offset: Int, length: Int) {
-        val str = String(data)
+        var str = String(
+            Arrays.copyOfRange(data, offset, length),
+            Charset.forName("UTF-8")
+        )
             .replace("\n", "")
             .replace("\r", "")
             .replace("INFO:", "")
@@ -37,8 +43,13 @@ class ProgressStream : OutputStream() {
             .replace("... done", "")
             .replace("at", "")
             .trim()
+
+        if (str.startsWith("[stdout]")) {
+            str = str.removePrefix("[stdout] ")
+        }
+
         if (str.isNotEmpty()) {
-            Timber.i("[ProgressStream] $str")
+            Timber.i(str)
         }
     }
     override fun write(byte: Int) {

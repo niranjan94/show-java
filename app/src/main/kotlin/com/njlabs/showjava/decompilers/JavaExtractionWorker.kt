@@ -21,6 +21,8 @@ package com.njlabs.showjava.decompilers
 import android.content.Context
 import androidx.work.Data
 import androidx.work.ListenableWorker
+import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.OutputStreamAppender
 import com.njlabs.showjava.R
 import com.njlabs.showjava.utils.PackageSourceTools
 import com.njlabs.showjava.utils.ZipUtils
@@ -31,8 +33,21 @@ import org.benf.cfr.reader.util.getopt.GetOptParser
 import org.benf.cfr.reader.util.getopt.Options
 import org.benf.cfr.reader.util.getopt.OptionsImpl
 import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler
+import org.slf4j.Logger
 import timber.log.Timber
 import java.io.File
+import org.slf4j.Logger.ROOT_LOGGER_NAME
+import org.slf4j.LoggerFactory
+import ch.qos.logback.core.FileAppender
+import ch.qos.logback.classic.LoggerContext
+import ch.qos.logback.core.ConsoleAppender
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder
+import ch.qos.logback.core.Appender
+
+
+
+
+
 
 class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
@@ -68,6 +83,8 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
         val args = JadxArgs()
         args.outDirSrc = javaOutputDir
         args.inputFiles = mutableListOf(dexInputFile)
+        args.threadsCount = 1
+
         val jadx = JadxDecompiler(args)
         jadx.load()
         jadx.saveSources()
