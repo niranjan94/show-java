@@ -56,7 +56,7 @@ object PackageSourceTools {
             json.put("has_java_sources", false)
             json.put("has_xml_sources", false)
             val filePath = "$sourceOutputDir/info.json"
-            FileUtils.writeStringToFile(File(filePath), json.toString(), "UTF-8")
+            FileUtils.writeStringToFile(File(filePath), json.toString(2), "UTF-8")
         } catch (e: IOException) {
             e.printStackTrace()
         } catch (e: JSONException) {
@@ -70,7 +70,7 @@ object PackageSourceTools {
             val infoFile = File("$sourceOutputDir/info.json")
             val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
             json.put("has_java_sources", status)
-            FileUtils.writeStringToFile(infoFile, json.toString(), "UTF-8")
+            FileUtils.writeStringToFile(infoFile, json.toString(2), "UTF-8")
         } catch (e: IOException) {
             e.printStackTrace()
         } catch (e: JSONException) {
@@ -84,7 +84,7 @@ object PackageSourceTools {
             val infoFile = File("$sourceOutputDir/info.json")
             val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
             json.put("has_xml_sources", status)
-            FileUtils.writeStringToFile(infoFile, json.toString(), "UTF-8")
+            FileUtils.writeStringToFile(infoFile, json.toString(2), "UTF-8")
         } catch (e: IOException) {
             e.printStackTrace()
         } catch (e: JSONException) {

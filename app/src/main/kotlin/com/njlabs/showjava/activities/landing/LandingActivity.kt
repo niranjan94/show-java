@@ -25,6 +25,7 @@ import android.os.Environment
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
 import com.github.angads25.filepicker.view.FilePickerDialog
@@ -35,6 +36,7 @@ import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.data.SourceInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
@@ -47,8 +49,10 @@ class LandingActivity : BaseActivity() {
     private lateinit var filePickerDialog: FilePickerDialog
 
     private var historyListAdapter: HistoryListAdapter? = null
-
     private var historyItems = ArrayList<SourceInfo>()
+    private var historyLoaderSubscription: Disposable? = null
+
+    private var shouldLoadHistory = true
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_landing)
@@ -61,10 +65,12 @@ class LandingActivity : BaseActivity() {
         drawerLayout.addDrawerListener(drawerToggle)
         landingHandler = LandingHandler(context)
         setupFab()
+
         if (savedInstanceState != null) {
             val historyItems = savedInstanceState.getParcelableArrayList<SourceInfo>("historyItems")
             if (historyItems != null) {
                 this.historyItems = historyItems
+                shouldLoadHistory = false
                 setupList()
             }
         }
@@ -113,11 +119,13 @@ class LandingActivity : BaseActivity() {
     }
 
     override fun postPermissionsGrant() {
-        populateHistory()
+        if (shouldLoadHistory) {
+            populateHistory()
+        }
     }
 
     private fun populateHistory(resume: Boolean = false) {
-        landingHandler.loadHistory()
+        historyLoaderSubscription = landingHandler.loadHistory()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError { Timber.e(it) }
@@ -128,7 +136,7 @@ class LandingActivity : BaseActivity() {
                 } else {
                     setupList()
                 }
-            }.dispose()
+            }
     }
 
     private fun setListVisibility(isListVisible: Boolean = true) {
@@ -146,8 +154,7 @@ class LandingActivity : BaseActivity() {
         } else {
             setListVisibility(true)
             historyListView.setHasFixedSize(true)
-            historyListView.layoutManager =
-                    androidx.recyclerview.widget.LinearLayoutManager(context)
+            historyListView.layoutManager = LinearLayoutManager(context)
             historyListAdapter = HistoryListAdapter(historyItems) { selectedHistoryItem ->
                 val intent = Intent(context, NavigatorActivity::class.java)
                 intent.putExtra("selectedApp", selectedHistoryItem)
@@ -179,4 +186,10 @@ class LandingActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (historyLoaderSubscription?.isDisposed != true) {
+            historyLoaderSubscription?.dispose()
+        }
+    }
 }

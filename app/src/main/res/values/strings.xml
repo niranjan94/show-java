@@ -62,6 +62,9 @@
     <string name="optimizing">Optimizing</string>
     <string name="optimizingClasses">Optimizing classes</string>
     <string name="mergingClasses">Merging classes</string>
+    <string name="wrapLines">Wrap lines</string>
+    <string name="lineNumbers">Line numbers</string>
+    <string name="zoomable">Zoomable</string>
     <string-array name="decompilers">
         <item><xliff:g>CFR 0.110</xliff:g></item>
         <item><xliff:g>JaDX 0.6.1</xliff:g></item>

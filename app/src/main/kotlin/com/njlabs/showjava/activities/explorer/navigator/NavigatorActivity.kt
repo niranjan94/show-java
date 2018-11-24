@@ -25,6 +25,7 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.explorer.navigator.adapters.FilesListAdapter
@@ -33,6 +34,7 @@ import com.njlabs.showjava.activities.explorer.viewer.ImageViewerActivity
 import com.njlabs.showjava.data.FileItem
 import com.njlabs.showjava.data.SourceInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_navigator.*
 import timber.log.Timber
@@ -44,6 +46,7 @@ class NavigatorActivity : BaseActivity() {
     private lateinit var navigationHandler: NavigatorHandler
     private lateinit var filesListAdapter: FilesListAdapter
     private var currentDirectory: File? = null
+    private var filesLoadSubscription: Disposable? = null
 
     private var fileItems: ArrayList<FileItem>? = ArrayList()
     private var selectedApp: SourceInfo? = null
@@ -61,6 +64,8 @@ class NavigatorActivity : BaseActivity() {
                 currentDirectory = File(it)
             }
         }
+
+        Timber.d("selectedApp: %s", selectedApp?.sourceDirectory)
 
         // selectedApp ?: finish()
         currentDirectory = currentDirectory ?: selectedApp?.sourceDirectory
@@ -82,7 +87,7 @@ class NavigatorActivity : BaseActivity() {
     private fun populateList(startDirectory: File) {
         supportActionBar?.title = startDirectory.name
         currentDirectory = startDirectory
-        navigationHandler.loadFiles(startDirectory)
+        filesLoadSubscription = navigationHandler.loadFiles(startDirectory)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError { Timber.e(it) }
@@ -91,7 +96,7 @@ class NavigatorActivity : BaseActivity() {
                     it.add(0, FileItem(File(startDirectory.parent), "Parent directory", "parent"))
                 }
                 updateList(it)
-            }.dispose()
+            }
     }
 
     private fun updateList(fileItems: ArrayList<FileItem>?) {
@@ -122,9 +127,8 @@ class NavigatorActivity : BaseActivity() {
                         startActivity(intent)
                     }
                     arrayOf(
-                        "java", "xml", "json", "c",
-                        "cpp", "txt", "properties",
-                        "yml", "md", "kt", "html",
+                        "java", "xml", "json", "txt", "properties",
+                        "yml", "yaml", "md", "html", "class",
                         "js", "css", "scss", "sass"
                     ).contains(selectedFile.file.extension) -> {
                         val intent = Intent(context, CodeViewerActivity::class.java)
@@ -137,8 +141,12 @@ class NavigatorActivity : BaseActivity() {
                         val fileIntent = Intent(Intent.ACTION_VIEW)
                         val mimeType =
                             mimeTypeDetector.getMimeTypeFromExtension(selectedFile.file.extension)
-                        fileIntent.setDataAndType(Uri.fromFile(selectedFile.file), mimeType)
+                        fileIntent.setDataAndType(
+                            FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", selectedFile.file),
+                            mimeType
+                        )
                         fileIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        fileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                         try {
                             context.startActivity(fileIntent)
                         } catch (e: ActivityNotFoundException) {
@@ -166,5 +174,13 @@ class NavigatorActivity : BaseActivity() {
             bundle.putString("currentDirectory", it.canonicalPath)
 
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (filesLoadSubscription?.isDisposed != true) {
+            filesLoadSubscription?.dispose()
+        }
+
     }
 }

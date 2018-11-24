@@ -48,6 +48,7 @@ class LandingHandler(private var context: Context) {
                 val files = dir.listFiles()
                 if (files != null && files.isNotEmpty())
                     files.forEach { file ->
+                        Timber.d(file.canonicalPath)
                         if (PackageSourceTools.sourceExists(file)) {
                             PackageSourceTools.getSourceInfoFromSourcePath(file)
                                 ?.let { historyItems.add(it) }

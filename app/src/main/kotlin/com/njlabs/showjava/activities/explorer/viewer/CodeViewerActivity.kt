@@ -18,95 +18,139 @@
 
 package com.njlabs.showjava.activities.explorer.viewer
 
-import android.annotation.SuppressLint
-import android.content.res.AssetManager
-import android.net.Uri
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
-import android.webkit.WebResourceResponse
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import com.google.common.html.HtmlEscapers
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.utils.rx.ProcessStatus
+import com.njlabs.showjava.utils.views.CodeView
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_code_viewer.*
 import timber.log.Timber
 import java.io.File
-import java.io.IOException
-import java.io.InputStream
 
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-class CodeViewerActivity : BaseActivity() {
-    @SuppressLint("SetJavaScriptEnabled")
+class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
+
+    private var fileLoaderSubscription: Disposable? = null
+    private var extensionTypeMap = hashMapOf(
+        "txt" to "plaintext",
+        "class" to "java",
+        "yml" to "yaml",
+        "md" to "markdown"
+    )
+
     override fun init(savedInstanceState: Bundle?) {
+
         setupLayout(R.layout.activity_code_viewer)
         val extras = intent.extras
-        extras?.let {
-            val file = File(it.getString("filePath"))
-            val packageName = it.getString("name")
 
-            Timber.d(file.canonicalPath)
-            Timber.d(packageName)
+        val file = File(extras?.getString("filePath"))
+        val packageName = extras?.getString("name")
 
-            supportActionBar?.title = file.name
-            val subtitle = file.canonicalPath.replace(
-                "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
-                ""
-            )
-            supportActionBar?.subtitle = subtitle
-            if (file.name.trim().equals("AndroidManifest.xml", true)) {
-                supportActionBar?.subtitle = packageName
+        toolbar.popupTheme = R.style.AppTheme_DarkPopupOverlay
+
+        supportActionBar?.title = file.name
+        val subtitle = file.canonicalPath.replace(
+            "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+            ""
+        )
+        supportActionBar?.subtitle = subtitle
+        if (file.name.trim().equals("AndroidManifest.xml", true)) {
+            supportActionBar?.subtitle = packageName
+        }
+
+        codeView.visibility = View.INVISIBLE
+        codeLoadProgress.visibility = View.VISIBLE
+
+        var language = file.extension
+        extensionTypeMap[language]?.let {
+            language = it
+        }
+
+        fileLoaderSubscription = loadFile(file)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError { error -> Timber.e(error) }
+            .subscribe { status ->
+                codeView.setCode(status.result)
+                    .setLanguage(language)
+                    .setWrapLine(false)
+                    .setFontSize(14F)
+                    .setZoomEnabled(true)
+                    .setShowLineNumber(true)
+                    .setOnHighlightListener(this)
+                    .apply()
             }
+    }
 
-            val assetBaseUrl = "file:///android_asset/code_viewer/"
-            val sourceCodeText = HtmlEscapers.htmlEscaper().escape(file.readText())
+    private fun loadFile(fileToLoad: File): Observable<ProcessStatus<String>> {
+        return Observable.create { emitter: ObservableEmitter<ProcessStatus<String>> ->
+            emitter.onNext(ProcessStatus(fileToLoad.readText()))
+            emitter.onComplete()
+        }
+    }
 
-            codeView.settings.javaScriptEnabled = true
-            codeView.settings.defaultTextEncodingName = "utf-8"
-            codeView.webViewClient = object : WebViewClient() {
-                @Suppress("OverridingDeprecatedMember")
-                override fun shouldInterceptRequest(
-                    view: WebView,
-                    url: String
-                ): WebResourceResponse {
-                    val stream = inputStreamForAndroidResource(url)
-                    @Suppress("DEPRECATION")
-                    return if (stream != null) {
-                        WebResourceResponse("text/javascript", "utf-8", stream)
-                    } else super.shouldInterceptRequest(view, url)
-                }
+    override fun onFontSizeChanged(sizeInPx: Int) {}
+    override fun onLineClicked(lineNumber: Int, content: String) {}
 
-                private fun inputStreamForAndroidResource(_url: String): InputStream? {
-                    var url = _url
-                    if (url.contains(assetBaseUrl)) {
-                        url = url.replaceFirst(assetBaseUrl.toRegex(), "")
-                        try {
-                            val assets = assets
-                            val uri = Uri.parse(url)
-                            return assets.open(uri.path, AssetManager.ACCESS_STREAMING)
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
-                    }
-                    return null
-                }
+    override fun onStartCodeHighlight() {
+        runOnUiThread {
+            codeView.visibility = View.INVISIBLE
+            codeLoadProgress.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onFinishCodeHighlight() {
+        runOnUiThread {
+            codeView.visibility = View.VISIBLE
+            codeLoadProgress.visibility = View.GONE
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        menu.findItem(R.id.wrap_text).isVisible = true
+        menu.findItem(R.id.zoomable).isVisible = true
+        menu.findItem(R.id.line_number).isVisible = true
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.wrap_text -> {
+                val newState = !item.isChecked
+                codeView.setWrapLine(newState).apply()
+                item.isChecked = newState
+                return true
             }
+            R.id.zoomable -> {
+                val newState = !item.isChecked
+                codeView.setZoomEnabled(newState).apply()
+                item.isChecked = newState
+                return true
+            }
+            R.id.line_number -> {
+                val newState = !item.isChecked
+                codeView.setShowLineNumber(newState).apply()
+                item.isChecked = newState
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
-            val data =
-                """
-                        <!DOCTYPE html>
-                        <html>
-                        <head>
-                            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                            <script src="run_prettify.js?skin=sons-of-obsidian"></script>
-                        </head>
-                        <body style="background-color: #000000;">
-                            <pre class="prettyprint linenums"><code class="language-${file.extension}">${sourceCodeText.trim()}</code></pre>
-                        </body>
-                        </html>
-                    """
-            codeView.loadDataWithBaseURL(assetBaseUrl, data.trim(), "text/html", "UTF-8", null)
-
+    override fun onDestroy() {
+        super.onDestroy()
+        if (fileLoaderSubscription?.isDisposed != true) {
+            fileLoaderSubscription?.dispose()
         }
     }
 }

@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+    line-height: 1.2;
+    background: #212121 !important;
+}
+.hljs {
+}
+
+pre {
+    margin: 0;
+    position: relative;
+}
+
+table, td, tr {
+    margin: 0;
+    padding: 0;
+}
+
+code > span {
+    display: none;
+}
+
+td.ln {
+    text-align: right;
+    padding-right: 2px;
+}
+
+td.line:hover span {
+    background: #661d76;
+    color: #fff;
+}
+
+td.line:hover {
+    background: #661d76;
+    color: #fff;
+    border-radius: 2px;
+}
+
+td.highlighted-line {
+    background: #ffda11;
+    color: #000;
+    border-radius: 2px;
+}
+
+td.highlighted-line span {
+    background: #ffda11;
+    color: #000;
+}

@@ -17,18 +17,6 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#D32F2F</color>
-
-    <color name="ic_launcher_background">@color/white</color>
-
-    <color name="black">#000000</color>
-    <color name="grey_900">#212121</color>
-    <color name="grey_700">#616161</color>
-    <color name="grey_400">#BDBDBD</color>
-    <color name="white">#ffffff</color>
-    <color name="danger_color">#22d32f2f</color>
-    <color name="androidStudioBackground">#282b2e</color>
-</resources>
+<CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />

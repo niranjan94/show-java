@@ -39,6 +39,8 @@ class ImageViewerActivity : BaseActivity() {
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_image_viewer)
         window.decorView.setBackgroundColor(Color.BLACK)
+        toolbar.popupTheme = R.style.AppTheme_DarkPopupOverlay
+
         val extras = intent.extras
         extras?.let {
 

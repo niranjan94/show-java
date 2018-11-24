@@ -22,27 +22,57 @@
     tools:context="com.njlabs.showjava.activities.landing.LandingActivity">
 
     <item
-        android:id="@+id/bug_report_option"
+        android:id="@+id/wrap_text"
         android:orderInCategory="1"
+        android:visible="false"
+        android:title="@string/wrapLines"
+        android:checkable="true"
+        android:checked="false"
+        android:actionLayout="@layout/action_layout_checkbox"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/line_number"
+        android:orderInCategory="2"
+        android:visible="false"
+        android:title="@string/lineNumbers"
+        android:checkable="true"
+        android:checked="true"
+        android:actionLayout="@layout/action_layout_checkbox"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/zoomable"
+        android:orderInCategory="3"
+        android:visible="false"
+        android:title="@string/zoomable"
+        android:checkable="true"
+        android:checked="true"
+        android:actionLayout="@layout/action_layout_checkbox"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/bug_report_option"
+        android:orderInCategory="4"
         android:title="@string/reportBug"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/about_option"
-        android:orderInCategory="2"
+        android:orderInCategory="5"
         android:title="@string/about"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/settings_option"
-        android:orderInCategory="2"
+        android:orderInCategory="6"
         android:title="@string/settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/invert_colors"
         android:icon="@drawable/ic_action_invert_colors"
-        android:orderInCategory="2"
+        android:orderInCategory="0"
         android:title="@string/invertBackgroundColor"
         android:visible="false"
         app:showAsAction="always"

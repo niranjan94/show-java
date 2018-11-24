@@ -36,6 +36,7 @@
         android:label="@string/appName"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
+        tools:replace="android:label,android:supportsRtl"
         android:supportsRtl="false"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">

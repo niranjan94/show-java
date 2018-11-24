@@ -34,8 +34,8 @@
             android:id="@+id/toolbar"
             layout="@layout/layout_toolbar" />
 
-        <LinearLayout
-            android:id="@+id/welcomeLayout"
+        <RelativeLayout
+            android:id="@+id/layoutHolder"
             android:layout_width="match_parent"
 
             android:layout_height="match_parent"
@@ -45,83 +45,89 @@
             android:layout_marginRight="8dp"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="181dp"
-                android:layout_height="181dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
-                android:contentDescription="@string/appName"
-                app:srcCompat="@drawable/showjava_logo" />
+            <LinearLayout
+                android:id="@+id/welcomeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_view"
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="181dp"
+                    android:layout_height="181dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="@string/appName"
+                    app:srcCompat="@drawable/showjava_logo" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="1dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/welcome"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="@color/grey_700"
+                            android:textSize="35sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="7dp"
+                            android:text="@string/tapPlus"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/grey_700" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/pickAppText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                app:cardCornerRadius="4dp"
-                app:cardElevation="1dp"
-                app:cardUseCompatPadding="true">
+                android:paddingBottom="8dp"
+                android:paddingEnd="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingTop="8dp"
+                android:text="@string/pickAppToExplore"
+                android:visibility="gone" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="8dp">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/historyListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pickAppText"
+                android:divider="@null"
+                android:listSelector="@android:color/transparent"
+                android:scrollbarStyle="outsideOverlay"
+                android:visibility="gone" />
+        </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/welcome"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="@color/grey_700"
-                        android:textSize="35sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="7dp"
-                        android:text="@string/tapPlus"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/grey_700" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/pickAppText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
-            android:paddingBottom="8dp"
-            android:paddingEnd="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingStart="5dp"
-            android:paddingTop="8dp"
-            android:text="@string/pickAppToExplore"
-            android:visibility="gone" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/historyListView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/adView"
-            android:layout_below="@+id/pickAppText"
-            android:divider="@null"
-            android:listSelector="@android:color/transparent"
-            android:scrollbarStyle="outsideOverlay"
-            android:visibility="gone" />
 
         <io.github.kobakei.materialfabspeeddial.FabSpeedDial
             android:id="@+id/selectionFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/welcomeLayout"
+            android:layout_alignBottom="@+id/layoutHolder"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             app:fab_extraMargin="-8dp"
