@@ -62,6 +62,10 @@ class LandingActivity : BaseActivity() {
             R.string.drawerOpen,
             R.string.drawerClose
         )
+        navigationView.setNavigationItemSelectedListener {
+            drawerLayout.closeDrawers()
+            onOptionsItemSelected(it)
+        }
         drawerLayout.addDrawerListener(drawerToggle)
         landingHandler = LandingHandler(context)
         setupFab()

@@ -35,8 +35,6 @@ import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.PackageSourceTools
-import com.njlabs.showjava.utils.rx.ProcessStatus
-import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -51,6 +49,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
     private var searchMenuItem: MenuItem? = null
 
     private var apps = ArrayList<PackageInfo>()
+    private var appsLoaderSubscription: Disposable? = null
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_apps)
@@ -72,11 +71,11 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
     }
 
     private fun loadApps() {
-        appsHandler.loadApps()
+        appsLoaderSubscription = appsHandler.loadApps()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<ProcessStatus<ArrayList<PackageInfo>>> {
-                override fun onNext(processStatus: ProcessStatus<ArrayList<PackageInfo>>) {
+            .subscribe(
+                { processStatus ->
                     if (!processStatus.isDone) {
                         progressBar.progress = processStatus.progress.toInt()
                         statusText.text = processStatus.status
@@ -89,11 +88,11 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
                         }
                         setupList()
                     }
+                },
+                { e ->
+                    Timber.e(e)
                 }
-                override fun onComplete() {}
-                override fun onSubscribe(d: Disposable) {}
-                override fun onError(e: Throwable) { Timber.e(e) }
-            })
+            )
     }
 
     private fun setupList() {
@@ -126,7 +125,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val options = ActivityOptions
                 .makeSceneTransitionAnimation(this, view.findViewById(R.id.itemCard), "appListItem")
-           return startActivity(i, options.toBundle())
+            return startActivity(i, options.toBundle())
         }
 
         startActivity(i)
@@ -175,4 +174,10 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         return true
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (appsLoaderSubscription?.isDisposed != true) {
+            appsLoaderSubscription?.dispose()
+        }
+    }
 }
