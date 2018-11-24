@@ -121,6 +121,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
                 "Decompiler notification",
                 NotificationManager.IMPORTANCE_HIGH
             )
+            channel.importance = NotificationManager.IMPORTANCE_LOW
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -133,6 +134,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             .addAction(R.drawable.ic_stop_black, "Stop decompiler", pendingIntentForStop)
             .setOngoing(true)
             .setAutoCancel(false)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .setProgress(0, 0, true)
 
         val notification = builder.build()
