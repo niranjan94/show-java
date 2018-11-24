@@ -38,8 +38,8 @@ class SourceInfo() : Parcelable {
         }
 
     constructor(parcel: Parcel) : this() {
-        packageLabel = parcel.readString()
-        packageName = parcel.readString()
+        packageLabel = parcel.readString()!!
+        packageName = parcel.readString()!!
         hasSource = parcel.readByte() != 0.toByte()
     }
 

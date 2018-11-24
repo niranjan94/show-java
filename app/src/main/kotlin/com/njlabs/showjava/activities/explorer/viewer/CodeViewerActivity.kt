@@ -18,7 +18,7 @@
 
 package com.njlabs.showjava.activities.explorer.viewer
 
-import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.view.Menu
@@ -67,8 +67,13 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
             supportActionBar?.subtitle = packageName
         }
 
-        codeView.visibility = View.INVISIBLE
-        codeLoadProgress.visibility = View.VISIBLE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            codeView.visibility = View.INVISIBLE
+            codeLoadProgress.visibility = View.VISIBLE
+        } else {
+            codeView.visibility = View.VISIBLE
+            codeLoadProgress.visibility = View.GONE
+        }
 
         var language = file.extension
         extensionTypeMap[language]?.let {
@@ -119,7 +124,9 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
         menuInflater.inflate(R.menu.menu_main, menu)
         menu.findItem(R.id.wrap_text).isVisible = true
         menu.findItem(R.id.zoomable).isVisible = true
-        menu.findItem(R.id.line_number).isVisible = true
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            menu.findItem(R.id.line_number).isVisible = true
+        }
         return true
     }
 

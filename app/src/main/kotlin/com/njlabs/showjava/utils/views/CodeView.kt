@@ -42,7 +42,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import timber.log.Timber
-import java.util.*
+import java.util.Locale
 import java.util.regex.Pattern
 
 class CodeView @JvmOverloads constructor(
@@ -101,38 +101,49 @@ class CodeView @JvmOverloads constructor(
         if (listener != null) {
             if (onHighlightListener !== listener) {
                 onHighlightListener = listener
-                addJavascriptInterface(object : Any() {
-                    @JavascriptInterface
-                    fun onStartCodeHighlight() {
-                        if (onHighlightListener != null) {
-                            onHighlightListener!!.onStartCodeHighlight()
-                        }
-                    }
+                /*
+                    For applications built for API levels below 17, WebView#addJavascriptInterface presents a security hazard as
+                    JavaScript on the target web page has the ability to use reflection to access the injected object's public fields
+                    and thus manipulate the host application in unintended ways.
 
-                    @JavascriptInterface
-                    fun onFinishCodeHighlight() {
-                        if (onHighlightListener != null) {
-                            Handler(Looper.getMainLooper()).post {
-                                fillLineNumbers()
-                                showHideLineNumber(isShowLineNumber())
-                                highlightLineNumber(highlightLineNumber)
+                    Issue id: AddJavascriptInterface
+
+                    Ref: https://labs.mwrinfosecurity.com/blog/2013/09/24/webview-addjavascriptinterface-remote-code-execution/
+                 */
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    addJavascriptInterface(object : Any() {
+                        @JavascriptInterface
+                        fun onStartCodeHighlight() {
+                            if (onHighlightListener != null) {
+                                onHighlightListener!!.onStartCodeHighlight()
                             }
-                            onHighlightListener!!.onFinishCodeHighlight()
                         }
-                    }
 
-                    @JavascriptInterface
-                    fun logText(text: String) {
-                        Timber.d("logText: %s", text)
-                    }
-
-                    @JavascriptInterface
-                    fun onLineClicked(lineNumber: Int, content: String) {
-                        if (onHighlightListener != null) {
-                            onHighlightListener!!.onLineClicked(lineNumber, content)
+                        @JavascriptInterface
+                        fun onFinishCodeHighlight() {
+                            if (onHighlightListener != null) {
+                                Handler(Looper.getMainLooper()).post {
+                                    fillLineNumbers()
+                                    showHideLineNumber(isShowLineNumber())
+                                    highlightLineNumber(highlightLineNumber)
+                                }
+                                onHighlightListener!!.onFinishCodeHighlight()
+                            }
                         }
-                    }
-                }, "android")
+
+                        @JavascriptInterface
+                        fun logText(text: String) {
+                            Timber.d("logText: %s", text)
+                        }
+
+                        @JavascriptInterface
+                        fun onLineClicked(lineNumber: Int, content: String) {
+                            if (onHighlightListener != null) {
+                                onHighlightListener!!.onLineClicked(lineNumber, content)
+                            }
+                        }
+                    }, "android")
+                }
             }
         } else {
             removeJavascriptInterface("android")
@@ -159,7 +170,7 @@ class CodeView @JvmOverloads constructor(
 
     fun setCode(code: String?): CodeView {
         if (code == null) this.code = ""
-        else this.code = code
+        else this.code = code + "\n"
         this.escapeCode = Html.escapeHtml(this.code)
         return this
     }
@@ -252,7 +263,7 @@ class CodeView @JvmOverloads constructor(
 <script>highlightCode()</script>
 </body>
 </html>
-""".trimIndent()
+"""
     }
 
     private fun executeJavaScript(js: String) {

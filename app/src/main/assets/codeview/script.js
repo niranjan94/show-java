@@ -1,6 +1,10 @@
 function highlightCode() {
-  android.onStartCodeHighlight();
+  try {
+      android.onStartCodeHighlight();
+  } catch(ignored) { }
   var codeHolder = document.getElementById('code-holder');
   var result = hljs.highlightBlock(codeHolder);
-  android.onFinishCodeHighlight();
+  try {
+    android.onFinishCodeHighlight();
+  } catch(ignored) { }
 }
