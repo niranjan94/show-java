@@ -19,6 +19,7 @@
 package com.njlabs.showjava.utils.streams
 
 import androidx.annotation.NonNull
+import com.njlabs.showjava.decompilers.BaseDecompiler
 import timber.log.Timber
 import java.io.OutputStream
 import java.nio.charset.Charset
@@ -28,7 +29,7 @@ import java.util.Arrays
 /**
  * A custom output stream that strips unnecessary stuff from raw input stream
  */
-class ProgressStream : OutputStream() {
+class ProgressStream(val decompiler: BaseDecompiler) : OutputStream() {
     override fun write(@NonNull data: ByteArray, offset: Int, length: Int) {
         var str = String(
             Arrays.copyOfRange(data, offset, length),
@@ -50,6 +51,7 @@ class ProgressStream : OutputStream() {
 
         if (str.isNotEmpty()) {
             Timber.i(str)
+            decompiler.sendStatus(str)
         }
     }
     override fun write(byte: Int) {

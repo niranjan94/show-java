@@ -16,22 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava
+package com.njlabs.showjava.receivers
 
-object Constants {
-    const val PROCESS_BROADCAST_ACTION = "com.njlabs.showjava.process.BROADCAST"
-    const val PROCESS_STATUS_KEY = "com.njlabs.showjava.process.STATUS_KEY"
-    const val PROCESS_STATUS_MESSAGE = "com.njlabs.showjava.process.STATUS_MESSAGE"
-    const val PROCESS_DIR = "com.njlabs.showjava.process.DIR"
-    const val PROCESS_PACKAGE_ID = "com.njlabs.showjava.process.PACKAGE_ID"
-    const val PROCESS_NOTIFICATION_ID = 1
-    const val PROCESS_NOTIFICATION_CHANNEL_ID = "com.njlabs.showjava"
-    const val STORAGE_PERMISSION_REQUEST = 3
-    const val FILE_PICKER_RESULT = 9600
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import androidx.work.WorkManager
+import com.njlabs.showjava.Constants
+import timber.log.Timber
 
-    interface ACTION {
-        companion object {
-            const val STOP_WORKER = "com.njlabs.showjava.workers.action.STOP"
+class DecompilerActionReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent?) {
+        when (intent?.action) {
+            Constants.ACTION.STOP_WORKER -> {
+                WorkManager.getInstance().cancelAllWorkByTag(
+                    intent.getStringExtra("id")
+                )
+            }
+            else -> {
+                Timber.i("Received an unknown action.")
+            }
         }
     }
 }

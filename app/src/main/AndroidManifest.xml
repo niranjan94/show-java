@@ -54,6 +54,8 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
+        <receiver android:name=".receivers.DecompilerActionReceiver" />
+
         <activity
             android:name=".activities.landing.LandingActivity"
             android:label="@string/appName"

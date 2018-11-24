@@ -38,10 +38,6 @@ class DecompilerActivity : BaseActivity() {
         itemSecondaryLabel.text = if (packageInfo.versionName != null)
             packageInfo.versionName else packageInfo.versionCode.toString()
 
-        if (intent.action == Constants.ACTION.STOP_PROCESS) {
-            WorkManager.getInstance().cancelAllWorkByTag(intent.getStringExtra("id"))
-        }
-
     }
 
     fun startProcess() {

@@ -35,7 +35,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.decompiler.DecompilerActivity
+import com.njlabs.showjava.receivers.DecompilerActionReceiver
 import com.njlabs.showjava.utils.Notifier
 import com.njlabs.showjava.utils.streams.ProgressStream
 import com.njlabs.showjava.workers.DecompilerWorker
@@ -67,7 +67,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected val outputResSrcDirectory: File = File(workingDirectory, "src/res")
 
     init {
-        printStream = PrintStream(ProgressStream())
+        printStream = PrintStream(ProgressStream(this))
         System.setErr(printStream)
         System.setOut(printStream)
     }
@@ -83,7 +83,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         this.broadcastStatus(title, message)
     }
 
-    protected fun sendStatus(title: String) {
+    fun sendStatus(title: String) {
         sendStatus(title, "")
     }
 
@@ -106,14 +106,15 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      * Build a persistent notification
      */
     protected fun buildNotification(title: String): Notification {
-        val stopIntent = Intent(context, DecompilerActivity::class.java)
-        stopIntent.action = Constants.ACTION.STOP_PROCESS
+        val stopIntent = Intent(context, DecompilerActionReceiver::class.java)
+        stopIntent.action = Constants.ACTION.STOP_WORKER
         stopIntent.putExtra("id", id)
         stopIntent.putExtra("packageFilePath", inputPackageFile.canonicalFile)
 
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val pendingIntentForStop = PendingIntent.getService(context, 0, stopIntent, 0)
+        val pendingIntentForStop = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 Constants.PROCESS_NOTIFICATION_CHANNEL_ID,
