@@ -28,7 +28,11 @@ import timber.log.Timber
 class DecompilerActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {
-            Constants.ACTION.STOP_WORKER -> {
+            Constants.WORKER.ACTION.STOP -> {
+                Timber.i(
+                    "Received cancel request for: %s",
+                    intent.getStringExtra("id")
+                )
                 WorkManager.getInstance().cancelAllWorkByTag(
                     intent.getStringExtra("id")
                 )

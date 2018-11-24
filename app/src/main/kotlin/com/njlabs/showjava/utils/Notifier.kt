@@ -26,7 +26,7 @@ import com.njlabs.showjava.Constants
 class Notifier(
     private val notificationManager: NotificationManager,
     private val notificationBuilder: NotificationCompat.Builder,
-    private val notificationId: Int = Constants.PROCESS_NOTIFICATION_ID,
+    private val notificationId: Int = Constants.WORKER.NOTIFICATION_ID,
     private val notificationTag: String?
 ) {
 

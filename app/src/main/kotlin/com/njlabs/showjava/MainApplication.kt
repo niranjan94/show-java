@@ -32,6 +32,9 @@ import androidx.multidex.MultiDex
 
 class MainApplication : Application() {
 
+    /**
+     * Setup fonts, plant the correct logging tree for Timber and init ads
+     */
     override fun onCreate() {
         super.onCreate()
         ViewPump.init(
@@ -55,7 +58,9 @@ class MainApplication : Application() {
         MobileAds.initialize(this, getString(R.string.admobAppId))
     }
 
-
+    /**
+     * Initialize MultiDex
+     */
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         MultiDex.install(this)

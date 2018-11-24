@@ -16,18 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.decompilers
+package com.njlabs.showjava;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.njlabs.showjava.DecompilerTestBase
-import org.junit.Test
-import org.junit.runner.RunWith
+import java.io.File;
 
-@RunWith(AndroidJUnit4::class)
-class CfrDecompilerTest: DecompilerTestBase() {
+import jadx.api.JadxArgs;
+import jadx.core.dex.nodes.ClassNode;
 
-    @Test
-    override fun runDecompiler() {
-        useDecompiler("cfr")
+
+@SuppressWarnings("unused")
+public class Logger {
+
+    /**
+     * This method will be invoked by a JaDX method that is used to save classes.
+     */
+    public static void logJadxClassWrite(File dir, JadxArgs args, ClassNode cls) {
+        System.out.println("Decompiling " + cls.getFullName());
     }
 }

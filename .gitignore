@@ -20,3 +20,4 @@ build
 *.iml
 google-services.json
 /app/standard/
+tmp

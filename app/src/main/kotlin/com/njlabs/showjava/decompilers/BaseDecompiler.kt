@@ -59,6 +59,10 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         Environment.getExternalStorageDirectory().canonicalPath,
         "show-java/sources/$packageName/"
     )
+    protected val cacheDirectory: File = File(
+        Environment.getExternalStorageDirectory().canonicalPath,
+        "show-java/.cache/"
+    )
     protected val inputPackageFile: File = File(data.getString("inputPackageFile"))
 
     protected val outputDexFile: File = File(workingDirectory, "classes.dex")
@@ -72,42 +76,53 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         System.setOut(printStream)
     }
 
+    /**
+     * Prepare the required directories.
+     * All child classes must call this method on override.
+     */
     open fun doWork(): ListenableWorker.Result {
         outputJavaSrcDirectory.mkdirs()
         outputResSrcDirectory.mkdirs()
         return ListenableWorker.Result.SUCCESS
     }
 
+    /**
+     * Update the notification and broadcast status
+     */
     protected fun sendStatus(title: String, message: String) {
         processNotifier?.updateTitleText(title, message)
         this.broadcastStatus(title, message)
     }
-
     fun sendStatus(title: String) {
         sendStatus(title, "")
     }
 
+    /**
+     * Clear the notification and exit marking the work job as failed
+     */
     protected fun exit(exception: Exception?): ListenableWorker.Result {
         Timber.e(exception)
         processNotifier?.cancel()
         return ListenableWorker.Result.FAILURE
     }
 
+    /**
+     * Broadcast the status to the receiver
+     */
     private fun broadcastStatus(title: String, message: String) {
         context.sendBroadcast(
-            Intent(Constants.PROCESS_BROADCAST_ACTION)
-                .putExtra(Constants.PROCESS_STATUS_KEY, title)
-                .putExtra(Constants.PROCESS_STATUS_MESSAGE, message)
+            Intent(Constants.WORKER.ACTION.BROADCAST)
+                .putExtra(Constants.WORKER.STATUS_KEY, title)
+                .putExtra(Constants.WORKER.STATUS_MESSAGE, message)
         )
     }
-
 
     /**
      * Build a persistent notification
      */
     protected fun buildNotification(title: String): Notification {
         val stopIntent = Intent(context, DecompilerActionReceiver::class.java)
-        stopIntent.action = Constants.ACTION.STOP_WORKER
+        stopIntent.action = Constants.WORKER.ACTION.STOP
         stopIntent.putExtra("id", id)
         stopIntent.putExtra("packageFilePath", inputPackageFile.canonicalFile)
 
@@ -117,7 +132,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                Constants.PROCESS_NOTIFICATION_CHANNEL_ID,
+                Constants.WORKER.NOTIFICATION_CHANNEL,
                 "Decompiler notification",
                 NotificationManager.IMPORTANCE_HIGH
             )
@@ -125,7 +140,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             notificationManager.createNotificationChannel(channel)
         }
 
-        val builder = NotificationCompat.Builder(context, Constants.PROCESS_NOTIFICATION_CHANNEL_ID)
+        val builder = NotificationCompat.Builder(context, Constants.WORKER.NOTIFICATION_CHANNEL)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setContentTitle(packageLabel)
             .setContentText(title)
@@ -138,18 +153,24 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             .setProgress(0, 0, true)
 
         val notification = builder.build()
-        notificationManager.notify(id, Constants.PROCESS_NOTIFICATION_ID, notification)
+        notificationManager.notify(id, Constants.WORKER.NOTIFICATION_ID, notification)
         processNotifier =
-                Notifier(notificationManager, builder, Constants.PROCESS_NOTIFICATION_ID, id)
+                Notifier(notificationManager, builder, Constants.WORKER.NOTIFICATION_ID, id)
         return notification
     }
 
+    /**
+     * Cancel notification on worker stop
+     */
     open fun onStopped(cancelled: Boolean) {
         processNotifier?.cancel()
     }
 
     companion object {
 
+        /**
+         * For the WorkManager compatible Data object from the given map
+         */
         fun formData(dataMap: Map<String, Any>): Data {
             val id = UUID.randomUUID().toString()
             return Data.Builder()
@@ -158,6 +179,9 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
                 .build()
         }
 
+        /**
+         * Start the jobs using the given map
+         */
         fun start(dataMap: Map<String, Any>): String {
 
             val data = formData(dataMap)

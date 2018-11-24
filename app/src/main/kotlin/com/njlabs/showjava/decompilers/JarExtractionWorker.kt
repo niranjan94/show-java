@@ -45,6 +45,9 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
     private var ignoredLibs: ArrayList<String> = ArrayList()
 
+    /**
+     * Load a list of library classes that are to be ignored from the assets
+     */
     private fun loadIgnoredLibs() {
         context.assets.open("ignored.basic.list").bufferedReader().useLines {
             it.forEach { line -> ignoredLibs.add(StringTools.toClassName(line)) }
@@ -58,10 +61,17 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         ignoredLibs.forEach { Timber.d(it) }
     }
 
+    /**
+     * Check if the given class name is in the ignore-list
+     */
     private fun isIgnored(className: String): Boolean {
         return ignoredLibs.any { className.startsWith(it) }
     }
 
+    /**
+     * Convert the apk to a dex file.
+     * During the generation of the dex-file, any ignored classes will be stripped.
+     */
     @Throws(Exception::class)
     private fun convertApkToDex() {
 
@@ -104,6 +114,10 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         Timber.i("DEX file location: ${this.outputDexFile}")
     }
 
+    /**
+     * Convert the dex file to jar for CFR or Fernflower to use.
+     * JaDX can directly make use of the dex file.
+     */
     @Throws(Exception::class)
     private fun convertDexToJar() {
         Timber.i("Starting DEX to JAR Conversion")
@@ -134,6 +148,9 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         }
     }
 
+    /**
+     * Handle dex2jar exception gracefully without causing a full crash
+     */
     private inner class DexExceptionHandlerMod : DexExceptionHandler {
         override fun handleFileException(e: Exception) {
             Timber.d("Dex2Jar Exception $e")

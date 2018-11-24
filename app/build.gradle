@@ -226,4 +226,51 @@ dependencies {
 
 }
 
+apply plugin: 'hiBeaver'
+
+import com.bryansharp.gradle.hibeaver.utils.MethodLogAdapter
+import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.Opcodes
+
+hiBeaver {
+    hiBeaverModifyName = 'myHibeaverTest'
+    showHelp = false
+    keepQuiet = false
+    watchTimeConsume = false
+
+    modifyMatchMaps = [
+            /*
+             * JaDX does not log class-by-class progress updates.
+             * So we patch the the method that saves the class at the bytecode level
+             * to invoke a log method at com.njlabs.showjava.Logger
+             *
+             * Note: this needs to be tested and adjusted for every update of JaDX.
+             */
+            'jadx.core.dex.visitors.SaveCode': [
+                    ['methodName': 'save', 'methodDesc': '(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V', 'adapter': {
+                        ClassVisitor cv, int access, String name, String desc, String signature, String[] exceptions ->
+                            MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions)
+                            MethodVisitor adapter = new MethodLogAdapter(methodVisitor) {
+                                @Override
+                                void visitCode() {
+                                    super.visitCode()
+                                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0)
+                                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 1)
+                                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 2)
+                                    methodVisitor.visitMethodInsn(
+                                            Opcodes.INVOKESTATIC,
+                                            className2Path('com.njlabs.showjava.Logger'),
+                                            'logJadxClassWrite',
+                                            '(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V',
+                                            false
+                                    )
+                                }
+                            }
+                            return adapter
+                    }]
+            ]
+    ]
+}
+
 apply plugin: 'com.google.gms.google-services'

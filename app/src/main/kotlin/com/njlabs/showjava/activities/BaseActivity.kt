@@ -49,7 +49,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
 
     protected lateinit var toolbar: Toolbar
     protected lateinit var context: Context
-    protected lateinit var prefs: SharedPreferences
+    private lateinit var prefs: SharedPreferences
 
     abstract fun init(savedInstanceState: Bundle?)
 

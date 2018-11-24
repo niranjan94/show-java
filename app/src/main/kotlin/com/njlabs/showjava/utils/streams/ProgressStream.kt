@@ -45,12 +45,16 @@ class ProgressStream(val decompiler: BaseDecompiler) : OutputStream() {
             .replace("at", "")
             .trim()
 
+        if (str.startsWith("[ignored]")) {
+            return
+        }
+
         if (str.startsWith("[stdout]")) {
             str = str.removePrefix("[stdout] ")
         }
 
         if (str.isNotEmpty()) {
-            Timber.i(str)
+            Timber.d("[stdout] %s", str)
             decompiler.sendStatus(str)
         }
     }

@@ -18,20 +18,35 @@
 
 package com.njlabs.showjava
 
+/**
+ * Constants used throughout the application
+ */
 object Constants {
-    const val PROCESS_BROADCAST_ACTION = "com.njlabs.showjava.process.BROADCAST"
-    const val PROCESS_STATUS_KEY = "com.njlabs.showjava.process.STATUS_KEY"
-    const val PROCESS_STATUS_MESSAGE = "com.njlabs.showjava.process.STATUS_MESSAGE"
-    const val PROCESS_DIR = "com.njlabs.showjava.process.DIR"
-    const val PROCESS_PACKAGE_ID = "com.njlabs.showjava.process.PACKAGE_ID"
-    const val PROCESS_NOTIFICATION_ID = 1
-    const val PROCESS_NOTIFICATION_CHANNEL_ID = "com.njlabs.showjava"
-    const val STORAGE_PERMISSION_REQUEST = 3
-    const val FILE_PICKER_RESULT = 9600
 
-    interface ACTION {
+    const val STORAGE_PERMISSION_REQUEST = 1009
+
+    /**
+     * Workers related constants
+     */
+    interface WORKER {
         companion object {
-            const val STOP_WORKER = "com.njlabs.showjava.workers.action.STOP"
+            const val STATUS_KEY = "com.njlabs.showjava.worker.STATUS_KEY"
+            const val STATUS_MESSAGE = "com.njlabs.showjava.worker.STATUS_MESSAGE"
+            const val NOTIFICATION_CHANNEL = "com.njlabs.showjava"
+            const val NOTIFICATION_ID = 1094
+        }
+
+        /**
+         * Actions used for interacting with workers
+         */
+        interface ACTION {
+            companion object {
+                // Action to broadcast status to receivers
+                const val BROADCAST = "com.njlabs.showjava.worker.action.BROADCAST"
+
+                // Action to instruct the receiver to stop the worker
+                const val STOP = "com.njlabs.showjava.worker.action.STOP"
+            }
         }
     }
 }

@@ -19,7 +19,7 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>[stdout] %msg%n</pattern>
+            <pattern>[ignored] %msg%n</pattern>
         </encoder>
     </appender>
     <root>

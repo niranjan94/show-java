@@ -25,6 +25,9 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
+/**
+ * Adapter for populating and managing the Apps list
+ */
 class AppsListAdapter(
     private var apps: List<PackageInfo>,
     private val itemClick: (PackageInfo, View) -> Unit
