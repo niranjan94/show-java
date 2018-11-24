@@ -149,6 +149,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$androidxVersion"
     implementation "com.google.android.material:material:$androidxVersion"
     implementation "androidx.cardview:cardview:$androidxVersion"
+    implementation "androidx.preference:preference:$androidxVersion"
     implementation "androidx.legacy:legacy-support-v4:$androidxVersion"
     implementation "androidx.recyclerview:recyclerview:$androidxVersion"
     implementation "androidx.legacy:legacy-support-core-utils:$androidxVersion"

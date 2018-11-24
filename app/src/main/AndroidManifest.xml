@@ -112,6 +112,7 @@
             android:name=".activities.explorer.viewer.ImageViewerActivity"
             android:theme="@style/SourceViewerTheme" />
         <activity android:name=".activities.about.AboutActivity" />
+        <activity android:name=".activities.settings.SettingsActivity" />
 
     </application>
 

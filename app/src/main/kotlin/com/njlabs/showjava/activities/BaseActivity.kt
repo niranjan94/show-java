@@ -39,6 +39,7 @@ import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
+import com.njlabs.showjava.activities.settings.SettingsActivity
 import com.njlabs.showjava.utils.Tools
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -173,7 +174,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                 return true
             }
             R.id.settings_option -> {
-                // startActivity(Intent(baseContext, SettingsActivity::class.java))
+                startActivity(Intent(baseContext, SettingsActivity::class.java))
                 return true
             }
         }

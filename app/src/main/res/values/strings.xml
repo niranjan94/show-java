@@ -20,7 +20,18 @@
     <string name="settings">Settings</string>
     <string name="drawerClose">Close drawer</string>
     <string name="drawerOpen">Open drawer</string>
+    <string name="decompilerSettings">Decompiler settings</string>
+    <string name="selectDefaultDecompiler">Select default decompiler</string>
+    <string name="speedUpDecompile">Speed up decompiling process</string>
+    <string name="ignoreLibrariesPreferenceSummary">Speed up by ignoring common open sourced libraries</string>
+    <string name="autoDecompilerSelectionPreferenceSummary">Show/Hide the decompiler selection dialog box</string>
+    <string name="autoDecompilerSelection">Don\'t ask to pick decompiler each time</string>
+    <string name="tapToRateApp">Tap to rate this app on Play Store</string>
     <string name="reportBug">Report a bug</string>
+    <string name="rateAndReview">Rate &amp; Review</string>
+    <string name="easeOfUse">Ease of use</string>
+    <string name="helpSupport">Help &amp; Support</string>
+    <string name="reportBugPreferenceSummary">Tap to report any bug (or) issue found in this app</string>
     <string name="about">About</string>
     <string name="invertBackgroundColor">Invert background color</string>
     <string name="storagePermissionRationale">
@@ -66,9 +77,9 @@
     <string name="lineNumbers">Line numbers</string>
     <string name="zoomable">Zoomable</string>
     <string-array name="decompilers">
-        <item><xliff:g>CFR 0.110</xliff:g></item>
-        <item><xliff:g>JaDX 0.6.1</xliff:g></item>
-        <item><xliff:g>FernFlower (analytical decompiler)</xliff:g></item>
+        <item><xliff:g>CFR 0.135</xliff:g></item>
+        <item><xliff:g>JaDX 0.8.0</xliff:g></item>
+        <item><xliff:g>FernFlower e9989d15e3 (analytical decompiler)</xliff:g></item>
     </string-array>
 
     <string-array name="decompilersValues">
