@@ -1,8 +1,16 @@
 body {
     margin: 0;
     line-height: 1.2;
+}
+
+body.dark {
     background: #212121 !important;
 }
+
+body.light {
+    background: white !important;
+}
+
 .hljs {
 }
 

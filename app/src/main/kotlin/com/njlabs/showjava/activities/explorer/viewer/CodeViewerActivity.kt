@@ -46,6 +46,7 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
         "yml" to "yaml",
         "md" to "markdown"
     )
+    private var darkMode = true
 
     override fun init(savedInstanceState: Bundle?) {
 
@@ -123,6 +124,7 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         menu.findItem(R.id.wrap_text).isVisible = true
+        menu.findItem(R.id.invert_colors).isVisible = true
         menu.findItem(R.id.zoomable).isVisible = true
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             menu.findItem(R.id.line_number).isVisible = true
@@ -148,6 +150,11 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
                 val newState = !item.isChecked
                 codeView.setShowLineNumber(newState).apply()
                 item.isChecked = newState
+                return true
+            }
+            R.id.invert_colors -> {
+                darkMode = !darkMode
+                codeView.setDarkMode(darkMode)
                 return true
             }
         }

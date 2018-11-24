@@ -20,6 +20,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
+apply plugin: 'io.michaelrocks.paranoid'
 
 def versionMajor = 3
 def versionMinor = 0
@@ -65,6 +66,9 @@ android {
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
         resValue 'string', 'appName', 'Show Java'
+        resValue 'string', 'appNameGetPro', 'Get Show Java Pro'
+        resValue 'string', 'appVersion', android.defaultConfig.versionName
+        resValue 'string', 'appVersionExtended', "Version ${android.defaultConfig.versionName}"
         resValue 'string', 'bugReportUri', 'https://github.com/niranjan94/show-java/issues'
         resValue 'string', 'originalApplicationId', 'com.njlabs.showjava'
         resValue 'string', 'deviceId', props.getProperty('deviceId')
@@ -73,6 +77,7 @@ android {
 
         buildConfigField 'String', 'GIT_SHA', "\"${gitSha}\""
         buildConfigField 'String', 'BUILD_TIME', "\"${buildTime}\""
+        buildConfigField 'String', 'PACKAGE_NAME', "\"${android.defaultConfig.applicationId.bytes.encodeBase64().toString()}\""
         buildConfigField 'Boolean', 'IS_CI', "${isCi}"
 
         manifestPlaceholders = [admobAppId: props.getProperty('admobAppId')]
@@ -117,8 +122,9 @@ android {
             shrinkResources true
         }
         debug {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
+            testProguardFile 'test-proguard-rules.pro'
         }
     }
 

@@ -21,60 +21,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.njlabs.showjava.activities.landing.LandingActivity">
 
-    <item
-        android:id="@+id/wrap_text"
-        android:orderInCategory="1"
-        android:visible="false"
-        android:title="@string/wrapLines"
-        android:checkable="true"
-        android:checked="false"
-        android:actionLayout="@layout/action_layout_checkbox"
-        app:showAsAction="never" />
+    <group android:id="@+id/code_view_group"
+        android:checkableBehavior="all">
 
-    <item
-        android:id="@+id/line_number"
-        android:orderInCategory="2"
-        android:visible="false"
-        android:title="@string/lineNumbers"
-        android:checkable="true"
-        android:checked="true"
-        android:actionLayout="@layout/action_layout_checkbox"
-        app:showAsAction="never" />
+        <item
+            android:id="@+id/invert_colors"
+            android:icon="@drawable/ic_action_invert_colors"
+            android:orderInCategory="0"
+            android:title="@string/invertBackgroundColor"
+            android:visible="false"
+            app:showAsAction="always"
+            tools:ignore="AlwaysShowAction" />
+        <item
+            android:id="@+id/wrap_text"
+            android:orderInCategory="1"
+            android:visible="false"
+            android:title="@string/wrapLines"
+            android:checkable="true"
+            android:checked="false"
+            android:actionLayout="@layout/action_layout_checkbox"
+            app:showAsAction="never" />
 
-    <item
-        android:id="@+id/zoomable"
-        android:orderInCategory="3"
-        android:visible="false"
-        android:title="@string/zoomable"
-        android:checkable="true"
-        android:checked="true"
-        android:actionLayout="@layout/action_layout_checkbox"
-        app:showAsAction="never" />
+        <item
+            android:id="@+id/line_number"
+            android:orderInCategory="2"
+            android:visible="false"
+            android:title="@string/lineNumbers"
+            android:checkable="true"
+            android:checked="true"
+            android:actionLayout="@layout/action_layout_checkbox"
+            app:showAsAction="never" />
 
-    <item
-        android:id="@+id/bug_report_option"
-        android:orderInCategory="4"
-        android:title="@string/reportBug"
-        app:showAsAction="never" />
+        <item
+            android:id="@+id/zoomable"
+            android:orderInCategory="3"
+            android:visible="false"
+            android:title="@string/zoomable"
+            android:checkable="true"
+            android:checked="true"
+            android:actionLayout="@layout/action_layout_checkbox"
+            app:showAsAction="never" />
+    </group>
 
-    <item
-        android:id="@+id/about_option"
-        android:orderInCategory="5"
-        android:title="@string/about"
-        app:showAsAction="never" />
+    <group android:id="@+id/common_group"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/bug_report_option"
+            android:orderInCategory="4"
+            android:icon="@drawable/ic_bug_report_black"
+            android:title="@string/reportBug"
+            app:showAsAction="never" />
 
-    <item
-        android:id="@+id/settings_option"
-        android:orderInCategory="6"
-        android:title="@string/settings"
-        app:showAsAction="never" />
+        <item
+            android:id="@+id/about_option"
+            android:orderInCategory="5"
+            android:icon="@drawable/ic_info_black"
+            android:title="@string/about"
+            app:showAsAction="never" />
 
-    <item
-        android:id="@+id/invert_colors"
-        android:icon="@drawable/ic_action_invert_colors"
-        android:orderInCategory="0"
-        android:title="@string/invertBackgroundColor"
-        android:visible="false"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
+        <item
+            android:id="@+id/settings_option"
+            android:orderInCategory="6"
+            android:icon="@drawable/ic_settings_black"
+            android:title="@string/settings"
+            app:showAsAction="never" />
+    </group>
+
+    <group android:id="@+id/extra_group">
+        <item
+            android:id="@+id/get_pro_option"
+            android:orderInCategory="7"
+            android:visible="false"
+            android:icon="@drawable/ic_whatshot_black"
+            android:title="@string/appNameGetPro"
+            app:showAsAction="never" />
+    </group>
+
 </menu>

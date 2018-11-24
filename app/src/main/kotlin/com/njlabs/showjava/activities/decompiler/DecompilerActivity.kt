@@ -38,6 +38,7 @@ class DecompilerActivity : BaseActivity() {
         itemSecondaryLabel.text = if (packageInfo.versionName != null)
             packageInfo.versionName else packageInfo.versionCode.toString()
 
+        startProcess()
     }
 
     fun startProcess() {

@@ -22,6 +22,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Environment
+import android.util.Base64
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -29,17 +30,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
 import com.github.angads25.filepicker.view.FilePickerDialog
+import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.AppsActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.utils.SafetyNetLite
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
+import java.sql.Time
 
 
 class LandingActivity : BaseActivity() {
@@ -63,9 +67,10 @@ class LandingActivity : BaseActivity() {
             R.string.drawerClose
         )
         navigationView.setNavigationItemSelectedListener {
-            drawerLayout.closeDrawers()
             onOptionsItemSelected(it)
         }
+        navigationView.menu.findItem(R.id.get_pro_option).isVisible = true
+
         drawerLayout.addDrawerListener(drawerToggle)
         landingHandler = LandingHandler(context)
         setupFab()

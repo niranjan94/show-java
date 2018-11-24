@@ -54,6 +54,7 @@ class CodeView @JvmOverloads constructor(
     private var language: String? = null
     private var fontSize = 16f
     private var wrapLine = false
+    private var darkMode = true
     private var onHighlightListener: OnHighlightListener? = null
     private var pinchDetector: ScaleGestureDetector? = null
     private var zoomEnabled = false
@@ -202,6 +203,24 @@ class CodeView @JvmOverloads constructor(
         return this
     }
 
+    fun isDarkMode(): Boolean {
+        return darkMode
+    }
+
+    fun setDarkMode(darkMode: Boolean): CodeView {
+        var bodyClass = "dark"
+        var style = "androidstudio"
+        if (!darkMode) {
+            bodyClass = "light"
+            style = "github-gist"
+        }
+        val styleUri = "file:///android_asset/codeview/highlightjs/styles/$style.css"
+        executeJavaScript("document.getElementById('stylesheet').setAttribute('href', '$styleUri')")
+        executeJavaScript("document.getElementById('body').setAttribute('class', '$bodyClass')")
+        this.darkMode = darkMode
+        return this
+    }
+
     fun isShowLineNumber(): Boolean {
         return showLineNumber
     }
@@ -241,11 +260,19 @@ class CodeView @JvmOverloads constructor(
         if (wrapLine) {
             wrapLineCss = "word-wrap: break-word; white-space: pre-wrap; word-break: break-all;"
         }
+
+        var bodyClass = "dark"
+        var style = "androidstudio"
+        if (!darkMode) {
+            bodyClass = "light"
+            style = "github-gist"
+        }
+
         return """
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel='stylesheet' href='file:///android_asset/codeview/highlightjs/styles/androidstudio.css'/>
+  <link id='stylesheet' rel='stylesheet' href='file:///android_asset/codeview/highlightjs/styles/$style.css'/>
   <link rel='stylesheet' href='file:///android_asset/codeview/styles.css'/>
   <style type="text/css">
     body {
@@ -258,7 +285,7 @@ class CodeView @JvmOverloads constructor(
   <script src='file:///android_asset/codeview/highlightjs/highlight.js'></script>
   <script src='file:///android_asset/codeview/script.js'></script>
 </head>
-<body>
+<body id='body' class='$bodyClass'>
 <pre><code class='$language' id='code-holder'>${insertLineNumber(escapeCode)}</code></pre>
 <script>highlightCode()</script>
 </body>

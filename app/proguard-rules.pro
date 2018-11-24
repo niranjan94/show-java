@@ -32,23 +32,23 @@
 -keep class android.support.** { *; }
 -keep interface android.support.** { *; }
 
--keep class jadx.** { *; }
--keep class org.benf.cfr.reader.** { *; }
--keep class com.googlecode.** { *; }
--keep class com.android.** { *; }
 
 -keepattributes *Annotation*
 -keepattributes Signature
 -keepattributes InnerClasses
 -keepattributes InnerClasses,EnclosingMethod
 
--keep class com.crashlytics.** { *; }
+-keep class com.googlecode.**
+-keep class com.android.**
 -keep class com.crashlytics.android.**
--keep class org.jetbrains.java.decompiler.** { *; }
--keep class org.jetbrains.java.decompiler.**
-
--keep class cz.msebera.android.httpclient.** { *; }
--keep class com.loopj.android.http.** { *; }
+-keep class org.objectweb.asm.**
+-keep class io.fabric.sdk.android.**
+-keep class com.crashlytics.android.**
+-keep class com.google.android.**
+-keep class ch.qos.logback.**
+-keep class kotlin.io.** { *; }
+-keep class com.njlabs.showjava.decompilers.** { *; }
+-keep class jadx.core.clsp.** { *; }
 
 -keepattributes SourceFile,LineNumberTable
 
@@ -75,3 +75,5 @@
 -dontwarn java.**
 -dontwarn org.jetbrains.java.decompiler.**
 -dontwarn com.crashlytics.**
+-dontwarn com.google.android.**
+-dontwarn ch.qos.logback.**
