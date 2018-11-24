@@ -40,6 +40,7 @@ import org.jf.dexlib2.dexbacked.DexBackedDexFile
 import java.io.BufferedInputStream
 import java.util.zip.ZipFile
 
+
 class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
     private var ignoredLibs: ArrayList<String> = ArrayList()
