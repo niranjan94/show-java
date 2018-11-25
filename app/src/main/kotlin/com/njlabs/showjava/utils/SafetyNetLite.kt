@@ -20,69 +20,112 @@ package com.njlabs.showjava.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.util.Base64
+import com.github.javiersantos.piracychecker.*
+import com.github.javiersantos.piracychecker.enums.InstallerID
 import com.njlabs.showjava.BuildConfig
 import io.michaelrocks.paranoid.Obfuscate
 import timber.log.Timber
 import java.security.MessageDigest
+import org.solovyev.android.checkout.Billing
+
 
 @Obfuscate
-class SafetyNetLite {
+class SafetyNetLite(val context: Context, val preferences: SharedPreferences) {
 
-    companion object {
+    private val packageName = "com.njlabs.showjava"
 
-        const val packageName = "com.njlabs.showjava"
-
-        @SuppressLint("PrivateApi")
-        @Throws(Exception::class)
-        fun getSystemProperty(name: String): String {
-            val systemPropertyClass = Class.forName("android.os.SystemProperties")
-            return systemPropertyClass
-                .getMethod("get", String::class.java)
-                .invoke(systemPropertyClass, name) as String
-        }
-
-        @Suppress("DEPRECATION")
-        @SuppressLint("PackageManagerGetSignatures")
-        fun checkAppSignature(context: Context) {
-            val packageInfo = context.packageManager.getPackageInfo(
-                context.packageName, PackageManager.GET_SIGNATURES
-            )
-            packageInfo.signatures.forEach { signature ->
-                val signatureBytes = signature.toByteArray()
-                val md = MessageDigest.getInstance("SHA")
-                md.update(signatureBytes)
-                val currentSignature = Base64.encodeToString(md.digest(), Base64.DEFAULT)
-                Timber.d("[currentSignature] %s", currentSignature)
+    fun isSafeExtended(allow: (() -> Unit), doNotAllow: (() -> Unit), onError: (() -> Unit)) {
+        context.piracyChecker {
+            enableGooglePlayLicensing(BuildConfig.PLAY_LICENSE_KEY)
+            if (BuildConfig.EXTENDED_VALIDATION) {
+                enableInstallerId(InstallerID.GOOGLE_PLAY)
+                enableUnauthorizedAppsCheck(true)
+                enableDebugCheck(true)
+                enableEmulatorCheck()
             }
-        }
-
-        fun isSafe(context: Context): Boolean {
-            if (context.packageName.compareTo(packageName) != 0) {
-                return false
+            saveResultToSharedPreferences(preferences, "is_safe")
+            callback {
+                doNotAllow { _, _ -> doNotAllow() }
+                allow { allow() }
+                onError { onError() }
             }
+        }.start()
+    }
 
-            val installer = context.packageManager.getInstallerPackageName(packageName)
-            if (installer == null || installer != "com.android.vending") {
-                return false
+    fun getBilling(): Billing {
+        return Billing(context, object : Billing.DefaultConfiguration() {
+            override fun getPublicKey(): String {
+                return BuildConfig.PLAY_LICENSE_KEY
             }
+        })
+    }
 
-            try {
-                val goldfish = getSystemProperty("ro.hardware").contains("goldfish")
-                val emu = getSystemProperty("ro.kernel.qemu").isNotEmpty()
-                val sdk = getSystemProperty("ro.product.model") == "sdk"
-                if (emu || goldfish || sdk) {
-                    return false
-                }
-            } catch (e: Exception) { }
+    fun getIapProductId(): String {
+        return BuildConfig.IAP_PRODUCT_ID
+    }
 
-            if (BuildConfig.DEBUG || 0 != context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
-                return false
-            }
-
+    fun hasPurchasedPro(): Boolean {
+        if (!this.isSafe()) {
             return false
         }
+        return preferences.getBoolean("show-java-pro", false)
+    }
+
+    @SuppressLint("PrivateApi")
+    @Throws(Exception::class)
+    fun getSystemProperty(name: String): String {
+        val systemPropertyClass = Class.forName("android.os.SystemProperties")
+        return systemPropertyClass
+            .getMethod("get", String::class.java)
+            .invoke(systemPropertyClass, name) as String
+    }
+
+    @Suppress("DEPRECATION")
+    @SuppressLint("PackageManagerGetSignatures")
+    fun checkAppSignature() {
+        val packageInfo = context.packageManager.getPackageInfo(
+            context.packageName, PackageManager.GET_SIGNATURES
+        )
+        packageInfo.signatures.forEach { signature ->
+            val signatureBytes = signature.toByteArray()
+            val md = MessageDigest.getInstance("SHA")
+            md.update(signatureBytes)
+            val currentSignature = Base64.encodeToString(md.digest(), Base64.DEFAULT)
+            Timber.d("[currentSignature] %s", currentSignature)
+        }
+    }
+
+    private fun isSafe(): Boolean {
+        if (context.packageName == packageName) {
+            return false
+        }
+
+        if (!BuildConfig.EXTENDED_VALIDATION) {
+            return true
+        }
+
+        val installer = context.packageManager.getInstallerPackageName(packageName)
+        if (installer == null || installer != "com.android.vending") {
+            return false
+        }
+
+        try {
+            val goldfish = getSystemProperty("ro.hardware").contains("goldfish")
+            val emu = getSystemProperty("ro.kernel.qemu").isNotEmpty()
+            val sdk = getSystemProperty("ro.product.model") == "sdk"
+            if (emu || goldfish || sdk) {
+                return false
+            }
+        } catch (e: Exception) { }
+
+        if (BuildConfig.DEBUG || 0 != context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
+            return false
+        }
+
+        return false
     }
 }

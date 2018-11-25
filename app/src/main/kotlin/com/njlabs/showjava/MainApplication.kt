@@ -29,7 +29,6 @@ import timber.log.Timber
 import androidx.multidex.MultiDex
 
 
-
 class MainApplication : Application() {
 
     /**

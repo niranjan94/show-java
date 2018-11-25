@@ -65,7 +65,7 @@
             android:title="@string/reportBug">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/niranjan94/show-java/issues/new"/>
+                android:data="https://github.com/niranjan94/show-java/issues"/>
         </Preference>
 
         <Preference

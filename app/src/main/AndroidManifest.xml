@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Show Java - A java/apk decompiler for android
   ~ Copyright (c) 2018 Niranjan Rajendran
   ~
@@ -42,14 +41,14 @@
         android:label="@string/appName"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
-        tools:replace="android:label,android:supportsRtl"
         android:supportsRtl="false"
         android:theme="@style/AppTheme.NoActionBar"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:label,android:supportsRtl">
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="${admobAppId}"/>
+            android:value="${admobAppId}" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -61,7 +60,8 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
-        <receiver android:name=".receivers.DecompilerActionReceiver"
+        <receiver
+            android:name=".receivers.DecompilerActionReceiver"
             android:permission="com.njlabs.showjava.permission.CANCEL_WORKER">
             <intent-filter>
                 <action android:name="com.njlabs.showjava.workers.action.STOP" />
@@ -91,8 +91,8 @@
 
         <activity
             android:name=".activities.decompiler.DecompilerActivity"
-            android:theme="@style/AppTheme.WithTransition"
-            android:label="@string/appName">
+            android:label="@string/appName"
+            android:theme="@style/AppTheme.WithTransition">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.apps.AppsActivity" />
@@ -111,8 +111,24 @@
         <activity
             android:name=".activities.explorer.viewer.ImageViewerActivity"
             android:theme="@style/SourceViewerTheme" />
-        <activity android:name=".activities.about.AboutActivity" />
-        <activity android:name=".activities.settings.SettingsActivity" />
+
+        <activity android:name=".activities.about.AboutActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.landing.LandingActivity" />
+        </activity>
+
+        <activity android:name=".activities.purchase.PurchaseActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.landing.LandingActivity" />
+        </activity>
+
+        <activity android:name=".activities.settings.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.landing.LandingActivity" />
+        </activity>
 
     </application>
 

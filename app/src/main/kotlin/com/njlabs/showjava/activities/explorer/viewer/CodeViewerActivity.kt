@@ -60,12 +60,17 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
 
         supportActionBar?.title = file.name
         val subtitle = file.canonicalPath.replace(
-            "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+             "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
             ""
         )
-        supportActionBar?.subtitle = subtitle
-        if (file.name.trim().equals("AndroidManifest.xml", true)) {
-            supportActionBar?.subtitle = packageName
+
+        // Workaround for a weird bug caused by Calligraphy
+        // https://github.com/chrisjenx/Calligraphy/issues/280#issuecomment-256444828
+        toolbar.post {
+            toolbar.subtitle = subtitle
+            if (file.name.trim().equals("AndroidManifest.xml", true)) {
+                toolbar.subtitle = packageName
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

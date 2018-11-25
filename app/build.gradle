@@ -69,16 +69,16 @@ android {
         resValue 'string', 'appNameGetPro', 'Get Show Java Pro'
         resValue 'string', 'appVersion', android.defaultConfig.versionName
         resValue 'string', 'appVersionExtended', "Version ${android.defaultConfig.versionName}"
-        resValue 'string', 'bugReportUri', 'https://github.com/niranjan94/show-java/issues'
-        resValue 'string', 'originalApplicationId', 'com.njlabs.showjava'
         resValue 'string', 'deviceId', props.getProperty('deviceId')
         resValue 'string', 'adUnitId', props.getProperty('adUnitId')
         resValue 'string', 'admobAppId', props.getProperty('admobAppId')
 
         buildConfigField 'String', 'GIT_SHA', "\"${gitSha}\""
         buildConfigField 'String', 'BUILD_TIME', "\"${buildTime}\""
-        buildConfigField 'String', 'PACKAGE_NAME', "\"${android.defaultConfig.applicationId.bytes.encodeBase64().toString()}\""
+        buildConfigField 'String', 'PLAY_LICENSE_KEY', "\"${props.getProperty('googlePlayLicenseKey')}\""
+        buildConfigField 'String', 'IAP_PRODUCT_ID', "\"${props.getProperty('IapProductId')}\""
         buildConfigField 'Boolean', 'IS_CI', "${isCi}"
+        buildConfigField 'Boolean', 'EXTENDED_VALIDATION', 'false'
 
         manifestPlaceholders = [admobAppId: props.getProperty('admobAppId')]
     }
@@ -120,10 +120,11 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
+            buildConfigField 'Boolean', 'EXTENDED_VALIDATION', 'true'
         }
         debug {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             testProguardFile 'test-proguard-rules.pro'
         }
     }
@@ -133,6 +134,12 @@ android {
         main.resources.srcDirs += 'src/main/config'
         test.java.srcDirs += 'src/test/kotlin'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.code.findbugs:jsr305:2.0.3'
     }
 }
 
@@ -225,12 +232,13 @@ dependencies {
     implementation('org.solovyev.android:checkout:1.2.1', {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
-    implementation 'com.github.javiersantos:PiracyChecker:1.2.4'
-    implementation 'com.github.kobakei:MaterialFabSpeedDial:1.2.1'
+    implementation ('com.github.kobakei:MaterialFabSpeedDial:1.2.1', {
+        exclude group: 'com.google.android.material', module: 'material'
+    })
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     implementation 'com.github.angads25:filepicker:1.1.1'
-
+    implementation 'com.github.javiersantos:PiracyChecker:1.2.4'
 }
 
 apply plugin: 'hiBeaver'

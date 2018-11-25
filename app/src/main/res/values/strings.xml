@@ -64,8 +64,8 @@
     <string name="noSupportedHandlerForFileType">No supported applications for this file type.</string>
     <string name="searchApps">Search apps</string>
     <string name="niranjan94" translatable="false">niranjan94</string>
-    <string name="apk_parse_failed">Failed to parse the selected apk file</string>
-    <string name="jar_unsupported">Decompiling JAR files is unsupported. Will be available soon.</string>
+    <string name="apkParseFailed">Failed to parse the selected apk file</string>
+    <string name="jarUnsupported">Decompiling JAR files is unsupported. Will be available soon.</string>
     <string name="unsupported_file">File is unsupported.</string>
     <string name="extractingJar">Extracting JAR from APK</string>
     <string name="decompilingToJava">Decompiling to java</string>
@@ -76,6 +76,15 @@
     <string name="wrapLines">Wrap lines</string>
     <string name="lineNumbers">Line numbers</string>
     <string name="zoomable">Zoomable</string>
+    <string name="errorUserCancelled">The process was cancelled.</string>
+    <string name="errorAlreadyOwned">You already own this item. Please close and re-open the application to load your purchases.</string>
+    <string name="errorItemUnavailable">This item is currently unavailable. Try again later.</string>
+    <string name="errorAccount">There was an error with your account.</string>
+    <string name="errorPayment">An error occurred while processing your payment. Please try again.</string>
+    <string name="errorRequest">An error occurred while processing your request.</string>
+    <string name="proNoAds">No advertisements</string>
+    <string name="proEarlyAccess">Early access to new features</string>
+    <string name="buyNow">Buy Now</string>
     <string-array name="decompilers">
         <item><xliff:g>CFR 0.135</xliff:g></item>
         <item><xliff:g>JaDX 0.8.0</xliff:g></item>

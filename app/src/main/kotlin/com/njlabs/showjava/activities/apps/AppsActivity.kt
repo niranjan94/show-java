@@ -29,6 +29,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
@@ -103,7 +104,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         appsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         historyListAdapter = AppsListAdapter(apps) { selectedApp: PackageInfo, view: View ->
             Timber.d(selectedApp.name)
-            if (selectedApp.name.toLowerCase().contains(getString(R.string.originalApplicationId).toLowerCase())) {
+            if (selectedApp.name.toLowerCase().contains(BuildConfig.APPLICATION_ID.toLowerCase())) {
                 Toast.makeText(
                     applicationContext,
                     getString(R.string.checkoutSourceLink),

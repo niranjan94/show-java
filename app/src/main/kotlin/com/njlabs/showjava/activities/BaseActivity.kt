@@ -39,7 +39,9 @@ import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
+import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import com.njlabs.showjava.activities.settings.SettingsActivity
+import com.njlabs.showjava.utils.SafetyNetLite
 import com.njlabs.showjava.utils.Tools
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -50,14 +52,16 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
 
     protected lateinit var toolbar: Toolbar
     protected lateinit var context: Context
-    private lateinit var prefs: SharedPreferences
+    protected lateinit var securePreferences: SharedPreferences
+    protected lateinit var safetyNet: SafetyNetLite
 
     abstract fun init(savedInstanceState: Bundle?)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = this
-        prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        securePreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        safetyNet = SafetyNetLite(context, securePreferences)
 
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             EasyPermissions.requestPermissions(
@@ -113,7 +117,6 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                 } catch (ignored: PackageManager.NameNotFoundException) {
 
                 }
-
             }
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -149,7 +152,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     }
 
     private fun isPro(): Boolean {
-        return false
+        return safetyNet.hasPurchasedPro()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -168,13 +171,17 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                 return true
             }
             R.id.bug_report_option -> {
-                val uri = Uri.parse(getString(R.string.bugReportUri))
+                val uri = Uri.parse("https://github.com/niranjan94/show-java/issues")
                 startActivity(Intent(Intent.ACTION_VIEW, uri))
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                 return true
             }
             R.id.settings_option -> {
                 startActivity(Intent(baseContext, SettingsActivity::class.java))
+                return true
+            }
+            R.id.get_pro_option -> {
+                startActivity(Intent(baseContext, PurchaseActivity::class.java))
                 return true
             }
         }

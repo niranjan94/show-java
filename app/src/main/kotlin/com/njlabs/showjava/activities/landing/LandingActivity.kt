@@ -37,13 +37,11 @@ import com.njlabs.showjava.activities.apps.AppsActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.data.SourceInfo
-import com.njlabs.showjava.utils.SafetyNetLite
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
-import java.sql.Time
 
 
 class LandingActivity : BaseActivity() {
