@@ -54,6 +54,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         multiDexEnabled true
+        multiDexKeepProguard file('multidex-config.pro')
 
         applicationId 'com.njlabs.showjava'
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild

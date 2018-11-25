@@ -18,18 +18,16 @@
 
 package com.njlabs.showjava
 
-import android.app.Application
-import android.content.Context
 import com.google.android.gms.ads.MobileAds
 import com.njlabs.showjava.utils.logging.ProductionTree
 import io.github.inflationx.calligraphy3.CalligraphyConfig
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor
 import io.github.inflationx.viewpump.ViewPump
 import timber.log.Timber
-import androidx.multidex.MultiDex
+import androidx.multidex.MultiDexApplication
 
 
-class MainApplication : Application() {
+class MainApplication : MultiDexApplication() {
 
     /**
      * Setup fonts, plant the correct logging tree for Timber and init ads
@@ -55,13 +53,5 @@ class MainApplication : Application() {
             Timber.plant(ProductionTree())
         }
         MobileAds.initialize(this, getString(R.string.admobAppId))
-    }
-
-    /**
-     * Initialize MultiDex
-     */
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
     }
 }
