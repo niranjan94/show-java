@@ -1,4 +1,5 @@
 /*
+ //noinspection GradleDependency
  * Show Java - A java/apk decompiler for android
  * Copyright (c) 2018 Niranjan Rajendran
  *
@@ -127,8 +128,8 @@ android {
             buildConfigField 'Boolean', 'EXTENDED_VALIDATION', 'true'
         }
         debug {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             testProguardFile 'test-proguard-rules.pro'
         }
     }
@@ -182,7 +183,7 @@ dependencies {
     })
 
     // APACHE COMMONS LIBRARIES
-    implementation 'commons-io:commons-io:2.6'
+    implementation 'commons-io:commons-io:2.5' // Fix to 2.5 for compatibility
     implementation 'commons-cli:commons-cli:1.4'
 
     // DEX2JAR AND FRIENDS
@@ -201,8 +202,9 @@ dependencies {
     implementation files('libs/android-5.1.jar')
     implementation files('libs/jadx-core-0.8.0.jar')
     implementation 'org.slf4j:slf4j-api:1.7.25'
-    implementation 'ch.qos.logback:logback-classic:1.2.3'
-    implementation 'ch.qos.logback:logback-core:1.2.3'
+    implementation 'org.slf4j:slf4j-simple:1.7.25'
+    // implementation 'ch.qos.logback:logback-classic:1.2.3'
+    // implementation 'ch.qos.logback:logback-core:1.2.3'
 
     implementation 'uk.com.robust-it:cloning:1.9.10'
 

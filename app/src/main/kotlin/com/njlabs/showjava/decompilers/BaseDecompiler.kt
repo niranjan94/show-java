@@ -140,13 +140,16 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             notificationManager.createNotificationChannel(channel)
         }
 
+        val actionIcon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            R.drawable.ic_stop_black else R.drawable.ic_stat_stop
+
         val builder = NotificationCompat.Builder(context, Constants.WORKER.NOTIFICATION_CHANNEL)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setContentTitle(packageLabel)
             .setContentText(title)
-            .setSmallIcon(R.drawable.ic_code_black)
+            .setSmallIcon(R.drawable.ic_stat_code)
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-            .addAction(R.drawable.ic_stop_black, "Stop decompiler", pendingIntentForStop)
+            .addAction(actionIcon, "Stop decompiler", pendingIntentForStop)
             .setOngoing(true)
             .setAutoCancel(false)
             .setPriority(NotificationCompat.PRIORITY_LOW)

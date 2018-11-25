@@ -1,4 +1,6 @@
 -keep class com.njlabs.**
 -keep class com.njlabs.** { *; }
+-keep class androidx.test.**
+-keep class androidx.test.** { *; }
 -keep class androidx.multidex.**
 -keep class androidx.multidex.** { *; }

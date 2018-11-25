@@ -6,7 +6,10 @@
 -dontnote junit.framework.**
 -dontnote junit.runner.**
 
--dontwarn android.test.**
+-keep class androidx.test.**
+-keep class androidx.test.** { *; }
+
+-dontwarn androidx.test.**
 -dontwarn androidx.**
 -dontwarn android.support.test.**
 -dontwarn org.junit.**

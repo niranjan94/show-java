@@ -14,8 +14,8 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 ## Features
 
-- Select either **CFR 0.135**, **JaDX 0.8.0** or **FernFlower [e9989d15e3](https://github.com/fesh0r/fernflower/tree/e9989d15e3c1ad1ae28e168f306becfd0abe101c) (analytical decompiler)** to use as the decompiler (more to come).
-- Runs directly on an android device (4.x and above).
+- Select either **CFR 0.135**, **JaDX 0.8.0** or **FernFlower [`e9989d15e3`](https://github.com/fesh0r/fernflower/tree/e9989d15e3c1ad1ae28e168f306becfd0abe101c) (analytical decompiler)** to use as the decompiler (more to come).
+- Runs directly on an android device (4.1.x and above).
 - Select apk from sdcard (or) from a list of installed applications.
 - Easy to use.
 - Decompiles resources too (layouts, Drawables, Menus, AndroidManifest, image assets).
@@ -24,6 +24,26 @@ This is a Decompiler that extracts the source code of an Android application (in
 - Simple source browser with a summary of all decompilation errors.
 - Each decompiled source file has commented references to classes that could not be decompiled.
 - Share the decompiled source easily with the built in archive + share mechanism.
+
+## Compatibility Matrix
+
+### Version 3.0
+
+|             | CFR 0.135          | JaDX 0.8.0         | Fernflower         |
+|-------------|--------------------|--------------------|--------------------|
+| Oreo        | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Nougat      | :white_check_mark: |                    | :white_check_mark: |
+| Marshmallow | :white_check_mark: |                    |                    |
+| Lollipop    | :white_check_mark: |                    |                    |
+| KitKat      | :white_check_mark: |                    |                    |
+| Jelly Bean  | :white_check_mark: |                    |                    |
+
+### Version 2.0
+
+|             | CFR 0.110          | JaDX 0.6.1         | Fernflower         |
+|-------------|--------------------|--------------------|--------------------|
+| ICS & Above | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+
 
 ## Known Issues
 1. Does not work with system applications in most of the phones (especially ones that are not de-odexed).
@@ -61,9 +81,9 @@ To obtain the software under a different license, please contact [Niranjan Rajen
 
 1. A Big-Huge Thanks to Lee Benfield ([lee@benf.org](mailto:lee@benf.org)) for his awesome CFR - Class File Reader
 2. Panxiaobo ([pxb1988@gmail.com](mailto:pxb1988@gmail.com)) for dex2jar.
-3. [Liu Dong](https://github.com/xiaxiaocao) for apk-parser.
+3. [Hsiafan](https://github.com/hsiafan/apk-parser) for apk-parser.
 4. [Ben Gruver](https://github.com/JesusFreke/) for dexlib2.
-5. [skylot](https://github.com/skylot) for JaDX.
+5. [skylot](https://github.com/skylot/jadx) for JaDX.
 6. [JetBrains](https://github.com/JetBrains) for FernFlower analytical decompiler.
 
 > Android, Google Play and the Google Play logo are trademarks of Google Inc.
