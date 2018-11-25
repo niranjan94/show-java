@@ -128,8 +128,8 @@ android {
             buildConfigField 'Boolean', 'EXTENDED_VALIDATION', 'true'
         }
         debug {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             testProguardFile 'test-proguard-rules.pro'
         }
     }
@@ -256,7 +256,7 @@ import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
 hiBeaver {
-    hiBeaverModifyName = 'myHibeaverTest'
+    hiBeaverModifyName = 'showJavaDexModifications'
     showHelp = false
     keepQuiet = false
     watchTimeConsume = false
@@ -287,6 +287,29 @@ hiBeaver {
                                             '(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V',
                                             false
                                     )
+                                }
+                            }
+                            return adapter
+                    }]
+            ],
+            /*
+             * JaDX uses java.nio.* classes for checking if the file system is case sensitive or not.
+             * But java.nio.* classes are not available on on Android API < 26.
+             * So, we will patch the method to return true thereby skipping all java.nio.* usages.
+             *
+             * Note: this needs to be tested and adjusted for every update of JaDX.
+             */
+            'jadx.core.utils.files.FileUtils': [
+                    ['methodName': 'isCaseSensitiveFS', 'methodDesc': '(Ljava/io/File;)Z', 'adapter': {
+                        ClassVisitor cv, int access, String name, String desc, String signature, String[] exceptions ->
+                            MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions)
+                            MethodVisitor adapter = new MethodLogAdapter(methodVisitor) {
+                                @Override
+                                void visitCode() {
+                                    methodVisitor.visitCode()
+                                    methodVisitor.visitInsn(Opcodes.ICONST_1)
+                                    methodVisitor.visitInsn(Opcodes.IRETURN)
+                                    methodVisitor.visitEnd()
                                 }
                             }
                             return adapter

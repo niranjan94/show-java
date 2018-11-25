@@ -42,6 +42,7 @@ import com.njlabs.showjava.workers.DecompilerWorker
 import timber.log.Timber
 import java.io.File
 import java.io.PrintStream
+import java.nio.file.Files
 import java.util.UUID
 
 abstract class BaseDecompiler(val context: Context, val data: Data) {
@@ -125,7 +126,6 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         stopIntent.action = Constants.WORKER.ACTION.STOP
         stopIntent.putExtra("id", id)
         stopIntent.putExtra("packageFilePath", inputPackageFile.canonicalFile)
-
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val pendingIntentForStop = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)

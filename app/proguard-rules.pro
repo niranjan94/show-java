@@ -46,6 +46,7 @@
 -keep class com.crashlytics.android.**
 -keep class com.google.android.**
 -keep class ch.qos.logback.**
+-keep class com.android.dex.** { *; }
 -keep class kotlin.io.** { *; }
 -keep class com.njlabs.showjava.MainApplication { *; }
 -keep class com.njlabs.showjava.decompilers.** { *; }
