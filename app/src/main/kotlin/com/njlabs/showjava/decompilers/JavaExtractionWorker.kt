@@ -124,7 +124,7 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
             return exit(e)
         }
 
-        PackageSourceTools.setJavaSourceStatus(workingDirectory.canonicalPath, false)
+        PackageSourceTools.setJavaSourceStatus(workingDirectory.canonicalPath, true)
         return ListenableWorker.Result.SUCCESS
     }
 }

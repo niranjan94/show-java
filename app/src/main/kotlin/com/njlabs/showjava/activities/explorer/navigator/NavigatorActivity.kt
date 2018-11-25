@@ -20,8 +20,8 @@ package com.njlabs.showjava.activities.explorer.navigator
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.Toast
@@ -65,22 +65,14 @@ class NavigatorActivity : BaseActivity() {
             }
         }
 
-        Timber.d("selectedApp: %s", selectedApp?.sourceDirectory)
-
-        // selectedApp ?: finish()
         currentDirectory = currentDirectory ?: selectedApp?.sourceDirectory
-        // currentDirectory ?: finish()
-
-        // currentDirectory = File("${Environment.getExternalStorageDirectory()}/show-java/")
         setupList()
         filesListAdapter.updateData(fileItems)
-        Timber.d(currentDirectory?.canonicalPath)
         currentDirectory?.let { populateList(it) }
     }
 
     private fun setListVisibility(isListVisible: Boolean = true) {
         val listGroupVisibility = if (isListVisible) View.VISIBLE else View.GONE
-        // val defaultGroupVisibility = if (isListVisible) View.GONE else View.VISIBLE
         filesList.visibility = listGroupVisibility
     }
 
@@ -93,7 +85,7 @@ class NavigatorActivity : BaseActivity() {
             .doOnError { Timber.e(it) }
             .subscribe {
                 if (selectedApp?.sourceDirectory != startDirectory) {
-                    it.add(0, FileItem(File(startDirectory.parent), "Parent directory", "parent"))
+                    // it.add(0, FileItem(File(startDirectory.parent), "Parent directory", "parent"))
                 }
                 updateList(it)
             }
@@ -142,7 +134,11 @@ class NavigatorActivity : BaseActivity() {
                         val mimeType =
                             mimeTypeDetector.getMimeTypeFromExtension(selectedFile.file.extension)
                         fileIntent.setDataAndType(
-                            FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", selectedFile.file),
+                            FileProvider.getUriForFile(
+                                context,
+                                context.applicationContext.packageName + ".provider",
+                                selectedFile.file
+                            ),
                             mimeType
                         )
                         fileIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -172,8 +168,21 @@ class NavigatorActivity : BaseActivity() {
         }
         currentDirectory?.let {
             bundle.putString("currentDirectory", it.canonicalPath)
-
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            if (currentDirectory?.canonicalPath == selectedApp?.sourceDirectory?.canonicalPath) {
+                finish()
+                return true
+            }
+            currentDirectory?.parent ?.let {
+                populateList(File(it))
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {
