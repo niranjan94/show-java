@@ -28,6 +28,8 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Environment
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.DEFAULT_SOUND
+import androidx.core.app.NotificationCompat.DEFAULT_VIBRATE
 import androidx.work.Data
 import androidx.work.ListenableWorker
 import androidx.work.WorkManager
@@ -94,7 +96,12 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         processNotifier?.updateTitleText(title, message)
         this.broadcastStatus(title, message)
     }
-    fun sendStatus(title: String) {
+
+    fun sendStatus(message: String) {
+        sendStatus(context.getString(R.string.processing), message)
+    }
+
+    fun setStep(title: String) {
         sendStatus(title, "")
     }
 
@@ -134,9 +141,10 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             val channel = NotificationChannel(
                 Constants.WORKER.NOTIFICATION_CHANNEL,
                 "Decompiler notification",
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_LOW
             )
-            channel.importance = NotificationManager.IMPORTANCE_LOW
+            channel.setSound(null, null)
+            channel.enableVibration(false)
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -151,11 +159,17 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
             .addAction(actionIcon, "Stop decompiler", pendingIntentForStop)
             .setOngoing(true)
+            .setSound(null)
             .setAutoCancel(false)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setProgress(0, 0, true)
 
         val notification = builder.build()
+        notification.sound = null
+        notification.vibrate = null
+        notification.defaults = notification.defaults and DEFAULT_SOUND.inv()
+        notification.defaults = notification.defaults and DEFAULT_VIBRATE.inv()
+
         notificationManager.notify(id, Constants.WORKER.NOTIFICATION_ID, notification)
         processNotifier =
                 Notifier(notificationManager, builder, Constants.WORKER.NOTIFICATION_ID, id)

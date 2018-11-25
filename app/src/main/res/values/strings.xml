@@ -101,5 +101,6 @@
     <string name="viewOpenSourceLicenses">View Open source licenses</string>
     <string name="openSourceLicense">Open source licenses</string>
     <string name="tapViewOpenSourceLicenses">Tap to view open source licenses</string>
+    <string name="startingDexToJar">Starting DEX to JAR Conversion</string>
 
 </resources>

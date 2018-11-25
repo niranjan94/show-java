@@ -21,3 +21,4 @@ build
 google-services.json
 /app/standard/
 tmp
+dependencies.txt

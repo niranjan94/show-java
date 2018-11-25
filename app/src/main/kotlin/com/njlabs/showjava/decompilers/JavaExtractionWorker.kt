@@ -100,11 +100,14 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
     override fun doWork(): ListenableWorker.Result {
         Timber.tag("JavaExtraction")
-        buildNotification(context.getString(R.string.decompilingToJava))
+
+        context.getString(R.string.decompilingToJava).let {
+            buildNotification(it)
+            setStep(it)
+        }
 
         super.doWork()
 
-        sendStatus("jar2java")
 
         if (decompiler != "jadx") {
             if (outputDexFile.exists() && outputDexFile.isFile) {

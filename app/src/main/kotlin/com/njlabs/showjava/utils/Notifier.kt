@@ -33,9 +33,13 @@ class Notifier(
     var time: Long = 0
 
     fun updateTitle(title: String) {
-        notificationBuilder.setContentTitle(title)
-        notificationBuilder.setProgress(0, 0, true)
-        notificationManager.notify(notificationTag, notificationId, notificationBuilder.build())
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - time >= 500) {
+            notificationBuilder.setContentTitle(title)
+            notificationBuilder.setProgress(0, 0, true)
+            notificationManager.notify(notificationTag, notificationId, notificationBuilder.build())
+            time = currentTime
+        }
     }
 
     fun updateText(text: String) {
@@ -49,10 +53,14 @@ class Notifier(
     }
 
     fun updateTitleText(title: String, text: String) {
-        notificationBuilder.setContentTitle(title)
-        notificationBuilder.setContentText(text)
-        notificationBuilder.setProgress(0, 0, true)
-        notificationManager.notify(notificationTag, notificationId, notificationBuilder.build())
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - time >= 500) {
+            notificationBuilder.setContentTitle(title)
+            notificationBuilder.setContentText(text)
+            notificationBuilder.setProgress(0, 0, true)
+            notificationManager.notify(notificationTag, notificationId, notificationBuilder.build())
+            time = currentTime
+        }
     }
 
     fun updateIntent(pendingIntent: PendingIntent) {

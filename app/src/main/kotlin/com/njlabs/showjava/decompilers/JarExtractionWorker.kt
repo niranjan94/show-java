@@ -93,7 +93,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
                         val currentClass = classDef.type
                         sendStatus(
                             context.getString(R.string.optimizingClasses),
-                            currentClass.replace("Processing ".toRegex(), "")
+                            currentClass.replace("Processing ", "")
                         )
                         classes.add(classDef)
                     }
@@ -120,8 +120,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
      */
     @Throws(Exception::class)
     private fun convertDexToJar() {
-        Timber.i("Starting DEX to JAR Conversion")
-        sendStatus("dex2jar")
+        setStep(context.getString(R.string.startingDexToJar))
 
         val reuseReg = false // reuse register while generate java .class file
         val topologicalSort1 = false // same with --topological-sort/-ts
@@ -143,7 +142,6 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
                 .verbose(verbose)
             dex2jar.exceptionHandler = dexExceptionHandlerMod
             dex2jar.to(outputJarFile)
-            Timber.i("Clearing cache")
             outputDexFile.delete()
         }
     }
@@ -167,7 +165,10 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
     override fun doWork(): ListenableWorker.Result {
         Timber.tag("JarExtraction")
-        buildNotification(context.getString(R.string.extractingJar))
+        context.getString(R.string.extractingJar).let {
+            buildNotification(it)
+            setStep(it)
+        }
 
         super.doWork()
 

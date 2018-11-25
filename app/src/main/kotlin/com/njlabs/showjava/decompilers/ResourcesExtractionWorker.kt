@@ -58,7 +58,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         while (entries.hasMoreElements()) {
             val zipEntry = entries.nextElement()
             if (!zipEntry.isDirectory && FilenameUtils.isExtension(zipEntry.name, images)) {
-                sendStatus("progress_stream", zipEntry.name)
+                sendStatus(zipEntry.name)
                 writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
             }
         }
@@ -74,10 +74,10 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
             if (!zipEntry.isDirectory
                 && zipEntry.name != "AndroidManifest.xml"
                 && FilenameUtils.isExtension(zipEntry.name, "xml")) {
-                sendStatus("progress_stream", zipEntry.name)
+                sendStatus(zipEntry.name)
                 writeXML(zipEntry.name)
             } else if (!zipEntry.isDirectory && FilenameUtils.isExtension(zipEntry.name, images)) {
-                sendStatus("progress_stream", zipEntry.name)
+                sendStatus(zipEntry.name)
                 writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
             }
         }
@@ -164,7 +164,10 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
 
     override fun doWork(): ListenableWorker.Result {
         Timber.tag("ResourcesExtraction")
-        buildNotification(context.getString(R.string.extractingResources))
+        context.getString(R.string.extractingResources).let {
+            buildNotification(it)
+            setStep(it)
+        }
 
         super.doWork()
 

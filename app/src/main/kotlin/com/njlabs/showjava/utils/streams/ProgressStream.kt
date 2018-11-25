@@ -37,12 +37,15 @@ class ProgressStream(val decompiler: BaseDecompiler) : OutputStream() {
         )
             .replace("\n", "")
             .replace("\r", "")
-            .replace("INFO:", "")
-            .replace("ERROR:", "")
-            .replace("WARN:", "")
+            .replace("INFO:".toRegex(RegexOption.IGNORE_CASE), "")
+            .replace("ERROR:".toRegex(RegexOption.IGNORE_CASE), "")
+            .replace("WARN:".toRegex(RegexOption.IGNORE_CASE), "")
             .replace("\n\r", "")
             .replace("... done", "")
             .replace("at", "")
+            .replace("Processing ".toRegex(RegexOption.IGNORE_CASE), "")
+            .replace("Decompiling ".toRegex(RegexOption.IGNORE_CASE), "")
+            .replace("Extracting ".toRegex(RegexOption.IGNORE_CASE), "")
             .trim()
 
         if (str.startsWith("[ignored]")) {
