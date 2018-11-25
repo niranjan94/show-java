@@ -36,6 +36,7 @@ import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity

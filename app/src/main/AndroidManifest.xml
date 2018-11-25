@@ -130,6 +130,12 @@
                 android:value=".activities.landing.LandingActivity" />
         </activity>
 
+        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.about.AboutActivity"/>
+        </activity>
     </application>
 
 </manifest>

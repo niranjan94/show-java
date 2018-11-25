@@ -20,6 +20,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'io.michaelrocks.paranoid'
 
 def versionMajor = 3
@@ -69,6 +70,8 @@ android {
         resValue 'string', 'appNameGetPro', 'Get Show Java Pro'
         resValue 'string', 'appVersion', android.defaultConfig.versionName
         resValue 'string', 'appVersionExtended', "Version ${android.defaultConfig.versionName}"
+        resValue 'string', 'appVersionExtendedWithHash', "Version ${android.defaultConfig.versionName} ($gitSha)"
+
         resValue 'string', 'deviceId', props.getProperty('deviceId')
         resValue 'string', 'adUnitId', props.getProperty('adUnitId')
         resValue 'string', 'admobAppId', props.getProperty('admobAppId')
@@ -123,8 +126,8 @@ android {
             buildConfigField 'Boolean', 'EXTENDED_VALIDATION', 'true'
         }
         debug {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             testProguardFile 'test-proguard-rules.pro'
         }
     }
@@ -168,6 +171,7 @@ dependencies {
     implementation "androidx.legacy:legacy-support-core-utils:$androidxVersion"
     implementation "androidx.core:core:$androidxVersion"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'com.google.android.gms:play-services-oss-licenses:16.0.1'
 
     implementation("android.arch.work:work-runtime-ktx:$workVersion", {
         exclude group: 'com.google.guava', module: 'listenablefuture'

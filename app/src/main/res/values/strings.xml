@@ -64,6 +64,7 @@
     <string name="noSupportedHandlerForFileType">No supported applications for this file type.</string>
     <string name="searchApps">Search apps</string>
     <string name="niranjan94" translatable="false">niranjan94</string>
+    <string name="niranjan94Username" translatable="false">\@niranjan94</string>
     <string name="apkParseFailed">Failed to parse the selected apk file</string>
     <string name="jarUnsupported">Decompiling JAR files is unsupported. Will be available soon.</string>
     <string name="unsupported_file">File is unsupported.</string>
@@ -85,15 +86,20 @@
     <string name="proNoAds">No advertisements</string>
     <string name="proEarlyAccess">Early access to new features</string>
     <string name="buyNow">Buy Now</string>
-    <string-array name="decompilers">
+    <string-array name="decompilers" translatable="false">
         <item><xliff:g>CFR 0.135</xliff:g></item>
         <item><xliff:g>JaDX 0.8.0</xliff:g></item>
         <item><xliff:g>FernFlower e9989d15e3 (analytical decompiler)</xliff:g></item>
     </string-array>
 
-    <string-array name="decompilersValues">
+    <string-array name="decompilersValues" translatable="false">
         <item><xliff:g>cfr</xliff:g></item>
         <item><xliff:g>jadx</xliff:g></item>
         <item><xliff:g>fernflower</xliff:g></item>
     </string-array>
+
+    <string name="viewOpenSourceLicenses">View Open source licenses</string>
+    <string name="openSourceLicense">Open source licenses</string>
+    <string name="tapViewOpenSourceLicenses">Tap to view open source licenses</string>
+
 </resources>

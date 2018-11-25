@@ -32,6 +32,7 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.26.1'
         classpath 'com.bryansharp:hibeaver:1.2.7'
         classpath 'io.michaelrocks:paranoid-gradle-plugin:0.2.4'
+        classpath 'com.google.android.gms:oss-licenses-plugin:0.9.4'
     }
 }
 
