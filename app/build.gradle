@@ -314,22 +314,6 @@ hiBeaver {
                             }
                             return adapter
                     }]
-            ],
-
-            'com.strobel.compilerservices.RuntimeHelpers': [
-                    ['methodName': 'ensureClassInitialized', 'methodDesc': '(Ljava/lang/Class;)V', 'adapter': {
-                        ClassVisitor cv, int access, String name, String desc, String signature, String[] exceptions ->
-                            MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions)
-                            MethodVisitor adapter = new MethodLogAdapter(methodVisitor) {
-                                @Override
-                                void visitCode() {
-                                    methodVisitor.visitCode()
-                                    methodVisitor.visitInsn(Opcodes.RETURN)
-                                    methodVisitor.visitEnd()
-                                }
-                            }
-                            return adapter
-                    }]
             ]
     ]
 }

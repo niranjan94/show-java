@@ -18,16 +18,28 @@
 
 package com.njlabs.showjava.activities.decompiler
 
+import android.os.Build
 import android.os.Bundle
-import androidx.work.WorkManager
-import com.njlabs.showjava.Constants
+import android.view.LayoutInflater
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import kotlinx.android.synthetic.main.activity_decompiler.*
+import kotlinx.android.synthetic.main.layout_pick_decompiler_list_item.view.*
+import timber.log.Timber
 
 
 class DecompilerActivity : BaseActivity() {
+
+    private fun isAvailable(decompiler: String): Boolean {
+        return when (decompiler) {
+            "cfr" -> true
+            "jadx" -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+            "fernflower" -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+            else -> false
+        }
+    }
+
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_decompiler)
         val packageFilePath = intent.getStringExtra("packageFilePath")
@@ -38,7 +50,21 @@ class DecompilerActivity : BaseActivity() {
         itemSecondaryLabel.text = if (packageInfo.versionName != null)
             packageInfo.versionName else packageInfo.versionCode.toString()
 
-        startProcess()
+        val decompilersValues = resources.getStringArray(R.array.decompilersValues)
+        val decompilers = resources.getStringArray(R.array.decompilers)
+        val decompilerDescriptions = resources.getStringArray(R.array.decompilerDescriptions)
+
+        decompilersValues.forEachIndexed { index, decompiler ->
+            val view = LayoutInflater.from(pickerList.context)
+                .inflate(R.layout.layout_pick_decompiler_list_item, pickerList, false)
+            view.decompilerName.text = decompilers[index]
+            view.decompilerDescription.text = decompilerDescriptions[index]
+            view.decompilerItemCard.cardElevation = 1F
+            view.decompilerItemCard.setOnClickListener {
+                Timber.d("Clicked %s", decompiler)
+            }
+            pickerList.addView(view)
+        }
     }
 
     fun startProcess() {

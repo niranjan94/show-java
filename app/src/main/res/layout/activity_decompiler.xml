@@ -83,14 +83,15 @@
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
-        android:id="@+id/welcomeLayout"
+        android:id="@+id/primaryLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:transitionName="none"
+        tools:ignore="UnusedAttribute"
         android:layout_above="@id/adView"
         android:layout_below="@id/itemCard"
         android:padding="8dp"
         android:orientation="vertical">
-
 
         <TextView
             android:id="@+id/textView"
@@ -98,6 +99,20 @@
             android:layout_height="wrap_content"
             android:text="@string/pickDecompiler"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp">
+
+            <LinearLayout
+                android:id="@+id/pickerList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 

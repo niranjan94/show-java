@@ -55,6 +55,9 @@
         <item name="android:textColorPrimary">@color/grey_900</item>
     </style>
 
+    <style name="WindowAnimationDefault">
+    </style>
+
     <style name="WindowAnimationTransition">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>

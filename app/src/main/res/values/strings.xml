@@ -89,13 +89,19 @@
     <string-array name="decompilers" translatable="false">
         <item><xliff:g>CFR 0.135</xliff:g></item>
         <item><xliff:g>JaDX 0.8.0</xliff:g></item>
-        <item><xliff:g>FernFlower e9989d15e3 (analytical decompiler)</xliff:g></item>
+        <item><xliff:g>FernFlower e9989d15e3</xliff:g></item>
     </string-array>
 
     <string-array name="decompilersValues" translatable="false">
         <item><xliff:g>cfr</xliff:g></item>
         <item><xliff:g>jadx</xliff:g></item>
         <item><xliff:g>fernflower</xliff:g></item>
+    </string-array>
+
+    <string-array name="decompilerDescriptions">
+        <item><xliff:g>A fast decompiler that can decompile modern Java features up to and including much of Java 9, 10 and beyond</xliff:g></item>
+        <item><xliff:g>A decompiler optimised for working with Android dex/apk files</xliff:g></item>
+        <item><xliff:g>The first working analytical decompiler for Java</xliff:g></item>
     </string-array>
 
     <string name="viewOpenSourceLicenses">View Open source licenses</string>
