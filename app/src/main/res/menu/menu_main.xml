@@ -21,12 +21,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.njlabs.showjava.activities.landing.LandingActivity">
 
+    <group android:id="@+id/code_explorer_group"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/share_code"
+            android:icon="@drawable/ic_share_white"
+            android:orderInCategory="0"
+            android:title="@string/shareSource"
+            android:visible="false"
+            app:showAsAction="always"
+            tools:ignore="AlwaysShowAction" />
+
+        <item
+            android:id="@+id/delete_code"
+            android:icon="@drawable/ic_delete_white"
+            android:orderInCategory="0"
+            android:title="@string/deleteSource"
+            android:visible="false"
+            app:showAsAction="always"
+            tools:ignore="AlwaysShowAction" />
+    </group>
+
     <group android:id="@+id/code_view_group"
         android:checkableBehavior="all">
 
         <item
             android:id="@+id/invert_colors"
-            android:icon="@drawable/ic_action_invert_colors"
+            android:icon="@drawable/ic_invert_colors_white"
             android:orderInCategory="0"
             android:title="@string/invertBackgroundColor"
             android:visible="false"

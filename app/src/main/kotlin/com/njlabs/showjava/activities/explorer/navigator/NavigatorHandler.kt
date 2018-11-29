@@ -20,6 +20,7 @@ package com.njlabs.showjava.activities.explorer.navigator
 
 import android.content.Context
 import com.njlabs.showjava.data.FileItem
+import com.njlabs.showjava.utils.ZipUtils
 import com.njlabs.showjava.utils.humanReadableByteCount
 import io.reactivex.Observable
 import java.io.File
@@ -54,6 +55,12 @@ class NavigatorHandler(private var context: Context) {
             files.sortBy { it.name?.toLowerCase() }
             directories.addAll(files)
             directories
+        }
+    }
+
+    fun archiveDirectory(sourceDirectory: File, packageName: String): Observable<File> {
+        return Observable.fromCallable {
+            ZipUtils.zipDir(sourceDirectory, packageName)
         }
     }
 }

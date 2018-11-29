@@ -21,6 +21,7 @@ package com.njlabs.showjava.activities.explorer.navigator
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.MimeTypeMap
@@ -39,6 +40,11 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_navigator.*
 import timber.log.Timber
 import java.io.File
+import androidx.appcompat.app.AlertDialog
+import org.apache.commons.io.FileUtils
+import com.crashlytics.android.Crashlytics
+import java.io.IOException
+import android.app.ProgressDialog
 
 
 class NavigatorActivity : BaseActivity() {
@@ -47,6 +53,7 @@ class NavigatorActivity : BaseActivity() {
     private lateinit var filesListAdapter: FilesListAdapter
     private var currentDirectory: File? = null
     private var filesLoadSubscription: Disposable? = null
+    private var zipProgressDialog: ProgressDialog? = null
 
     private var fileItems: ArrayList<FileItem>? = ArrayList()
     private var selectedApp: SourceInfo? = null
@@ -171,18 +178,99 @@ class NavigatorActivity : BaseActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        menu.findItem(R.id.share_code).isVisible = true
+        menu.findItem(R.id.delete_code).isVisible = true
+        return true
+    }
+
+    private fun showProgressDialog() {
+        if (zipProgressDialog == null) {
+            zipProgressDialog = ProgressDialog(this)
+            zipProgressDialog!!.isIndeterminate = false
+            zipProgressDialog!!.setCancelable(false)
+            zipProgressDialog!!.setInverseBackgroundForced(false)
+            zipProgressDialog!!.setCanceledOnTouchOutside(false)
+            zipProgressDialog!!.setMessage(getString(R.string.compressingSource))
+        }
+        zipProgressDialog!!.show()
+    }
+
+    private fun dismissProgressDialog() {
+        if (zipProgressDialog != null && zipProgressDialog!!.isShowing) {
+            zipProgressDialog!!.dismiss()
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            if (currentDirectory?.canonicalPath == selectedApp?.sourceDirectory?.canonicalPath) {
-                finish()
-                return true
+        when (item.itemId) {
+            android.R.id.home -> {
+                if (currentDirectory?.canonicalPath == selectedApp?.sourceDirectory?.canonicalPath) {
+                    finish()
+                    return true
+                }
+                currentDirectory?.parent ?.let {
+                    populateList(File(it))
+                    return true
+                }
             }
-            currentDirectory?.parent ?.let {
-                populateList(File(it))
-                return true
+            R.id.share_code -> {
+                showProgressDialog()
+                filesLoadSubscription = navigationHandler.archiveDirectory(
+                    selectedApp!!.sourceDirectory, selectedApp!!.packageName
+                )
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnError { Timber.e(it) }
+                    .subscribe {
+                        dismissProgressDialog()
+                        val shareIntent = Intent()
+                        shareIntent.action = Intent.ACTION_SEND
+                        shareIntent.setDataAndType(
+                            FileProvider.getUriForFile(
+                                context,
+                                context.applicationContext.packageName + ".provider",
+                                it
+                            ),
+                            MimeTypeMap.getSingleton().getMimeTypeFromExtension(it.extension)
+                        )
+                        startActivity(Intent.createChooser(shareIntent, getString(R.string.sendSourceVia)))
+                    }
+
+            }
+            R.id.delete_code -> {
+                AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.deleteSource))
+                    .setMessage(getString(R.string.deleteSourceConfirm))
+                    .setIcon(R.drawable.ic_error_outline_black)
+                    .setPositiveButton(android.R.string.yes
+                    ) { _, _ ->
+                        deleteSource()
+                    }
+                    .setNegativeButton(android.R.string.no, null)
+                    .show()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun deleteSource() {
+        try {
+            selectedApp?.let {
+                if (it.sourceDirectory.exists()) {
+                    FileUtils.deleteDirectory(it.sourceDirectory)
+                }
+            }
+        } catch (e: IOException) {
+            Crashlytics.logException(e)
+        }
+        Toast.makeText(
+            baseContext,
+            getString(R.string.sourceDeleted),
+            Toast.LENGTH_SHORT
+        ).show()
+        finish()
     }
 
     override fun onDestroy() {

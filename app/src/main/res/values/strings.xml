@@ -108,5 +108,11 @@
     <string name="openSourceLicense">Open source licenses</string>
     <string name="tapViewOpenSourceLicenses">Tap to view open source licenses</string>
     <string name="startingDexToJar">Starting DEX to JAR Conversion</string>
+    <string name="shareSource">Share source</string>
+    <string name="deleteSource">Delete source</string>
+    <string name="deleteSourceConfirm">Are you sure you want to delete the decompiled source ?</string>
+    <string name="compressingSource">Compressing source</string>
+    <string name="sourceDeleted">The source has been deleted from your device.</string>
+    <string name="sendSourceVia">Send source via</string>
 
 </resources>
