@@ -26,6 +26,9 @@ import io.reactivex.Observable
 import java.io.File
 import java.text.DateFormat
 import java.util.Date
+import kotlin.collections.ArrayList
+import kotlin.collections.forEach
+import kotlin.collections.sortBy
 
 class NavigatorHandler(private var context: Context) {
 

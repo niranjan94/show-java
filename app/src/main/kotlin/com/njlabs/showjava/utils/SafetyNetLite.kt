@@ -28,9 +28,9 @@ import com.github.javiersantos.piracychecker.*
 import com.github.javiersantos.piracychecker.enums.InstallerID
 import com.njlabs.showjava.BuildConfig
 import io.michaelrocks.paranoid.Obfuscate
+import org.solovyev.android.checkout.Billing
 import timber.log.Timber
 import java.security.MessageDigest
-import org.solovyev.android.checkout.Billing
 
 
 @Obfuscate

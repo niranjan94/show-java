@@ -23,7 +23,7 @@ import com.njlabs.showjava.decompilers.BaseDecompiler
 import timber.log.Timber
 import java.io.OutputStream
 import java.nio.charset.Charset
-import java.util.Arrays
+import java.util.*
 
 
 /**

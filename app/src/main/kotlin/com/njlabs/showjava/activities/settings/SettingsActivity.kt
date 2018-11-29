@@ -18,9 +18,9 @@
 
 package com.njlabs.showjava.activities.settings
 
-import android.preference.PreferenceManager
-import android.preference.ListPreference
 import android.os.Bundle
+import android.preference.ListPreference
+import android.preference.PreferenceManager
 import android.view.Menu
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat

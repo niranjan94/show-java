@@ -18,8 +18,7 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/search"
         android:icon="@drawable/ic_search_white"
@@ -45,13 +44,4 @@
         android:orderInCategory="2"
         android:title="@string/settings"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/invert_colors"
-        android:icon="@drawable/ic_action_invert_colors"
-        android:orderInCategory="2"
-        android:title="@string/invertBackgroundColor"
-        android:visible="false"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
 </menu>

@@ -18,13 +18,13 @@
 
 package com.njlabs.showjava
 
+import androidx.multidex.MultiDexApplication
 import com.google.android.gms.ads.MobileAds
 import com.njlabs.showjava.utils.logging.ProductionTree
 import io.github.inflationx.calligraphy3.CalligraphyConfig
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor
 import io.github.inflationx.viewpump.ViewPump
 import timber.log.Timber
-import androidx.multidex.MultiDexApplication
 
 
 class MainApplication : MultiDexApplication() {

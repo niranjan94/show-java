@@ -22,7 +22,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import java.io.File
 import java.text.Normalizer
-import java.util.Locale
+import java.util.*
 import java.util.regex.Pattern
 
 private val NON_LATIN = Pattern.compile("[^\\w-]")

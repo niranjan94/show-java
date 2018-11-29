@@ -39,7 +39,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import com.njlabs.showjava.BuildConfig
-import java.util.Locale
+import java.util.*
 import java.util.regex.Pattern
 
 class CodeView @JvmOverloads constructor(

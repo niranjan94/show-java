@@ -28,15 +28,14 @@ import com.googlecode.dex2jar.v3.Dex2jar
 import com.googlecode.dex2jar.v3.DexExceptionHandler
 import com.njlabs.showjava.R
 import com.njlabs.showjava.utils.toClassName
+import org.apache.commons.io.FilenameUtils
 import org.jf.dexlib2.DexFileFactory
 import org.jf.dexlib2.Opcodes
+import org.jf.dexlib2.dexbacked.DexBackedDexFile
 import org.jf.dexlib2.iface.ClassDef
 import org.jf.dexlib2.immutable.ImmutableDexFile
 import org.objectweb.asm.tree.MethodNode
 import timber.log.Timber
-import java.lang.Exception
-import org.apache.commons.io.FilenameUtils
-import org.jf.dexlib2.dexbacked.DexBackedDexFile
 import java.io.BufferedInputStream
 import java.util.zip.ZipFile
 
