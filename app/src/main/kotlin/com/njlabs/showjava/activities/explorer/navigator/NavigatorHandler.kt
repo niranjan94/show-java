@@ -20,7 +20,7 @@ package com.njlabs.showjava.activities.explorer.navigator
 
 import android.content.Context
 import com.njlabs.showjava.data.FileItem
-import com.njlabs.showjava.utils.StringTools
+import com.njlabs.showjava.utils.humanReadableByteCount
 import io.reactivex.Observable
 import java.io.File
 import java.text.DateFormat
@@ -46,7 +46,7 @@ class NavigatorHandler(private var context: Context) {
                     val fileSize = "$noOfChildren ${if (noOfChildren == 1) "item" else "items"}"
                     directories.add(FileItem(file, fileSize, lastModDate))
                 } else {
-                    val fileSize = StringTools.humanReadableByteCount(file.length(), true)
+                    val fileSize = humanReadableByteCount(file.length(), true)
                     files.add(FileItem(file, fileSize, lastModDate))
                 }
             }

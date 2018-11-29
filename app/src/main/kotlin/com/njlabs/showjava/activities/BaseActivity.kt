@@ -36,14 +36,13 @@ import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import com.njlabs.showjava.activities.settings.SettingsActivity
 import com.njlabs.showjava.utils.SafetyNetLite
-import com.njlabs.showjava.utils.Tools
+import com.njlabs.showjava.utils.checkDataConnection
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -145,7 +144,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                     }
                 }
                 mAdView.loadAd(adRequest)
-                if (!Tools.checkDataConnection(context)) {
+                if (!checkDataConnection(context)) {
                     mAdView.visibility = View.GONE
                 }
             }

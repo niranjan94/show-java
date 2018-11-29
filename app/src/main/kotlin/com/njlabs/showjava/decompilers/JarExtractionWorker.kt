@@ -27,7 +27,7 @@ import com.googlecode.dex2jar.reader.DexFileReader
 import com.googlecode.dex2jar.v3.Dex2jar
 import com.googlecode.dex2jar.v3.DexExceptionHandler
 import com.njlabs.showjava.R
-import com.njlabs.showjava.utils.StringTools
+import com.njlabs.showjava.utils.toClassName
 import org.jf.dexlib2.DexFileFactory
 import org.jf.dexlib2.Opcodes
 import org.jf.dexlib2.iface.ClassDef
@@ -50,11 +50,11 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
      */
     private fun loadIgnoredLibs() {
         context.assets.open("ignored.basic.list").bufferedReader().useLines {
-            it.forEach { line -> ignoredLibs.add(StringTools.toClassName(line)) }
+            it.forEach { line -> ignoredLibs.add(toClassName(line)) }
         }
         if (data.getBoolean("shouldIgnoreLibs", true)) {
             context.assets.open("ignored.list").bufferedReader().useLines {
-                it.forEach { line -> ignoredLibs.add(StringTools.toClassName(line)) }
+                it.forEach { line -> ignoredLibs.add(toClassName(line)) }
             }
         }
         Timber.d("Total libs to ignore: ${ignoredLibs.size}")
