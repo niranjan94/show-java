@@ -16,21 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava;
+package com.njlabs.showjava.utils.streams
 
-import java.io.File;
+import java.io.File
 
-import jadx.api.JadxArgs;
-import jadx.core.dex.nodes.ClassNode;
+import jadx.api.JadxArgs
+import jadx.core.dex.nodes.ClassNode
 
 
-@SuppressWarnings("unused")
-public class Logger {
+object Logger {
 
     /**
      * This method will be invoked by a JaDX method that is used to save classes.
      */
-    public static void logJadxClassWrite(File dir, JadxArgs args, ClassNode cls) {
-        System.out.println("Decompiling " + cls.getFullName());
+    @Suppress("UNUSED_PARAMETER")
+    @JvmStatic
+    fun logJadxClassWrite(dir: File, args: JadxArgs, cls: ClassNode) {
+        println("Decompiling " + cls.fullName)
     }
 }

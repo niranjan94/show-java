@@ -282,7 +282,7 @@ hiBeaver {
                                     methodVisitor.visitVarInsn(Opcodes.ALOAD, 2)
                                     methodVisitor.visitMethodInsn(
                                             Opcodes.INVOKESTATIC,
-                                            className2Path('com.njlabs.showjava.Logger'),
+                                            className2Path('com.njlabs.showjava.utils.streams.Logger'),
                                             'logJadxClassWrite',
                                             '(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V',
                                             false
