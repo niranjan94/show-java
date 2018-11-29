@@ -97,6 +97,15 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         setContentView(layoutRef)
     }
 
+    fun setSubtitle(subtitle: String?) {
+        // Workaround for a weird bug caused by Calligraphy
+        // https://github.com/chrisjenx/Calligraphy/issues/280#issuecomment-256444828
+        toolbar.post {
+            toolbar.subtitle = subtitle
+        }
+
+    }
+
     private fun setupToolbar(title: String?) {
         toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)

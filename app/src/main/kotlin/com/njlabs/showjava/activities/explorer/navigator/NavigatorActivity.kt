@@ -22,6 +22,7 @@ import android.app.ProgressDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -71,7 +72,7 @@ class NavigatorActivity : BaseActivity() {
                 currentDirectory = File(it)
             }
         }
-
+        supportActionBar?.title = selectedApp?.packageLabel
         currentDirectory = currentDirectory ?: selectedApp?.sourceDirectory
         setupList()
         filesListAdapter.updateData(fileItems)
@@ -84,16 +85,23 @@ class NavigatorActivity : BaseActivity() {
     }
 
     private fun populateList(startDirectory: File) {
-        supportActionBar?.title = startDirectory.name
         currentDirectory = startDirectory
+        val packageName = selectedApp?.packageName
+        if (isAtRoot()) {
+            setSubtitle(packageName)
+        } else {
+            setSubtitle(
+                startDirectory.canonicalPath.replace(
+                    "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+                    ""
+                )
+            )
+        }
         filesLoadSubscription = navigationHandler.loadFiles(startDirectory)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError { Timber.e(it) }
             .subscribe {
-                if (selectedApp?.sourceDirectory != startDirectory) {
-                    // it.add(0, FileItem(File(startDirectory.parent), "Parent directory", "parent"))
-                }
                 updateList(it)
             }
     }
@@ -203,14 +211,18 @@ class NavigatorActivity : BaseActivity() {
         }
     }
 
+    private fun isAtRoot(): Boolean {
+        return currentDirectory?.canonicalPath == selectedApp?.sourceDirectory?.canonicalPath
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                if (currentDirectory?.canonicalPath == selectedApp?.sourceDirectory?.canonicalPath) {
+                if (isAtRoot()) {
                     finish()
                     return true
                 }
-                currentDirectory?.parent ?.let {
+                currentDirectory?.parent?.let {
                     populateList(File(it))
                     return true
                 }
@@ -235,7 +247,12 @@ class NavigatorActivity : BaseActivity() {
                             ),
                             MimeTypeMap.getSingleton().getMimeTypeFromExtension(it.extension)
                         )
-                        startActivity(Intent.createChooser(shareIntent, getString(R.string.sendSourceVia)))
+                        startActivity(
+                            Intent.createChooser(
+                                shareIntent,
+                                getString(R.string.sendSourceVia)
+                            )
+                        )
                     }
 
             }
@@ -244,7 +261,8 @@ class NavigatorActivity : BaseActivity() {
                     .setTitle(getString(R.string.deleteSource))
                     .setMessage(getString(R.string.deleteSourceConfirm))
                     .setIcon(R.drawable.ic_error_outline_black)
-                    .setPositiveButton(android.R.string.yes
+                    .setPositiveButton(
+                        android.R.string.yes
                     ) { _, _ ->
                         deleteSource()
                     }

@@ -64,12 +64,11 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
             ""
         )
 
-        // Workaround for a weird bug caused by Calligraphy
-        // https://github.com/chrisjenx/Calligraphy/issues/280#issuecomment-256444828
-        toolbar.post {
-            toolbar.subtitle = subtitle
-            if (file.name.trim().equals("AndroidManifest.xml", true)) {
-                toolbar.subtitle = packageName
+        file.name.trim().let {
+            if (it.equals("AndroidManifest.xml", true) || it.equals("info.json", true)) {
+                setSubtitle(packageName)
+            } else {
+                setSubtitle(subtitle)
             }
         }
 

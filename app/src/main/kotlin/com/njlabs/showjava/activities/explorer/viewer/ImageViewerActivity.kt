@@ -59,9 +59,11 @@ class ImageViewerActivity : BaseActivity() {
                     "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
                     ""
                 )
-            supportActionBar?.subtitle = subtitle
+
             if (fileName.trim().equals("icon.png", true)) {
-                supportActionBar?.subtitle = packageName
+                setSubtitle(packageName)
+            } else {
+                setSubtitle(subtitle)
             }
 
             imageView.setImage(ImageSource.uri(filePath!!), imageViewState)
