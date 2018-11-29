@@ -54,3 +54,9 @@ td.highlighted-line span {
     background: #ffda11;
     color: #000;
 }
+
+body.wrapped td.line {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-all;
+}

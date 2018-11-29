@@ -27,12 +27,9 @@
 
 package com.njlabs.showjava.utils.views
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.text.Html
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -41,7 +38,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
-import timber.log.Timber
+import com.njlabs.showjava.BuildConfig
 import java.util.Locale
 import java.util.regex.Pattern
 
@@ -60,8 +57,8 @@ class CodeView @JvmOverloads constructor(
     private var zoomEnabled = false
     private var showLineNumber = false
     private var startLineNumber = 1
-    var lineCount = 0
-    var highlightLineNumber = -1
+    private var lineCount = 0
+    private var highlightLineNumber = -1
 
     interface OnHighlightListener {
         fun onStartCodeHighlight()
@@ -70,13 +67,11 @@ class CodeView @JvmOverloads constructor(
         fun onLineClicked(lineNumber: Int, content: String)
     }
 
-    init {
-        init(context)
-    }
+    init { init(context) }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (isZoomEnabled()) {
+        if (zoomEnabled) {
             pinchDetector!!.onTouchEvent(event)
         }
         return super.onTouchEvent(event)
@@ -88,15 +83,13 @@ class CodeView @JvmOverloads constructor(
         webChromeClient = WebChromeClient()
         settings.javaScriptEnabled = true
         settings.cacheMode = WebSettings.LOAD_NO_CACHE
+        settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
         settings.loadWithOverviewMode = true
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && BuildConfig.DEBUG) {
             WebView.setWebContentsDebuggingEnabled(true)
         }
     }
 
-    /**
-     * Define um listener.
-     */
     @SuppressLint("AddJavascriptInterface")
     fun setOnHighlightListener(listener: OnHighlightListener?): CodeView {
         if (listener != null) {
@@ -119,24 +112,12 @@ class CodeView @JvmOverloads constructor(
                                 onHighlightListener!!.onStartCodeHighlight()
                             }
                         }
-
                         @JavascriptInterface
                         fun onFinishCodeHighlight() {
                             if (onHighlightListener != null) {
-                                Handler(Looper.getMainLooper()).post {
-                                    fillLineNumbers()
-                                    showHideLineNumber(isShowLineNumber())
-                                    highlightLineNumber(highlightLineNumber)
-                                }
                                 onHighlightListener!!.onFinishCodeHighlight()
                             }
                         }
-
-                        @JavascriptInterface
-                        fun logText(text: String) {
-                            Timber.d("logText: %s", text)
-                        }
-
                         @JavascriptInterface
                         fun onLineClicked(lineNumber: Int, content: String) {
                             if (onHighlightListener != null) {
@@ -152,10 +133,6 @@ class CodeView @JvmOverloads constructor(
         return this
     }
 
-    fun getFontSize(): Float {
-        return fontSize
-    }
-
     fun setFontSize(fontSize: Float): CodeView {
         if (fontSize < 8) this.fontSize = 8f
         else this.fontSize = fontSize
@@ -165,10 +142,6 @@ class CodeView @JvmOverloads constructor(
         return this
     }
 
-    fun getCode(): String {
-        return code
-    }
-
     fun setCode(code: String?): CodeView {
         if (code == null) this.code = ""
         else this.code = code + "\n"
@@ -176,17 +149,9 @@ class CodeView @JvmOverloads constructor(
         return this
     }
 
-    fun getLanguage(): String? {
-        return language
-    }
-
     fun setLanguage(language: String): CodeView {
         this.language = language
         return this
-    }
-
-    fun isWrapLine(): Boolean {
-        return wrapLine
     }
 
     fun setWrapLine(wrapLine: Boolean): CodeView {
@@ -194,44 +159,19 @@ class CodeView @JvmOverloads constructor(
         return this
     }
 
-    fun isZoomEnabled(): Boolean {
-        return zoomEnabled
-    }
-
     fun setZoomEnabled(zoomEnabled: Boolean): CodeView {
         this.zoomEnabled = zoomEnabled
         return this
     }
 
-    fun isDarkMode(): Boolean {
-        return darkMode
-    }
-
     fun setDarkMode(darkMode: Boolean): CodeView {
-        var bodyClass = "dark"
-        var style = "androidstudio"
-        if (!darkMode) {
-            bodyClass = "light"
-            style = "github-gist"
-        }
-        val styleUri = "file:///android_asset/codeview/highlightjs/styles/$style.css"
-        executeJavaScript("document.getElementById('stylesheet').setAttribute('href', '$styleUri')")
-        executeJavaScript("document.getElementById('body').setAttribute('class', '$bodyClass')")
         this.darkMode = darkMode
         return this
-    }
-
-    fun isShowLineNumber(): Boolean {
-        return showLineNumber
     }
 
     fun setShowLineNumber(showLineNumber: Boolean): CodeView {
         this.showLineNumber = showLineNumber
         return this
-    }
-
-    fun getStartLineNumber(): Int {
-        return startLineNumber
     }
 
     fun setStartLineNumber(startLineNumber: Int): CodeView {
@@ -245,7 +185,9 @@ class CodeView @JvmOverloads constructor(
         showHideLineNumber(showLineNumber)
     }
 
-    fun apply() {
+    fun load() { reload() }
+
+    override fun reload() {
         loadDataWithBaseURL(
             "",
             toHtml(),
@@ -255,31 +197,36 @@ class CodeView @JvmOverloads constructor(
         )
     }
 
-    private fun toHtml(): String {
-        var wrapLineCss = ""
-        if (wrapLine) {
-            wrapLineCss = "word-wrap: break-word; white-space: pre-wrap; word-break: break-all;"
-        }
-
+    private fun getStyleAndClass(): Pair<String, String> {
         var bodyClass = "dark"
         var style = "androidstudio"
         if (!darkMode) {
             bodyClass = "light"
             style = "github-gist"
         }
+        if (wrapLine) {
+            bodyClass += " wrapped"
+        }
+        return Pair("file:///android_asset/codeview/highlightjs/styles/$style.css", bodyClass)
+    }
 
+    fun apply() {
+        val (styleUri, bodyClass) = getStyleAndClass()
+        executeJavaScript("updateStyleAndClasses('$styleUri', '$bodyClass')")
+        showHideLineNumber(showLineNumber)
+    }
+
+    private fun toHtml(): String {
+        val (styleUri, bodyClass) = getStyleAndClass()
         return """
 <!DOCTYPE html>
 <html>
 <head>
-  <link id='stylesheet' rel='stylesheet' href='file:///android_asset/codeview/highlightjs/styles/$style.css'/>
+  <link id='stylesheet' rel='stylesheet' href='$styleUri'/>
   <link rel='stylesheet' href='file:///android_asset/codeview/styles.css'/>
   <style type="text/css">
     body {
-      font-size: ${getFontSize().toInt()}px;
-    }
-    td.line {
-        $wrapLineCss
+      font-size: ${fontSize.toInt()}px;
     }
   </style>
   <script src='file:///android_asset/codeview/highlightjs/highlight.js'></script>
@@ -287,61 +234,21 @@ class CodeView @JvmOverloads constructor(
 </head>
 <body id='body' class='$bodyClass'>
 <pre><code class='$language' id='code-holder'>${insertLineNumber(escapeCode)}</code></pre>
-<script>highlightCode()</script>
+<script type="text/javascript">
+highlightCode();
+fillLineNumbers();
+showHideLineNumber($showLineNumber)
+highlightLineNumber($highlightLineNumber)
+</script>
 </body>
 </html>
 """
     }
 
-    private fun executeJavaScript(js: String) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            evaluateJavascript("javascript:$js", null)
-        } else {
-            loadUrl("javascript:$js")
-        }
-    }
-
-    private fun changeFontSize(sizeInPx: Int) {
-        executeJavaScript("document.body.style.fontSize = '" + sizeInPx + "px'")
-    }
-
-    private fun fillLineNumbers() {
-        executeJavaScript("var i; var x = document.querySelectorAll('td.ln'); for(i = 0; i < x.length; i++) {x[i].innerHTML = x[i].getAttribute('line');}")
-    }
-
-    private fun showHideLineNumber(show: Boolean) {
-        executeJavaScript(
-            String.format(
-                Locale.ENGLISH,
-                "var i; var x = document.querySelectorAll('td.ln'); for(i = 0; i < x.length; i++) {x[i].style.display = %s;}",
-                if (show) "''" else "'none'"
-            )
-        )
-    }
-
-    fun highlightLineNumber(lineNumber: Int) {
-        this.highlightLineNumber = lineNumber
-        executeJavaScript(
-            String.format(
-                Locale.ENGLISH,
-                "var x = document.querySelectorAll('.highlighted-line'); if(x && x.length == 1) x[0].classList.remove('highlighted-line');"
-            )
-        )
-        if (lineNumber >= 0) {
-            executeJavaScript(
-                String.format(
-                    Locale.ENGLISH,
-                    "var x = document.querySelectorAll(\"td.line[line='%d']\"); if(x && x.length == 1) x[0].classList.add('highlighted-line');",
-                    lineNumber
-                )
-            )
-        }
-    }
-
     private fun insertLineNumber(code: String?): String {
         val m = Pattern.compile("(.*?)&#10;").matcher(code!!)
         val sb = StringBuffer()
-        var pos = getStartLineNumber()
+        var pos = startLineNumber
         lineCount = 0
         while (m.find()) {
             m.appendReplacement(
@@ -364,7 +271,7 @@ class CodeView @JvmOverloads constructor(
         private var oldFontSize: Int = 0
 
         override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
-            fontSize = getFontSize()
+            fontSize = this@CodeView.fontSize
             oldFontSize = fontSize.toInt()
             return super.onScaleBegin(detector)
         }
@@ -375,7 +282,7 @@ class CodeView @JvmOverloads constructor(
         }
 
         override fun onScale(detector: ScaleGestureDetector): Boolean {
-            fontSize = getFontSize() * detector.scaleFactor
+            fontSize = this@CodeView.fontSize * detector.scaleFactor
             if (fontSize >= 8) {
                 changeFontSize(fontSize.toInt())
                 if (onHighlightListener != null && oldFontSize != fontSize.toInt()) {
@@ -387,5 +294,26 @@ class CodeView @JvmOverloads constructor(
             }
             return false
         }
+    }
+
+    private fun executeJavaScript(js: String) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            evaluateJavascript("javascript:$js", null)
+        } else {
+            loadUrl("javascript:$js")
+        }
+    }
+
+    private fun changeFontSize(sizeInPx: Int) {
+        executeJavaScript("changeFontSize($sizeInPx)")
+    }
+
+    private fun showHideLineNumber(show: Boolean) {
+        executeJavaScript("showHideLineNumber($show)")
+    }
+
+    fun highlightLineNumber(lineNumber: Int) {
+        this.highlightLineNumber = lineNumber
+        executeJavaScript("highlightLineNumber($lineNumber)")
     }
 }

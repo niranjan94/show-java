@@ -29,7 +29,15 @@ def versionMinor = 0
 def versionPatch = 1
 def versionBuild = 0
 
-def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone('UTC'))
 
 def isCi = 'true' == System.getenv('CI')
@@ -40,7 +48,11 @@ try {
     props.load(new FileInputStream('app/keys.properties'))
 } catch (e) {
     props.load(new FileInputStream('app/keys.properties.example'))
+    println("===========")
     println(e.message)
+    println("Loaded app/keys.properties.example instead.")
+    println("===========")
+    println()
 }
 
 android {
@@ -72,13 +84,13 @@ android {
         resValue 'string', 'appNameGetPro', 'Get Show Java Pro'
         resValue 'string', 'appVersion', android.defaultConfig.versionName
         resValue 'string', 'appVersionExtended', "Version ${android.defaultConfig.versionName}"
-        resValue 'string', 'appVersionExtendedWithHash', "Version ${android.defaultConfig.versionName} ($gitSha)"
+        resValue 'string', 'appVersionExtendedWithHash', "Version ${android.defaultConfig.versionName} (${getGitHash()})"
 
         resValue 'string', 'deviceId', props.getProperty('deviceId')
         resValue 'string', 'adUnitId', props.getProperty('adUnitId')
         resValue 'string', 'admobAppId', props.getProperty('admobAppId')
 
-        buildConfigField 'String', 'GIT_SHA', "\"${gitSha}\""
+        buildConfigField 'String', 'GIT_SHA', "\"${getGitHash()}\""
         buildConfigField 'String', 'BUILD_TIME', "\"${buildTime}\""
         buildConfigField 'String', 'PLAY_LICENSE_KEY', "\"${props.getProperty('googlePlayLicenseKey')}\""
         buildConfigField 'String', 'IAP_PRODUCT_ID', "\"${props.getProperty('IapProductId')}\""

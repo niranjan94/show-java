@@ -98,7 +98,7 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
                     .setZoomEnabled(true)
                     .setShowLineNumber(true)
                     .setOnHighlightListener(this)
-                    .apply()
+                    .load()
             }
     }
 
@@ -147,7 +147,7 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
             }
             R.id.zoomable -> {
                 val newState = !item.isChecked
-                codeView.setZoomEnabled(newState).apply()
+                codeView.setZoomEnabled(newState)
                 item.isChecked = newState
                 return true
             }
@@ -159,7 +159,7 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
             }
             R.id.invert_colors -> {
                 darkMode = !darkMode
-                codeView.setDarkMode(darkMode)
+                codeView.setDarkMode(darkMode).apply()
                 return true
             }
         }
