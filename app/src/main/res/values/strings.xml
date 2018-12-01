@@ -114,5 +114,6 @@
     <string name="compressingSource">Compressing source</string>
     <string name="sourceDeleted">The source has been deleted from your device.</string>
     <string name="sendSourceVia">Send source via</string>
+    <string name="viewDecompiledSource">View previously decompiled source</string>
 
 </resources>

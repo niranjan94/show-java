@@ -89,38 +89,32 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:focusable="true"
-        android:transitionName="appListItem"
+        android:visibility="gone"
+        android:foreground="?attr/selectableItemBackground"
         app:cardElevation="1dp"
         app:cardCornerRadius="0dp"
         tools:ignore="UnusedAttribute">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="8dp"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="6dp"
-                android:layout_marginStart="6dp"
-                android:orientation="vertical">
+                android:text="@string/viewDecompiledSource"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View decompiled source"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/historyInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/space"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/space"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -132,7 +126,8 @@
         tools:ignore="UnusedAttribute"
         android:layout_above="@id/adView"
         android:layout_below="@id/historyCard"
-        android:padding="8dp"
+        android:paddingTop="8dp"
+        android:layout_marginTop="8dp"
         android:orientation="vertical">
 
         <TextView
@@ -140,13 +135,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/pickDecompiler"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="8dp">
-
             <LinearLayout
                 android:id="@+id/pickerList"
                 android:layout_width="match_parent"

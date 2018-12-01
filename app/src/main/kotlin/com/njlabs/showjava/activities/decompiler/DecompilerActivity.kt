@@ -20,15 +20,20 @@ package com.njlabs.showjava.activities.decompiler
 
 import android.annotation.SuppressLint
 import android.content.ComponentCallbacks2
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
+import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.BaseDecompiler.Companion.isAvailable
 import com.njlabs.showjava.utils.getVersion
+import com.njlabs.showjava.utils.sourceDir
 import kotlinx.android.synthetic.main.activity_decompiler.*
 import kotlinx.android.synthetic.main.layout_pick_decompiler_list_item.view.*
 import org.apache.commons.io.FileUtils
@@ -75,6 +80,21 @@ class DecompilerActivity : BaseActivity() {
             }
             pickerList.addView(view)
         }
+
+        val sourceDirectory = sourceDir(packageInfo.packageName)
+        if (SourceInfo.exists(sourceDirectory)) {
+            historyCard.visibility = View.VISIBLE
+            historyInfo.text = FileUtils.byteCountToDisplaySize(
+                FileUtils.sizeOfDirectory(sourceDirectory)
+            )
+            historyCard.setOnClickListener {
+                val intent = Intent(context, NavigatorActivity::class.java)
+                intent.putExtra("selectedApp", SourceInfo.from(sourceDirectory))
+                startActivity(intent)
+            }
+        }
+
+
     }
 
     private fun startProcess(decompiler: String) {
