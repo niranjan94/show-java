@@ -21,7 +21,6 @@ package com.njlabs.showjava.activities.settings
 import android.content.Context
 import android.os.Bundle
 import android.preference.ListPreference
-import android.preference.PreferenceManager
 import android.view.Menu
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -54,13 +53,22 @@ class SettingsActivity : BaseActivity() {
     companion object {
         private val sBindPreferenceSummaryToValueListener =
             Preference.OnPreferenceChangeListener { preference, value ->
-                val stringValue = value.toString()
+                var stringValue = value.toString()
                 if (preference is ListPreference) {
                     val index = preference.findIndexOfValue(stringValue)
-                    preference.setSummary(if (index >= 0) preference.entries[index] else null)
-                } else {
-                    preference.summary = stringValue
+                    stringValue = if (index >= 0) preference.entries[index].toString() else ""
                 }
+
+                if (stringValue != "") {
+                    val decompilersValues = preference.context.resources.getStringArray(R.array.decompilersValues)
+                    val index = decompilersValues.indexOf(stringValue)
+                    if (index >= 0) {
+                        val decompilers = preference.context.resources.getStringArray(R.array.decompilers)
+                        preference.summary = decompilers[index]
+                        return@OnPreferenceChangeListener true
+                    }
+                }
+                preference.summary = null
                 true
             }
 
@@ -68,8 +76,7 @@ class SettingsActivity : BaseActivity() {
             preference.onPreferenceChangeListener = sBindPreferenceSummaryToValueListener
             sBindPreferenceSummaryToValueListener.onPreferenceChange(
                 preference,
-                PreferenceManager
-                    .getDefaultSharedPreferences(preference.context)
+                preference.context.getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
                     .getString(preference.key, "")!!
             )
         }

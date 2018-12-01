@@ -30,10 +30,10 @@ class PackageInfo() : Parcelable {
     var icon: Drawable? = null
 
     constructor(parcel: Parcel) : this() {
-        label = parcel.readString()
-        name = parcel.readString()
-        version = parcel.readString()
-        filePath = parcel.readString()
+        label = parcel.readString()!!
+        name = parcel.readString()!!
+        version = parcel.readString()!!
+        filePath = parcel.readString()!!
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

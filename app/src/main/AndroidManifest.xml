@@ -25,7 +25,6 @@
         android:protectionLevel="normal" />
 
     <uses-permission android:name="com.njlabs.showjava.permission.CANCEL_WORKER" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -63,9 +62,6 @@
         <receiver
             android:name=".receivers.DecompilerActionReceiver"
             android:permission="com.njlabs.showjava.permission.CANCEL_WORKER">
-            <intent-filter>
-                <action android:name="com.njlabs.showjava.workers.action.STOP" />
-            </intent-filter>
         </receiver>
 
         <activity
