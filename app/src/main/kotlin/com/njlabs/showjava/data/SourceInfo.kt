@@ -20,6 +20,7 @@ package com.njlabs.showjava.data
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.njlabs.showjava.utils.getDate
 import com.njlabs.showjava.utils.sourceDir
 import org.apache.commons.io.FileUtils
 import org.json.JSONException
@@ -27,17 +28,6 @@ import org.json.JSONObject
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
-
-fun getDate(): String {
-    val date = Date(System.currentTimeMillis())
-    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.US)
-    formatter.timeZone = TimeZone.getTimeZone("UTC")
-    return formatter.format(date)
-}
 
 class SourceInfo() : Parcelable {
 

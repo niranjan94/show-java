@@ -32,3 +32,8 @@ fun isSystemPackage(pkgInfo: PackageInfo): Boolean {
 fun sourceDir(packageName: String): File {
     return appStorage.resolve("sources/$packageName")
 }
+
+fun jarPackageName(jarFileName: String): String {
+    val slug = toSlug(jarFileName)
+    return "$slug-${hashString("SHA-1", slug).slice(0..7)}".toLowerCase()
+}

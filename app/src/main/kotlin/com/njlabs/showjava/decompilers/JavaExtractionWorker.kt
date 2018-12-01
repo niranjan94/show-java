@@ -22,6 +22,7 @@ import android.content.Context
 import androidx.work.Data
 import androidx.work.ListenableWorker
 import com.njlabs.showjava.R
+import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.utils.ZipUtils
 import jadx.api.JadxArgs
@@ -113,7 +114,10 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
         try {
             when (decompiler) {
-                "jadx" -> decompileWithJaDX(outputDexFile, outputJavaSrcDirectory)
+                "jadx" -> decompileWithJaDX(
+                    if (type == PackageInfo.Type.JAR) outputJarFile else outputDexFile,
+                    outputJavaSrcDirectory
+                )
                 "cfr" -> decompileWithCFR(outputJarFile, outputJavaSrcDirectory)
                 "fernflower" -> decompileWithFernFlower(outputJarFile, outputJavaSrcDirectory)
             }

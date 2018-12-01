@@ -27,6 +27,7 @@ import com.googlecode.dex2jar.reader.DexFileReader
 import com.googlecode.dex2jar.v3.Dex2jar
 import com.googlecode.dex2jar.v3.DexExceptionHandler
 import com.njlabs.showjava.R
+import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.toClassName
 import org.apache.commons.io.FilenameUtils
 import org.jf.dexlib2.DexFileFactory
@@ -171,16 +172,30 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
         super.doWork()
 
-        try {
-            loadIgnoredLibs()
-            convertApkToDex()
-        } catch (e: Exception) {
-            return exit(e)
+        when(type) {
+            PackageInfo.Type.APK -> {
+                try {
+                    loadIgnoredLibs()
+                    convertApkToDex()
+                } catch (e: Exception) {
+                    return exit(e)
+                }
+            }
+            PackageInfo.Type.JAR -> {
+                inputPackageFile.copyTo(outputJarFile)
+            }
+
+            PackageInfo.Type.DEX -> {
+                inputPackageFile.copyTo(outputDexFile)
+            }
         }
 
-        if (decompiler != "jadx") {
+        if (decompiler != "jadx"
+            && (type == PackageInfo.Type.APK || type == PackageInfo.Type.DEX)
+        ) {
             convertDexToJar()
         }
+
         return ListenableWorker.Result.SUCCESS
     }
 }

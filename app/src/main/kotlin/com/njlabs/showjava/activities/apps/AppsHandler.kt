@@ -21,7 +21,6 @@ package com.njlabs.showjava.activities.apps
 import android.content.Context
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
-import com.njlabs.showjava.utils.getVersion
 import com.njlabs.showjava.utils.isSystemPackage
 import com.njlabs.showjava.utils.rx.ProcessStatus
 import io.reactivex.Observable
@@ -37,12 +36,7 @@ class AppsHandler(private var context: Context) {
                 !isSystemPackage(pack)
             }
             packages.forEachIndexed { index, pack ->
-                val packageInfo = PackageInfo()
-                packageInfo.label =
-                        pack.applicationInfo.loadLabel(context.packageManager).toString()
-                packageInfo.name = pack.packageName
-                packageInfo.version = getVersion(pack)
-                packageInfo.filePath = pack.applicationInfo.publicSourceDir
+                val packageInfo = PackageInfo.fromApkPackageInfo(context, pack)
                 packageInfo.icon = pack.applicationInfo.loadIcon(context.packageManager)
                 installedApps.add(packageInfo)
                 val currentCount = index + 1

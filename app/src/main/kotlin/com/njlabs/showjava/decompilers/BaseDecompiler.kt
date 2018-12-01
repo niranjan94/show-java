@@ -24,6 +24,7 @@ import android.os.Build
 import androidx.work.*
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
+import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.ProcessNotifier
 import com.njlabs.showjava.utils.appStorage
 import com.njlabs.showjava.utils.streams.ProgressStream
@@ -40,6 +41,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     private var processNotifier: ProcessNotifier? = null
 
     protected val decompiler = data.getString("decompiler")
+    protected val type = PackageInfo.Type.values()[data.getInt("type", 0)]
 
     protected val packageName: String = data.getString("name").toString()
     protected val packageLabel: String = data.getString("label").toString()

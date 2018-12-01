@@ -27,6 +27,7 @@ import androidx.annotation.RequiresApi
 import androidx.work.Data
 import androidx.work.ListenableWorker
 import com.njlabs.showjava.R
+import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
@@ -89,6 +90,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         zipFile.close()
     }
 
+    @Suppress("UNCHECKED_CAST")
     @RequiresApi(Build.VERSION_CODES.N)
     @Throws(Exception::class)
     private fun loadResourcesTable() {
@@ -187,9 +189,12 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
 
     override fun doWork(): ListenableWorker.Result {
         Timber.tag("ResourcesExtraction")
-        context.getString(R.string.extractingResources).let {
-            buildNotification(it)
-            setStep(it)
+
+        if (type == PackageInfo.Type.APK) {
+            context.getString(R.string.extractingResources).let {
+                buildNotification(it)
+                setStep(it)
+            }
         }
 
         super.doWork()
@@ -202,16 +207,18 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         // Not using JaDX for resource extraction.
         // Due to its dependency on the javax.imageio.ImageIO class which is unavailable on android
 
-        try {
-            extractResourcesWithParser()
-            saveIcon()
-        } catch (e: Exception) {
-            return exit(e)
-        }
+        if (type == PackageInfo.Type.APK) {
+            try {
+                extractResourcesWithParser()
+                saveIcon()
+            } catch (e: Exception) {
+                return exit(e)
+            }
 
-        SourceInfo.from(workingDirectory)
-            .setXmlSourcePresence(true)
-            .persist()
+            SourceInfo.from(workingDirectory)
+                .setXmlSourcePresence(true)
+                .persist()
+        }
 
         return ListenableWorker.Result.SUCCESS
     }

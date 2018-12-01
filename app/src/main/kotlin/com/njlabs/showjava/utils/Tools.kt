@@ -22,8 +22,10 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.net.ConnectivityManager
 import android.os.Build
+import java.security.MessageDigest
 import java.text.Normalizer
-import java.util.Locale
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.regex.Pattern
 
 private val NON_LATIN = Pattern.compile("[^\\w-]")
@@ -40,12 +42,35 @@ fun toSlug(input: String): String {
     return slug.toLowerCase(Locale.ENGLISH)
 }
 
+fun hashString(type: String, input: String): String {
+    val hexChars = "0123456789ABCDEF"
+    val bytes = MessageDigest
+        .getInstance(type)
+        .digest(input.toByteArray())
+    val result = StringBuilder(bytes.size * 2)
+
+    bytes.forEach {
+        val i = it.toInt()
+        result.append(hexChars[i shr 4 and 0x0f])
+        result.append(hexChars[i and 0x0f])
+    }
+
+    return result.toString()
+}
+
 fun checkDataConnection(context: Context): Boolean {
     val connectivityMgr =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     return (connectivityMgr.activeNetworkInfo != null &&
             connectivityMgr.activeNetworkInfo.isAvailable &&
             connectivityMgr.activeNetworkInfo.isConnected)
+}
+
+fun getDate(): String {
+    val date = Date(System.currentTimeMillis())
+    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.US)
+    formatter.timeZone = TimeZone.getTimeZone("UTC")
+    return formatter.format(date)
 }
 
 /**

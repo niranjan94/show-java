@@ -32,14 +32,17 @@ import com.github.angads25.filepicker.view.FilePickerDialog
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.AppsActivity
+import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
+import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
+import java.io.File
 
 
 class LandingActivity : BaseActivity() {
@@ -86,15 +89,23 @@ class LandingActivity : BaseActivity() {
         properties.root = Environment.getExternalStorageDirectory()
         properties.error_dir = properties.root
         properties.offset = properties.root
-        properties.extensions = arrayOf("apk")
+        properties.extensions = arrayOf("apk", "jar", "dex")
 
         filePickerDialog = FilePickerDialog(this, properties)
-        filePickerDialog.setTitle("Select a File")
+        filePickerDialog.setTitle(getString(R.string.selectFile))
 
-        filePickerDialog.setDialogSelectionListener {
-            //files is the array of the paths of files selected by the Application User.
+        filePickerDialog.setDialogSelectionListener { files ->
+            if (files.isNotEmpty()) {
+                val selectedFile = File(files.first())
+                if (selectedFile.exists() && selectedFile.isFile) {
+                    PackageInfo.fromFile(context, selectedFile) ?. let {
+                        val i = Intent(applicationContext, DecompilerActivity::class.java)
+                        i.putExtra("packageInfo", it)
+                        startActivity(i)
+                    }
+                }
+            }
         }
-
     }
 
     public override fun onResume() {
