@@ -180,6 +180,15 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
     companion object {
 
+        fun isAvailable(decompiler: String): Boolean {
+            return when (decompiler) {
+                "cfr" -> true
+                "jadx" -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                "fernflower" -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                else -> false
+            }
+        }
+
         /**
          * For the WorkManager compatible Data object from the given map
          */

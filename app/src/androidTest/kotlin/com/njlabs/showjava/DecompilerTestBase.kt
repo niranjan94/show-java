@@ -18,6 +18,7 @@
 
 package com.njlabs.showjava
 
+import android.os.Build
 import android.os.Environment
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
@@ -27,11 +28,18 @@ import com.njlabs.showjava.decompilers.JarExtractionWorker
 import com.njlabs.showjava.decompilers.JavaExtractionWorker
 import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
 import junit.framework.TestCase
+import org.junit.Assume
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import java.io.File
 
 abstract class DecompilerTestBase {
+
+    abstract val decompiler: String
+
+    private val testApplicationFile: File
+        get() = File(Environment.getExternalStorageDirectory(), "test-application.apk")
 
     @Rule
     @JvmField
@@ -54,15 +62,21 @@ abstract class DecompilerTestBase {
         }
     }
 
-    private val testApplicationFile: File
-        get() = File(Environment.getExternalStorageDirectory(), "test-application.apk")
+    @Before
+    fun checkDecompilerAvailability() {
+        Assume.assumeTrue(
+            "Assume $decompiler is available on API ${Build.VERSION.SDK_INT}.",
+            BaseDecompiler.isAvailable(decompiler)
+        )
+    }
 
-    fun useDecompiler(name: String) {
+    @Test
+    fun testDecompiler() {
         val data = BaseDecompiler.formData(hashMapOf(
             "shouldIgnoreLibs" to true,
-            "decompiler" to name,
-            "name" to "xyz.codezero.testapplication.$name",
-            "label" to "TestApplication-$name",
+            "decompiler" to decompiler,
+            "name" to "xyz.codezero.testapplication.$decompiler",
+            "label" to "TestApplication-$decompiler",
             "inputPackageFile" to testApplicationFile.canonicalPath
         ))
 
@@ -85,6 +99,4 @@ abstract class DecompilerTestBase {
         val resourcesExtractionWorker = ResourcesExtractionWorker(appContext.targetContext, data)
         TestCase.assertEquals(ListenableWorker.Result.SUCCESS, resourcesExtractionWorker.doWork())
     }
-
-    abstract fun runDecompiler()
 }

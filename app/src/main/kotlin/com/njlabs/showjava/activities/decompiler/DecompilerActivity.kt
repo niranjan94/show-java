@@ -26,6 +26,7 @@ import android.view.LayoutInflater
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.decompilers.BaseDecompiler
+import com.njlabs.showjava.decompilers.BaseDecompiler.Companion.isAvailable
 import com.njlabs.showjava.utils.getVersion
 import kotlinx.android.synthetic.main.activity_decompiler.*
 import kotlinx.android.synthetic.main.layout_pick_decompiler_list_item.view.*
@@ -35,15 +36,6 @@ import java.io.File
 
 
 class DecompilerActivity : BaseActivity() {
-
-    private fun isAvailable(decompiler: String): Boolean {
-        return when (decompiler) {
-            "cfr" -> true
-            "jadx" -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-            "fernflower" -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-            else -> false
-        }
-    }
 
     private lateinit var packageFilePath: String
     private lateinit var packageFile: File

@@ -140,8 +140,8 @@ android {
             buildConfigField 'Boolean', 'EXTENDED_VALIDATION', 'true'
         }
         debug {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             testProguardFile 'test-proguard-rules.pro'
         }
     }
@@ -258,6 +258,7 @@ dependencies {
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     implementation 'com.github.angads25:filepicker:1.1.1'
     implementation 'com.github.javiersantos:PiracyChecker:1.2.4'
+    implementation 'com.scottyab:secure-preferences-lib:0.1.4'
 }
 
 apply plugin: 'hiBeaver'

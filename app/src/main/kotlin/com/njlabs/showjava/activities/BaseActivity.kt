@@ -43,6 +43,7 @@ import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import com.njlabs.showjava.activities.settings.SettingsActivity
 import com.njlabs.showjava.utils.SafetyNetLite
 import com.njlabs.showjava.utils.checkDataConnection
+import com.securepreferences.SecurePreferences
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -60,7 +61,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = this
-        securePreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        securePreferences = SecurePreferences(this)
         safetyNet = SafetyNetLite(context, securePreferences)
 
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
