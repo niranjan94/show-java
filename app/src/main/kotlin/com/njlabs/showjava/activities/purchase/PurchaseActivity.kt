@@ -77,6 +77,7 @@ class PurchaseActivity : BaseActivity() {
 
     private fun onPurchaseComplete(purchase: Purchase) {
         Timber.d("Purchase complete: %s", purchase.sku)
+        safetyNet.onPurchaseComplete()
     }
 
     private fun makePurchase() {

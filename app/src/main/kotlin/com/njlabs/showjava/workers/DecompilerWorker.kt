@@ -21,10 +21,40 @@ package com.njlabs.showjava.workers
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.njlabs.showjava.decompilers.BaseDecompiler
+import com.njlabs.showjava.decompilers.JarExtractionWorker
+import com.njlabs.showjava.decompilers.JavaExtractionWorker
+import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
 
+class DecompilerWorker(val context: Context, private val params: WorkerParameters) : Worker(context, params) {
 
-abstract class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
+    private var worker: BaseDecompiler? = null
+
+    init {
+        if (tags.contains("jar-extraction")) {
+            worker = JarExtractionWorker(context, params.inputData)
+        }
+        if (tags.contains("java-extraction")) {
+            worker = JavaExtractionWorker(context, params.inputData)
+        }
+        if (tags.contains("resources-extraction")) {
+            worker = ResourcesExtractionWorker(context, params.inputData)
+        }
+    }
+
     override fun doWork(): Result {
-        return Result.SUCCESS
+        var result = Result.FAILURE
+        worker ?.let {
+            result = it.doWork()
+            it.onStopped(false)
+        }
+        return result
+    }
+
+    override fun onStopped(cancelled: Boolean) {
+        super.onStopped(cancelled)
+        if (worker != null) {
+            return worker!!.onStopped(cancelled)
+        }
     }
 }

@@ -29,6 +29,7 @@ import com.njlabs.showjava.utils.PackageSourceTools
 import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
 import net.dongliu.apk.parser.ApkFile
+import net.dongliu.apk.parser.exception.ParserException
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import timber.log.Timber
@@ -75,10 +76,18 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
                 && zipEntry.name != "AndroidManifest.xml"
                 && FilenameUtils.isExtension(zipEntry.name, "xml")) {
                 sendStatus(zipEntry.name)
-                writeXML(zipEntry.name)
+                try {
+                    writeXML(zipEntry.name)
+                } catch (e: ParserException) {
+                    sendStatus("Skipped ${zipEntry.name}")
+                }
             } else if (!zipEntry.isDirectory && FilenameUtils.isExtension(zipEntry.name, images)) {
                 sendStatus(zipEntry.name)
-                writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
+                try {
+                    writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
+                } catch (e: java.lang.Exception) {
+                    sendStatus("Skipped ${zipEntry.name}")
+                }
             }
         }
         zipFile.close()
@@ -110,7 +119,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         outputStream.close()
     }
 
-    @Throws(Exception::class)
+    @Throws(ParserException::class)
     private fun writeXML(path: String) {
         val xml = parsedInputApkFile.transBinaryXml(path)
         val fileFolderPath =

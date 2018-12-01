@@ -128,6 +128,8 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         stopIntent.action = Constants.WORKER.ACTION.STOP
         stopIntent.putExtra("id", id)
         stopIntent.putExtra("packageFilePath", inputPackageFile.canonicalFile)
+        stopIntent.putExtra("packageName", packageName)
+
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val pendingIntentForStop = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -165,9 +167,9 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         notification.defaults = notification.defaults and DEFAULT_SOUND.inv()
         notification.defaults = notification.defaults and DEFAULT_VIBRATE.inv()
 
-        notificationManager.notify(id, Constants.WORKER.NOTIFICATION_ID, notification)
+        notificationManager.notify(id, Constants.WORKER.PROGRESS_NOTIFICATION_ID, notification)
         processNotifier =
-                Notifier(notificationManager, builder, Constants.WORKER.NOTIFICATION_ID, id)
+                Notifier(notificationManager, builder, Constants.WORKER.PROGRESS_NOTIFICATION_ID, id)
         return notification
     }
 
@@ -175,6 +177,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      * Cancel notification on worker stop
      */
     open fun onStopped(cancelled: Boolean) {
+        Timber.d("[cancel-request] cancelled: $cancelled")
         processNotifier?.cancel()
     }
 
@@ -210,6 +213,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
             val jarExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
                 .addTag("decompile")
+                .addTag("jar-extraction")
                 .addTag(id)
                 .addTag(dataMap["name"] as String)
                 .setInputData(data)
@@ -217,6 +221,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
             val javaExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
                 .addTag("decompile")
+                .addTag("java-extraction")
                 .addTag(id)
                 .addTag(dataMap["name"] as String)
                 .setInputData(data)
@@ -224,6 +229,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
             val resourcesExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
                 .addTag("decompile")
+                .addTag("resources-extraction")
                 .addTag(id)
                 .addTag(dataMap["name"] as String)
                 .setInputData(data)
@@ -232,7 +238,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             WorkManager.getInstance()
                 .beginUniqueWork(
                     dataMap["name"] as String,
-                    ExistingWorkPolicy.KEEP,
+                    ExistingWorkPolicy.REPLACE,
                     jarExtractionWork
                 )
                 .then(javaExtractionWork)

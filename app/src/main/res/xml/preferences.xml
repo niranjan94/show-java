@@ -27,7 +27,7 @@
         <CheckBoxPreference
             app:iconSpaceReserved="false"
             android:defaultValue="true"
-            android:key="ignore_libraries"
+            android:key="ignoreLibraries"
             android:summary="@string/ignoreLibrariesPreferenceSummary"
             android:title="@string/speedUpDecompile" />
 
@@ -49,7 +49,7 @@
         <CheckBoxPreference
             app:iconSpaceReserved="false"
             android:defaultValue="false"
-            android:key="hide_decompiler_select"
+            android:key="hideDecompilerSelect"
             android:summary="@string/autoDecompilerSelectionPreferenceSummary"
             android:title="@string/autoDecompilerSelection" />
 

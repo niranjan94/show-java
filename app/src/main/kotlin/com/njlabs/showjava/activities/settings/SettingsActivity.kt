@@ -18,6 +18,7 @@
 
 package com.njlabs.showjava.activities.settings
 
+import android.content.Context
 import android.os.Bundle
 import android.preference.ListPreference
 import android.preference.PreferenceManager
@@ -40,6 +41,7 @@ class SettingsActivity : BaseActivity() {
     class PrefsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             preferenceManager.sharedPreferencesName = "user_preferences"
+            preferenceManager.sharedPreferencesMode = Context.MODE_PRIVATE
             setPreferencesFromResource(R.xml.preferences, rootKey)
             bindPreferenceSummaryToValue(findPreference("decompiler"))
         }

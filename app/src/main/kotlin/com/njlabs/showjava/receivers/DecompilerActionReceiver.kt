@@ -29,12 +29,10 @@ class DecompilerActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {
             Constants.WORKER.ACTION.STOP -> {
-                Timber.i(
-                    "Received cancel request for: %s",
-                    intent.getStringExtra("id")
-                )
-                WorkManager.getInstance().cancelAllWorkByTag(
-                    intent.getStringExtra("id")
+                Timber.d("[cancel-request] ID: ${intent.getStringExtra("id")}")
+                Timber.d("[cancel-request] PackageName: ${intent.getStringExtra("packageName")}")
+                WorkManager.getInstance().cancelUniqueWork(
+                    intent.getStringExtra("packageName")
                 )
             }
             else -> {

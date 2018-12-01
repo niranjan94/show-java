@@ -23,13 +23,26 @@ import com.njlabs.showjava.decompilers.BaseDecompiler
 import timber.log.Timber
 import java.io.OutputStream
 import java.nio.charset.Charset
-import java.util.*
+import java.util.Arrays
 
 
 /**
  * A custom output stream that strips unnecessary stuff from raw input stream
  */
 class ProgressStream(val decompiler: BaseDecompiler) : OutputStream() {
+
+    private fun shouldIgnore(string: String): Boolean {
+        if (string.startsWith("[ignored]")) {
+            return true
+        }
+        for (part in arrayOf("TRYBLOCK", "stack info", "Produces", "ASTORE", "targets", "WARN jadx", "thread-1", "ERROR jadx", "JadxRuntimeException")) {
+            if (string.contains(part, true)) {
+                return true
+            }
+        }
+        return false
+    }
+
     override fun write(@NonNull data: ByteArray, offset: Int, length: Int) {
         var str = String(
             Arrays.copyOfRange(data, offset, length),
@@ -48,7 +61,7 @@ class ProgressStream(val decompiler: BaseDecompiler) : OutputStream() {
             .replace("Extracting ".toRegex(RegexOption.IGNORE_CASE), "")
             .trim()
 
-        if (str.startsWith("[ignored]")) {
+        if (shouldIgnore(str)) {
             return
         }
 
@@ -61,6 +74,7 @@ class ProgressStream(val decompiler: BaseDecompiler) : OutputStream() {
             decompiler.sendStatus(str)
         }
     }
+
     override fun write(byte: Int) {
         // Just a stub. We aren't implementing this.
     }

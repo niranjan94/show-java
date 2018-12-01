@@ -33,7 +33,8 @@ object Constants {
             const val STATUS_KEY = "com.njlabs.showjava.worker.STATUS_KEY"
             const val STATUS_MESSAGE = "com.njlabs.showjava.worker.STATUS_MESSAGE"
             const val NOTIFICATION_CHANNEL = "com.njlabs.showjava"
-            const val NOTIFICATION_ID = 1094
+            const val PROGRESS_NOTIFICATION_ID = 1094
+            const val COMPLETED_NOTIFICATION_ID = 1095
         }
 
         /**

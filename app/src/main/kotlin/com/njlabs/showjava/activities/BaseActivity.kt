@@ -53,7 +53,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
 
     protected lateinit var toolbar: Toolbar
     protected lateinit var context: Context
-    protected lateinit var securePreferences: SharedPreferences
+    protected lateinit var userPreferences: SharedPreferences
     protected lateinit var safetyNet: SafetyNetLite
 
     abstract fun init(savedInstanceState: Bundle?)
@@ -61,8 +61,8 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = this
-        securePreferences = SecurePreferences(this)
-        safetyNet = SafetyNetLite(context, securePreferences)
+        userPreferences = getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
+        safetyNet = SafetyNetLite.getInstance(context)
 
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             EasyPermissions.requestPermissions(

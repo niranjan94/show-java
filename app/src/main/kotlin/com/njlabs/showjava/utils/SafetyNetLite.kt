@@ -20,13 +20,14 @@ package com.njlabs.showjava.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.util.Base64
 import com.github.javiersantos.piracychecker.*
 import com.github.javiersantos.piracychecker.enums.InstallerID
 import com.njlabs.showjava.BuildConfig
+import com.njlabs.showjava.SingletonHolder
+import com.securepreferences.SecurePreferences
 import io.michaelrocks.paranoid.Obfuscate
 import org.solovyev.android.checkout.Billing
 import timber.log.Timber
@@ -34,9 +35,18 @@ import java.security.MessageDigest
 
 
 @Obfuscate
-class SafetyNetLite(val context: Context, val preferences: SharedPreferences) {
+class SafetyNetLite(val context: Context) {
 
     private val packageName = "com.njlabs.showjava"
+    private var hasPurchasedPro: Boolean? = null
+    private var preferences: SecurePreferences? = null
+
+    private fun getPreferences(): SecurePreferences {
+        if (preferences == null) {
+            preferences = SecurePreferences(context)
+        }
+        return preferences as SecurePreferences
+    }
 
     fun isSafeExtended(allow: (() -> Unit), doNotAllow: (() -> Unit), onError: (() -> Unit)) {
         context.piracyChecker {
@@ -47,7 +57,7 @@ class SafetyNetLite(val context: Context, val preferences: SharedPreferences) {
                 enableDebugCheck(true)
                 enableEmulatorCheck()
             }
-            saveResultToSharedPreferences(preferences, "is_safe")
+            saveResultToSharedPreferences(getPreferences(), "is_safe")
             callback {
                 doNotAllow { _, _ -> doNotAllow() }
                 allow { allow() }
@@ -72,7 +82,15 @@ class SafetyNetLite(val context: Context, val preferences: SharedPreferences) {
         if (!this.isSafe()) {
             return false
         }
-        return preferences.getBoolean("show-java-pro", false)
+        if (hasPurchasedPro != null) {
+            return hasPurchasedPro as Boolean
+        }
+        return getPreferences().getBoolean("show-java-pro", false)
+    }
+
+    fun onPurchaseComplete() {
+        hasPurchasedPro = true
+        getPreferences().edit().putBoolean("show-java-pro", true).apply()
     }
 
     @SuppressLint("PrivateApi")
@@ -128,4 +146,6 @@ class SafetyNetLite(val context: Context, val preferences: SharedPreferences) {
 
         return false
     }
+
+    companion object : SingletonHolder<SafetyNetLite, Context>(::SafetyNetLite)
 }

@@ -19,6 +19,7 @@
 package com.njlabs.showjava.activities.decompiler
 
 import android.annotation.SuppressLint
+import android.content.ComponentCallbacks2
 import android.content.pm.PackageInfo
 import android.os.Build
 import android.os.Bundle
@@ -70,15 +71,15 @@ class DecompilerActivity : BaseActivity() {
             view.decompilerDescription.text = decompilerDescriptions[index]
             view.decompilerItemCard.cardElevation = 1F
             view.decompilerItemCard.setOnClickListener {
-                Timber.d("Clicked %s", decompiler)
+                startProcess(decompiler)
             }
             pickerList.addView(view)
         }
     }
 
-    fun startProcess(decompiler: String) {
+    private fun startProcess(decompiler: String) {
         BaseDecompiler.start(hashMapOf(
-            "shouldIgnoreLibs" to true,
+            "shouldIgnoreLibs" to userPreferences.getBoolean("ignoreLibraries", true),
             "decompiler" to decompiler,
             "name" to packageInfo.packageName,
             "label" to packageLabel,
