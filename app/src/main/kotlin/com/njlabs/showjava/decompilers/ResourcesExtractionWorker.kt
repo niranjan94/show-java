@@ -22,14 +22,19 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.work.Data
 import androidx.work.ListenableWorker
 import com.njlabs.showjava.R
-import com.njlabs.showjava.utils.PackageSourceTools
+import com.njlabs.showjava.data.SourceInfo
 import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
+import net.dongliu.apk.parser.AbstractApkFile
 import net.dongliu.apk.parser.ApkFile
 import net.dongliu.apk.parser.exception.ParserException
+import net.dongliu.apk.parser.struct.resource.ResourcePackage
+import net.dongliu.apk.parser.struct.resource.ResourceTable
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 import timber.log.Timber
@@ -54,20 +59,11 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         val jadx = JadxDecompiler(args)
         jadx.load()
         jadx.saveResources()
-        val zipFile = ZipFile(inputPackageFile)
-        val entries = zipFile.entries()
-        while (entries.hasMoreElements()) {
-            val zipEntry = entries.nextElement()
-            if (!zipEntry.isDirectory && FilenameUtils.isExtension(zipEntry.name, images)) {
-                sendStatus(zipEntry.name)
-                writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
-            }
-        }
-        zipFile.close()
     }
 
     @Throws(Exception::class)
     private fun extractResourcesWithParser() {
+        writeManifest()
         val zipFile = ZipFile(inputPackageFile)
         val entries = zipFile.entries()
         while (entries.hasMoreElements()) {
@@ -91,7 +87,25 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
             }
         }
         zipFile.close()
-        writeManifest()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    @Throws(Exception::class)
+    private fun loadResourcesTable() {
+        val resourceTableField = AbstractApkFile::class.java.getDeclaredField("resourceTable")
+        resourceTableField.isAccessible = true
+        val resourceTable = resourceTableField.get(parsedInputApkFile) as ResourceTable
+        val packageMapField = resourceTable.javaClass.getDeclaredField("packageMap")
+        packageMapField.isAccessible = true
+        val packageMap = packageMapField.get(resourceTable) as Map<Short, ResourcePackage>
+        packageMap.forEach { _, u ->
+            Timber.d("[res] ID: ${u.id} Name: ${u.name}")
+            u.typesMap.forEach { _, iu ->
+                iu.forEach {
+                    Timber.d("[res] Inner ID: ${it.id} Inner Name: ${it.name}")
+                }
+            }
+        }
     }
 
     @Throws(Exception::class)
@@ -143,7 +157,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
     private fun writeManifest() {
         val manifestXml = parsedInputApkFile.manifestXml
         FileUtils.writeStringToFile(
-            File(workingDirectory.canonicalPath, "AndroidManifest.xml"),
+            workingDirectory.resolve("AndroidManifest.xml"),
             manifestXml,
             Charset.defaultCharset()
         )
@@ -166,7 +180,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
     private fun saveIcon() {
         val packageInfo = context.packageManager.getPackageArchiveInfo(inputPackageFile.canonicalPath, 0)
         val bitmap = getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(context.packageManager))
-        val iconOutput = FileOutputStream(File(workingDirectory.canonicalPath, "icon.png"))
+        val iconOutput = FileOutputStream(workingDirectory.resolve("icon.png"))
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, iconOutput)
         iconOutput.close()
     }
@@ -187,10 +201,17 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
 
         // Not using JaDX for resource extraction.
         // Due to its dependency on the javax.imageio.ImageIO class which is unavailable on android
-        extractResourcesWithParser()
 
-        saveIcon()
-        PackageSourceTools.setXmlSourceStatus(workingDirectory.canonicalPath, true)
+        try {
+            extractResourcesWithParser()
+            saveIcon()
+        } catch (e: Exception) {
+            return exit(e)
+        }
+
+        SourceInfo.from(workingDirectory)
+            .setXmlSourcePresence(true)
+            .persist()
 
         return ListenableWorker.Result.SUCCESS
     }

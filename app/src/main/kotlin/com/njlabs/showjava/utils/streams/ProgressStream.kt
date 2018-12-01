@@ -31,16 +31,22 @@ import java.util.Arrays
  */
 class ProgressStream(val decompiler: BaseDecompiler) : OutputStream() {
 
+    private val validProgressRegex = Regex("^[^.][a-zA-Z/\$;\\s0-9.]+\$")
+
     private fun shouldIgnore(string: String): Boolean {
         if (string.startsWith("[ignored]")) {
             return true
         }
-        for (part in arrayOf("TRYBLOCK", "stack info", "Produces", "ASTORE", "targets", "WARN jadx", "thread-1", "ERROR jadx", "JadxRuntimeException")) {
+        for (part in arrayOf(
+            "TRYBLOCK", "stack info", "Produces", "ASTORE", "targets",
+            "WARN jadx", "thread-1", "ERROR jadx", "JadxRuntimeException",
+            "java.lang")) {
             if (string.contains(part, true)) {
                 return true
             }
         }
-        return false
+
+        return !validProgressRegex.matches(string)
     }
 
     override fun write(@NonNull data: ByteArray, offset: Int, length: Int) {

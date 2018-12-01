@@ -18,55 +18,41 @@
 
 package com.njlabs.showjava.decompilers
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Build
-import android.os.Environment
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationCompat.DEFAULT_SOUND
-import androidx.core.app.NotificationCompat.DEFAULT_VIBRATE
 import androidx.work.*
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
-import com.njlabs.showjava.receivers.DecompilerActionReceiver
-import com.njlabs.showjava.utils.Notifier
+import com.njlabs.showjava.utils.ProcessNotifier
+import com.njlabs.showjava.utils.appStorage
 import com.njlabs.showjava.utils.streams.ProgressStream
 import com.njlabs.showjava.workers.DecompilerWorker
+import org.apache.commons.io.FileUtils
 import timber.log.Timber
 import java.io.File
 import java.io.PrintStream
-import java.util.*
 
 abstract class BaseDecompiler(val context: Context, val data: Data) {
     var printStream: PrintStream? = null
 
     private var id = data.getString("id")
-    private var processNotifier: Notifier? = null
+    private var processNotifier: ProcessNotifier? = null
 
     protected val decompiler = data.getString("decompiler")
 
     protected val packageName: String = data.getString("name").toString()
     protected val packageLabel: String = data.getString("label").toString()
 
-    protected val workingDirectory: File = File(
-        Environment.getExternalStorageDirectory().canonicalPath,
-        "show-java/sources/$packageName/"
-    )
-    protected val cacheDirectory: File = File(
-        Environment.getExternalStorageDirectory().canonicalPath,
-        "show-java/.cache/"
-    )
+    protected val workingDirectory: File = appStorage.resolve("sources/$packageName/")
+    protected val cacheDirectory: File = appStorage.resolve("sources/.cache/")
+
     protected val inputPackageFile: File = File(data.getString("inputPackageFile"))
 
-    protected val outputDexFile: File = File(workingDirectory, "classes.dex")
-    protected val outputJarFile: File = File(workingDirectory, "$packageName.jar")
-    protected val outputJavaSrcDirectory: File = File(workingDirectory, "src/java")
-    protected val outputResSrcDirectory: File = File(workingDirectory, "src/res")
+    protected val outputDexFile: File = workingDirectory.resolve("classes.dex")
+    protected val outputJarFile: File = workingDirectory.resolve("$packageName.jar")
+    protected val outputJavaSrcDirectory: File = workingDirectory.resolve("src/java")
+    protected val outputResSrcDirectory: File = workingDirectory.resolve("src/res")
 
     init {
         printStream = PrintStream(ProgressStream(this))
@@ -105,7 +91,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      */
     protected fun exit(exception: Exception?): ListenableWorker.Result {
         Timber.e(exception)
-        processNotifier?.cancel()
+        onStopped(false)
         return ListenableWorker.Result.FAILURE
     }
 
@@ -123,54 +109,9 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     /**
      * Build a persistent notification
      */
-    protected fun buildNotification(title: String): Notification {
-        val stopIntent = Intent(context, DecompilerActionReceiver::class.java)
-        stopIntent.action = Constants.WORKER.ACTION.STOP
-        stopIntent.putExtra("id", id)
-        stopIntent.putExtra("packageFilePath", inputPackageFile.canonicalFile)
-        stopIntent.putExtra("packageName", packageName)
-
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val pendingIntentForStop = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                Constants.WORKER.NOTIFICATION_CHANNEL,
-                "Decompiler notification",
-                NotificationManager.IMPORTANCE_LOW
-            )
-            channel.setSound(null, null)
-            channel.enableVibration(false)
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        val actionIcon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            R.drawable.ic_stop_black else R.drawable.ic_stat_stop
-
-        val builder = NotificationCompat.Builder(context, Constants.WORKER.NOTIFICATION_CHANNEL)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setContentTitle(packageLabel)
-            .setContentText(title)
-            .setSmallIcon(R.drawable.ic_stat_code)
-            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-            .addAction(actionIcon, "Stop decompiler", pendingIntentForStop)
-            .setOngoing(true)
-            .setSound(null)
-            .setAutoCancel(false)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setProgress(0, 0, true)
-
-        val notification = builder.build()
-        notification.sound = null
-        notification.vibrate = null
-        notification.defaults = notification.defaults and DEFAULT_SOUND.inv()
-        notification.defaults = notification.defaults and DEFAULT_VIBRATE.inv()
-
-        notificationManager.notify(id, Constants.WORKER.PROGRESS_NOTIFICATION_ID, notification)
-        processNotifier =
-                Notifier(notificationManager, builder, Constants.WORKER.PROGRESS_NOTIFICATION_ID, id)
-        return notification
+    protected fun buildNotification(title: String) {
+        processNotifier = ProcessNotifier(context, id)
+            .buildFor(title, packageName, packageLabel, inputPackageFile)
     }
 
     /**
@@ -178,6 +119,9 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      */
     open fun onStopped(cancelled: Boolean) {
         Timber.d("[cancel-request] cancelled: $cancelled")
+        if (cancelled) {
+            FileUtils.deleteQuietly(workingDirectory)
+        }
         processNotifier?.cancel()
     }
 
@@ -196,7 +140,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
          * For the WorkManager compatible Data object from the given map
          */
         fun formData(dataMap: Map<String, Any>): Data {
-            val id = UUID.randomUUID().toString()
+            val id = dataMap["name"] as String
             return Data.Builder()
                 .putAll(dataMap)
                 .putString("id", id)
@@ -211,38 +155,23 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             val data = formData(dataMap)
             val id = data.getString("id")!!
 
-            val jarExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
-                .addTag("decompile")
-                .addTag("jar-extraction")
-                .addTag(id)
-                .addTag(dataMap["name"] as String)
-                .setInputData(data)
-                .build()
-
-            val javaExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
-                .addTag("decompile")
-                .addTag("java-extraction")
-                .addTag(id)
-                .addTag(dataMap["name"] as String)
-                .setInputData(data)
-                .build()
-
-            val resourcesExtractionWork = OneTimeWorkRequestBuilder<DecompilerWorker>()
-                .addTag("decompile")
-                .addTag("resources-extraction")
-                .addTag(id)
-                .addTag(dataMap["name"] as String)
-                .setInputData(data)
-                .build()
+            fun buildWorkRequest(type: String): OneTimeWorkRequest {
+                return OneTimeWorkRequestBuilder<DecompilerWorker>()
+                    .addTag("decompile")
+                    .addTag(type)
+                    .addTag(id)
+                    .setInputData(data)
+                    .build()
+            }
 
             WorkManager.getInstance()
                 .beginUniqueWork(
-                    dataMap["name"] as String,
+                    id,
                     ExistingWorkPolicy.REPLACE,
-                    jarExtractionWork
+                    buildWorkRequest("jar-extraction")
                 )
-                .then(javaExtractionWork)
-                .then(resourcesExtractionWork)
+                .then(buildWorkRequest("java-extraction"))
+                .then(buildWorkRequest("resources-extraction"))
                 .enqueue()
             return id
         }

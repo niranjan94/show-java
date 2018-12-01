@@ -23,6 +23,14 @@
     android:layout_height="match_parent"
     tools:context=".activities.explorer.navigator.NavigatorActivity">
 
+    <ProgressBar
+        android:id="@+id/deleteProgress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
@@ -36,5 +44,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/adView"
-        android:layout_below="@id/toolbar"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_below="@id/toolbar" />
 </RelativeLayout>

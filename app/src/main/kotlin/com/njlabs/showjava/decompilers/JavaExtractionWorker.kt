@@ -22,7 +22,7 @@ import android.content.Context
 import androidx.work.Data
 import androidx.work.ListenableWorker
 import com.njlabs.showjava.R
-import com.njlabs.showjava.utils.PackageSourceTools
+import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.utils.ZipUtils
 import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
@@ -46,22 +46,15 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
         val options: Options?
         val files: List<String?>?
 
-        try {
-            val processedArgs = getOptParser.parse(args, OptionsImpl.getFactory())
-            files = processedArgs.first as List<String>
-            options = processedArgs.second as Options
-            if (files.isEmpty()) {
-                return sendStatus("exit_process_on_error")
-            }
-        } catch (e: Exception) {
-            return sendStatus("exit_process_on_error")
-        }
+        val processedArgs = getOptParser.parse(args, OptionsImpl.getFactory())
+        files = processedArgs.first as List<String>
+        options = processedArgs.second as Options
 
         if (!options.optionIsSet(OptionsImpl.HELP) && !files.isEmpty()) {
             val cfrDriver = CfrDriver.Builder().withBuiltOptions(options).build()
             cfrDriver.analyse(files)
         } else {
-            sendStatus("exit_process_on_error")
+            throw Exception("cfr_invalid_arguments")
         }
     }
 
@@ -88,7 +81,7 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
             )
         )
 
-        val decompiledJarFile = File(javaOutputDir.canonicalPath + "/" + packageName + ".jar")
+        val decompiledJarFile = javaOutputDir.resolve("$packageName.jar")
 
         if (decompiledJarFile.exists()) {
             ZipUtils.unzip(decompiledJarFile, javaOutputDir, printStream!!)
@@ -100,7 +93,6 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
     override fun doWork(): ListenableWorker.Result {
         Timber.tag("JavaExtraction")
-
         context.getString(R.string.decompilingToJava).let {
             buildNotification(it)
             setStep(it)
@@ -108,14 +100,16 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
         super.doWork()
 
-
         if (decompiler != "jadx") {
             if (outputDexFile.exists() && outputDexFile.isFile) {
                 outputDexFile.delete()
             }
         }
 
-        PackageSourceTools.initialise(packageLabel, packageName, workingDirectory.canonicalPath)
+        val sourceInfo = SourceInfo.from(workingDirectory)
+            .setPackageLabel(packageLabel)
+            .setPackageName(packageName)
+            .persist()
 
         try {
             when (decompiler) {
@@ -127,7 +121,10 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
             return exit(e)
         }
 
-        PackageSourceTools.setJavaSourceStatus(workingDirectory.canonicalPath, true)
+        sourceInfo
+            .setJavaSourcePresence(true)
+            .persist()
+
         return ListenableWorker.Result.SUCCESS
     }
 }

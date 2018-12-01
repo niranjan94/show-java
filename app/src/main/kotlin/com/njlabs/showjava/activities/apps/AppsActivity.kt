@@ -35,7 +35,6 @@ import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.data.PackageInfo
-import com.njlabs.showjava.utils.PackageSourceTools
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -111,8 +110,6 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            val sourceDir = PackageSourceTools.sourceDir(selectedApp.name)
-            Timber.d(sourceDir.canonicalPath)
             openProcessActivity(selectedApp, view)
         }
         appsList.adapter = historyListAdapter
@@ -120,9 +117,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
 
     private fun openProcessActivity(packageInfo: PackageInfo, view: View) {
         val i = Intent(applicationContext, DecompilerActivity::class.java)
-        Timber.d("packageFilePath:%s", packageInfo.filePath)
         i.putExtra("packageFilePath", packageInfo.filePath)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val options = ActivityOptions
                 .makeSceneTransitionAnimation(this, view.findViewById(R.id.itemCard), "appListItem")

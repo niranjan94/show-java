@@ -136,8 +136,9 @@ class LandingActivity : BaseActivity() {
             .doOnError { Timber.e(it) }
             .subscribe {
                 historyItems = it
-                if (resume) {
+                if (resume && historyListAdapter != null) {
                     historyListAdapter?.updateData(historyItems)
+                    setListVisibility(!historyItems.isEmpty())
                 } else {
                     setupList()
                 }

@@ -19,11 +19,13 @@
 package com.njlabs.showjava.activities.explorer.navigator
 
 import android.content.Context
+import com.crashlytics.android.Crashlytics
 import com.njlabs.showjava.data.FileItem
 import com.njlabs.showjava.utils.ZipUtils
 import io.reactivex.Observable
 import org.apache.commons.io.FileUtils
 import java.io.File
+import java.io.IOException
 import java.text.DateFormat
 import java.util.Date
 import kotlin.collections.ArrayList
@@ -64,6 +66,18 @@ class NavigatorHandler(private var context: Context) {
     fun archiveDirectory(sourceDirectory: File, packageName: String): Observable<File> {
         return Observable.fromCallable {
             ZipUtils.zipDir(sourceDirectory, packageName)
+        }
+    }
+
+    fun deleteDirectory(sourceDirectory: File): Observable<Any> {
+        return Observable.fromCallable {
+            try {
+                if (sourceDirectory.exists()) {
+                    FileUtils.deleteDirectory(sourceDirectory)
+                }
+            } catch (e: IOException) {
+                Crashlytics.logException(e)
+            }
         }
     }
 }

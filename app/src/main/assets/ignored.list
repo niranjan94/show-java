@@ -2,11 +2,13 @@ com.bumptech.glide
 org.androidannotations
 de.greenrobot.event
 roboguice
-rx
 com.squareup.okhttp
+okhttp3
 com.google.gson
 com.square.picasso
+com.squareup.picasso
 com.square.tape
+com.squareup.tape
 com.nineoldandroids
 bolts
 com.mikepenz.iconics
@@ -41,3 +43,4 @@ com.millennialmedia
 com.amazon.inapp
 com.flurry.sdk
 org.spongycastle
+com.google.firebase

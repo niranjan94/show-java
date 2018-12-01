@@ -30,7 +30,6 @@ import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
-import com.crashlytics.android.Crashlytics
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.explorer.navigator.adapters.FilesListAdapter
@@ -42,10 +41,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_navigator.*
-import org.apache.commons.io.FileUtils
 import timber.log.Timber
 import java.io.File
-import java.io.IOException
 
 
 class NavigatorActivity : BaseActivity() {
@@ -53,7 +50,12 @@ class NavigatorActivity : BaseActivity() {
     private lateinit var navigationHandler: NavigatorHandler
     private lateinit var filesListAdapter: FilesListAdapter
     private var currentDirectory: File? = null
+    private var sourceArchive: File? = null
+
     private var filesLoadSubscription: Disposable? = null
+    private var archiveSubscription: Disposable? = null
+    private var deleteSubscription: Disposable? = null
+
     private var zipProgressDialog: ProgressDialog? = null
 
     private var fileItems: ArrayList<FileItem>? = ArrayList()
@@ -215,6 +217,26 @@ class NavigatorActivity : BaseActivity() {
         return currentDirectory?.canonicalPath == selectedApp?.sourceDirectory?.canonicalPath
     }
 
+    private fun shareArchive(file: File) {
+        dismissProgressDialog()
+        val shareIntent = Intent()
+        shareIntent.action = Intent.ACTION_SEND
+        shareIntent.setDataAndType(
+            FileProvider.getUriForFile(
+                context,
+                context.applicationContext.packageName + ".provider",
+                file
+            ),
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+        )
+        startActivity(
+            Intent.createChooser(
+                shareIntent,
+                getString(R.string.sendSourceVia)
+            )
+        )
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -228,32 +250,23 @@ class NavigatorActivity : BaseActivity() {
                 }
             }
             R.id.share_code -> {
+                sourceArchive?.let {
+                    shareArchive(it)
+                    return true
+                }
+
                 showProgressDialog()
-                filesLoadSubscription = navigationHandler.archiveDirectory(
+                archiveSubscription = navigationHandler.archiveDirectory(
                     selectedApp!!.sourceDirectory, selectedApp!!.packageName
                 )
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnError { Timber.e(it) }
                     .subscribe {
-                        dismissProgressDialog()
-                        val shareIntent = Intent()
-                        shareIntent.action = Intent.ACTION_SEND
-                        shareIntent.setDataAndType(
-                            FileProvider.getUriForFile(
-                                context,
-                                context.applicationContext.packageName + ".provider",
-                                it
-                            ),
-                            MimeTypeMap.getSingleton().getMimeTypeFromExtension(it.extension)
-                        )
-                        startActivity(
-                            Intent.createChooser(
-                                shareIntent,
-                                getString(R.string.sendSourceVia)
-                            )
-                        )
+                        sourceArchive = it
+                        shareArchive(it)
                     }
+                return true
 
             }
             R.id.delete_code -> {
@@ -268,27 +281,28 @@ class NavigatorActivity : BaseActivity() {
                     }
                     .setNegativeButton(android.R.string.no, null)
                     .show()
+                return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun deleteSource() {
-        try {
-            selectedApp?.let {
-                if (it.sourceDirectory.exists()) {
-                    FileUtils.deleteDirectory(it.sourceDirectory)
+        selectedApp?.let {
+            deleteProgress.visibility = View.VISIBLE
+            filesList.visibility = View.GONE
+            deleteSubscription = navigationHandler.deleteDirectory(it.sourceDirectory)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Toast.makeText(
+                        baseContext,
+                        getString(R.string.sourceDeleted),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    finish()
                 }
-            }
-        } catch (e: IOException) {
-            Crashlytics.logException(e)
         }
-        Toast.makeText(
-            baseContext,
-            getString(R.string.sourceDeleted),
-            Toast.LENGTH_SHORT
-        ).show()
-        finish()
     }
 
     override fun onDestroy() {
@@ -296,6 +310,11 @@ class NavigatorActivity : BaseActivity() {
         if (filesLoadSubscription?.isDisposed != true) {
             filesLoadSubscription?.dispose()
         }
-
+        if (archiveSubscription?.isDisposed != true) {
+            archiveSubscription?.dispose()
+        }
+        if (deleteSubscription?.isDisposed != true) {
+            deleteSubscription?.dispose()
+        }
     }
 }

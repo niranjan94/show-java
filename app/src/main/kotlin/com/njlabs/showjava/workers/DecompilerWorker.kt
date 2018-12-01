@@ -25,6 +25,7 @@ import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.JarExtractionWorker
 import com.njlabs.showjava.decompilers.JavaExtractionWorker
 import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
+import timber.log.Timber
 
 class DecompilerWorker(val context: Context, private val params: WorkerParameters) : Worker(context, params) {
 
@@ -45,7 +46,11 @@ class DecompilerWorker(val context: Context, private val params: WorkerParameter
     override fun doWork(): Result {
         var result = Result.FAILURE
         worker ?.let {
-            result = it.doWork()
+            try {
+                result = it.doWork()
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
             it.onStopped(false)
         }
         return result

@@ -20,60 +20,168 @@ package com.njlabs.showjava.data
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.njlabs.showjava.utils.PackageSourceTools
+import com.njlabs.showjava.utils.sourceDir
+import org.apache.commons.io.FileUtils
+import org.json.JSONException
+import org.json.JSONObject
+import timber.log.Timber
 import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+
+fun getDate(): String {
+    val date = Date(System.currentTimeMillis())
+    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.US)
+    formatter.timeZone = TimeZone.getTimeZone("UTC")
+    return formatter.format(date)
+}
 
 class SourceInfo() : Parcelable {
 
     lateinit var packageLabel: String
     lateinit var packageName: String
-    var hasSource = true
 
-    private var _sourceDirectory: File? = null
+    var hasJavaSource: Boolean = false
+    var hasXmlSource: Boolean = false
 
-    val sourceDirectory: File
-        get() {
-            _sourceDirectory = _sourceDirectory ?: PackageSourceTools.sourceDir(packageName)
-            return _sourceDirectory as File
-        }
+    var createdAt: String = getDate()
+    var updatedAt: String = getDate()
+
+    lateinit var sourceDirectory: File
 
     constructor(parcel: Parcel) : this() {
         packageLabel = parcel.readString()!!
         packageName = parcel.readString()!!
-        hasSource = parcel.readByte() != 0.toByte()
+        hasJavaSource = parcel.readInt() == 1
+        hasXmlSource = parcel.readInt() == 1
+        createdAt = parcel.readString()!!
+        updatedAt = parcel.readString()!!
+        sourceDirectory = sourceDir(packageName)
     }
 
-    constructor(packageLabel: String, packageName: String) : this() {
+    constructor(packageLabel: String, packageName: String, hasJavaSource: Boolean, hasXmlSource:Boolean, createdAt: String, updatedAt: String) : this() {
         this.packageLabel = packageLabel
         this.packageName = packageName
-    }
-
-    constructor(hasSource: Boolean) : this() {
-        this.hasSource = hasSource
-    }
-
-    fun hasSource(): Boolean {
-        return hasSource
+        this.hasJavaSource = hasJavaSource
+        this.hasXmlSource = hasXmlSource
+        this.createdAt = createdAt
+        this.updatedAt = updatedAt
+        sourceDirectory = sourceDir(packageName)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(packageLabel)
         parcel.writeString(packageName)
-        parcel.writeByte(if (hasSource) 1 else 0)
+        parcel.writeInt(if (hasJavaSource) 1 else 0)
+        parcel.writeInt(if (hasXmlSource) 1 else 0)
+        parcel.writeString(createdAt)
+        parcel.writeString(updatedAt)
     }
 
     override fun describeContents(): Int {
         return 0
     }
 
+    fun setPackageLabel(packageLabel: String): SourceInfo {
+        this.packageLabel = packageLabel
+        return this
+    }
+
+    fun setPackageName(packageName: String): SourceInfo {
+        this.packageName = packageName
+        this.sourceDirectory = sourceDir(packageName)
+        return this
+    }
+
+    fun setJavaSourcePresence(hasJavaSource: Boolean): SourceInfo {
+        this.hasJavaSource = hasJavaSource
+        return this
+    }
+
+    fun setXmlSourcePresence(hasXmlSource: Boolean): SourceInfo {
+        this.hasXmlSource = hasXmlSource
+        return this
+    }
+
+    fun persist(): SourceInfo {
+        updatedAt = getDate()
+        try {
+            val infoFile = getInfoFile(sourceDirectory)
+            val json = JSONObject()
+            json.put("package_label", packageLabel)
+            json.put("package_name", packageName)
+            json.put("has_java_sources", hasJavaSource)
+            json.put("has_xml_sources", hasXmlSource)
+            json.put("created_at", createdAt)
+            json.put("updated_at", updatedAt)
+            FileUtils.writeStringToFile(
+                infoFile,
+                json.toString(2),
+                "UTF-8"
+            )
+        } catch (e: IOException) {
+            Timber.e(e)
+        } catch (e: JSONException) {
+            Timber.e(e)
+        }
+        return this
+    }
+
     companion object CREATOR : Parcelable.Creator<SourceInfo> {
+        private fun getInfoFile(source: File): File {
+            if (!source.exists() || source.isFile) {
+                return source
+            }
+            return source.resolve("info.json")
+        }
+
+        fun exists(sourceDir: File): Boolean {
+            if (sourceDir.exists() && sourceDir.isDirectory) {
+                val infoFile = sourceDir.resolve("info.json")
+                if (infoFile.exists() && infoFile.isFile) {
+                    val sourceInfo = from(sourceDir)
+                    if (sourceInfo.hasJavaSource || sourceInfo.hasXmlSource) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+        fun from(source: File): SourceInfo {
+            return try {
+                val infoFile = getInfoFile(source)
+                if (!infoFile.exists()) {
+                    return SourceInfo()
+                }
+                val json = JSONObject(FileUtils.readFileToString(infoFile, "UTF-8"))
+                if (json.getBoolean("has_java_sources") || json.getBoolean("has_xml_sources")) {
+                    SourceInfo(
+                        json.getString("package_label"),
+                        json.getString("package_name"),
+                        json.getBoolean("has_java_sources"),
+                        json.getBoolean("has_xml_sources"),
+                        json.getString("created_at"),
+                        json.getString("updated_at")
+                    )
+                } else {
+                    SourceInfo()
+                }
+            } catch (e: IOException) {
+                SourceInfo()
+            } catch (e: JSONException) {
+                SourceInfo()
+            }
+        }
+
         override fun createFromParcel(parcel: Parcel): SourceInfo {
             return SourceInfo(parcel)
         }
-
         override fun newArray(size: Int): Array<SourceInfo?> {
             return arrayOfNulls(size)
         }
     }
-
 }

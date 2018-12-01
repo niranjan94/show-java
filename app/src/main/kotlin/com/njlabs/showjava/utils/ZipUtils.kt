@@ -30,7 +30,7 @@ import java.util.zip.ZipOutputStream
 object ZipUtils {
 
     fun zipDir(dir: File, packageId: String): File {
-        val zipIntoDir = File("${Environment.getExternalStorageDirectory()}/show-java/archives/")
+        val zipIntoDir = appStorage.resolve("archives")
         if (!zipIntoDir.exists() || !zipIntoDir.isDirectory) {
             zipIntoDir.mkdirs()
         }

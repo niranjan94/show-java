@@ -18,3 +18,8 @@ org.junit
 java
 org.intellij.lang.annotations
 org.jetbrains.annotations
+rx
+io.reactivex
+dagger
+io.realm
+com.facebook.react

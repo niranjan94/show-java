@@ -23,21 +23,23 @@ import android.content.Context
 import android.content.Intent
 import androidx.work.WorkManager
 import com.njlabs.showjava.Constants
+import com.njlabs.showjava.utils.ProcessNotifier
 import timber.log.Timber
 
 class DecompilerActionReceiver : BroadcastReceiver() {
+
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {
             Constants.WORKER.ACTION.STOP -> {
                 Timber.d("[cancel-request] ID: ${intent.getStringExtra("id")}")
-                Timber.d("[cancel-request] PackageName: ${intent.getStringExtra("packageName")}")
-                WorkManager.getInstance().cancelUniqueWork(
-                    intent.getStringExtra("packageName")
-                )
+                val id = intent.getStringExtra("id")
+                ProcessNotifier(context!!, id).cancel()
+                WorkManager.getInstance().cancelUniqueWork(id)
             }
             else -> {
                 Timber.i("Received an unknown action.")
             }
         }
     }
+
 }

@@ -19,9 +19,8 @@
 package com.njlabs.showjava.activities.landing
 
 import android.content.Context
-import android.os.Environment
 import com.njlabs.showjava.data.SourceInfo
-import com.njlabs.showjava.utils.PackageSourceTools
+import com.njlabs.showjava.utils.appStorage
 import io.reactivex.Observable
 import org.apache.commons.io.FileUtils
 import timber.log.Timber
@@ -33,9 +32,8 @@ class LandingHandler(private var context: Context) {
     fun loadHistory(): Observable<ArrayList<SourceInfo>> {
         return Observable.fromCallable {
             val historyItems = ArrayList<SourceInfo>()
-            val showJavaDir = File("${Environment.getExternalStorageDirectory()}/show-java/")
-            showJavaDir.mkdirs()
-            val nomedia = File(showJavaDir, ".nomedia")
+            appStorage.mkdirs()
+            val nomedia = File(appStorage, ".nomedia")
             if (!nomedia.exists() || !nomedia.isFile) {
                 try {
                     nomedia.createNewFile()
@@ -43,15 +41,15 @@ class LandingHandler(private var context: Context) {
                     Timber.e(e)
                 }
             }
-            val dir = File("${Environment.getExternalStorageDirectory()}/show-java/sources")
-            if (dir.exists()) {
-                val files = dir.listFiles()
+            val sourcesDir = appStorage.resolve("sources")
+            if (sourcesDir.exists()) {
+                val files = sourcesDir.listFiles()
                 if (files != null && files.isNotEmpty())
                     files.forEach { file ->
-                        Timber.d(file.canonicalPath)
-                        if (PackageSourceTools.sourceExists(file)) {
-                            PackageSourceTools.getSourceInfoFromSourcePath(file)
-                                ?.let { historyItems.add(it) }
+                        if (SourceInfo.exists(file)) {
+                            SourceInfo.from(file).let {
+                                historyItems.add(it)
+                            }
                         } else {
                             try {
                                 if (file.exists()) {
