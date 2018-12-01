@@ -21,8 +21,8 @@ package com.njlabs.showjava.activities.explorer.navigator
 import android.content.Context
 import com.njlabs.showjava.data.FileItem
 import com.njlabs.showjava.utils.ZipUtils
-import com.njlabs.showjava.utils.humanReadableByteCount
 import io.reactivex.Observable
+import org.apache.commons.io.FileUtils
 import java.io.File
 import java.text.DateFormat
 import java.util.Date
@@ -50,7 +50,7 @@ class NavigatorHandler(private var context: Context) {
                     val fileSize = "$noOfChildren ${if (noOfChildren == 1) "item" else "items"}"
                     directories.add(FileItem(file, fileSize, lastModDate))
                 } else {
-                    val fileSize = humanReadableByteCount(file.length(), true)
+                    val fileSize = FileUtils.byteCountToDisplaySize(file.length())
                     files.add(FileItem(file, fileSize, lastModDate))
                 }
             }

@@ -19,10 +19,11 @@
 package com.njlabs.showjava.utils
 
 import android.content.Context
+import android.content.pm.PackageInfo
 import android.net.ConnectivityManager
-import java.io.File
+import android.os.Build
 import java.text.Normalizer
-import java.util.*
+import java.util.Locale
 import java.util.regex.Pattern
 
 private val NON_LATIN = Pattern.compile("[^\\w-]")
@@ -39,30 +40,30 @@ fun toSlug(input: String): String {
     return slug.toLowerCase(Locale.ENGLISH)
 }
 
-fun humanReadableByteCount(bytes: Long, si: Boolean): String {
-    val unit = if (si) 1000 else 1024
-    if (bytes < unit) return bytes.toString() + " B"
-    val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
-    val pre = (if (si) "kMGTPE" else "KMGTPE")[exp - 1] + if (si) "" else "i"
-    return String.format("%.1f %sB", bytes / Math.pow(unit.toDouble(), exp.toDouble()), pre)
-}
-
-fun getFolderSize(f: File): Long {
-    var size: Long = 0
-    if (f.isDirectory) {
-        for (file in f.listFiles()) {
-            size += getFolderSize(file)
-        }
-    } else {
-        size = f.length()
-    }
-    return size
-}
-
 fun checkDataConnection(context: Context): Boolean {
     val connectivityMgr =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     return (connectivityMgr.activeNetworkInfo != null &&
             connectivityMgr.activeNetworkInfo.isAvailable &&
             connectivityMgr.activeNetworkInfo.isConnected)
+}
+
+/**
+ * Get either version name or version code form [packageInfo].
+ */
+fun getVersion(packageInfo: PackageInfo): String {
+    return if (packageInfo.versionName != null)
+        packageInfo.versionName
+    else
+        getVersionCode(packageInfo).toString()
+}
+
+/**
+ * Get version code from [packageInfo] using the correct method depending on Android version.
+ */
+fun getVersionCode(packageInfo: PackageInfo): Number {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+        packageInfo.longVersionCode
+    else
+        packageInfo.versionCode
 }

@@ -22,6 +22,7 @@ import android.content.Context
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.PackageSourceTools
+import com.njlabs.showjava.utils.getVersion
 import com.njlabs.showjava.utils.rx.ProcessStatus
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
@@ -40,8 +41,7 @@ class AppsHandler(private var context: Context) {
                 packageInfo.label =
                         pack.applicationInfo.loadLabel(context.packageManager).toString()
                 packageInfo.name = pack.packageName
-                packageInfo.version =
-                        if (pack.versionName != null) pack.versionName else pack.versionCode.toString()
+                packageInfo.version = getVersion(pack)
                 packageInfo.filePath = pack.applicationInfo.publicSourceDir
                 packageInfo.icon = pack.applicationInfo.loadIcon(context.packageManager)
                 installedApps.add(packageInfo)

@@ -18,7 +18,6 @@
 
 package com.njlabs.showjava.activities.decompiler
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
@@ -28,7 +27,6 @@ import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.data.PackageInfo
 import kotlinx.android.synthetic.main.activity_decompiler_process.*
 
-@SuppressLint("Registered")
 class DecompilerProcessActivity : BaseActivity() {
     override fun init(savedInstanceState: Bundle?) {
         setupLayoutNoActionBar(R.layout.activity_decompiler_process)

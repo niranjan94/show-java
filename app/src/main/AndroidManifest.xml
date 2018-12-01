@@ -98,6 +98,8 @@
                 android:value=".activities.apps.AppsActivity" />
         </activity>
 
+        <activity android:name=".activities.decompiler.DecompilerProcessActivity" />
+
         <activity
             android:name=".activities.explorer.viewer.CodeViewerActivity"
             android:theme="@style/SourceViewerTheme" />
