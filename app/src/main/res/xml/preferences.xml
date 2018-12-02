@@ -56,6 +56,20 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:iconSpaceReserved="false"
+        android:title="@string/experimental">
+
+        <EditTextPreference
+            android:defaultValue="2000"
+            android:inputType="number"
+            android:key="chunkSize"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:title="@string/classesPerChunk" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/helpSupport"
         app:iconSpaceReserved="false">
 

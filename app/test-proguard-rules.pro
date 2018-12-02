@@ -8,7 +8,7 @@
 
 -keep class androidx.test.**
 -keep class androidx.test.** { *; }
--keep class com.njlabs.showjava.test.** { *; }
+-keep class com.njlabs.showjava.** { *; }
 -keep class com.android.dex.** { *; }
 
 -dontwarn androidx.test.**

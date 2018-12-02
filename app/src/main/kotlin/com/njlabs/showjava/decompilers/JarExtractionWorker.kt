@@ -115,11 +115,13 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         Timber.d("Output directory: $workingDirectory")
         setStep(context.getString(R.string.mergingClasses))
         Timber.d("Total class to write ${classes.size}")
+        setStep(context.getString(R.string.writingDexFile))
 
-        classes.chunked(6000).forEachIndexed { index, list ->
-            Timber.d("Chunk $index with classes: ${list.size}")
+        val chunkedClasses = classes.chunked(data.getInt("chunkSize", 2000))
+        chunkedClasses.forEachIndexed { index, list ->
+            Timber.d("Chunk $index with classes: ${chunkedClasses.size}")
+            sendStatus(context.getString(R.string.chunk, index + 1, chunkedClasses.size), true)
             val dexFile = ImmutableDexFile(Opcodes.getDefault(), list)
-            sendStatus(context.getString(R.string.writingDexFile), true)
             DexFileFactory.writeDexFile(
                 outputDexFiles.resolve("$index.dex").canonicalPath,
                 dexFile
@@ -156,6 +158,9 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         val optimizeSynchronized = true // Optimise-synchronised
 
         if (outputDexFiles.exists() && outputDexFiles.isDirectory) {
+
+            setStep(context.getString(R.string.writingJarFile))
+
             outputDexFiles.listFiles().forEachIndexed { index, outputDexFile ->
                 if (outputDexFile.exists() && outputDexFile.isFile) {
                     val dexExceptionHandlerMod = DexExceptionHandlerMod()

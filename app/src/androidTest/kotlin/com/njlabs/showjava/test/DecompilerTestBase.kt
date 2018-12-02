@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, gsee <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.njlabs.showjava.test
@@ -88,6 +88,7 @@ abstract class DecompilerTestBase {
     fun testDecompiler() {
         val data = BaseDecompiler.formData(hashMapOf(
             "shouldIgnoreLibs" to true,
+            "chunkSize" to 2000,
             "decompiler" to decompiler,
             "name" to "xyz.codezero.testapplication.$decompiler.${type.name}",
             "label" to "TestApplication-$decompiler-${type.name}",

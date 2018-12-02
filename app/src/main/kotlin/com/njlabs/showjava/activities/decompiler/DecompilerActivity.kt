@@ -85,6 +85,7 @@ class DecompilerActivity : BaseActivity() {
     private fun startProcess(decompiler: String) {
         BaseDecompiler.start(hashMapOf(
             "shouldIgnoreLibs" to userPreferences.getBoolean("ignoreLibraries", true),
+            "chunkSize" to (userPreferences.getString("chunkSize", "2000")?.toInt() ?: 2000),
             "decompiler" to decompiler,
             "name" to packageInfo.name,
             "label" to packageInfo.label,

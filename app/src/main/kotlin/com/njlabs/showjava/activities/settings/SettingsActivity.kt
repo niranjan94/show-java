@@ -43,6 +43,7 @@ class SettingsActivity : BaseActivity() {
             preferenceManager.sharedPreferencesMode = Context.MODE_PRIVATE
             setPreferencesFromResource(R.xml.preferences, rootKey)
             bindPreferenceSummaryToValue(findPreference("decompiler"))
+            bindPreferenceSummaryToValue(findPreference("chunkSize"))
         }
     }
 
@@ -65,8 +66,10 @@ class SettingsActivity : BaseActivity() {
                     if (index >= 0) {
                         val decompilers = preference.context.resources.getStringArray(R.array.decompilers)
                         preference.summary = decompilers[index]
-                        return@OnPreferenceChangeListener true
+                    } else {
+                        preference.summary = stringValue
                     }
+                    return@OnPreferenceChangeListener true
                 }
                 preference.summary = null
                 true

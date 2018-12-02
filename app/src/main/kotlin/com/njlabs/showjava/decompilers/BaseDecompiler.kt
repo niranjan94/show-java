@@ -23,7 +23,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.work.*
 import com.njlabs.showjava.Constants
-import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.ProcessNotifier
 import com.njlabs.showjava.utils.appStorage
@@ -81,7 +80,8 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     }
 
     fun sendStatus(message: String, forceSet: Boolean = false) {
-        sendStatus(context.getString(R.string.processing), message, forceSet)
+        processNotifier?.updateText(message, forceSet)
+        this.broadcastStatus(null, message)
     }
 
     fun setStep(title: String) {
@@ -100,7 +100,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     /**
      * Broadcast the status to the receiver
      */
-    private fun broadcastStatus(title: String, message: String) {
+    private fun broadcastStatus(title: String?, message: String) {
         context.sendBroadcast(
             Intent(Constants.WORKER.ACTION.BROADCAST)
                 .putExtra(Constants.WORKER.STATUS_KEY, title)

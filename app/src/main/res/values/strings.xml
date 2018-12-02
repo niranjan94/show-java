@@ -117,5 +117,8 @@
     <string name="viewDecompiledSource">View previously decompiled source</string>
     <string name="selectFile">Select a File</string>
     <string name="writingDexFile">Writing dex file</string>
-
+    <string name="writingJarFile">Writing jar file</string>
+    <string name="chunk">Chunk <xliff:g example="2" id="currentChunk">%1$d</xliff:g> of <xliff:g example="4" id="totalChunks">%2$d</xliff:g></string>
+    <string name="experimental">Experimental</string>
+    <string name="classesPerChunk">Class definitions per dex chunk</string>
 </resources>
