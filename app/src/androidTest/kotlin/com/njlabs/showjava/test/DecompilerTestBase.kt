@@ -16,7 +16,7 @@
  * along with this program.  If not, gsee <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava
+package com.njlabs.showjava.test
 
 import android.os.Build
 import android.os.Environment

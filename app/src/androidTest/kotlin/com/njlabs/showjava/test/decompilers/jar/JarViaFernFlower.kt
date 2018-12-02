@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.decompilers.jar
+package com.njlabs.showjava.test.decompilers.jar
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.njlabs.showjava.DecompilerTestBase
+import com.njlabs.showjava.test.DecompilerTestBase
 import com.njlabs.showjava.data.PackageInfo
 import org.junit.runner.RunWith
 

@@ -68,7 +68,7 @@ fun checkDataConnection(context: Context): Boolean {
 
 fun getDate(): String {
     val date = Date(System.currentTimeMillis())
-    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.US)
+    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US)
     formatter.timeZone = TimeZone.getTimeZone("UTC")
     return formatter.format(date)
 }

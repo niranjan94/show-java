@@ -4,33 +4,33 @@
 
 ![ShowJava Banner v0.1](https://res.cloudinary.com/niranjan94/image/upload/v1518341743/banner_lihb7z.png)
 
-An apk decompiler for android.
+An APK (android application), JAR & Dex decompiler for android.
 
 > The current GitHub master branch may be ahead of the Play Store version (and could be unstable/incomplete/buggy at some places)
 
 [<img src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" width="200" alt="Get Show Java on Google Play" />](https://play.google.com/store/apps/details?id=com.njlabs.showjava "Get Show Java on Google Play")
 ## About
-This is a Decompiler that extracts the source code of an Android application (including XML files and image assets). Works directly from your android device.
+This is a Decompiler that extracts the source code of an Android application (including XML files and image assets), JAR Packages and dex files. Works directly from your android device.
 
 ## Features
 
-- Select either **CFR 0.135**, **JaDX 0.8.0** or **FernFlower [`e9989d15e3`](https://github.com/fesh0r/fernflower/tree/e9989d15e3c1ad1ae28e168f306becfd0abe101c) (analytical decompiler)** to use as the decompiler (more to come).
+- Select either **CFR 0.135**, **JaDX 0.8.0** or **FernFlower [`e9989d1`](https://github.com/fesh0r/fernflower/tree/e9989d15e3c1ad1ae28e168f306becfd0abe101c) (analytical decompiler)** to use as the decompiler.
 - Runs directly on an android device (4.1.x and above).
-- Select apk from sdcard (or) from a list of installed applications.
-- Easy to use.
-- Decompiles resources too (layouts, Drawables, Menus, AndroidManifest, image assets).
-- Displays code in a clean-syntax-highlighted form.
-- The decompiled source can easily be copied from the sdcard (source is stored in ShowJava folder in the sdcard).
-- Simple source browser with a summary of all decompilation errors.
-- Each decompiled source file has commented references to classes that could not be decompiled.
+- Select apk/jar/dex from sdcard (or) from a list of installed applications.
+- Decompiles android resources (layouts, Drawables, Menus, AndroidManifest, image assets, values, etc).
+- Easy to use source navigator with built-in media & code viewer.
+- Displays code in a clean-syntax-highlighted form with zoom & line-wrap.
+- The decompiled source can easily be copied from the sdcard (source is stored in `show-java` folder in the sdcard).
 - Share the decompiled source easily with the built in archive + share mechanism.
 
 ## Compatibility Matrix
 
 ### Version 3.0
 
+JaDX and Fernflower use newer Java features such as some types of lambda's which are not available on pre-N versions of Android. 
+
 |             | CFR 0.135          | JaDX 0.8.0         | Fernflower         |
-|-------------|--------------------|--------------------|--------------------|
+|------------:|:------------------:|:------------------:|:------------------:|
 | Oreo        | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Nougat      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Marshmallow | :white_check_mark: |                    |                    |
@@ -43,7 +43,7 @@ This is a Decompiler that extracts the source code of an Android application (in
 ### Version 2.0
 
 |             | CFR 0.110          | JaDX 0.6.1         | Fernflower         |
-|-------------|--------------------|--------------------|--------------------|
+|------------:|:------------------:|:------------------:|:------------------:|
 | ICS & Above | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 > Available from the [Play Store](https://play.google.com/store/apps/details?id=com.njlabs.showjava) on all Android devices lower than Jelly Bean.<br>

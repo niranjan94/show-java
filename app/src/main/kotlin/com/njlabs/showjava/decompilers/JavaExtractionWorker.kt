@@ -114,10 +114,7 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
         try {
             when (decompiler) {
-                "jadx" -> decompileWithJaDX(
-                    if (type == PackageInfo.Type.JAR) outputJarFile else outputDexFile,
-                    outputJavaSrcDirectory
-                )
+                "jadx" -> decompileWithJaDX(outputDexFile, outputJavaSrcDirectory)
                 "cfr" -> decompileWithCFR(outputJarFile, outputJavaSrcDirectory)
                 "fernflower" -> decompileWithFernFlower(outputJarFile, outputJavaSrcDirectory)
             }

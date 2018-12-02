@@ -125,6 +125,13 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         Timber.i("DEX file location: ${this.outputDexFile}")
     }
 
+    @Throws(Exception::class)
+    private fun convertJarToDex() {
+        xyz.codezero.android.dx.command.dexer.Main.main(
+            arrayOf("--output", outputDexFile.canonicalPath, inputPackageFile.canonicalPath)
+        )
+    }
+
     /**
      * Convert the dex file to jar for CFR or Fernflower to use.
      * JaDX can directly make use of the dex file.
@@ -183,24 +190,25 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
         super.doWork()
 
-        when(type) {
-            PackageInfo.Type.APK, PackageInfo.Type.DEX -> {
-                try {
+        try {
+            when(type) {
+                PackageInfo.Type.APK, PackageInfo.Type.DEX -> {
                     loadIgnoredLibs()
                     convertApkToDex()
-                } catch (e: Exception) {
-                    return exit(e)
+                    if (decompiler != "jadx") {
+                        convertDexToJar()
+                    }
+                }
+                PackageInfo.Type.JAR -> {
+                    if (decompiler == "jadx") {
+                        convertJarToDex()
+                    } else {
+                        inputPackageFile.copyTo(outputJarFile, true)
+                    }
                 }
             }
-            PackageInfo.Type.JAR -> {
-                inputPackageFile.copyTo(outputJarFile, true)
-            }
-        }
-
-        if (decompiler != "jadx"
-            && (type == PackageInfo.Type.APK || type == PackageInfo.Type.DEX)
-        ) {
-            convertDexToJar()
+        } catch (e: Exception) {
+            return exit(e)
         }
 
         return ListenableWorker.Result.SUCCESS

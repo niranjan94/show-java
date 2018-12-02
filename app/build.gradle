@@ -23,6 +23,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'io.michaelrocks.paranoid'
+apply plugin: 'ru.tinkoff.gradle.jarjar'
 
 def versionMajor = 3
 def versionMinor = 0
@@ -140,8 +141,8 @@ android {
             buildConfigField 'Boolean', 'EXTENDED_VALIDATION', 'true'
         }
         debug {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             testProguardFile 'test-proguard-rules.pro'
         }
     }
@@ -209,6 +210,11 @@ dependencies {
     // CLASS FILE READER - JAVA DECOMPILER
     implementation files('libs/cfr-0.135.jar')
 
+    // DX Tool. We are using jar-jar to repackage the dx lib.
+    // As android comes with the same classes in the lib-art.jar package that is usually a tad bit
+    // older than what we need and hence missing stuff.
+    jarJar files('libs/dx-1.14.jar')
+
     // DEPENDENCIES FOR JaDX
     implementation files('libs/dx-1.14.jar')
     implementation files('libs/android-5.1.jar')
@@ -259,6 +265,12 @@ dependencies {
     implementation 'com.github.angads25:filepicker:1.1.1'
     implementation 'com.github.javiersantos:PiracyChecker:1.2.4'
     implementation 'com.scottyab:secure-preferences-lib:0.1.4'
+
+    implementation fileTree(dir: 'build/libs', include: ['*.jar'])
+}
+
+jarJar {
+    rules = ['dx-1.14.jar': 'com.android.** xyz.codezero.android.@1']
 }
 
 apply plugin: 'hiBeaver'
