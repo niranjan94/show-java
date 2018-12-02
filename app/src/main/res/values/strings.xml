@@ -116,5 +116,6 @@
     <string name="sendSourceVia">Send source via</string>
     <string name="viewDecompiledSource">View previously decompiled source</string>
     <string name="selectFile">Select a File</string>
+    <string name="writingDexFile">Writing dex file</string>
 
 </resources>

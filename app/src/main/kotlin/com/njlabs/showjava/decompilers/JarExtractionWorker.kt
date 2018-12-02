@@ -59,7 +59,6 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
             }
         }
         Timber.d("Total libs to ignore: ${ignoredLibs.size}")
-        ignoredLibs.forEach { Timber.d(it) }
     }
 
     /**
@@ -113,22 +112,30 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
             addClassesFromDex(inputPackageFile.inputStream())
         }
 
-        Timber.i("Output directory: $workingDirectory")
-        sendStatus(context.getString(R.string.mergingClasses))
-        val dexFile = ImmutableDexFile(Opcodes.getDefault(), classes)
+        Timber.d("Output directory: $workingDirectory")
+        setStep(context.getString(R.string.mergingClasses))
+        Timber.d("Total class to write ${classes.size}")
 
-        DexFileFactory.writeDexFile(
-            this.outputDexFile.canonicalPath,
-            dexFile
-        )
-
-        Timber.i("DEX file location: ${this.outputDexFile}")
+        classes.chunked(6000).forEachIndexed { index, list ->
+            Timber.d("Chunk $index with classes: ${list.size}")
+            val dexFile = ImmutableDexFile(Opcodes.getDefault(), list)
+            sendStatus(context.getString(R.string.writingDexFile), true)
+            DexFileFactory.writeDexFile(
+                outputDexFiles.resolve("$index.dex").canonicalPath,
+                dexFile
+            )
+            Timber.d("DEX file location: ${this.outputDexFiles}")
+        }
     }
 
     @Throws(Exception::class)
     private fun convertJarToDex() {
         xyz.codezero.android.dx.command.dexer.Main.main(
-            arrayOf("--output", outputDexFile.canonicalPath, inputPackageFile.canonicalPath)
+            arrayOf(
+                "--output",
+                outputDexFiles.resolve("0.dex").canonicalPath,
+                inputPackageFile.canonicalPath
+            )
         )
     }
 
@@ -148,20 +155,25 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         val printIR = false // print ir to System.out
         val optimizeSynchronized = true // Optimise-synchronised
 
-        if (outputDexFile.exists() && outputDexFile.isFile) {
-            val dexExceptionHandlerMod = DexExceptionHandlerMod()
-            val reader = DexFileReader(outputDexFile)
-            val dex2jar = Dex2jar.from(reader)
-                .reUseReg(reuseReg)
-                .topoLogicalSort(topologicalSort || topologicalSort1)
-                .skipDebug(!debugInfo)
-                .optimizeSynchronized(optimizeSynchronized)
-                .printIR(printIR)
-                .verbose(verbose)
-            dex2jar.exceptionHandler = dexExceptionHandlerMod
-            dex2jar.to(outputJarFile)
-            outputDexFile.delete()
+        if (outputDexFiles.exists() && outputDexFiles.isDirectory) {
+            outputDexFiles.listFiles().forEachIndexed { index, outputDexFile ->
+                if (outputDexFile.exists() && outputDexFile.isFile) {
+                    val dexExceptionHandlerMod = DexExceptionHandlerMod()
+                    val reader = DexFileReader(outputDexFile)
+                    val dex2jar = Dex2jar.from(reader)
+                        .reUseReg(reuseReg)
+                        .topoLogicalSort(topologicalSort || topologicalSort1)
+                        .skipDebug(!debugInfo)
+                        .optimizeSynchronized(optimizeSynchronized)
+                        .printIR(printIR)
+                        .verbose(verbose)
+                    dex2jar.exceptionHandler = dexExceptionHandlerMod
+                    dex2jar.to(outputJarFiles.resolve("$index.jar"))
+                    outputDexFile.delete()
+                }
+            }
         }
+
     }
 
     /**
@@ -190,6 +202,9 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
         super.doWork()
 
+        outputDexFiles.mkdirs()
+        outputJarFiles.mkdirs()
+
         try {
             when(type) {
                 PackageInfo.Type.APK, PackageInfo.Type.DEX -> {
@@ -203,7 +218,10 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
                     if (decompiler == "jadx") {
                         convertJarToDex()
                     } else {
-                        inputPackageFile.copyTo(outputJarFile, true)
+                        inputPackageFile.copyTo(
+                            outputJarFiles.resolve("0.jar"),
+                            true
+                        )
                     }
                 }
             }

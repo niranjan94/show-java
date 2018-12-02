@@ -51,8 +51,8 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
     protected val inputPackageFile: File = File(data.getString("inputPackageFile"))
 
-    protected val outputDexFile: File = workingDirectory.resolve("classes.dex")
-    protected val outputJarFile: File = workingDirectory.resolve("$packageName.jar")
+    protected val outputDexFiles: File = workingDirectory.resolve("dex-files")
+    protected val outputJarFiles: File = workingDirectory.resolve("jar-files")
     protected val outputJavaSrcDirectory: File = workingDirectory.resolve("src/java")
     protected val outputResSrcDirectory: File = workingDirectory.resolve("src/res")
 
@@ -75,17 +75,17 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     /**
      * Update the notification and broadcast status
      */
-    protected fun sendStatus(title: String, message: String) {
-        processNotifier?.updateTitleText(title, message)
+    protected fun sendStatus(title: String, message: String, forceSet: Boolean = false) {
+        processNotifier?.updateTitleText(title, message, forceSet)
         this.broadcastStatus(title, message)
     }
 
-    fun sendStatus(message: String) {
-        sendStatus(context.getString(R.string.processing), message)
+    fun sendStatus(message: String, forceSet: Boolean = false) {
+        sendStatus(context.getString(R.string.processing), message, forceSet)
     }
 
     fun setStep(title: String) {
-        sendStatus(title, "")
+        sendStatus(title, "", true)
     }
 
     /**

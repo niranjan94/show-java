@@ -22,7 +22,6 @@ import android.content.Context
 import androidx.work.Data
 import androidx.work.ListenableWorker
 import com.njlabs.showjava.R
-import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.utils.ZipUtils
 import jadx.api.JadxArgs
@@ -40,15 +39,16 @@ import java.io.FileNotFoundException
 class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
     @Throws(Exception::class)
-    private fun decompileWithCFR(jarInputFile: File, javaOutputDir: File) {
-        val args = arrayOf(jarInputFile.toString(), "--outputdir", javaOutputDir.toString())
+    private fun decompileWithCFR(jarInputFiles: File, javaOutputDir: File) {
+        val jarFiles = jarInputFiles.listFiles()
+        val args = arrayOf(jarFiles.first().toString(), "--outputdir", javaOutputDir.toString())
 
         val getOptParser = GetOptParser()
         val options: Options?
         val files: List<String?>?
 
         val processedArgs = getOptParser.parse(args, OptionsImpl.getFactory())
-        files = processedArgs.first as List<String>
+        files = jarFiles.map { it.canonicalPath }
         options = processedArgs.second as Options
 
         if (!options.optionIsSet(OptionsImpl.HELP) && !files.isEmpty()) {
@@ -60,36 +60,37 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
     }
 
     @Throws(Exception::class)
-    private fun decompileWithJaDX(dexInputFile: File, javaOutputDir: File) {
+    private fun decompileWithJaDX(dexInputFiles: File, javaOutputDir: File) {
         val args = JadxArgs()
         args.outDirSrc = javaOutputDir
-        args.inputFiles = mutableListOf(dexInputFile)
+        args.inputFiles = dexInputFiles.listFiles().toMutableList()
         args.threadsCount = 1
 
         val jadx = JadxDecompiler(args)
         jadx.load()
         jadx.saveSources()
-        if (dexInputFile.exists() && dexInputFile.isFile) {
-            dexInputFile.delete()
+        if (dexInputFiles.exists() && dexInputFiles.isDirectory) {
+            dexInputFiles.deleteRecursively()
         }
     }
 
     @Throws(Exception::class)
-    private fun decompileWithFernFlower(jarInputFile: File, javaOutputDir: File) {
+    private fun decompileWithFernFlower(jarInputFiles: File, javaOutputDir: File) {
         ConsoleDecompiler.main(
             arrayOf(
-                jarInputFile.canonicalPath, javaOutputDir.canonicalPath
+                jarInputFiles.canonicalPath, javaOutputDir.canonicalPath
             )
         )
 
-        val decompiledJarFile = javaOutputDir.resolve("$packageName.jar")
-
-        if (decompiledJarFile.exists()) {
-            ZipUtils.unzip(decompiledJarFile, javaOutputDir, printStream!!)
-            decompiledJarFile.delete()
-        } else {
-            throw FileNotFoundException("Decompiled jar does not exist")
+        javaOutputDir.listFiles().forEach { decompiledJarFile ->
+            if (decompiledJarFile.exists() && decompiledJarFile.isFile && decompiledJarFile.extension == "jar") {
+                ZipUtils.unzip(decompiledJarFile, javaOutputDir, printStream!!)
+                decompiledJarFile.delete()
+            } else {
+                throw FileNotFoundException("Decompiled jar does not exist")
+            }
         }
+
     }
 
     override fun doWork(): ListenableWorker.Result {
@@ -101,12 +102,6 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
         super.doWork()
 
-        if (decompiler != "jadx") {
-            if (outputDexFile.exists() && outputDexFile.isFile) {
-                outputDexFile.delete()
-            }
-        }
-
         val sourceInfo = SourceInfo.from(workingDirectory)
             .setPackageLabel(packageLabel)
             .setPackageName(packageName)
@@ -114,12 +109,20 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
         try {
             when (decompiler) {
-                "jadx" -> decompileWithJaDX(outputDexFile, outputJavaSrcDirectory)
-                "cfr" -> decompileWithCFR(outputJarFile, outputJavaSrcDirectory)
-                "fernflower" -> decompileWithFernFlower(outputJarFile, outputJavaSrcDirectory)
+                "jadx" -> decompileWithJaDX(outputDexFiles, outputJavaSrcDirectory)
+                "cfr" -> decompileWithCFR(outputJarFiles, outputJavaSrcDirectory)
+                "fernflower" -> decompileWithFernFlower(outputJarFiles, outputJavaSrcDirectory)
             }
         } catch (e: Exception) {
             return exit(e)
+        }
+
+        if (outputDexFiles.exists() && outputDexFiles.isDirectory) {
+            outputDexFiles.deleteRecursively()
+        }
+
+        if (outputJarFiles.exists() && outputJarFiles.isDirectory) {
+            outputJarFiles.deleteRecursively()
         }
 
         sourceInfo
