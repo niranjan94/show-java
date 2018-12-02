@@ -112,25 +112,22 @@ abstract class DecompilerTestBase {
 
         val appContext = InstrumentationRegistry.getInstrumentation()
 
-        val jarExtractionWorker = JarExtractionWorker(appContext.targetContext, data)
-        TestCase.assertEquals(
-            "Can extract JAR",
-            ListenableWorker.Result.SUCCESS,
-            jarExtractionWorker.doWork()
-        )
+        var result: ListenableWorker.Result
+        var worker: BaseDecompiler
 
-        val javaExtractionWorker = JavaExtractionWorker(appContext.targetContext, data)
-        TestCase.assertEquals(
-            "Can extract JAVA Code",
-            ListenableWorker.Result.SUCCESS,
-            javaExtractionWorker.doWork()
-        )
+        worker = JarExtractionWorker(appContext.targetContext, data)
+        result = worker.doWork()
+        worker.onStopped()
+        TestCase.assertEquals("Can extract JAR", ListenableWorker.Result.SUCCESS, result)
 
-        val resourcesExtractionWorker = ResourcesExtractionWorker(appContext.targetContext, data)
-        TestCase.assertEquals(
-            "Can extract resources",
-            ListenableWorker.Result.SUCCESS,
-            resourcesExtractionWorker.doWork()
-        )
+        worker = JavaExtractionWorker(appContext.targetContext, data)
+        result = worker.doWork()
+        worker.onStopped()
+        TestCase.assertEquals("Can extract JAVA Code", ListenableWorker.Result.SUCCESS, result)
+
+        worker = ResourcesExtractionWorker(appContext.targetContext, data)
+        result = worker.doWork()
+        worker.onStopped()
+        TestCase.assertEquals("Can extract resources", ListenableWorker.Result.SUCCESS, result)
     }
 }

@@ -48,7 +48,7 @@ import java.util.zip.ZipFile
 
 class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
-    private var parsedInputApkFile = ApkFile(inputPackageFile)
+    private lateinit var parsedInputApkFile: ApkFile
     private val images = listOf("jpg", "png", "gif", "jpeg", "webp", "tiff", "bmp")
 
     @Throws(Exception::class)
@@ -208,6 +208,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         // Due to its dependency on the javax.imageio.ImageIO class which is unavailable on android
 
         if (type == PackageInfo.Type.APK) {
+            parsedInputApkFile = ApkFile(inputPackageFile)
             try {
                 extractResourcesWithParser()
                 saveIcon()

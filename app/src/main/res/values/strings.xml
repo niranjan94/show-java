@@ -68,7 +68,7 @@
     <string name="apkParseFailed">Failed to parse the selected apk file</string>
     <string name="jarUnsupported">Decompiling JAR files is unsupported. Will be available soon.</string>
     <string name="unsupported_file">File is unsupported.</string>
-    <string name="extractingJar">Extracting JAR from APK</string>
+    <string name="extractingJar">Building JAR from Input</string>
     <string name="decompilingToJava">Decompiling to java</string>
     <string name="extractingResources">Extracting resources</string>
     <string name="optimizing">Optimizing</string>

@@ -119,7 +119,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     /**
      * Cancel notification on worker stop
      */
-    open fun onStopped(cancelled: Boolean) {
+    open fun onStopped(cancelled: Boolean = false) {
         Timber.d("[cancel-request] cancelled: $cancelled")
         if (cancelled) {
             FileUtils.deleteQuietly(workingDirectory)
