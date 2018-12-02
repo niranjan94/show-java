@@ -16,13 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.decompilers
+package com.njlabs.showjava.decompilers.apk
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.njlabs.showjava.DecompilerTestBase
+import com.njlabs.showjava.data.PackageInfo
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class JadxDecompilerTest: DecompilerTestBase() {
-    override val decompiler: String = "jadx"
+class ApkViaCfr: DecompilerTestBase() {
+    override val type: PackageInfo.Type = PackageInfo.Type.APK
+    override val decompiler: String = "cfr"
 }

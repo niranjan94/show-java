@@ -23,6 +23,7 @@ import android.os.Environment
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import androidx.work.ListenableWorker
+import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.JarExtractionWorker
 import com.njlabs.showjava.decompilers.JavaExtractionWorker
@@ -37,9 +38,14 @@ import java.io.File
 abstract class DecompilerTestBase {
 
     abstract val decompiler: String
+    abstract val type: PackageInfo.Type
+
+    private val testAssets: File
+        get() = File(Environment.getExternalStorageDirectory(), "show-java")
+            .resolve("test-assets")
 
     private val testApplicationFile: File
-        get() = File(Environment.getExternalStorageDirectory(), "test-application.apk")
+        get() = testAssets.resolve("test-application.${type.name.toLowerCase()}")
 
     @Rule
     @JvmField
@@ -55,9 +61,17 @@ abstract class DecompilerTestBase {
     @Before
     fun initializeEnvironment() {
         val appContext = InstrumentationRegistry.getInstrumentation()
+        if (testAssets.exists() && testAssets.isFile) {
+            testAssets.delete()
+        }
+        if (!testAssets.exists()) {
+            testAssets.mkdirs()
+        }
         if (!testApplicationFile.exists()) {
             testApplicationFile.outputStream().use {
-                appContext.context.assets.open("test-application.apk").copyTo(it)
+                appContext.context.assets
+                    .open("test-application.${type.name.toLowerCase()}")
+                    .copyTo(it)
             }
         }
     }
@@ -75,10 +89,18 @@ abstract class DecompilerTestBase {
         val data = BaseDecompiler.formData(hashMapOf(
             "shouldIgnoreLibs" to true,
             "decompiler" to decompiler,
-            "name" to "xyz.codezero.testapplication.$decompiler",
-            "label" to "TestApplication-$decompiler",
-            "inputPackageFile" to testApplicationFile.canonicalPath
+            "name" to "xyz.codezero.testapplication.$decompiler.${type.name}",
+            "label" to "TestApplication-$decompiler-${type.name}",
+            "inputPackageFile" to testApplicationFile.canonicalPath,
+            "type" to type.ordinal
         ))
+
+        val packageInfo = PackageInfo.fromFile(
+            InstrumentationRegistry.getInstrumentation().targetContext,
+            testApplicationFile
+        )
+
+        TestCase.assertNotNull("Can parse PackageInfo from file", packageInfo)
 
         val outputDirectory = File(
             Environment.getExternalStorageDirectory(), "show-java/sources/${data.getString("name")}"
@@ -91,12 +113,24 @@ abstract class DecompilerTestBase {
         val appContext = InstrumentationRegistry.getInstrumentation()
 
         val jarExtractionWorker = JarExtractionWorker(appContext.targetContext, data)
-        TestCase.assertEquals(ListenableWorker.Result.SUCCESS, jarExtractionWorker.doWork())
+        TestCase.assertEquals(
+            "Can extract JAR",
+            ListenableWorker.Result.SUCCESS,
+            jarExtractionWorker.doWork()
+        )
 
         val javaExtractionWorker = JavaExtractionWorker(appContext.targetContext, data)
-        TestCase.assertEquals(ListenableWorker.Result.SUCCESS, javaExtractionWorker.doWork())
+        TestCase.assertEquals(
+            "Can extract JAVA Code",
+            ListenableWorker.Result.SUCCESS,
+            javaExtractionWorker.doWork()
+        )
 
         val resourcesExtractionWorker = ResourcesExtractionWorker(appContext.targetContext, data)
-        TestCase.assertEquals(ListenableWorker.Result.SUCCESS, resourcesExtractionWorker.doWork())
+        TestCase.assertEquals(
+            "Can extract resources",
+            ListenableWorker.Result.SUCCESS,
+            resourcesExtractionWorker.doWork()
+        )
     }
 }

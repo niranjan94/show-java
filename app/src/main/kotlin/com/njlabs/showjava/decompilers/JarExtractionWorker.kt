@@ -182,11 +182,11 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
                 }
             }
             PackageInfo.Type.JAR -> {
-                inputPackageFile.copyTo(outputJarFile)
+                inputPackageFile.copyTo(outputJarFile, true)
             }
 
             PackageInfo.Type.DEX -> {
-                inputPackageFile.copyTo(outputDexFile)
+                inputPackageFile.copyTo(outputDexFile, true)
             }
         }
 
