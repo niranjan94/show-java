@@ -33,6 +33,7 @@ import org.apache.commons.io.FilenameUtils
 import org.jf.dexlib2.DexFileFactory
 import org.jf.dexlib2.Opcodes
 import org.jf.dexlib2.dexbacked.DexBackedDexFile
+import org.jf.dexlib2.dexbacked.DexBackedOdexFile
 import org.jf.dexlib2.iface.ClassDef
 import org.jf.dexlib2.immutable.ImmutableDexFile
 import org.objectweb.asm.tree.MethodNode
@@ -80,8 +81,18 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
         val classes = ArrayList<ClassDef>()
 
-        fun addClassesFromDex(inputStream: InputStream) {
-            val dexFile = DexBackedDexFile.fromInputStream(Opcodes.getDefault(), BufferedInputStream(inputStream))
+        fun addClassesFromDex(inputStream: InputStream, type: String = "dex") {
+            val dexFile =
+                if (type == "dex")
+                    DexBackedDexFile.fromInputStream(
+                        Opcodes.getDefault(),
+                        BufferedInputStream(inputStream)
+                    )
+                else
+                    DexBackedOdexFile.fromInputStream(
+                        Opcodes.getDefault(),
+                        BufferedInputStream(inputStream)
+                    )
             for (classDef in dexFile.classes) {
                 if (!isIgnored(classDef.type)) {
                     val currentClass = classDef.type
@@ -101,15 +112,18 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
             // In the case of APKs with multiple dex files, ensure all dex files are loaded
             while (entries.hasMoreElements()) {
                 val zipEntry = entries.nextElement()
-                if (!zipEntry.isDirectory && FilenameUtils.isExtension(zipEntry.name, "dex")) {
-                    addClassesFromDex(zipFile.getInputStream(zipEntry))
+                if (!zipEntry.isDirectory) {
+                    val extension = FilenameUtils.getExtension(zipEntry.name).toLowerCase()
+                    if (arrayOf("dex", "odex").contains(extension)) {
+                        addClassesFromDex(zipFile.getInputStream(zipEntry), extension)
+                    }
                 }
             }
             zipFile.close()
         }
 
         if (type == PackageInfo.Type.DEX) {
-            addClassesFromDex(inputPackageFile.inputStream())
+            addClassesFromDex(inputPackageFile.inputStream(), inputPackageFile.extension)
         }
 
         Timber.d("Output directory: $workingDirectory")
@@ -188,6 +202,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         override fun handleFileException(e: Exception) {
             Timber.d("Dex2Jar Exception $e")
         }
+
         override fun handleMethodTranslateException(
             method: Method,
             irMethod: IrMethod,
@@ -211,7 +226,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         outputJarFiles.mkdirs()
 
         try {
-            when(type) {
+            when (type) {
                 PackageInfo.Type.APK, PackageInfo.Type.DEX -> {
                     loadIgnoredLibs()
                     convertApkToDex()

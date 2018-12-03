@@ -89,7 +89,7 @@ class LandingActivity : BaseActivity() {
         properties.root = Environment.getExternalStorageDirectory()
         properties.error_dir = properties.root
         properties.offset = properties.root
-        properties.extensions = arrayOf("apk", "jar", "dex")
+        properties.extensions = arrayOf("apk", "jar", "dex", "odex")
 
         filePickerDialog = FilePickerDialog(this, properties)
         filePickerDialog.setTitle(getString(R.string.selectFile))

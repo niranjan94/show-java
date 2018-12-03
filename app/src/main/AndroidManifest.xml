@@ -84,15 +84,6 @@
                 android:resource="@xml/searchable" />
         </activity>
 
-        <activity
-            android:name=".activities.decompiler.DecompilerActivity"
-            android:label="@string/appName"
-            android:theme="@style/AppTheme.WithTransition">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.apps.AppsActivity" />
-        </activity>
-
         <activity android:name=".activities.decompiler.DecompilerProcessActivity" />
 
         <activity
@@ -133,6 +124,138 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.about.AboutActivity"/>
         </activity>
+
+
+        <activity
+            android:name=".activities.decompiler.DecompilerActivity"
+            android:label="@string/appName"
+            android:theme="@style/AppTheme.WithTransition">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.apps.AppsActivity" />
+
+            <intent-filter
+                android:icon="@mipmap/ic_launcher_round"
+                android:label="@string/appName"
+                android:priority="10" >
+
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="file" />
+                <data android:mimeType="application/vnd.android.package-archive" />
+            </intent-filter>
+
+            <intent-filter
+                android:icon="@mipmap/ic_launcher_round"
+                android:label="@string/appName"
+                android:priority="20" >
+
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="file" />
+                <data android:mimeType="application/java-archive" />
+            </intent-filter>
+
+            <!--
+                 Capture file open requests (pathPattern is honoured) where no
+                 MIME type is provided in the Intent.  An Intent with a null
+                 MIME type will never be matched by a filter with a set MIME
+                 type, so we need a second intent-filter if we wish to also
+                 match files with this extension and a non-null MIME type
+                 (even if it is non-null but zero length).
+            -->
+            <intent-filter
+                android:icon="@mipmap/ic_launcher_round"
+                android:label="@string/appName"
+                android:priority="30" >
+
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+
+                <!--
+                     Work around Android's ugly primitive PatternMatcher
+                     implementation that can't cope with finding a . early in
+                     the path unless it's explicitly matched.
+                -->
+                <data android:pathPattern=".*\\.jar" />
+                <data android:pathPattern=".*\\..*\\.jar" />
+                <data android:pathPattern=".*\\..*\\..*\\.jar" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.jar" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.jar" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.jar" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.jar" />
+                <data android:pathPattern=".*\\.dex" />
+                <data android:pathPattern=".*\\..*\\.dex" />
+                <data android:pathPattern=".*\\..*\\..*\\.dex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.dex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.dex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.dex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.dex" />
+                <data android:pathPattern=".*\\.odex" />
+                <data android:pathPattern=".*\\..*\\.odex" />
+                <data android:pathPattern=".*\\..*\\..*\\.odex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.odex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.odex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.odex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.odex" />
+            </intent-filter>
+
+            <!--
+                 Capture file open requests (pathPattern is honoured) where a
+                 (possibly blank) MIME type is provided in the Intent.  This
+                 filter may only be necessary for supporting ES File Explorer,
+                 which has the probably buggy behaviour of using an Intent
+                 with a MIME type that is set but zero-length.  It's
+                 impossible to match such a type except by using a global
+                 wildcard.
+            -->
+            <intent-filter
+                android:icon="@mipmap/ic_launcher_round"
+                android:label="@string/appName"
+                android:priority="40" >
+
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:mimeType="*/*" />
+
+                <!--
+                     Work around Android's ugly primitive PatternMatcher
+                     implementation that can't cope with finding a . early in
+                     the path unless it's explicitly matched.
+                -->
+                <data android:pathPattern=".*\\.jar" />
+                <data android:pathPattern=".*\\..*\\.jar" />
+                <data android:pathPattern=".*\\..*\\..*\\.jar" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.jar" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.jar" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.jar" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.jar" />
+                <data android:pathPattern=".*\\.dex" />
+                <data android:pathPattern=".*\\..*\\.dex" />
+                <data android:pathPattern=".*\\..*\\..*\\.dex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.dex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.dex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.dex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.dex" />
+                <data android:pathPattern=".*\\.odex" />
+                <data android:pathPattern=".*\\..*\\.odex" />
+                <data android:pathPattern=".*\\..*\\..*\\.odex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.odex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.odex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.odex" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.odex" />
+            </intent-filter>
+
+        </activity>
+
     </application>
 
 </manifest>

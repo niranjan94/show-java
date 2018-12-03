@@ -152,7 +152,7 @@ class PackageInfo() : Parcelable {
             return when(file.extension) {
                 "apk" -> fromApk(context, file)
                 "jar" -> fromJar(file)
-                "dex" -> fromDex(file)
+                "dex", "odex" -> fromDex(file)
                 else -> null
             }
         }
