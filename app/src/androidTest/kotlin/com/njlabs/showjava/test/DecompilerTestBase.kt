@@ -89,6 +89,7 @@ abstract class DecompilerTestBase {
         val data = BaseDecompiler.formData(hashMapOf(
             "shouldIgnoreLibs" to true,
             "chunkSize" to 2000,
+            "maxAttempts" to 1,
             "decompiler" to decompiler,
             "name" to "xyz.codezero.testapplication.$decompiler.${type.name}",
             "label" to "TestApplication-$decompiler-${type.name}",

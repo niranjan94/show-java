@@ -22,3 +22,4 @@ google-services.json
 /app/standard/
 tmp
 dependencies.txt
+test.sh

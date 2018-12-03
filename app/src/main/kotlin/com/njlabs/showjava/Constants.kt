@@ -29,6 +29,14 @@ object Constants {
      * Workers related constants
      */
     interface WORKER {
+
+        interface PARAMETERS {
+            companion object {
+                const val CLASSES_PER_CHUNK = 500
+                const val MAX_ATTEMPTS = 2
+            }
+        }
+
         companion object {
             const val STATUS_KEY = "com.njlabs.showjava.worker.STATUS_KEY"
             const val STATUS_MESSAGE = "com.njlabs.showjava.worker.STATUS_MESSAGE"

@@ -19,6 +19,7 @@
 package com.njlabs.showjava.activities.landing
 
 import android.content.Context
+import androidx.work.WorkManager
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.utils.appStorage
 import io.reactivex.Observable
@@ -28,6 +29,13 @@ import java.io.File
 import java.io.IOException
 
 class LandingHandler(private var context: Context) {
+
+
+    private fun isDecompilerRunning(): Boolean {
+        return WorkManager.getInstance().getStatusesByTagLiveData("decompiler").value?.any {
+            !it.state.isFinished
+        } ?: false
+    }
 
     fun loadHistory(): Observable<ArrayList<SourceInfo>> {
         return Observable.fromCallable {
@@ -51,21 +59,25 @@ class LandingHandler(private var context: Context) {
                                 historyItems.add(it)
                             }
                         } else {
-                            try {
-                                if (file.exists()) {
-                                    if (file.isDirectory) {
-                                        FileUtils.deleteDirectory(file)
-                                    } else {
-                                        file.delete()
+/* // Not deleting directories.
+                            if (!isDecompilerRunning()) {
+                                try {
+                                    if (file.exists()) {
+                                        if (file.isDirectory) {
+                                            FileUtils.deleteDirectory(file)
+                                        } else {
+                                            file.delete()
+                                        }
                                     }
-                                }
 
-                            } catch (e: Exception) {
-                                Timber.d(e)
+                                } catch (e: Exception) {
+                                    Timber.d(e)
+                                }
+                                if (file.exists() && !file.isDirectory) {
+                                    file.delete()
+                                }
                             }
-                            if (file.exists() && !file.isDirectory) {
-                                file.delete()
-                            }
+*/
                         }
                     }
             }

@@ -155,6 +155,7 @@ android {
     }
 }
 
+
 configurations.all {
     resolutionStrategy {
         force 'com.google.code.findbugs:jsr305:2.0.3'
@@ -196,6 +197,7 @@ dependencies {
     })
 
     // APACHE COMMONS LIBRARIES
+    //noinspection GradleDependency
     implementation 'commons-io:commons-io:2.5' // Fix to 2.5 for compatibility
     implementation 'commons-cli:commons-cli:1.4'
 

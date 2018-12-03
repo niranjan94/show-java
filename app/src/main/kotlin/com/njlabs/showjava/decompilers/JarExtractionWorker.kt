@@ -26,8 +26,10 @@ import com.googlecode.dex2jar.ir.IrMethod
 import com.googlecode.dex2jar.reader.DexFileReader
 import com.googlecode.dex2jar.v3.Dex2jar
 import com.googlecode.dex2jar.v3.DexExceptionHandler
+import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
+import com.njlabs.showjava.utils.cleanMemory
 import com.njlabs.showjava.utils.toClassName
 import org.apache.commons.io.FilenameUtils
 import org.jf.dexlib2.DexFileFactory
@@ -75,6 +77,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
      */
     @Throws(Exception::class)
     private fun convertApkToDex() {
+        cleanMemory()
 
         Timber.i("Starting APK to DEX Conversion")
         sendStatus(context.getString(R.string.optimizing))
@@ -131,7 +134,9 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         Timber.d("Total class to write ${classes.size}")
         setStep(context.getString(R.string.writingDexFile))
 
-        val chunkedClasses = classes.chunked(data.getInt("chunkSize", 2000))
+        val chunkedClasses = classes.chunked(data.getInt("chunkSize",
+            Constants.WORKER.PARAMETERS.CLASSES_PER_CHUNK
+        ))
         chunkedClasses.forEachIndexed { index, list ->
             Timber.d("Chunk $index with classes: ${chunkedClasses.size}")
             sendStatus(context.getString(R.string.chunk, index + 1, chunkedClasses.size), true)
@@ -146,6 +151,8 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
     @Throws(Exception::class)
     private fun convertJarToDex() {
+        cleanMemory()
+
         xyz.codezero.android.dx.command.dexer.Main.main(
             arrayOf(
                 "--output",
@@ -161,6 +168,8 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
      */
     @Throws(Exception::class)
     private fun convertDexToJar() {
+        cleanMemory()
+
         setStep(context.getString(R.string.startingDexToJar))
 
         val reuseReg = false // reuse register while generate java .class file

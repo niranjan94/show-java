@@ -26,6 +26,7 @@ import com.njlabs.showjava.Constants
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.ProcessNotifier
 import com.njlabs.showjava.utils.appStorage
+import com.njlabs.showjava.utils.cleanMemory
 import com.njlabs.showjava.utils.streams.ProgressStream
 import com.njlabs.showjava.workers.DecompilerWorker
 import org.apache.commons.io.FileUtils
@@ -38,9 +39,11 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
     private var id = data.getString("id")
     private var processNotifier: ProcessNotifier? = null
+    private var runAttemptCount: Int = 0
 
     protected val decompiler = data.getString("decompiler")
     protected val type = PackageInfo.Type.values()[data.getInt("type", 0)]
+    private val maxAttempts = data.getInt("maxAttempts", Constants.WORKER.PARAMETERS.MAX_ATTEMPTS)
 
     protected val packageName: String = data.getString("name").toString()
     protected val packageLabel: String = data.getString("label").toString()
@@ -66,9 +69,15 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      * All child classes must call this method on override.
      */
     open fun doWork(): ListenableWorker.Result {
+        cleanMemory()
         outputJavaSrcDirectory.mkdirs()
         outputResSrcDirectory.mkdirs()
         return ListenableWorker.Result.SUCCESS
+    }
+
+    fun withAttempt(attempt: Int = 0): ListenableWorker.Result {
+        this.runAttemptCount = attempt
+        return this.doWork()
     }
 
     /**
@@ -94,7 +103,10 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected fun exit(exception: Exception?): ListenableWorker.Result {
         Timber.e(exception)
         onStopped(false)
-        return ListenableWorker.Result.FAILURE
+        return if (runAttemptCount >= maxAttempts)
+            ListenableWorker.Result.FAILURE
+        else
+            ListenableWorker.Result.RETRY
     }
 
     /**

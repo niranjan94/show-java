@@ -50,14 +50,6 @@ class PackageInfo() : Parcelable {
 
 
     constructor(label: String, name: String, version: String, filePath: String, type: Type) : this() {
-        Timber.d("""
-            label: $label
-            name: $name
-            version: $version
-            filePath: $filePath
-            type: ${type.name}
-        """.trimIndent())
-
         this.label = label
         this.name = name
         this.version = version

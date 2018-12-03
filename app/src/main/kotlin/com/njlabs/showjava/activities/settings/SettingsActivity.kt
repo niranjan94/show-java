@@ -44,6 +44,7 @@ class SettingsActivity : BaseActivity() {
             setPreferencesFromResource(R.xml.preferences, rootKey)
             bindPreferenceSummaryToValue(findPreference("decompiler"))
             bindPreferenceSummaryToValue(findPreference("chunkSize"))
+            bindPreferenceSummaryToValue(findPreference("maxAttempts"))
         }
     }
 

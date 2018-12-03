@@ -121,5 +121,6 @@
     <string name="chunk">Chunk <xliff:g example="2" id="currentChunk">%1$d</xliff:g> of <xliff:g example="4" id="totalChunks">%2$d</xliff:g></string>
     <string name="experimental">Experimental</string>
     <string name="classesPerChunk">Class definitions per dex chunk</string>
+    <string name="maxDecompilerAttempts">Max attempts for decompilation</string>
     <string name="cannotDecompileFile">Cannot decompile the file selected</string>
 </resources>

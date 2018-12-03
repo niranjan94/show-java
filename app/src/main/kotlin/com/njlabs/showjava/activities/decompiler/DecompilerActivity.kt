@@ -19,11 +19,15 @@
 package com.njlabs.showjava.activities.decompiler
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import com.njlabs.showjava.Constants.WORKER.PARAMETERS.Companion.CLASSES_PER_CHUNK
+import com.njlabs.showjava.Constants.WORKER.PARAMETERS.Companion.MAX_ATTEMPTS
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
@@ -35,6 +39,8 @@ import com.njlabs.showjava.utils.sourceDir
 import kotlinx.android.synthetic.main.activity_decompiler.*
 import kotlinx.android.synthetic.main.layout_pick_decompiler_list_item.view.*
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.FileUtils.byteCountToDisplaySize as h
+import timber.log.Timber
 import java.io.File
 import java.net.URI
 
@@ -80,6 +86,7 @@ class DecompilerActivity : BaseActivity() {
         }
 
         assertSourceExistence(true)
+        getAvailableMemory()
     }
 
     private fun loadPackageInfoFromIntent() {
@@ -124,7 +131,14 @@ class DecompilerActivity : BaseActivity() {
         BaseDecompiler.start(
             hashMapOf(
                 "shouldIgnoreLibs" to userPreferences.getBoolean("ignoreLibraries", true),
-                "chunkSize" to (userPreferences.getString("chunkSize", "2000")?.toInt() ?: 2000),
+                "chunkSize" to (
+                        userPreferences.getString("chunkSize", CLASSES_PER_CHUNK.toString())?.toInt()
+                                ?: CLASSES_PER_CHUNK
+                        ),
+                "maxAttempts" to (
+                        userPreferences.getString("maxAttempts", MAX_ATTEMPTS.toString())?.toInt()
+                                ?: MAX_ATTEMPTS
+                        ),
                 "decompiler" to decompiler,
                 "name" to packageInfo.name,
                 "label" to packageInfo.label,
@@ -132,5 +146,17 @@ class DecompilerActivity : BaseActivity() {
                 "type" to packageInfo.type.ordinal
             )
         )
+    }
+
+    // Get a MemoryInfo object for the device's current memory status.
+    private fun getAvailableMemory(): ActivityManager.MemoryInfo {
+        val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val memory = ActivityManager.MemoryInfo().also { memoryInfo ->
+            am.getMemoryInfo(memoryInfo)
+        }
+
+        Timber.d("[MC] ${am.memoryClass}/${am.largeMemoryClass} [T] ${h(memory.threshold)} [A] ${h(memory.availMem)} [L] ${memory.lowMemory}")
+
+        return memory
     }
 }

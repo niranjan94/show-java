@@ -27,7 +27,7 @@ import com.njlabs.showjava.decompilers.JavaExtractionWorker
 import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
 import timber.log.Timber
 
-class DecompilerWorker(val context: Context, private val params: WorkerParameters) : Worker(context, params) {
+class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
 
     private var worker: BaseDecompiler? = null
 
@@ -44,10 +44,10 @@ class DecompilerWorker(val context: Context, private val params: WorkerParameter
     }
 
     override fun doWork(): Result {
-        var result = Result.FAILURE
+        var result = if (runAttemptCount >= 2) Result.FAILURE else Result.RETRY
         worker ?.let {
             try {
-                result = it.doWork()
+                result = it.withAttempt(runAttemptCount)
             } catch (e: Exception) {
                 Timber.e(e)
             }

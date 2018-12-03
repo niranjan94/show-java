@@ -60,12 +60,20 @@
         android:title="@string/experimental">
 
         <EditTextPreference
-            android:defaultValue="2000"
+            android:defaultValue="500"
             android:inputType="number"
             android:key="chunkSize"
             android:maxLines="1"
             android:singleLine="true"
             android:title="@string/classesPerChunk" />
+
+        <EditTextPreference
+            android:defaultValue="2"
+            android:inputType="number"
+            android:key="maxAttempts"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:title="@string/maxDecompilerAttempts" />
 
     </PreferenceCategory>
 

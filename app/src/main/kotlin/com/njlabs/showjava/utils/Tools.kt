@@ -73,6 +73,11 @@ fun getDate(): String {
     return formatter.format(date)
 }
 
+fun cleanMemory() {
+    Runtime.getRuntime().gc()
+    Thread.sleep(2500)
+}
+
 /**
  * Get either version name or version code form [packageInfo].
  */

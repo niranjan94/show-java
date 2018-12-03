@@ -24,6 +24,7 @@ import androidx.work.ListenableWorker
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.utils.ZipUtils
+import com.njlabs.showjava.utils.cleanMemory
 import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
 import org.benf.cfr.reader.api.CfrDriver
@@ -40,9 +41,10 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
     @Throws(Exception::class)
     private fun decompileWithCFR(jarInputFiles: File, javaOutputDir: File) {
+        cleanMemory()
+
         val jarFiles = jarInputFiles.listFiles()
         val args = arrayOf(jarFiles.first().toString(), "--outputdir", javaOutputDir.toString())
-
         val getOptParser = GetOptParser()
         val options: Options?
         val files: List<String?>?
@@ -61,6 +63,8 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
     @Throws(Exception::class)
     private fun decompileWithJaDX(dexInputFiles: File, javaOutputDir: File) {
+        cleanMemory()
+
         val args = JadxArgs()
         args.outDirSrc = javaOutputDir
         args.inputFiles = dexInputFiles.listFiles().toMutableList()
@@ -76,6 +80,8 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
     @Throws(Exception::class)
     private fun decompileWithFernFlower(jarInputFiles: File, javaOutputDir: File) {
+        cleanMemory()
+
         ConsoleDecompiler.main(
             arrayOf(
                 jarInputFiles.canonicalPath, javaOutputDir.canonicalPath

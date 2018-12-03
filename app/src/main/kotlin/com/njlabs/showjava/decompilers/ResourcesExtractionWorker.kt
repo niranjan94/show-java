@@ -29,6 +29,7 @@ import androidx.work.ListenableWorker
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.utils.cleanMemory
 import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
 import net.dongliu.apk.parser.AbstractApkFile
@@ -53,6 +54,8 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
 
     @Throws(Exception::class)
     private fun extractResourcesWithJadx() {
+        cleanMemory()
+
         val resDir = outputResSrcDirectory
         val args = JadxArgs()
         args.outDirRes = resDir
@@ -64,6 +67,8 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
 
     @Throws(Exception::class)
     private fun extractResourcesWithParser() {
+        cleanMemory()
+
         writeManifest()
         val zipFile = ZipFile(inputPackageFile)
         val entries = zipFile.entries()
@@ -94,6 +99,8 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
     @RequiresApi(Build.VERSION_CODES.N)
     @Throws(Exception::class)
     private fun loadResourcesTable() {
+        cleanMemory()
+
         val resourceTableField = AbstractApkFile::class.java.getDeclaredField("resourceTable")
         resourceTableField.isAccessible = true
         val resourceTable = resourceTableField.get(parsedInputApkFile) as ResourceTable
