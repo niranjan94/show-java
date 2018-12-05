@@ -52,13 +52,15 @@ class DecompilerWorker(val context: Context, val params: WorkerParameters) : Wor
                 result = it.withAttempt(runAttemptCount)
             } catch (e: Exception) {
                 Timber.e(e)
-                try {
-                    ProcessNotifier(context, params.inputData.getString("id")).error()
-                } catch (e: Exception) {
-                    Timber.e(e)
-                }
             }
             it.onStopped(false)
+        }
+        if (result == Result.FAILURE) {
+            try {
+                ProcessNotifier(context, params.inputData.getString("id")).error()
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
         }
         return result
     }

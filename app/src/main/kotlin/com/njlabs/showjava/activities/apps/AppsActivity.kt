@@ -49,29 +49,37 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
     private var searchMenuItem: MenuItem? = null
 
     private var apps = ArrayList<PackageInfo>()
-    private var appsLoaderSubscription: Disposable? = null
+    private var filteredApps = ArrayList<PackageInfo>()
+    private var withSystemApps: Boolean = false
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_apps)
         appsHandler = AppsHandler(context)
+        withSystemApps = userPreferences.getBoolean("showSystemApps", false)
         if (savedInstanceState != null) {
             val apps = savedInstanceState.getParcelableArrayList<PackageInfo>("apps")
             if (apps != null) {
                 this.apps = apps
+                this.filteredApps = apps
                 setupList()
+                filterApps(R.id.userRadioButton)
             }
         } else {
             loadingView.visibility = View.VISIBLE
             appsList.visibility = View.GONE
+            typeRadioGroup.visibility = View.GONE
             searchMenuItem?.isVisible = false
         }
-        if (this.apps.isEmpty()) {
+        if (this.apps.isEmpty( )) {
             loadApps()
+        }
+        typeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            filterApps(checkedId)
         }
     }
 
     private fun loadApps() {
-        appsLoaderSubscription = appsHandler.loadApps()
+        disposables.add(appsHandler.loadApps(withSystemApps)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -85,19 +93,23 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
                     } else {
                         if (processStatus.result != null) {
                             apps = processStatus.result
+                            filteredApps = processStatus.result
                         }
                         setupList()
+                        filterApps(R.id.userRadioButton)
                     }
                 },
                 { e ->
                     Timber.e(e)
                 }
             )
+        )
     }
 
     private fun setupList() {
         loadingView.visibility = View.GONE
         appsList.visibility = View.VISIBLE
+        typeRadioGroup.visibility = if (withSystemApps) View.VISIBLE else View.GONE
         searchMenuItem?.isVisible = true
         appsList.setHasFixedSize(true)
         appsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
@@ -144,14 +156,21 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         return true
     }
 
-    fun searchApps(query: String?) {
-        val filteredApps = ArrayList<PackageInfo>()
+    private fun searchApps(query: String?) {
         val cleanedQuery = query?.trim()?.toLowerCase() ?: ""
-        for (app in apps) {
-            if (cleanedQuery == "" || app.label.toLowerCase().contains(cleanedQuery)) {
-                filteredApps.add(app)
+        historyListAdapter.updateList(filteredApps.filter {
+            cleanedQuery == "" || it.label.toLowerCase().contains(cleanedQuery)
+        })
+    }
+
+    private fun filterApps(filterId: Int) {
+        filteredApps = apps.filter {
+            when(filterId) {
+                R.id.systemRadioButton -> it.isSystemPackage
+                R.id.userRadioButton -> !it.isSystemPackage
+                else -> true
             }
-        }
+        } as ArrayList<PackageInfo>
         historyListAdapter.updateList(filteredApps)
     }
 
@@ -168,12 +187,5 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
     override fun onClose(): Boolean {
         searchApps(null)
         return true
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (appsLoaderSubscription?.isDisposed != true) {
-            appsLoaderSubscription?.dispose()
-        }
     }
 }

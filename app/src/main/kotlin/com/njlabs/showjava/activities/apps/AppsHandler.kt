@@ -28,16 +28,17 @@ import io.reactivex.ObservableEmitter
 
 class AppsHandler(private var context: Context) {
 
-    fun loadApps(): Observable<ProcessStatus<ArrayList<PackageInfo>>> {
+    fun loadApps(withSystemApps: Boolean): Observable<ProcessStatus<ArrayList<PackageInfo>>> {
         return Observable.create { emitter: ObservableEmitter<ProcessStatus<ArrayList<PackageInfo>>> ->
             val installedApps = ArrayList<PackageInfo>()
             var packages = context.packageManager.getInstalledPackages(0)
             packages = packages.filter { pack ->
-                !isSystemPackage(pack)
+                withSystemApps || !isSystemPackage(pack)
             }
             packages.forEachIndexed { index, pack ->
                 val packageInfo = PackageInfo.fromApkPackageInfo(context, pack)
                 packageInfo.icon = pack.applicationInfo.loadIcon(context.packageManager)
+                packageInfo.isSystemPackage = isSystemPackage(pack)
                 installedApps.add(packageInfo)
                 val currentCount = index + 1
                 emitter.onNext(

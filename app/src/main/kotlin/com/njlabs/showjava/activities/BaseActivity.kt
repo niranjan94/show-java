@@ -45,6 +45,7 @@ import com.njlabs.showjava.utils.SafetyNetLite
 import com.njlabs.showjava.utils.checkDataConnection
 import com.securepreferences.SecurePreferences
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
+import io.reactivex.disposables.CompositeDisposable
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -55,6 +56,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     protected lateinit var context: Context
     protected lateinit var userPreferences: SharedPreferences
     protected lateinit var safetyNet: SafetyNetLite
+    protected val disposables = CompositeDisposable()
 
     abstract fun init(savedInstanceState: Bundle?)
 
@@ -242,4 +244,8 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.clear()
+    }
 }

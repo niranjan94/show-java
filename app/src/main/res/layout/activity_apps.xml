@@ -71,12 +71,51 @@
 
     </LinearLayout>
 
+    <RadioGroup
+        android:id="@+id/typeRadioGroup"
+        android:layout_width="200dp"
+        android:layout_below="@id/toolbar"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="3dp"
+        android:visibility="visible"
+        android:orientation="horizontal"
+        android:layout_marginStart="3dp">
+
+        <RadioButton
+            android:id="@+id/userRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="@string/user" />
+
+        <RadioButton
+            android:id="@+id/systemRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="@string/system" />
+
+
+        <RadioButton
+            android:id="@+id/allRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="@string/all" />
+    </RadioGroup>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/adView"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/typeRadioGroup"
         android:visibility="gone" />
+
 
 </RelativeLayout>

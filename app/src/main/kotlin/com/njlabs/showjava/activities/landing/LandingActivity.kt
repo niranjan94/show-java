@@ -38,7 +38,6 @@ import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
 import timber.log.Timber
@@ -53,7 +52,6 @@ class LandingActivity : BaseActivity() {
 
     private var historyListAdapter: HistoryListAdapter? = null
     private var historyItems = ArrayList<SourceInfo>()
-    private var historyLoaderSubscription: Disposable? = null
 
     private var shouldLoadHistory = true
 
@@ -141,7 +139,7 @@ class LandingActivity : BaseActivity() {
     }
 
     private fun populateHistory(resume: Boolean = false) {
-        historyLoaderSubscription = landingHandler.loadHistory()
+        disposables.add(landingHandler.loadHistory()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError { Timber.e(it) }
@@ -154,6 +152,7 @@ class LandingActivity : BaseActivity() {
                     setupList()
                 }
             }
+        )
     }
 
     private fun setListVisibility(isListVisible: Boolean = true) {
@@ -201,12 +200,5 @@ class LandingActivity : BaseActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (historyLoaderSubscription?.isDisposed != true) {
-            historyLoaderSubscription?.dispose()
-        }
     }
 }

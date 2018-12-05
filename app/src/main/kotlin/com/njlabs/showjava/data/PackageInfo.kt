@@ -38,6 +38,7 @@ class PackageInfo() : Parcelable {
     var file: File = File("")
     var icon: Drawable? = null
     var type = Type.APK
+    var isSystemPackage = false
 
     constructor(parcel: Parcel) : this() {
         label = parcel.readString()!!
@@ -45,9 +46,9 @@ class PackageInfo() : Parcelable {
         version = parcel.readString()!!
         filePath = parcel.readString()!!
         type = Type.values()[parcel.readInt()]
+        isSystemPackage = parcel.readInt() == 1
         file = File(filePath)
     }
-
 
     constructor(label: String, name: String, version: String, filePath: String, type: Type) : this() {
         this.label = label
@@ -64,6 +65,7 @@ class PackageInfo() : Parcelable {
         parcel.writeString(version)
         parcel.writeString(filePath)
         parcel.writeInt(type.ordinal)
+        parcel.writeInt(if (isSystemPackage) 1 else 0)
     }
 
     fun loadIcon(context: Context): Drawable {

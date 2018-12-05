@@ -38,7 +38,6 @@ import com.njlabs.showjava.activities.explorer.viewer.ImageViewerActivity
 import com.njlabs.showjava.data.FileItem
 import com.njlabs.showjava.data.SourceInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_navigator.*
 import timber.log.Timber
@@ -51,10 +50,6 @@ class NavigatorActivity : BaseActivity() {
     private lateinit var filesListAdapter: FilesListAdapter
     private var currentDirectory: File? = null
     private var sourceArchive: File? = null
-
-    private var filesLoadSubscription: Disposable? = null
-    private var archiveSubscription: Disposable? = null
-    private var deleteSubscription: Disposable? = null
 
     private var zipProgressDialog: ProgressDialog? = null
 
@@ -99,13 +94,14 @@ class NavigatorActivity : BaseActivity() {
                 )
             )
         }
-        filesLoadSubscription = navigationHandler.loadFiles(startDirectory)
+        disposables.add(navigationHandler.loadFiles(startDirectory)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError { Timber.e(it) }
             .subscribe {
                 updateList(it)
             }
+        )
     }
 
     private fun updateList(fileItems: ArrayList<FileItem>?) {
@@ -256,7 +252,7 @@ class NavigatorActivity : BaseActivity() {
                 }
 
                 showProgressDialog()
-                archiveSubscription = navigationHandler.archiveDirectory(
+                disposables.add(navigationHandler.archiveDirectory(
                     selectedApp!!.sourceDirectory, selectedApp!!.packageName
                 )
                     .subscribeOn(Schedulers.io())
@@ -266,6 +262,7 @@ class NavigatorActivity : BaseActivity() {
                         sourceArchive = it
                         shareArchive(it)
                     }
+                )
                 return true
 
             }
@@ -291,7 +288,7 @@ class NavigatorActivity : BaseActivity() {
         selectedApp?.let {
             deleteProgress.visibility = View.VISIBLE
             filesList.visibility = View.GONE
-            deleteSubscription = navigationHandler.deleteDirectory(it.sourceDirectory)
+            disposables.add(navigationHandler.deleteDirectory(it.sourceDirectory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -302,24 +299,12 @@ class NavigatorActivity : BaseActivity() {
                     ).show()
                     finish()
                 }
+            )
         }
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (filesLoadSubscription?.isDisposed != true) {
-            filesLoadSubscription?.dispose()
-        }
-        if (archiveSubscription?.isDisposed != true) {
-            archiveSubscription?.dispose()
-        }
-        if (deleteSubscription?.isDisposed != true) {
-            deleteSubscription?.dispose()
-        }
     }
 }

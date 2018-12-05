@@ -59,6 +59,13 @@
         app:iconSpaceReserved="false"
         android:title="@string/experimental">
 
+        <CheckBoxPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="showSystemApps"
+            android:summary="@string/showSystemAppsSummary"
+            android:title="@string/showSystemApps" />
+
         <EditTextPreference
             android:defaultValue="500"
             android:inputType="number"

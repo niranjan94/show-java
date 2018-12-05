@@ -34,6 +34,7 @@ import org.apache.commons.io.FileUtils
 import timber.log.Timber
 import java.io.File
 import java.io.PrintStream
+import java.util.concurrent.TimeUnit
 
 abstract class BaseDecompiler(val context: Context, val data: Data) {
     var printStream: PrintStream? = null
@@ -104,10 +105,8 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected fun exit(exception: Exception?): ListenableWorker.Result {
         Timber.e(exception)
         onStopped(false)
-        return if (runAttemptCount >= maxAttempts) {
-            processNotifier?.error()
+        return if (runAttemptCount >= maxAttempts)
             ListenableWorker.Result.FAILURE
-        }
         else
             ListenableWorker.Result.RETRY
     }
@@ -185,6 +184,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
                     .addTag("decompile")
                     .addTag(type)
                     .addTag(id)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, 0, TimeUnit.SECONDS)
                     .setInputData(data)
                     .build()
             }

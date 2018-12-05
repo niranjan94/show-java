@@ -129,4 +129,9 @@
     <string name="appHasBeenDecompiled"><xliff:g example="WhatsApp" id="appName">%1$s</xliff:g> has been decompiled</string>
     <string name="errorDecompilingApp"><xliff:g example="WhatsApp" id="appName">%1$s</xliff:g> could not be decompiled</string>
     <string name="tapToRetry">Tap to retry</string>
+    <string name="showSystemApps">Show System Apps</string>
+    <string name="showSystemAppsSummary">Allow decompiling system apps. (Buggy)</string>
+    <string name="all">All</string>
+    <string name="system">System</string>
+    <string name="user">User</string>
 </resources>

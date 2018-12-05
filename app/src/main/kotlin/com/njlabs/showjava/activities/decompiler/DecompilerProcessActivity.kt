@@ -94,7 +94,7 @@ class DecompilerProcessActivity : BaseActivity() {
     private fun reconcileDecompilerStatus() {
         val hasFailed = statusesMap.values.any { it == State.FAILED }
         val hasPassed = statusesMap.values.all { it == State.SUCCEEDED }
-        Timber.d("[status][packageName] hasPassed: $hasPassed | hasFailed: $hasFailed")
+        Timber.d("[status] [${packageInfo.name}] hasPassed: $hasPassed | hasFailed: $hasFailed")
 
         if (hasFailed) {
             Toast.makeText(

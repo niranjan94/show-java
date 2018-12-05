@@ -25,6 +25,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
@@ -35,6 +37,7 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.AppsActivity
 import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
+import com.njlabs.showjava.activities.apps.adapters.getSystemBadge
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
@@ -42,6 +45,7 @@ import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.BaseDecompiler.Companion.isAvailable
 import com.njlabs.showjava.utils.sourceDir
 import kotlinx.android.synthetic.main.activity_decompiler.*
+import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import kotlinx.android.synthetic.main.layout_pick_decompiler_list_item.view.*
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FileUtils.byteCountToDisplaySize as h
@@ -67,8 +71,20 @@ class DecompilerActivity : BaseActivity() {
         }
 
         val apkSize = FileUtils.byteCountToDisplaySize(packageInfo.file.length())
+
         itemIcon.setImageDrawable(packageInfo.loadIcon(context))
-        itemLabel.text = packageInfo.label
+
+        itemLabel.itemLabel.text = if (packageInfo.isSystemPackage)
+            SpannableString(
+                TextUtils.concat(
+                    packageInfo.label,
+                    " ", " ",
+                    getSystemBadge(context).toSpannable()
+                )
+            )
+        else
+            packageInfo.label
+
         itemSecondaryLabel.text = "${packageInfo.version} - $apkSize"
 
         val decompilersValues = resources.getStringArray(R.array.decompilersValues)

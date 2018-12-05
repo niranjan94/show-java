@@ -31,7 +31,6 @@ import com.njlabs.showjava.utils.views.CodeView
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_code_viewer.*
 import timber.log.Timber
@@ -39,7 +38,6 @@ import java.io.File
 
 class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
 
-    private var fileLoaderSubscription: Disposable? = null
     private var extensionTypeMap = hashMapOf(
         "txt" to "plaintext",
         "class" to "java",
@@ -60,7 +58,7 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
 
         supportActionBar?.title = file.name
         val subtitle = file.canonicalPath.replace(
-             "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+            "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
             ""
         )
 
@@ -85,20 +83,22 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
             language = it
         }
 
-        fileLoaderSubscription = loadFile(file)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError { error -> Timber.e(error) }
-            .subscribe { status ->
-                codeView.setCode(status.result)
-                    .setLanguage(language)
-                    .setWrapLine(false)
-                    .setFontSize(14F)
-                    .setZoomEnabled(true)
-                    .setShowLineNumber(true)
-                    .setOnHighlightListener(this)
-                    .load()
-            }
+        disposables.add(
+            loadFile(file)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError { error -> Timber.e(error) }
+                .subscribe { status ->
+                    codeView.setCode(status.result)
+                        .setLanguage(language)
+                        .setWrapLine(false)
+                        .setFontSize(14F)
+                        .setZoomEnabled(true)
+                        .setShowLineNumber(true)
+                        .setOnHighlightListener(this)
+                        .load()
+                }
+        )
     }
 
     private fun loadFile(fileToLoad: File): Observable<ProcessStatus<String>> {
@@ -163,12 +163,5 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (fileLoaderSubscription?.isDisposed != true) {
-            fileLoaderSubscription?.dispose()
-        }
     }
 }
