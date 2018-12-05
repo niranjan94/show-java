@@ -135,6 +135,6 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
             .setJavaSourcePresence(true)
             .persist()
 
-        return ListenableWorker.Result.SUCCESS
+        return successIf(outputJavaSrcDirectory.list().isNotEmpty())
     }
 }

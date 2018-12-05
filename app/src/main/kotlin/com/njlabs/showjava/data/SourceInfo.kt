@@ -97,27 +97,29 @@ class SourceInfo() : Parcelable {
     }
 
     fun persist(): SourceInfo {
-        updatedAt = getDate()
-        try {
-            val infoFile = getInfoFile(sourceDirectory)
-            val json = JSONObject()
-            json.put("package_label", packageLabel)
-            json.put("package_name", packageName)
-            json.put("has_java_sources", hasJavaSource)
-            json.put("has_xml_sources", hasXmlSource)
-            json.put("created_at", createdAt)
-            json.put("updated_at", updatedAt)
-            FileUtils.writeStringToFile(
-                infoFile,
-                json.toString(2),
-                "UTF-8"
-            )
-        } catch (e: IOException) {
-            Timber.e(e)
-        } catch (e: JSONException) {
-            Timber.e(e)
+        synchronized(this) {
+            updatedAt = getDate()
+            try {
+                val infoFile = getInfoFile(sourceDirectory)
+                val json = JSONObject()
+                json.put("package_label", packageLabel)
+                json.put("package_name", packageName)
+                json.put("has_java_sources", hasJavaSource)
+                json.put("has_xml_sources", hasXmlSource)
+                json.put("created_at", createdAt)
+                json.put("updated_at", updatedAt)
+                FileUtils.writeStringToFile(
+                    infoFile,
+                    json.toString(2),
+                    "UTF-8"
+                )
+            } catch (e: IOException) {
+                Timber.e(e)
+            } catch (e: JSONException) {
+                Timber.e(e)
+            }
+            return this
         }
-        return this
     }
 
     companion object CREATOR : Parcelable.Creator<SourceInfo> {

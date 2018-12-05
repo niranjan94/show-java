@@ -54,7 +54,14 @@ class ProcessNotifier(
     private lateinit var packageLabel: String
     private lateinit var packageFile: File
 
-    fun buildFor(title: String, packageName: String, packageLabel: String, packageFile: File ): ProcessNotifier {
+    fun withPackageInfo(packageName: String, packageLabel: String, packageFile: File): ProcessNotifier {
+        this.packageName = packageName
+        this.packageFile = packageFile
+        this.packageLabel = packageLabel
+        return this
+    }
+
+    fun buildFor(title: String, packageName: String, packageLabel: String, packageFile: File): ProcessNotifier {
 
         this.packageName = packageName
         this.packageFile = packageFile
@@ -170,7 +177,7 @@ class ProcessNotifier(
             .setSmallIcon(R.drawable.ic_stat_error)
             .setContentIntent(resultPendingIntent)
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-            .setAutoCancel(false)
+            .setAutoCancel(true)
         manager.notify(
             packageName,
             Constants.WORKER.COMPLETED_NOTIFICATION_ID,
@@ -203,7 +210,7 @@ class ProcessNotifier(
             .setSmallIcon(R.drawable.ic_stat_code)
             .setContentIntent(resultPendingIntent)
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-            .setAutoCancel(false)
+            .setAutoCancel(true)
 
         manager.notify(
             packageName,

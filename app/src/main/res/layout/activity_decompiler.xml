@@ -121,10 +121,9 @@
     <LinearLayout
         android:id="@+id/primaryLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:transitionName="none"
         tools:ignore="UnusedAttribute"
-        android:layout_above="@id/adView"
         android:layout_below="@id/historyCard"
         android:paddingTop="8dp"
         android:layout_marginTop="8dp"
@@ -143,7 +142,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp">
             <LinearLayout
                 android:id="@+id/pickerList"
@@ -155,6 +154,15 @@
         </ScrollView>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/systemAppWarning"
+        android:layout_below="@id/primaryLayout"
+        android:layout_width="match_parent"
+        android:padding="8dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/systemAppWarning" />
 
     <include
         android:id="@+id/adView"

@@ -23,20 +23,21 @@ import android.app.ActivityManager
 import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.text.Spannable
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
-import androidx.core.app.TaskStackBuilder
 import com.njlabs.showjava.Constants.WORKER.PARAMETERS.Companion.CLASSES_PER_CHUNK
 import com.njlabs.showjava.Constants.WORKER.PARAMETERS.Companion.MAX_ATTEMPTS
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
-import com.njlabs.showjava.activities.apps.AppsActivity
-import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
 import com.njlabs.showjava.activities.apps.adapters.getSystemBadge
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
@@ -48,10 +49,10 @@ import kotlinx.android.synthetic.main.activity_decompiler.*
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import kotlinx.android.synthetic.main.layout_pick_decompiler_list_item.view.*
 import org.apache.commons.io.FileUtils
-import org.apache.commons.io.FileUtils.byteCountToDisplaySize as h
 import timber.log.Timber
 import java.io.File
 import java.net.URI
+import org.apache.commons.io.FileUtils.byteCountToDisplaySize as h
 
 
 class DecompilerActivity : BaseActivity() {
@@ -106,6 +107,19 @@ class DecompilerActivity : BaseActivity() {
             pickerList.addView(view)
         }
 
+        if (packageInfo.isSystemPackage) {
+            systemAppWarning.visibility = View.VISIBLE
+            val warning = getString(R.string.systemAppWarning)
+            val sb = SpannableStringBuilder(warning)
+            val bss = StyleSpan(Typeface.BOLD)
+            val iss = StyleSpan(Typeface.ITALIC)
+            val nss = StyleSpan(Typeface.NORMAL)
+            sb.setSpan(bss, 0, 8, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            sb.setSpan(nss, 8, warning.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            sb.setSpan(iss, 0, warning.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            systemAppWarning.text = sb
+        }
+
         assertSourceExistence(true)
         getAvailableMemory()
     }
@@ -153,7 +167,10 @@ class DecompilerActivity : BaseActivity() {
             hashMapOf(
                 "shouldIgnoreLibs" to userPreferences.getBoolean("ignoreLibraries", true),
                 "chunkSize" to (
-                        userPreferences.getString("chunkSize", CLASSES_PER_CHUNK.toString())?.toInt()
+                        userPreferences.getString(
+                            "chunkSize",
+                            CLASSES_PER_CHUNK.toString()
+                        )?.toInt()
                                 ?: CLASSES_PER_CHUNK
                         ),
                 "maxAttempts" to (
@@ -191,7 +208,11 @@ class DecompilerActivity : BaseActivity() {
             am.getMemoryInfo(memoryInfo)
         }
 
-        Timber.d("[MC] ${am.memoryClass}/${am.largeMemoryClass} [T] ${h(memory.threshold)} [A] ${h(memory.availMem)} [L] ${memory.lowMemory}")
+        Timber.d(
+            "[MC] ${am.memoryClass}/${am.largeMemoryClass} [T] ${h(memory.threshold)} [A] ${h(
+                memory.availMem
+            )} [L] ${memory.lowMemory}"
+        )
 
         return memory
     }

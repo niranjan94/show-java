@@ -92,7 +92,7 @@ fun getDate(): String {
  */
 fun cleanMemory() {
     Runtime.getRuntime().gc()
-    Thread.sleep(2000)
+    Thread.sleep(500)
 }
 
 /**

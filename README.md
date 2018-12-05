@@ -33,10 +33,10 @@ JaDX and Fernflower use newer Java features such as some types of lambda's which
 |------------:|:------------------:|:------------------:|:------------------:|
 | Oreo        | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Nougat      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Marshmallow | :white_check_mark: |                    |                    |
-| Lollipop    | :white_check_mark: |                    |                    |
-| KitKat      | :white_check_mark: |                    |                    |
-| Jelly Bean  | :white_check_mark: |                    |                    |
+| Marshmallow | :white_check_mark: |        -           |         -          |
+| Lollipop    | :white_check_mark: |        -           |         -          |
+| KitKat      | :white_check_mark: |        -           |         -          |
+| Jelly Bean  | :white_check_mark: |        -           |         -          |
 
 > Available from the [Play Store](https://play.google.com/store/apps/details?id=com.njlabs.showjava) on all Android devices higher or equal to Jelly Bean.
 

@@ -31,11 +31,13 @@ import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.data.PackageInfo
 import kotlinx.android.synthetic.main.activity_decompiler_process.*
 import android.content.IntentFilter
+import android.os.Build
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.work.State
 import androidx.work.WorkManager
 import androidx.work.WorkStatus
+import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.SourceInfo
@@ -99,7 +101,15 @@ class DecompilerProcessActivity : BaseActivity() {
             }
 
             val hasFailed = statusesMap.values.any { it == State.FAILED }
+            val isWaiting = statusesMap.values.any { it == State.ENQUEUED }
             val hasPassed = statusesMap.values.all { it == State.SUCCEEDED }
+
+            if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                statusesMap.forEach { t, u ->
+                    Timber.d("[status] Worker: $t State: ${u.name}")
+                }
+            }
+
             Timber.d("[status] [${packageInfo.name}] hasPassed: $hasPassed | hasFailed: $hasFailed")
 
             if (hasFailed) {
@@ -116,6 +126,8 @@ class DecompilerProcessActivity : BaseActivity() {
                 startActivity(intent)
                 hasCompleted = true
                 finish()
+            } else if (isWaiting) {
+                statusText.text = getString(R.string.waitingToStart)
             }
         }
     }

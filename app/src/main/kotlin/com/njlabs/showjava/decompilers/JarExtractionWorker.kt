@@ -258,6 +258,8 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
             return exit(e)
         }
 
-        return ListenableWorker.Result.SUCCESS
+        return successIf(
+            outputJarFiles.listFiles().isNotEmpty() || outputDexFiles.listFiles().isNotEmpty()
+        )
     }
 }

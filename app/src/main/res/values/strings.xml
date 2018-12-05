@@ -51,7 +51,7 @@
     <string name="loadingStatistic">
         <xliff:g example="23" id="countCurrent">%1$d</xliff:g> of <xliff:g example="345" id="countTotal">%2$d</xliff:g>
     </string>
-    <string name="waitingForAPp">Waiting for app</string>
+    <string name="waitingToStart">Waiting to start</string>
     <string name="processing">Processing</string>
     <string name="gettingReady">Getting ready</string>
     <string name="cancel">Cancel</string>
@@ -134,4 +134,5 @@
     <string name="all">All</string>
     <string name="system">System</string>
     <string name="user">User</string>
+    <string name="systemAppWarning">Warning: This is a system application. Successful decompilation may not be possible.</string>
 </resources>

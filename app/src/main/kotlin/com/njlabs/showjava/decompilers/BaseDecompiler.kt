@@ -82,6 +82,11 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         return this.doWork()
     }
 
+    fun withNotifier(notifier: ProcessNotifier): BaseDecompiler {
+        this.processNotifier = notifier
+        return this
+    }
+
     /**
      * Update the notification and broadcast status
      */
@@ -105,10 +110,17 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected fun exit(exception: Exception?): ListenableWorker.Result {
         Timber.e(exception)
         onStopped(false)
-        return if (runAttemptCount >= maxAttempts)
+        return if (runAttemptCount >= (maxAttempts - 1))
             ListenableWorker.Result.FAILURE
         else
             ListenableWorker.Result.RETRY
+    }
+
+    protected fun successIf(condition: Boolean): ListenableWorker.Result {
+        return if (condition)
+            ListenableWorker.Result.SUCCESS
+        else
+            exit(Exception("Success condition failed"))
     }
 
     /**
@@ -126,8 +138,10 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      * Build a persistent notification
      */
     protected fun buildNotification(title: String) {
-        processNotifier = ProcessNotifier(context, id)
-            .buildFor(title, packageName, packageLabel, inputPackageFile)
+        if (processNotifier == null) {
+            processNotifier = ProcessNotifier(context, id)
+        }
+        processNotifier!!.buildFor(title, packageName, packageLabel, inputPackageFile)
     }
 
     fun onCompleted() {

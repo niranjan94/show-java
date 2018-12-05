@@ -25,8 +25,8 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.njlabs.showjava.utils.Identicon
 import com.njlabs.showjava.utils.getVersion
+import com.njlabs.showjava.utils.isSystemPackage
 import com.njlabs.showjava.utils.jarPackageName
-import timber.log.Timber
 import java.io.File
 
 
@@ -50,12 +50,13 @@ class PackageInfo() : Parcelable {
         file = File(filePath)
     }
 
-    constructor(label: String, name: String, version: String, filePath: String, type: Type) : this() {
+    constructor(label: String, name: String, version: String, filePath: String, type: Type, isSystemPackage: Boolean = false) : this() {
         this.label = label
         this.name = name
         this.version = version
         this.filePath = filePath
         this.type = type
+        this.isSystemPackage = isSystemPackage
         file = File(filePath)
     }
 
@@ -100,7 +101,8 @@ class PackageInfo() : Parcelable {
                 pack.packageName,
                 getVersion(pack),
                 pack.applicationInfo.publicSourceDir,
-                Type.APK
+                Type.APK,
+                isSystemPackage(pack)
             )
         }
 
@@ -114,7 +116,8 @@ class PackageInfo() : Parcelable {
                 pack.packageName,
                 getVersion(pack),
                 file.canonicalPath,
-                Type.APK
+                Type.APK,
+                isSystemPackage(pack)
             )
         }
 

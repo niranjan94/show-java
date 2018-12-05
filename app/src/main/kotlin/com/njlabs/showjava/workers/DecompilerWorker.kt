@@ -22,16 +22,24 @@ import android.content.Context
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.njlabs.showjava.Constants
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.JarExtractionWorker
 import com.njlabs.showjava.decompilers.JavaExtractionWorker
 import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
 import com.njlabs.showjava.utils.ProcessNotifier
 import timber.log.Timber
+import java.io.File
 
-class DecompilerWorker(val context: Context, val params: WorkerParameters) : Worker(context, params) {
+class DecompilerWorker(val context: Context, private val params: WorkerParameters) : Worker(context, params) {
 
     private var worker: BaseDecompiler? = null
+    private val maxAttempts = params.inputData.getInt("maxAttempts", Constants.WORKER.PARAMETERS.MAX_ATTEMPTS)
+
+    private val id: String = params.inputData.getString("id").toString()
+    private val packageName: String = params.inputData.getString("name").toString()
+    private val packageLabel: String = params.inputData.getString("label").toString()
+    private val inputPackageFile: File = File(params.inputData.getString("inputPackageFile"))
 
     init {
         if (tags.contains("jar-extraction")) {
@@ -46,10 +54,13 @@ class DecompilerWorker(val context: Context, val params: WorkerParameters) : Wor
     }
 
     override fun doWork(): Result {
-        var result = if (runAttemptCount >= 2) Result.FAILURE else Result.RETRY
+        var result = if (runAttemptCount >= (maxAttempts - 1)) Result.FAILURE else Result.RETRY
+        val notifier = ProcessNotifier(context, id)
+            .withPackageInfo(packageName, packageLabel, inputPackageFile)
+
         worker ?.let {
             try {
-                result = it.withAttempt(runAttemptCount)
+                result = it.withNotifier(notifier).withAttempt(runAttemptCount)
             } catch (e: Exception) {
                 Timber.e(e)
             }
@@ -57,7 +68,7 @@ class DecompilerWorker(val context: Context, val params: WorkerParameters) : Wor
         }
         if (result == Result.FAILURE) {
             try {
-                ProcessNotifier(context, params.inputData.getString("id")).error()
+                notifier.error()
             } catch (e: Exception) {
                 Timber.e(e)
             }
