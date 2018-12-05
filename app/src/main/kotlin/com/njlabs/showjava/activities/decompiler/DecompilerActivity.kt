@@ -154,7 +154,7 @@ class DecompilerActivity : BaseActivity() {
 
 
         val i = Intent(this, DecompilerProcessActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        // i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         i.putExtra("packageInfo", packageInfo)
         i.putExtra("decompilerIndex", decompilerIndex)
 
@@ -165,7 +165,7 @@ class DecompilerActivity : BaseActivity() {
         }
 
         startActivity(i)
-        finish()
+        // finish()
     }
 
     // Get a MemoryInfo object for the device's current memory status.

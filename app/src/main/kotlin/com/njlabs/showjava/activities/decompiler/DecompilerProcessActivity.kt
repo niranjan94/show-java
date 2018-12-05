@@ -22,31 +22,44 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.TextView
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
-import com.njlabs.showjava.activities.landing.LandingActivity
 import com.njlabs.showjava.data.PackageInfo
 import kotlinx.android.synthetic.main.activity_decompiler_process.*
 import android.content.IntentFilter
+import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.work.State
+import androidx.work.WorkManager
+import androidx.work.WorkStatus
 import com.njlabs.showjava.Constants
+import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
+import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.utils.sourceDir
 import com.njlabs.showjava.workers.DecompilerWorker
+import timber.log.Timber
 
 
 class DecompilerProcessActivity : BaseActivity() {
 
+    private val statusesMap = mutableMapOf(
+        "jar-extraction" to State.ENQUEUED,
+        "java-extraction" to State.ENQUEUED,
+        "resources-extraction" to State.ENQUEUED
+    )
+
+    private lateinit var packageInfo: PackageInfo
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_decompiler_process)
-        val packageInfo = intent.getParcelableExtra<PackageInfo>("packageInfo")
+        packageInfo = intent.getParcelableExtra("packageInfo")
         val decompilerIndex = intent.getIntExtra("decompilerIndex", 0)
-        if (packageInfo != null) {
-            inputPackageLabel.text = packageInfo.label
-        }
+
+        inputPackageLabel.text = packageInfo.label
 
         val decompilers = resources.getStringArray(R.array.decompilers)
         val decompilerDescriptions = resources.getStringArray(R.array.decompilerDescriptions)
@@ -61,7 +74,42 @@ class DecompilerProcessActivity : BaseActivity() {
 
         cancelButton.setOnClickListener {
             DecompilerWorker.cancel(context, packageInfo.name)
-            onBackPressed()
+            finish()
+        }
+
+        WorkManager.getInstance()
+            .getStatusesForUniqueWorkLiveData(packageInfo.name)
+            .observe(this, Observer<List<WorkStatus>> { statuses ->
+                statuses.forEach {
+                    statusesMap.keys.forEach { tag ->
+                        if (it.tags.contains(tag)) {
+                            statusesMap[tag] = it.state
+                        }
+                    }
+                    reconcileDecompilerStatus()
+                }
+            })
+    }
+
+    private fun reconcileDecompilerStatus() {
+        val hasFailed = statusesMap.values.any { it == State.FAILED }
+        val hasPassed = statusesMap.values.all { it == State.SUCCEEDED }
+        Timber.d("[status][packageName] hasPassed: $hasPassed | hasFailed: $hasFailed")
+
+        if (hasFailed) {
+            Toast.makeText(
+                context,
+                getString(R.string.errorDecompilingApp, packageInfo.label),
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
+        if (hasPassed) {
+            val intent = Intent(context, NavigatorActivity::class.java)
+            intent.putExtra("selectedApp", SourceInfo.from(sourceDir(packageInfo.name)))
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -99,21 +147,5 @@ class DecompilerProcessActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(progressReceiver)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        val i = Intent(this, LandingActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(i)
-        finish()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
-            return true
-        }
-        return super.onOptionsItemSelected(item)
     }
 }

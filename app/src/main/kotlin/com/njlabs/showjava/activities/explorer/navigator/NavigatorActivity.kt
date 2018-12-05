@@ -305,6 +305,11 @@ class NavigatorActivity : BaseActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (filesLoadSubscription?.isDisposed != true) {
