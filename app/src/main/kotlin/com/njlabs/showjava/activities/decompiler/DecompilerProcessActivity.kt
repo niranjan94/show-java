@@ -53,6 +53,7 @@ class DecompilerProcessActivity : BaseActivity() {
     )
 
     private lateinit var packageInfo: PackageInfo
+    private var hasCompleted = false
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_decompiler_process)
@@ -92,24 +93,30 @@ class DecompilerProcessActivity : BaseActivity() {
     }
 
     private fun reconcileDecompilerStatus() {
-        val hasFailed = statusesMap.values.any { it == State.FAILED }
-        val hasPassed = statusesMap.values.all { it == State.SUCCEEDED }
-        Timber.d("[status] [${packageInfo.name}] hasPassed: $hasPassed | hasFailed: $hasFailed")
+        synchronized(hasCompleted) {
+            if (hasCompleted) {
+                return
+            }
 
-        if (hasFailed) {
-            Toast.makeText(
-                context,
-                getString(R.string.errorDecompilingApp, packageInfo.label),
-                Toast.LENGTH_LONG
-            ).show()
-            return
-        }
+            val hasFailed = statusesMap.values.any { it == State.FAILED }
+            val hasPassed = statusesMap.values.all { it == State.SUCCEEDED }
+            Timber.d("[status] [${packageInfo.name}] hasPassed: $hasPassed | hasFailed: $hasFailed")
 
-        if (hasPassed) {
-            val intent = Intent(context, NavigatorActivity::class.java)
-            intent.putExtra("selectedApp", SourceInfo.from(sourceDir(packageInfo.name)))
-            startActivity(intent)
-            finish()
+            if (hasFailed) {
+                Toast.makeText(
+                    context,
+                    getString(R.string.errorDecompilingApp, packageInfo.label),
+                    Toast.LENGTH_LONG
+                ).show()
+                hasCompleted = true
+                finish()
+            } else if (hasPassed) {
+                val intent = Intent(context, NavigatorActivity::class.java)
+                intent.putExtra("selectedApp", SourceInfo.from(sourceDir(packageInfo.name)))
+                startActivity(intent)
+                hasCompleted = true
+                finish()
+            }
         }
     }
 

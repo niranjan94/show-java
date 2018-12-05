@@ -39,6 +39,9 @@ class NavigatorHandler(private var context: Context) {
             val directories = ArrayList<FileItem>()
             val files = ArrayList<FileItem>()
             val items = currentFile.listFiles()
+            if (items.isNullOrEmpty()) {
+                return@fromCallable directories
+            }
             items.forEach { file ->
                 val lastModDate = DateFormat.getDateTimeInstance()
                     .format(

@@ -210,6 +210,10 @@ class NavigatorActivity : BaseActivity() {
     }
 
     private fun isAtRoot(): Boolean {
+
+        Timber.d("[isAtRoot] currentDirectory: ${currentDirectory?.canonicalPath}")
+        Timber.d("[isAtRoot] sourceDirectory: ${selectedApp?.sourceDirectory?.canonicalPath}")
+
         return currentDirectory?.canonicalPath == selectedApp?.sourceDirectory?.canonicalPath
     }
 
