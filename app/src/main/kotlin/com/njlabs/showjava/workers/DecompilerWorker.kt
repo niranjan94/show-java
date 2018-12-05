@@ -19,12 +19,14 @@
 package com.njlabs.showjava.workers
 
 import android.content.Context
+import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.JarExtractionWorker
 import com.njlabs.showjava.decompilers.JavaExtractionWorker
 import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
+import com.njlabs.showjava.utils.ProcessNotifier
 import timber.log.Timber
 
 class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
@@ -60,6 +62,13 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
         super.onStopped(cancelled)
         if (worker != null) {
             return worker!!.onStopped(cancelled)
+        }
+    }
+
+    companion object {
+        fun cancel(context: Context, id: String) {
+            ProcessNotifier(context, id).cancel()
+            WorkManager.getInstance().cancelUniqueWork(id)
         }
     }
 }

@@ -61,8 +61,7 @@
 
         <receiver
             android:name=".receivers.DecompilerActionReceiver"
-            android:permission="com.njlabs.showjava.permission.CANCEL_WORKER">
-        </receiver>
+            android:permission="com.njlabs.showjava.permission.CANCEL_WORKER"></receiver>
 
         <activity
             android:name=".activities.landing.LandingActivity"
@@ -85,7 +84,13 @@
                 android:resource="@xml/searchable" />
         </activity>
 
-        <activity android:name=".activities.decompiler.DecompilerProcessActivity" />
+        <activity
+            android:name=".activities.decompiler.DecompilerProcessActivity"
+            android:theme="@style/AppTheme.WithTransition">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.apps.AppsActivity" />
+        </activity>
 
         <activity
             android:name=".activities.explorer.viewer.CodeViewerActivity"
@@ -119,11 +124,12 @@
                 android:value=".activities.landing.LandingActivity" />
         </activity>
 
-        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.about.AboutActivity"/>
+                android:value=".activities.about.AboutActivity" />
         </activity>
 
 
@@ -138,7 +144,7 @@
             <intent-filter
                 android:icon="@mipmap/ic_launcher_round"
                 android:label="@string/appName"
-                android:priority="10" >
+                android:priority="10">
 
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -150,7 +156,7 @@
             <intent-filter
                 android:icon="@mipmap/ic_launcher_round"
                 android:label="@string/appName"
-                android:priority="20" >
+                android:priority="20">
 
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -170,7 +176,7 @@
             <intent-filter
                 android:icon="@mipmap/ic_launcher_round"
                 android:label="@string/appName"
-                android:priority="30" >
+                android:priority="30">
 
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -218,7 +224,7 @@
             <intent-filter
                 android:icon="@mipmap/ic_launcher_round"
                 android:label="@string/appName"
-                android:priority="40" >
+                android:priority="40">
 
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

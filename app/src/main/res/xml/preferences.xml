@@ -75,6 +75,12 @@
             android:singleLine="true"
             android:title="@string/maxDecompilerAttempts" />
 
+        <Preference
+            app:iconSpaceReserved="false"
+            android:key="clearSourceHistory"
+            android:summary="@string/clearSourceHistorySummary"
+            android:title="@string/clearSourceHistory"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory

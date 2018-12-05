@@ -23,6 +23,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.work.*
 import com.njlabs.showjava.Constants
+import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.ProcessNotifier
 import com.njlabs.showjava.utils.appStorage
@@ -114,7 +115,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      */
     private fun broadcastStatus(title: String?, message: String) {
         context.sendBroadcast(
-            Intent(Constants.WORKER.ACTION.BROADCAST)
+            Intent(Constants.WORKER.ACTION.BROADCAST + packageName)
                 .putExtra(Constants.WORKER.STATUS_KEY, title)
                 .putExtra(Constants.WORKER.STATUS_MESSAGE, message)
         )
@@ -128,15 +129,23 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             .buildFor(title, packageName, packageLabel, inputPackageFile)
     }
 
+    fun onCompleted() {
+        processNotifier?.success()
+        broadcastStatus(
+            context.getString(R.string.appHasBeenDecompiled, packageLabel),
+            ""
+        )
+    }
+
     /**
      * Cancel notification on worker stop
      */
     open fun onStopped(cancelled: Boolean = false) {
         Timber.d("[cancel-request] cancelled: $cancelled")
+        processNotifier?.cancel()
         if (cancelled) {
             FileUtils.deleteQuietly(workingDirectory)
         }
-        processNotifier?.cancel()
     }
 
     companion object {

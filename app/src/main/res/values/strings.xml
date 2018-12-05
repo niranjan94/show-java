@@ -123,4 +123,8 @@
     <string name="classesPerChunk">Class definitions per dex chunk</string>
     <string name="maxDecompilerAttempts">Max attempts for decompilation</string>
     <string name="cannotDecompileFile">Cannot decompile the file selected</string>
+    <string name="clearSourceHistory">Clear source history</string>
+    <string name="clearSourceHistorySummary">Delete previously decompiled sources</string>
+    <string name="tapToView">Tap to view</string>
+    <string name="appHasBeenDecompiled"><xliff:g example="WhatsApp" id="appName">%1$s</xliff:g> has been decompiled</string>
 </resources>

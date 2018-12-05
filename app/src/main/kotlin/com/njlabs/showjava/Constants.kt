@@ -40,7 +40,8 @@ object Constants {
         companion object {
             const val STATUS_KEY = "com.njlabs.showjava.worker.STATUS_KEY"
             const val STATUS_MESSAGE = "com.njlabs.showjava.worker.STATUS_MESSAGE"
-            const val NOTIFICATION_CHANNEL = "com.njlabs.showjava"
+            const val PROGRESS_NOTIFICATION_CHANNEL = "com.njlabs.showjava.worker.notification.progress"
+            const val COMPLETION_NOTIFICATION_CHANNEL = "com.njlabs.showjava.worker.notification.completion"
             const val PROGRESS_NOTIFICATION_ID = 1094
             const val COMPLETED_NOTIFICATION_ID = 1095
         }

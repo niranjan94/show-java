@@ -27,12 +27,23 @@
 
     <include layout="@layout/layout_toolbar" android:id="@+id/toolbar"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
     <FrameLayout
         android:id="@+id/container"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@id/toolbar">
+
+    </FrameLayout>
 
 </RelativeLayout>

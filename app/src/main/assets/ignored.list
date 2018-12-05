@@ -52,3 +52,4 @@ org.slf4j
 cz.msebera.android.httpclient
 net.sourceforge.javaflacencoder
 vavi.sound
+com.google.protobuf

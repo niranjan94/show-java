@@ -20,16 +20,21 @@ package com.njlabs.showjava.activities.decompiler
 
 import android.annotation.SuppressLint
 import android.app.ActivityManager
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.TaskStackBuilder
 import com.njlabs.showjava.Constants.WORKER.PARAMETERS.Companion.CLASSES_PER_CHUNK
 import com.njlabs.showjava.Constants.WORKER.PARAMETERS.Companion.MAX_ATTEMPTS
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.activities.apps.AppsActivity
+import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
@@ -80,7 +85,7 @@ class DecompilerActivity : BaseActivity() {
             view.decompilerDescription.text = decompilerDescriptions[index]
             view.decompilerItemCard.cardElevation = 1F
             view.decompilerItemCard.setOnClickListener {
-                startProcess(decompiler)
+                startProcess(it, decompiler, index)
             }
             pickerList.addView(view)
         }
@@ -127,7 +132,7 @@ class DecompilerActivity : BaseActivity() {
         }
     }
 
-    private fun startProcess(decompiler: String) {
+    private fun startProcess(view: View, decompiler: String, decompilerIndex: Int) {
         BaseDecompiler.start(
             hashMapOf(
                 "shouldIgnoreLibs" to userPreferences.getBoolean("ignoreLibraries", true),
@@ -146,6 +151,21 @@ class DecompilerActivity : BaseActivity() {
                 "type" to packageInfo.type.ordinal
             )
         )
+
+
+        val i = Intent(this, DecompilerProcessActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        i.putExtra("packageInfo", packageInfo)
+        i.putExtra("decompilerIndex", decompilerIndex)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val options = ActivityOptions
+                .makeSceneTransitionAnimation(this, view, "decompilerItemCard")
+            return startActivity(i, options.toBundle())
+        }
+
+        startActivity(i)
+        finish()
     }
 
     // Get a MemoryInfo object for the device's current memory status.

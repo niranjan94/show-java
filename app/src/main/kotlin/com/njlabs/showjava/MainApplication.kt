@@ -18,7 +18,12 @@
 
 package com.njlabs.showjava
 
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.multidex.MultiDexApplication
+import androidx.work.WorkManager
 import com.google.android.gms.ads.MobileAds
 import com.njlabs.showjava.utils.logging.ProductionTree
 import io.github.inflationx.calligraphy3.CalligraphyConfig
@@ -53,5 +58,23 @@ class MainApplication : MultiDexApplication() {
             Timber.plant(ProductionTree())
         }
         MobileAds.initialize(this, getString(R.string.admobAppId))
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            cleanStaleNotifications()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun cleanStaleNotifications() {
+        val manager = applicationContext
+            .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val workManager = WorkManager.getInstance()
+        manager.activeNotifications.forEach { notification ->
+            val status = workManager.getStatusesForUniqueWorkLiveData(notification.tag)
+                .value?.any { it.state.isFinished }
+            if (status == null || status == true) {
+                manager.cancel(notification.tag, notification.id)
+            }
+        }
     }
 }

@@ -22,13 +22,20 @@ import android.content.Context
 import android.os.Bundle
 import android.preference.ListPreference
 import android.view.Menu
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 
 class SettingsActivity : BaseActivity() {
+
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_settings)
         supportFragmentManager
@@ -38,13 +45,66 @@ class SettingsActivity : BaseActivity() {
     }
 
     class PrefsFragment : PreferenceFragmentCompat() {
+
+        private lateinit var settingsHandler: SettingsHandler
+        private lateinit var deleteSubscription: Disposable
+
+        private lateinit var progressBarView: View
+        private lateinit var containerView: View
+
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             preferenceManager.sharedPreferencesName = "user_preferences"
             preferenceManager.sharedPreferencesMode = Context.MODE_PRIVATE
+
+            progressBarView = activity?.findViewById(R.id.progressBar)!!
+            containerView = activity?.findViewById(R.id.container)!!
+
+            settingsHandler = SettingsHandler(context!!)
+
             setPreferencesFromResource(R.xml.preferences, rootKey)
+
+            findPreference("clearSourceHistory").setOnPreferenceClickListener {
+                AlertDialog.Builder(context!!)
+                    .setTitle(getString(R.string.deleteSource))
+                    .setMessage(getString(R.string.deleteSourceConfirm))
+                    .setIcon(R.drawable.ic_error_outline_black)
+                    .setPositiveButton(
+                        android.R.string.yes
+                    ) { _, _ ->
+                        deleteSources()
+                    }
+                    .setNegativeButton(android.R.string.no, null)
+                    .show()
+                true
+            }
+
             bindPreferenceSummaryToValue(findPreference("decompiler"))
             bindPreferenceSummaryToValue(findPreference("chunkSize"))
             bindPreferenceSummaryToValue(findPreference("maxAttempts"))
+        }
+
+        private fun deleteSources() {
+            progressBarView.visibility = View.VISIBLE
+            containerView.visibility = View.INVISIBLE
+            deleteSubscription = settingsHandler.deleteHistory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.sourceDeleted),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    progressBarView.visibility = View.GONE
+                    containerView.visibility = View.VISIBLE
+                }
+        }
+
+        override fun onDestroy() {
+            super.onDestroy()
+            if (::deleteSubscription.isInitialized && !deleteSubscription.isDisposed) {
+                deleteSubscription.dispose()
+            }
         }
     }
 
