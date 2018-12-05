@@ -31,10 +31,16 @@ import java.util.regex.Pattern
 private val NON_LATIN = Pattern.compile("[^\\w-]")
 private val WHITESPACE = Pattern.compile("[\\s]")
 
+/**
+ * Convert a [packageName] in dot.notation to a class reference (Eg. Lclass/reference)
+ */
 fun toClassName(packageName: String): String {
     return "L" + packageName.trim().replace(".", "/")
 }
 
+/**
+ * Convert the [input] to a slug.
+ */
 fun toSlug(input: String): String {
     val noWhiteSpace = WHITESPACE.matcher(input).replaceAll("-")
     val normalized = Normalizer.normalize(noWhiteSpace, Normalizer.Form.NFD)
@@ -42,22 +48,26 @@ fun toSlug(input: String): String {
     return slug.toLowerCase(Locale.ENGLISH)
 }
 
-fun hashString(type: String, input: String): String {
+/**
+ * Hash the given [input] string using the specified [algorithm]
+ */
+fun hashString(algorithm: String, input: String): String {
     val hexChars = "0123456789ABCDEF"
     val bytes = MessageDigest
-        .getInstance(type)
+        .getInstance(algorithm)
         .digest(input.toByteArray())
     val result = StringBuilder(bytes.size * 2)
-
     bytes.forEach {
         val i = it.toInt()
         result.append(hexChars[i shr 4 and 0x0f])
         result.append(hexChars[i and 0x0f])
     }
-
     return result.toString()
 }
 
+/**
+ * Check if the device is connected to a network.
+ */
 fun checkDataConnection(context: Context): Boolean {
     val connectivityMgr =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -66,6 +76,9 @@ fun checkDataConnection(context: Context): Boolean {
             connectivityMgr.activeNetworkInfo.isConnected)
 }
 
+/**
+ * Get the current date as ISO 8601 [String]
+ */
 fun getDate(): String {
     val date = Date(System.currentTimeMillis())
     val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US)
@@ -73,9 +86,13 @@ fun getDate(): String {
     return formatter.format(date)
 }
 
+/**
+ * Request JVM to run the garbage collector.
+ * Don't think this would do much good. But okay.
+ */
 fun cleanMemory() {
     Runtime.getRuntime().gc()
-    Thread.sleep(2500)
+    Thread.sleep(2000)
 }
 
 /**

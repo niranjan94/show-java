@@ -29,7 +29,9 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
+import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
+import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.receivers.DecompilerActionReceiver
 import java.io.File
@@ -50,10 +52,12 @@ class ProcessNotifier(
     private lateinit var notification: Notification
     private lateinit var packageName: String
     private lateinit var packageLabel: String
+    private lateinit var packageFile: File
 
     fun buildFor(title: String, packageName: String, packageLabel: String, packageFile: File ): ProcessNotifier {
 
         this.packageName = packageName
+        this.packageFile = packageFile
         this.packageLabel = packageLabel
 
         val stopIntent = Intent(context, DecompilerActionReceiver::class.java)
@@ -142,6 +146,38 @@ class ProcessNotifier(
         manager.cancel(notificationTag, notificationId)
     }
 
+    fun error() {
+        val intent = Intent(context, DecompilerActivity::class.java)
+        intent.putExtra("packageInfo", PackageInfo.fromFile(context, packageFile))
+        val manager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val resultPendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                Constants.WORKER.COMPLETION_NOTIFICATION_CHANNEL,
+                "Decompile complete notification",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            manager.createNotificationChannel(channel)
+        }
+        val builder = NotificationCompat.Builder(context, Constants.WORKER.COMPLETION_NOTIFICATION_CHANNEL)
+            .setContentTitle(context.getString(R.string.errorDecompilingApp, packageLabel))
+            .setContentText(context.getString(R.string.tapToRetry))
+            .setSmallIcon(R.drawable.ic_stat_error)
+            .setContentIntent(resultPendingIntent)
+            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
+            .setAutoCancel(false)
+        manager.notify(
+            packageName,
+            Constants.WORKER.COMPLETED_NOTIFICATION_ID,
+            builder.build()
+        )
+    }
+
     fun success() {
         val intent = Intent(context, NavigatorActivity::class.java)
         intent.putExtra("selectedApp", SourceInfo.from(sourceDir(packageName)))
@@ -161,10 +197,9 @@ class ProcessNotifier(
             )
             manager.createNotificationChannel(channel)
         }
-
         val builder = NotificationCompat.Builder(context, Constants.WORKER.COMPLETION_NOTIFICATION_CHANNEL)
             .setContentTitle(context.getString(R.string.appHasBeenDecompiled, packageLabel))
-            .setContentText(context.getString(R.string.tapToView))
+            .setContentText(context.getString(R.string.tapToViewSource))
             .setSmallIcon(R.drawable.ic_stat_code)
             .setContentIntent(resultPendingIntent)
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))

@@ -64,6 +64,9 @@ class MainApplication : MultiDexApplication() {
         }
     }
 
+    /**
+     * Clean any stale notifications not linked to any decompiler process
+     */
     @RequiresApi(Build.VERSION_CODES.M)
     fun cleanStaleNotifications() {
         val manager = applicationContext

@@ -1,4 +1,4 @@
-package com.njlabs.showjava
+package com.njlabs.showjava.utils
 
 /*
  * Code borrowed from https://medium.com/@BladeCoder/kotlin-singletons-with-argument-194ef06edd9e
@@ -13,7 +13,6 @@ open class SingletonHolder<out T, in A>(creator: (A) -> T) {
         if (i != null) {
             return i
         }
-
         return synchronized(this) {
             val i2 = instance
             if (i2 != null) {

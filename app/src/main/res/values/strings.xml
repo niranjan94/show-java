@@ -125,6 +125,9 @@
     <string name="cannotDecompileFile">Cannot decompile the file selected</string>
     <string name="clearSourceHistory">Clear source history</string>
     <string name="clearSourceHistorySummary">Delete previously decompiled sources</string>
-    <string name="tapToView">Tap to view</string>
+    <string name="tapToViewSource">Tap to view source</string>
     <string name="appHasBeenDecompiled"><xliff:g example="WhatsApp" id="appName">%1$s</xliff:g> has been decompiled</string>
+    <string name="errorDecompilingApp"><xliff:g example="WhatsApp" id="appName">%1$s</xliff:g> could not be decompiled</string>
+    <string name="tapToViewSource">Try another decompiler</string>
+    <string name="tapToRetry">Tap to retry</string>
 </resources>

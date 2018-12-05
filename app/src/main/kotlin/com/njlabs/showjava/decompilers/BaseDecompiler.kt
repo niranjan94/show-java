@@ -104,8 +104,10 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected fun exit(exception: Exception?): ListenableWorker.Result {
         Timber.e(exception)
         onStopped(false)
-        return if (runAttemptCount >= maxAttempts)
+        return if (runAttemptCount >= maxAttempts) {
+            processNotifier?.error()
             ListenableWorker.Result.FAILURE
+        }
         else
             ListenableWorker.Result.RETRY
     }

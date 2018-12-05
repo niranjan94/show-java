@@ -26,7 +26,6 @@ import android.util.Base64
 import com.github.javiersantos.piracychecker.*
 import com.github.javiersantos.piracychecker.enums.InstallerID
 import com.njlabs.showjava.BuildConfig
-import com.njlabs.showjava.SingletonHolder
 import com.securepreferences.SecurePreferences
 import io.michaelrocks.paranoid.Obfuscate
 import org.solovyev.android.checkout.Billing

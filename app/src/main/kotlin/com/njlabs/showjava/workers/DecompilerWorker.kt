@@ -29,7 +29,7 @@ import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
 import com.njlabs.showjava.utils.ProcessNotifier
 import timber.log.Timber
 
-class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
+class DecompilerWorker(val context: Context, val params: WorkerParameters) : Worker(context, params) {
 
     private var worker: BaseDecompiler? = null
 
@@ -52,6 +52,11 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
                 result = it.withAttempt(runAttemptCount)
             } catch (e: Exception) {
                 Timber.e(e)
+                try {
+                    ProcessNotifier(context, params.inputData.getString("id")).error()
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
             }
             it.onStopped(false)
         }
