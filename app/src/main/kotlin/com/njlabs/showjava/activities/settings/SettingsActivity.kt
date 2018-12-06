@@ -49,15 +49,15 @@ class SettingsActivity : BaseActivity() {
         private lateinit var settingsHandler: SettingsHandler
         private lateinit var deleteSubscription: Disposable
 
-        private lateinit var progressBarView: View
-        private lateinit var containerView: View
+        private var progressBarView: View? = null
+        private var containerView: View? = null
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             preferenceManager.sharedPreferencesName = "user_preferences"
             preferenceManager.sharedPreferencesMode = Context.MODE_PRIVATE
 
-            progressBarView = activity?.findViewById(R.id.progressBar)!!
-            containerView = activity?.findViewById(R.id.container)!!
+            progressBarView = activity?.findViewById(R.id.progressBar)
+            containerView = activity?.findViewById(R.id.container)
 
             settingsHandler = SettingsHandler(context!!)
 
@@ -65,8 +65,8 @@ class SettingsActivity : BaseActivity() {
 
             findPreference("clearSourceHistory").setOnPreferenceClickListener {
                 AlertDialog.Builder(context!!)
-                    .setTitle(getString(R.string.deleteSource))
-                    .setMessage(getString(R.string.deleteSourceConfirm))
+                    .setTitle(getString(R.string.deleteSourceHistory))
+                    .setMessage(getString(R.string.deleteSourceHistoryConfirm))
                     .setIcon(R.drawable.ic_error_outline_black)
                     .setPositiveButton(
                         android.R.string.yes
@@ -84,19 +84,19 @@ class SettingsActivity : BaseActivity() {
         }
 
         private fun deleteSources() {
-            progressBarView.visibility = View.VISIBLE
-            containerView.visibility = View.INVISIBLE
+            progressBarView?.visibility = View.VISIBLE
+            containerView?.visibility = View.INVISIBLE
             deleteSubscription = settingsHandler.deleteHistory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     Toast.makeText(
                         context,
-                        getString(R.string.sourceDeleted),
+                        getString(R.string.sourceHistoryDeleted),
                         Toast.LENGTH_SHORT
                     ).show()
-                    progressBarView.visibility = View.GONE
-                    containerView.visibility = View.VISIBLE
+                    progressBarView?.visibility = View.GONE
+                    containerView?.visibility = View.VISIBLE
                 }
         }
 

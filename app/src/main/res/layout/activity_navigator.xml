@@ -35,14 +35,22 @@
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_above="@id/adView"
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/filesList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
     <include
         android:id="@+id/adView"
         layout="@layout/layout_admob" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/filesList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/adView"
-        android:layout_below="@id/toolbar" />
 </RelativeLayout>

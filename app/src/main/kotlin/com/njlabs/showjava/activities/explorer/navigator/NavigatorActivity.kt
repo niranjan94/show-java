@@ -53,7 +53,7 @@ class NavigatorActivity : BaseActivity() {
 
     private var zipProgressDialog: ProgressDialog? = null
 
-    private var fileItems: ArrayList<FileItem>? = ArrayList()
+    private var fileItems: ArrayList<FileItem> = ArrayList()
     private var selectedApp: SourceInfo? = null
 
     override fun init(savedInstanceState: Bundle?) {
@@ -62,7 +62,9 @@ class NavigatorActivity : BaseActivity() {
         navigationHandler = NavigatorHandler(this)
 
         if (savedInstanceState != null) {
-            fileItems = savedInstanceState.getParcelableArrayList<FileItem>("fileItems")
+            savedInstanceState.getParcelableArrayList<FileItem>("fileItems")?.let {
+                fileItems = it
+            }
             selectedApp = selectedApp ?: savedInstanceState.getParcelable("selectedApp")
             val currentDirectoryString = savedInstanceState.getString("currentDirectory")
             currentDirectoryString?.let {
@@ -74,6 +76,10 @@ class NavigatorActivity : BaseActivity() {
         setupList()
         filesListAdapter.updateData(fileItems)
         currentDirectory?.let { populateList(it) }
+
+        swipeRefresh.setOnRefreshListener {
+            currentDirectory?.let { populateList(it) }
+        }
     }
 
     private fun setListVisibility(isListVisible: Boolean = true) {
@@ -94,12 +100,14 @@ class NavigatorActivity : BaseActivity() {
                 )
             )
         }
+        swipeRefresh.isRefreshing = true
         disposables.add(navigationHandler.loadFiles(startDirectory)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError { Timber.e(it) }
             .subscribe {
                 updateList(it)
+                swipeRefresh.isRefreshing = false
             }
         )
     }
@@ -120,7 +128,7 @@ class NavigatorActivity : BaseActivity() {
     private fun setupList() {
         filesList.setHasFixedSize(true)
         filesList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-        filesListAdapter = FilesListAdapter(fileItems!!) { selectedFile ->
+        filesListAdapter = FilesListAdapter(fileItems) { selectedFile ->
             if (selectedFile.file.isDirectory) {
                 populateList(selectedFile.file)
             } else {
@@ -175,7 +183,9 @@ class NavigatorActivity : BaseActivity() {
 
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)
-        bundle.putParcelableArrayList("fileItems", fileItems)
+        if (fileItems.size <= 1000) {
+            bundle.putParcelableArrayList("fileItems", fileItems)
+        }
         selectedApp?.let {
             bundle.putParcelable("selectedApp", it)
         }

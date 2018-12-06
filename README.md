@@ -38,7 +38,7 @@ JaDX and Fernflower use newer Java features such as some types of lambda's which
 | KitKat      | :white_check_mark: |        -           |         -          |
 | Jelly Bean  | :white_check_mark: |        -           |         -          |
 
-> Available from the [Play Store](https://play.google.com/store/apps/details?id=com.njlabs.showjava) on all Android devices higher or equal to Jelly Bean.
+> Available from the [Play Store](https://play.google.com/store/apps/details?id=com.njlabs.showjava) on all Android devices running Jelly Bean and above.
 
 ### Version 2.0
 
@@ -46,7 +46,7 @@ JaDX and Fernflower use newer Java features such as some types of lambda's which
 |------------:|:------------------:|:------------------:|:------------------:|
 | ICS & Above | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
-> Available from the [Play Store](https://play.google.com/store/apps/details?id=com.njlabs.showjava) on all Android devices lower than Jelly Bean.<br>
+> Available from the [Play Store](https://play.google.com/store/apps/details?id=com.njlabs.showjava) on all Android devices running ICS.<br>
 > Can also be downloaded from [here](https://github.com/niranjan94/show-java/releases/tag/v2.1.0).
 
 ## Contributing to ShowJava

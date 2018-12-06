@@ -18,6 +18,7 @@
 
 package com.njlabs.showjava.decompilers
 
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -30,6 +31,9 @@ import com.njlabs.showjava.utils.appStorage
 import com.njlabs.showjava.utils.cleanMemory
 import com.njlabs.showjava.utils.streams.ProgressStream
 import com.njlabs.showjava.workers.DecompilerWorker
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import org.apache.commons.io.FileUtils
 import timber.log.Timber
 import java.io.File
@@ -60,6 +64,8 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected val outputJavaSrcDirectory: File = workingDirectory.resolve("src/java")
     protected val outputResSrcDirectory: File = workingDirectory.resolve("src/res")
 
+    protected val disposables = CompositeDisposable()
+
     init {
         printStream = PrintStream(ProgressStream(this))
         System.setErr(printStream)
@@ -72,6 +78,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      */
     open fun doWork(): ListenableWorker.Result {
         cleanMemory()
+        monitorMemory()
         outputJavaSrcDirectory.mkdirs()
         outputResSrcDirectory.mkdirs()
         return ListenableWorker.Result.SUCCESS
@@ -85,6 +92,27 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     fun withNotifier(notifier: ProcessNotifier): BaseDecompiler {
         this.processNotifier = notifier
         return this
+    }
+
+    private fun monitorMemory() {
+        disposables.add(
+            Observable.interval(1, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe {
+                    val free =  Runtime.getRuntime().freeMemory()
+                    val max = Runtime.getRuntime().maxMemory()
+                    val total = Runtime.getRuntime().totalMemory()
+                    val maxAdjusted = max / 2
+                    val used = (total - free)
+                    val usedPercentage = (used.toDouble() / maxAdjusted.toDouble()) * 100
+
+                    Timber.d("[mem] ----")
+                    Timber.d("[mem] Used: ${FileUtils.byteCountToDisplaySize(used)}")
+                    Timber.d("[mem] Max: ${FileUtils.byteCountToDisplaySize(maxAdjusted)}")
+                    Timber.d("[mem] Used %: $usedPercentage")
+                }
+        )
     }
 
     /**
@@ -110,6 +138,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected fun exit(exception: Exception?): ListenableWorker.Result {
         Timber.e(exception)
         onStopped(false)
+        disposables.clear()
         return if (runAttemptCount >= (maxAttempts - 1))
             ListenableWorker.Result.FAILURE
         else
@@ -117,6 +146,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     }
 
     protected fun successIf(condition: Boolean): ListenableWorker.Result {
+        disposables.clear()
         return if (condition)
             ListenableWorker.Result.SUCCESS
         else
@@ -157,6 +187,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      */
     open fun onStopped(cancelled: Boolean = false) {
         Timber.d("[cancel-request] cancelled: $cancelled")
+        disposables.clear()
         processNotifier?.cancel()
         if (cancelled) {
             FileUtils.deleteQuietly(workingDirectory)

@@ -104,6 +104,10 @@ class LandingActivity : BaseActivity() {
                 }
             }
         }
+
+        swipeRefresh.setOnRefreshListener {
+            populateHistory(true)
+        }
     }
 
     public override fun onResume() {
@@ -139,12 +143,14 @@ class LandingActivity : BaseActivity() {
     }
 
     private fun populateHistory(resume: Boolean = false) {
+        swipeRefresh.isRefreshing = true
         disposables.add(landingHandler.loadHistory()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError { Timber.e(it) }
             .subscribe {
                 historyItems = it
+                swipeRefresh.isRefreshing = false
                 if (resume && historyListAdapter != null) {
                     historyListAdapter?.updateData(historyItems)
                     setListVisibility(!historyItems.isEmpty())
@@ -159,6 +165,7 @@ class LandingActivity : BaseActivity() {
         val listGroupVisibility = if (isListVisible) View.VISIBLE else View.GONE
         val defaultGroupVisibility = if (isListVisible) View.GONE else View.VISIBLE
         historyListView.visibility = listGroupVisibility
+        swipeRefresh.visibility = listGroupVisibility
         pickAppText.visibility = listGroupVisibility
         welcomeLayout.visibility = defaultGroupVisibility
     }

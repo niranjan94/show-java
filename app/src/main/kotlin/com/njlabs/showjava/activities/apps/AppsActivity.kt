@@ -56,19 +56,20 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         setupLayout(R.layout.activity_apps)
         appsHandler = AppsHandler(context)
         withSystemApps = userPreferences.getBoolean("showSystemApps", false)
+
+        loadingView.visibility = View.VISIBLE
+        appsList.visibility = View.GONE
+        typeRadioGroup.visibility = View.GONE
+        searchMenuItem?.isVisible = false
+
         if (savedInstanceState != null) {
             val apps = savedInstanceState.getParcelableArrayList<PackageInfo>("apps")
-            if (apps != null) {
+            if (!apps.isNullOrEmpty()) {
                 this.apps = apps
                 this.filteredApps = apps
                 setupList()
                 filterApps(R.id.userRadioButton)
             }
-        } else {
-            loadingView.visibility = View.VISIBLE
-            appsList.visibility = View.GONE
-            typeRadioGroup.visibility = View.GONE
-            searchMenuItem?.isVisible = false
         }
         if (this.apps.isEmpty( )) {
             loadApps()

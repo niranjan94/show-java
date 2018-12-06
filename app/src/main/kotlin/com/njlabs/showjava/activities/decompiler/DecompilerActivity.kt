@@ -208,6 +208,7 @@ class DecompilerActivity : BaseActivity() {
             am.getMemoryInfo(memoryInfo)
         }
 
+
         Timber.d(
             "[MC] ${am.memoryClass}/${am.largeMemoryClass} [T] ${h(memory.threshold)} [A] ${h(
                 memory.availMem

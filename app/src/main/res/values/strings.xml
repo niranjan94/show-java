@@ -110,9 +110,12 @@
     <string name="startingDexToJar">Starting DEX to JAR Conversion</string>
     <string name="shareSource">Share source</string>
     <string name="deleteSource">Delete source</string>
+    <string name="deleteSourceHistory">Delete source history</string>
     <string name="deleteSourceConfirm">Are you sure you want to delete the decompiled source ?</string>
+    <string name="deleteSourceHistoryConfirm">Are you sure you want to delete source history ?</string>
     <string name="compressingSource">Compressing source</string>
     <string name="sourceDeleted">The source has been deleted from your device.</string>
+    <string name="sourceHistoryDeleted">The sources have been deleted from your device.</string>
     <string name="sendSourceVia">Send source via</string>
     <string name="viewDecompiledSource">View previously decompiled source</string>
     <string name="selectFile">Select a File</string>
