@@ -32,7 +32,6 @@ class AboutActivity : BaseActivity() {
         if (BuildConfig.GIT_SHA.isNotEmpty()) {
             version.setText(R.string.appVersionExtendedWithHash)
         }
-
         viewOpenSourceLicenses.setOnClickListener {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             startActivity(Intent(context, OssLicensesMenuActivity::class.java))

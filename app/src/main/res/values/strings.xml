@@ -148,4 +148,7 @@
     <string name="lowMemoryExtraInfo">Try reducing the classes per chunk (in settings) and/or pick another decompiler.</string>
     <string name="lowMemoryStatusInfo">Ran out of RAM. Tap for more info.</string>
     <string name="memoryThreshold">Memory usage threshold (in %)</string>
+    <string name="darkMode">Dark mode (Beta)</string>
+    <string name="darkModeSummary">Turn on/off dark mode for the app</string>
+    <string name="themeChangeCloseInfo">Close and re-open app for the theme to take complete effect</string>
 </resources>

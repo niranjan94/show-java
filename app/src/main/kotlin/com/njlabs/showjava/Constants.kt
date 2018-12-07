@@ -24,6 +24,7 @@ package com.njlabs.showjava
 object Constants {
 
     const val STORAGE_PERMISSION_REQUEST = 1009
+    const val USER_PREFERENCES_NAME = "user_preferences"
 
     /**
      * Workers related constants

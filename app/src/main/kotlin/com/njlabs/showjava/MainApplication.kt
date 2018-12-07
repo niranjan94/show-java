@@ -22,6 +22,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import androidx.work.WorkManager
 import com.google.android.gms.ads.MobileAds
@@ -39,6 +40,17 @@ class MainApplication : MultiDexApplication() {
      */
     override fun onCreate() {
         super.onCreate()
+
+        val preferences =
+            applicationContext.getSharedPreferences(Constants.USER_PREFERENCES_NAME, Context.MODE_PRIVATE)
+
+        AppCompatDelegate.setDefaultNightMode(
+            if (preferences.getBoolean("darkMode", false))
+                AppCompatDelegate.MODE_NIGHT_YES
+            else
+                AppCompatDelegate.MODE_NIGHT_NO
+        )
+
         ViewPump.init(
             ViewPump.builder()
                 .addInterceptor(

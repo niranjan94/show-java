@@ -32,6 +32,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -63,7 +64,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = this
-        userPreferences = getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
+        userPreferences = getSharedPreferences(Constants.USER_PREFERENCES_NAME, Context.MODE_PRIVATE)
         safetyNet = SafetyNetLite.getInstance(context)
 
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

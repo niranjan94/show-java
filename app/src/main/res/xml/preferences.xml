@@ -45,19 +45,27 @@
 
     </PreferenceCategory>
 
-<!--
     <PreferenceCategory
         app:iconSpaceReserved="false"
         android:title="@string/easeOfUse">
+
+        <CheckBoxPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="darkMode"
+            android:summary="@string/darkModeSummary"
+            android:title="@string/darkMode" />
+
+<!--
         <CheckBoxPreference
             app:iconSpaceReserved="false"
             android:defaultValue="false"
             android:key="hideDecompilerSelect"
             android:summary="@string/autoDecompilerSelectionPreferenceSummary"
             android:title="@string/autoDecompilerSelection" />
+-->
 
     </PreferenceCategory>
--->
 
     <PreferenceCategory
         app:iconSpaceReserved="false"

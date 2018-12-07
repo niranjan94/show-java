@@ -19,14 +19,17 @@
 package com.njlabs.showjava.activities.settings
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.preference.ListPreference
 import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -53,7 +56,7 @@ class SettingsActivity : BaseActivity() {
         private var containerView: View? = null
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            preferenceManager.sharedPreferencesName = "user_preferences"
+            preferenceManager.sharedPreferencesName = Constants.USER_PREFERENCES_NAME
             preferenceManager.sharedPreferencesMode = Context.MODE_PRIVATE
 
             progressBarView = activity?.findViewById(R.id.progressBar)
@@ -83,6 +86,24 @@ class SettingsActivity : BaseActivity() {
             bindPreferenceSummaryToValue(findPreference("chunkSize"))
             bindPreferenceSummaryToValue(findPreference("maxAttempts"))
             bindPreferenceSummaryToValue(findPreference("memoryThreshold"))
+
+            findPreference("darkMode").setOnPreferenceChangeListener { _, newValue ->
+                AppCompatDelegate.setDefaultNightMode(
+                    if (newValue as Boolean)
+                        AppCompatDelegate.MODE_NIGHT_YES
+                    else
+                        AppCompatDelegate.MODE_NIGHT_NO
+                )
+
+                Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
+
+                activity?.let {
+                    it.startActivity(Intent(it, SettingsActivity::class.java))
+                    it.finish()
+                }
+
+                true
+            }
         }
 
         private fun deleteSources() {
@@ -142,7 +163,7 @@ class SettingsActivity : BaseActivity() {
             preference.onPreferenceChangeListener = sBindPreferenceSummaryToValueListener
             sBindPreferenceSummaryToValueListener.onPreferenceChange(
                 preference,
-                preference.context.getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
+                preference.context.getSharedPreferences(Constants.USER_PREFERENCES_NAME, Context.MODE_PRIVATE)
                     .getString(preference.key, "")!!
             )
         }
