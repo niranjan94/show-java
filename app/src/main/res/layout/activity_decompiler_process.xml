@@ -108,6 +108,27 @@
             android:textColor="@color/grey_400" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/memoryUsage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/memoryStatus"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/grey_400"
+        android:text="@string/memoryUsage" />
+
+    <TextView
+        android:id="@+id/memoryStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/cancelButton"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/grey_400"
+        android:text="@string/zeroPercentage" />
+
     <androidx.appcompat.widget.AppCompatButton
         style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/cancelButton"
@@ -118,5 +139,6 @@
         android:layout_marginBottom="14dp"
         android:text="@string/cancel"
         android:textColor="@color/grey_400" />
+
 
 </RelativeLayout>

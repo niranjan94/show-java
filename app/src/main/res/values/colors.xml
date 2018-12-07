@@ -28,6 +28,12 @@
     <color name="grey_900">#212121</color>
     <color name="grey_700">#616161</color>
     <color name="grey_400">#BDBDBD</color>
+
+    <color name="green_500">#4CAF50</color>
+    <color name="amber_500">#FFC107</color>
+    <color name="orange_500">#FF9800</color>
+    <color name="red_500">#F44336</color>
+
     <color name="white">#ffffff</color>
     <color name="danger_color">#22d32f2f</color>
     <color name="androidStudioBackground">#282b2e</color>

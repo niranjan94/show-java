@@ -194,11 +194,11 @@ class DecompilerActivity : BaseActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val options = ActivityOptions
                 .makeSceneTransitionAnimation(this, view, "decompilerItemCard")
-            return startActivity(i, options.toBundle())
+            startActivity(i, options.toBundle())
+        } else {
+            startActivity(i)
         }
-
-        startActivity(i)
-        // finish()
+        finish()
     }
 
     // Get a MemoryInfo object for the device's current memory status.

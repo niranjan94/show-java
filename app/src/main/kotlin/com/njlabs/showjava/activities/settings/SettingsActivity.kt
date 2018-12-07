@@ -78,7 +78,8 @@ class SettingsActivity : BaseActivity() {
                 true
             }
 
-            bindPreferenceSummaryToValue(findPreference("decompiler"))
+            // Remove decompiler selection.
+            // bindPreferenceSummaryToValue(findPreference("decompiler"))
             bindPreferenceSummaryToValue(findPreference("chunkSize"))
             bindPreferenceSummaryToValue(findPreference("maxAttempts"))
         }

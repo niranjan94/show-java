@@ -18,6 +18,7 @@
 
 package com.njlabs.showjava.activities.decompiler
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -32,7 +33,9 @@ import com.njlabs.showjava.data.PackageInfo
 import kotlinx.android.synthetic.main.activity_decompiler_process.*
 import android.content.IntentFilter
 import android.os.Build
+import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.work.State
 import androidx.work.WorkManager
@@ -56,10 +59,16 @@ class DecompilerProcessActivity : BaseActivity() {
 
     private lateinit var packageInfo: PackageInfo
     private var hasCompleted = false
+    private var showMemoryUsage = false
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_decompiler_process)
         packageInfo = intent.getParcelableExtra("packageInfo")
+        showMemoryUsage = userPreferences.getBoolean("showMemoryUsage", false)
+
+        memoryUsage.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE
+        memoryStatus.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE
+
         val decompilerIndex = intent.getIntExtra("decompilerIndex", 0)
 
         inputPackageLabel.text = packageInfo.label
@@ -112,22 +121,24 @@ class DecompilerProcessActivity : BaseActivity() {
 
             Timber.d("[status] [${packageInfo.name}] hasPassed: $hasPassed | hasFailed: $hasFailed")
 
-            if (hasFailed) {
-                Toast.makeText(
-                    context,
-                    getString(R.string.errorDecompilingApp, packageInfo.label),
-                    Toast.LENGTH_LONG
-                ).show()
-                hasCompleted = true
-                finish()
-            } else if (hasPassed) {
-                val intent = Intent(context, NavigatorActivity::class.java)
-                intent.putExtra("selectedApp", SourceInfo.from(sourceDir(packageInfo.name)))
-                startActivity(intent)
-                hasCompleted = true
-                finish()
-            } else if (isWaiting) {
-                statusText.text = getString(R.string.waitingToStart)
+            when {
+                hasFailed -> {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.errorDecompilingApp, packageInfo.label),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    hasCompleted = true
+                    finish()
+                }
+                hasPassed -> {
+                    val intent = Intent(context, NavigatorActivity::class.java)
+                    intent.putExtra("selectedApp", SourceInfo.from(sourceDir(packageInfo.name)))
+                    startActivity(intent)
+                    hasCompleted = true
+                    finish()
+                }
+                isWaiting -> statusText.text = getString(R.string.waitingToStart)
             }
         }
     }
@@ -151,13 +162,36 @@ class DecompilerProcessActivity : BaseActivity() {
     }
 
     private val progressReceiver = object : BroadcastReceiver() {
+
+        @SuppressLint("SetTextI18n") // For memory status
         override fun onReceive(context: Context, intent: Intent) {
-            intent.getStringExtra(Constants.WORKER.STATUS_KEY)?.let {
+            val message = intent.getStringExtra(Constants.WORKER.STATUS_MESSAGE)
+            if (intent.getStringExtra(Constants.WORKER.STATUS_TYPE) == "memory") {
+                if (!showMemoryUsage) {
+                    return
+                }
+                val percentage = message.toDouble()
+                memoryStatus.text = "$message%"
+                val textColor = ContextCompat.getColor(
+                    context,
+                    when {
+                        percentage < 40 -> R.color.green_500
+                        percentage < 60 -> R.color.amber_500
+                        percentage < 80 -> R.color.orange_500
+                        else -> R.color.red_500
+                    }
+                )
+                memoryStatus.setTextColor(textColor)
+                memoryUsage.setTextColor(textColor)
+                return
+            }
+
+            intent.getStringExtra(Constants.WORKER.STATUS_TITLE)?.let {
                 if (it.trim().isNotEmpty()) {
                     statusTitle.text = it
                 }
             }
-            intent.getStringExtra(Constants.WORKER.STATUS_MESSAGE)?.let {
+            message?.let {
                 statusText.text = it
             }
         }

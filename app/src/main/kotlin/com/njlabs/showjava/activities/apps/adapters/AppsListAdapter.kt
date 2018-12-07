@@ -20,12 +20,12 @@ package com.njlabs.showjava.activities.apps.adapters
 
 import android.content.Context
 import android.graphics.Typeface
-import android.os.Build
 import android.text.SpannableString
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import cn.nekocode.badge.BadgeDrawable
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
@@ -33,14 +33,9 @@ import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
 
 fun getSystemBadge(context: Context): BadgeDrawable {
-    val color = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        context.resources.getColor(R.color.grey_400, null)
-    } else {
-        context.resources.getColor(R.color.grey_400)
-    }
     return BadgeDrawable.Builder()
         .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
-        .badgeColor(color)
+        .badgeColor(ContextCompat.getColor(context, R.color.grey_400))
         .typeFace(Typeface.createFromAsset(context.assets, "fonts/lato-light.ttf"))
         .text1("system")
         .build()

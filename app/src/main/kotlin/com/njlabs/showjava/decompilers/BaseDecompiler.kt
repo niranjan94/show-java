@@ -18,7 +18,6 @@
 
 package com.njlabs.showjava.decompilers
 
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -100,17 +99,18 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    val free =  Runtime.getRuntime().freeMemory()
-                    val max = Runtime.getRuntime().maxMemory()
-                    val total = Runtime.getRuntime().totalMemory()
-                    val maxAdjusted = max / 2
-                    val used = (total - free)
+                    val maxAdjusted = Runtime.getRuntime().maxMemory() / 2
+                    val used = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()).let { m ->
+                        if (m > maxAdjusted) maxAdjusted else m
+                    }
                     val usedPercentage = (used.toDouble() / maxAdjusted.toDouble()) * 100
 
                     Timber.d("[mem] ----")
                     Timber.d("[mem] Used: ${FileUtils.byteCountToDisplaySize(used)}")
                     Timber.d("[mem] Max: ${FileUtils.byteCountToDisplaySize(maxAdjusted)}")
                     Timber.d("[mem] Used %: $usedPercentage")
+
+                    broadcastStatus("memory", "%.2f".format(usedPercentage), "memory")
                 }
         )
     }
@@ -156,11 +156,12 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     /**
      * Broadcast the status to the receiver
      */
-    private fun broadcastStatus(title: String?, message: String) {
+    private fun broadcastStatus(title: String?, message: String, type: String = "progress") {
         context.sendBroadcast(
             Intent(Constants.WORKER.ACTION.BROADCAST + packageName)
-                .putExtra(Constants.WORKER.STATUS_KEY, title)
+                .putExtra(Constants.WORKER.STATUS_TITLE, title)
                 .putExtra(Constants.WORKER.STATUS_MESSAGE, message)
+                .putExtra(Constants.WORKER.STATUS_TYPE, type)
         )
     }
 
@@ -171,7 +172,13 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         if (processNotifier == null) {
             processNotifier = ProcessNotifier(context, id)
         }
-        processNotifier!!.buildFor(title, packageName, packageLabel, inputPackageFile)
+        processNotifier!!.buildFor(
+            title,
+            packageName,
+            packageLabel,
+            inputPackageFile,
+            context.resources.getStringArray(R.array.decompilersValues).indexOf(decompiler)
+        )
     }
 
     fun onCompleted() {

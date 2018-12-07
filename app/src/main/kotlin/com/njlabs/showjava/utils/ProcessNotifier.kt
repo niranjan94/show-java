@@ -30,6 +30,7 @@ import androidx.core.app.NotificationCompat
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
+import com.njlabs.showjava.activities.decompiler.DecompilerProcessActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
@@ -43,8 +44,8 @@ class ProcessNotifier(
     private val notificationTag: String?,
     private val notificationId: Int = Constants.WORKER.PROGRESS_NOTIFICATION_ID
 ) {
-    var time: Long = 0
-    var isCancelled: Boolean = false
+    private var time: Long = 0
+    private var isCancelled: Boolean = false
 
     private var manager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -61,7 +62,7 @@ class ProcessNotifier(
         return this
     }
 
-    fun buildFor(title: String, packageName: String, packageLabel: String, packageFile: File): ProcessNotifier {
+    fun buildFor(title: String, packageName: String, packageLabel: String, packageFile: File, decompilerIndex: Int): ProcessNotifier {
 
         this.packageName = packageName
         this.packageFile = packageFile
@@ -72,8 +73,20 @@ class ProcessNotifier(
         stopIntent.putExtra("id", packageName)
         stopIntent.putExtra("packageFilePath", packageFile.canonicalFile)
         stopIntent.putExtra("packageName", packageName)
-
         val pendingIntentForStop = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val viewIntent = Intent(context, DecompilerProcessActivity::class.java)
+        viewIntent.putExtra("packageInfo", PackageInfo(packageLabel, packageName))
+        viewIntent.putExtra("decompilerIndex", decompilerIndex)
+
+        val manager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val pendingIntentForView = PendingIntent.getActivity(
+            context,
+            0,
+            viewIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 Constants.WORKER.PROGRESS_NOTIFICATION_CHANNEL,
@@ -93,13 +106,13 @@ class ProcessNotifier(
             .setContentTitle(packageLabel)
             .setContentText(title)
             .setSmallIcon(R.drawable.ic_stat_code)
+            .setContentIntent(pendingIntentForView)
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
             .addAction(actionIcon, "Stop decompiler", pendingIntentForStop)
             .setOngoing(true)
             .setSound(null)
             .setAutoCancel(false)
             .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setProgress(0, 0, true)
 
         manager.notify(
             notificationTag,
@@ -121,7 +134,6 @@ class ProcessNotifier(
         val currentTime = System.currentTimeMillis()
         if (!isCancelled && (currentTime - time >= 500 || forceSet)) {
             builder.setContentTitle(title)
-            builder.setProgress(0, 0, true)
             manager.notify(notificationTag, notificationId, silence(builder.build()))
             time = currentTime
         }
@@ -131,7 +143,6 @@ class ProcessNotifier(
         val currentTime = System.currentTimeMillis()
         if (!isCancelled && (currentTime - time >= 500 || forceSet)) {
             builder.setContentText(text)
-            builder.setProgress(0, 0, true)
             manager.notify(notificationTag, notificationId, silence(builder.build()))
             time = currentTime
         }
@@ -142,7 +153,6 @@ class ProcessNotifier(
         if (!isCancelled && (currentTime - time >= 500 || forceSet)) {
             builder.setContentTitle(title)
             builder.setContentText(text)
-            builder.setProgress(0, 0, true)
             manager.notify(notificationTag, notificationId, silence(builder.build()))
             time = currentTime
         }

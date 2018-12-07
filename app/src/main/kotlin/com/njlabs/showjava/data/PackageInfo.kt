@@ -60,6 +60,11 @@ class PackageInfo() : Parcelable {
         file = File(filePath)
     }
 
+    constructor(label: String, name: String) : this() {
+        this.label = label
+        this.name = name
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(label)
         parcel.writeString(name)

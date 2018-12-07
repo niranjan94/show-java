@@ -138,4 +138,9 @@
     <string name="system">System</string>
     <string name="user">User</string>
     <string name="systemAppWarning">Warning: This is a system application. Successful decompilation may not be possible.</string>
+    <string name="memoryUsage">Memory usage</string>
+    <string name="zeroPercentage">(waiting)</string>
+    <string name="advanced">Advanced</string>
+    <string name="showMemoryUsage">Show memory usage</string>
+    <string name="showMemoryUsageSummary">Display live app memory usage on the decompiler screen</string>
 </resources>
