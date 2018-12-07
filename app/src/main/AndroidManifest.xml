@@ -93,6 +93,13 @@
         </activity>
 
         <activity
+            android:name=".activities.decompiler.LowMemoryActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.apps.AppsActivity" />
+        </activity>
+
+        <activity
             android:name=".activities.explorer.viewer.CodeViewerActivity"
             android:theme="@style/SourceViewerTheme" />
 

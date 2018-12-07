@@ -90,6 +90,7 @@ abstract class DecompilerTestBase {
             "shouldIgnoreLibs" to true,
             "chunkSize" to 2000,
             "maxAttempts" to 1,
+            "memoryThreshold" to 80,
             "decompiler" to decompiler,
             "name" to "xyz.codezero.testapplication.$decompiler.${type.name}",
             "label" to "TestApplication-$decompiler-${type.name}",

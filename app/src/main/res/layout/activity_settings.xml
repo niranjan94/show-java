@@ -25,7 +25,8 @@
     android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_toolbar" android:id="@+id/toolbar"/>
+    <include layout="@layout/layout_toolbar"
+        android:id="@+id/toolbar"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -39,11 +40,17 @@
     <FrameLayout
         android:id="@+id/container"
         android:paddingLeft="2dp"
+        android:layout_above="@id/adView"
         android:paddingRight="2dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar">
 
     </FrameLayout>
+
+    <include
+        android:id="@+id/adView"
+        layout="@layout/layout_admob" />
+
 
 </RelativeLayout>

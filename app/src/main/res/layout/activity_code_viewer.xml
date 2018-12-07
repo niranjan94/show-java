@@ -35,10 +35,6 @@
         android:layout_below="@+id/toolbar">
     </com.njlabs.showjava.utils.views.CodeView>
 
-    <include
-        android:id="@+id/adView"
-        layout="@layout/layout_admob" />
-
     <ProgressBar
         android:id="@+id/codeLoadProgress"
         style="?android:attr/progressBarStyle"
@@ -46,4 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <include
+        android:id="@+id/adView"
+        layout="@layout/layout_admob" />
 </RelativeLayout>

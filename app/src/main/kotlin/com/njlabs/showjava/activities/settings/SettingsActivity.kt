@@ -82,6 +82,7 @@ class SettingsActivity : BaseActivity() {
             // bindPreferenceSummaryToValue(findPreference("decompiler"))
             bindPreferenceSummaryToValue(findPreference("chunkSize"))
             bindPreferenceSummaryToValue(findPreference("maxAttempts"))
+            bindPreferenceSummaryToValue(findPreference("memoryThreshold"))
         }
 
         private fun deleteSources() {

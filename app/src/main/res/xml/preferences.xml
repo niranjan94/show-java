@@ -93,6 +93,14 @@
             android:singleLine="true"
             android:title="@string/maxDecompilerAttempts" />
 
+        <EditTextPreference
+            android:defaultValue="80"
+            android:inputType="number"
+            android:key="memoryThreshold"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:title="@string/memoryThreshold" />
+
         <Preference
             app:iconSpaceReserved="false"
             android:key="clearSourceHistory"

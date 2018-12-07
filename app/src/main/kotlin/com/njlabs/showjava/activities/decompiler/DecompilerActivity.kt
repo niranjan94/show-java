@@ -177,6 +177,7 @@ class DecompilerActivity : BaseActivity() {
                         userPreferences.getString("maxAttempts", MAX_ATTEMPTS.toString())?.toInt()
                                 ?: MAX_ATTEMPTS
                         ),
+                "memoryThreshold" to (userPreferences.getString("memoryThreshold", "80")?.toInt() ?: 80),
                 "decompiler" to decompiler,
                 "name" to packageInfo.name,
                 "label" to packageInfo.label,

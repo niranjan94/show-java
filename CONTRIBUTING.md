@@ -7,7 +7,7 @@
 
 3. Create a branch for your edits/bugfixes/feature additions
 4. Do your magic
-5. Test whatever you made in Android versions 4.0.x , 4.4.x, 5.x, 6.x, 7.x etc (You get the idea :wink: )
+5. Test whatever you made in Android versions 4.1.x , 4.4.x, 5.x, 6.x, 7.x etc (You get the idea :wink: )
 6. Once you're confident in your code, send a pull request to the `development` branch of the upstream repository with a proper descriptions explaining what you did and why. Be clear and consise.
 7. Wait for one of the project maintainers to review your pull request.
 8. We may merge it into the `development` branch if it's good. 

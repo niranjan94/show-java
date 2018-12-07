@@ -60,6 +60,7 @@ class DecompilerProcessActivity : BaseActivity() {
     private lateinit var packageInfo: PackageInfo
     private var hasCompleted = false
     private var showMemoryUsage = false
+    private var ranOutOfMemory = false
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_decompiler_process)
@@ -98,7 +99,23 @@ class DecompilerProcessActivity : BaseActivity() {
                             statusesMap[tag] = it.state
                         }
                     }
-                    reconcileDecompilerStatus()
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        it.outputData.keyValueMap.forEach { t, u ->
+                            Timber.d("[status][DATA] $t : $u")
+                        }
+                        statusesMap.forEach { t, u ->
+                            Timber.d("[status][STATUS] $t : $u")
+                        }
+                    }
+
+                    if (it.outputData.getBoolean("ranOutOfMemory", false)) {
+                        startActivity(Intent(context, LowMemoryActivity::class.java))
+                        hasCompleted = true
+                        finish()
+                    } else {
+                        reconcileDecompilerStatus()
+                    }
                 }
             })
     }

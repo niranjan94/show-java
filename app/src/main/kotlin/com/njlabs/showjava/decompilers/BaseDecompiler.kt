@@ -45,10 +45,12 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     private var id = data.getString("id")
     private var processNotifier: ProcessNotifier? = null
     private var runAttemptCount: Int = 0
+    protected var outOfMemory: Boolean = false
 
     protected val decompiler = data.getString("decompiler")
     protected val type = PackageInfo.Type.values()[data.getInt("type", 0)]
     private val maxAttempts = data.getInt("maxAttempts", Constants.WORKER.PARAMETERS.MAX_ATTEMPTS)
+    private val memoryThreshold = data.getInt("memoryThreshold", 80)
 
     protected val packageName: String = data.getString("name").toString()
     protected val packageLabel: String = data.getString("label").toString()
@@ -63,7 +65,8 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected val outputJavaSrcDirectory: File = workingDirectory.resolve("src/java")
     protected val outputResSrcDirectory: File = workingDirectory.resolve("src/res")
 
-    protected val disposables = CompositeDisposable()
+    private val disposables = CompositeDisposable()
+    private var onLowMemory: ((Boolean) -> Unit)? = null
 
     init {
         printStream = PrintStream(ProgressStream(this))
@@ -93,6 +96,11 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         return this
     }
 
+    fun withLowMemoryCallback(onLowMemory: ((Boolean) -> Unit)): BaseDecompiler {
+        this.onLowMemory = onLowMemory
+        return this
+    }
+
     private fun monitorMemory() {
         disposables.add(
             Observable.interval(1, TimeUnit.SECONDS)
@@ -111,6 +119,10 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
                     Timber.d("[mem] Used %: $usedPercentage")
 
                     broadcastStatus("memory", "%.2f".format(usedPercentage), "memory")
+
+                    if (usedPercentage > memoryThreshold) {
+                        onLowMemory?.invoke(true)
+                    }
                 }
         )
     }
@@ -253,4 +265,6 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             return id
         }
     }
+
+    class OutOfMemoryError: Exception()
 }

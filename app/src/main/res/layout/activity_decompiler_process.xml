@@ -92,6 +92,8 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/processing"
             android:textAllCaps="false"
+            android:gravity="center"
+            android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/grey_400" />
 
@@ -103,6 +105,8 @@
             android:ellipsize="none"
             android:singleLine="false"
             android:text="@string/gettingReady"
+            android:gravity="center"
+            android:textAlignment="center"
             android:textAllCaps="false"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/grey_400" />

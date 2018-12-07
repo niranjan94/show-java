@@ -31,6 +31,7 @@ import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.activities.decompiler.DecompilerProcessActivity
+import com.njlabs.showjava.activities.decompiler.LowMemoryActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
@@ -163,9 +164,7 @@ class ProcessNotifier(
         manager.cancel(notificationTag, notificationId)
     }
 
-    fun error() {
-        val intent = Intent(context, DecompilerActivity::class.java)
-        intent.putExtra("packageInfo", PackageInfo.fromFile(context, packageFile))
+    private fun complete(intent: Intent, title: String, text: String, icon: Int) {
         val manager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val resultPendingIntent = PendingIntent.getActivity(
             context,
@@ -182,9 +181,9 @@ class ProcessNotifier(
             manager.createNotificationChannel(channel)
         }
         val builder = NotificationCompat.Builder(context, Constants.WORKER.COMPLETION_NOTIFICATION_CHANNEL)
-            .setContentTitle(context.getString(R.string.errorDecompilingApp, packageLabel))
-            .setContentText(context.getString(R.string.tapToRetry))
-            .setSmallIcon(R.drawable.ic_stat_error)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setSmallIcon(icon)
             .setContentIntent(resultPendingIntent)
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
             .setAutoCancel(true)
@@ -192,40 +191,38 @@ class ProcessNotifier(
             packageName,
             Constants.WORKER.COMPLETED_NOTIFICATION_ID,
             builder.build()
+        )
+
+    }
+
+    fun error() {
+        val intent = Intent(context, DecompilerActivity::class.java)
+        intent.putExtra("packageInfo", PackageInfo.fromFile(context, packageFile))
+        complete(
+            intent,
+            context.getString(R.string.errorDecompilingApp, packageLabel),
+            context.getString(R.string.tapToRetry),
+            R.drawable.ic_stat_error
+        )
+    }
+
+    fun lowMemory() {
+        complete(
+            Intent(context, LowMemoryActivity::class.java),
+            context.getString(R.string.errorDecompilingApp, packageLabel),
+            context.getString(R.string.lowMemoryStatusInfo),
+            R.drawable.ic_stat_error
         )
     }
 
     fun success() {
         val intent = Intent(context, NavigatorActivity::class.java)
         intent.putExtra("selectedApp", SourceInfo.from(sourceDir(packageName)))
-
-        val manager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val resultPendingIntent = PendingIntent.getActivity(
-            context,
-            0,
+        complete(
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                Constants.WORKER.COMPLETION_NOTIFICATION_CHANNEL,
-                "Decompile complete notification",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            manager.createNotificationChannel(channel)
-        }
-        val builder = NotificationCompat.Builder(context, Constants.WORKER.COMPLETION_NOTIFICATION_CHANNEL)
-            .setContentTitle(context.getString(R.string.appHasBeenDecompiled, packageLabel))
-            .setContentText(context.getString(R.string.tapToViewSource))
-            .setSmallIcon(R.drawable.ic_stat_code)
-            .setContentIntent(resultPendingIntent)
-            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-            .setAutoCancel(true)
-
-        manager.notify(
-            packageName,
-            Constants.WORKER.COMPLETED_NOTIFICATION_ID,
-            builder.build()
+            context.getString(R.string.appHasBeenDecompiled, packageLabel),
+            context.getString(R.string.tapToViewSource),
+            R.drawable.ic_stat_code
         )
     }
 }

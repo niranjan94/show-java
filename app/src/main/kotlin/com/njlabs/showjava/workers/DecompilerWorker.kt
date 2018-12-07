@@ -19,6 +19,7 @@
 package com.njlabs.showjava.workers
 
 import android.content.Context
+import androidx.work.Data
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -30,6 +31,10 @@ import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
 import com.njlabs.showjava.utils.ProcessNotifier
 import timber.log.Timber
 import java.io.File
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class DecompilerWorker(val context: Context, private val params: WorkerParameters) : Worker(context, params) {
 
@@ -40,6 +45,7 @@ class DecompilerWorker(val context: Context, private val params: WorkerParameter
     private val packageName: String = params.inputData.getString("name").toString()
     private val packageLabel: String = params.inputData.getString("label").toString()
     private val inputPackageFile: File = File(params.inputData.getString("inputPackageFile"))
+    private val decompilerExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     init {
         if (tags.contains("jar-extraction")) {
@@ -55,24 +61,54 @@ class DecompilerWorker(val context: Context, private val params: WorkerParameter
 
     override fun doWork(): Result {
         var result = if (runAttemptCount >= (maxAttempts - 1)) Result.FAILURE else Result.RETRY
+        var ranOutOfMemory = false
         val notifier = ProcessNotifier(context, id)
             .withPackageInfo(packageName, packageLabel, inputPackageFile)
 
         worker ?.let {
             try {
-                result = it.withNotifier(notifier).withAttempt(runAttemptCount)
+                val latch = CountDownLatch(1)
+                decompilerExecutor.execute {
+                    result = it.withNotifier(notifier)
+                        .withLowMemoryCallback { isLowMemory ->
+                            ranOutOfMemory = isLowMemory
+                            outputData = Data.Builder()
+                                .putBoolean("ranOutOfMemory", isLowMemory)
+                                .build()
+
+                            if (isLowMemory) {
+                                latch.countDown()
+                                decompilerExecutor.shutdownNow()
+                            }
+                        }
+                        .withAttempt(runAttemptCount)
+                    latch.countDown()
+                }
+                latch.await()
+                decompilerExecutor.shutdownNow()
+                decompilerExecutor.awaitTermination(2, TimeUnit.SECONDS)
             } catch (e: Exception) {
                 Timber.e(e)
             }
             it.onStopped(false)
         }
+
+        if (ranOutOfMemory) {
+            result = Result.FAILURE
+        }
+
         if (result == Result.FAILURE) {
             try {
-                notifier.error()
+                if (ranOutOfMemory) {
+                    notifier.lowMemory()
+                } else {
+                    notifier.error()
+                }
             } catch (e: Exception) {
                 Timber.e(e)
             }
         }
+
         return result
     }
 
