@@ -141,8 +141,8 @@ android {
             buildConfigField 'Boolean', 'EXTENDED_VALIDATION', 'true'
         }
         debug {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             testProguardFile 'test-proguard-rules.pro'
         }
     }

@@ -100,12 +100,12 @@ class DecompilerProcessActivity : BaseActivity() {
                         }
                     }
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         it.outputData.keyValueMap.forEach { t, u ->
-                            Timber.d("[status][DATA] $t : $u")
+                            Timber.d("[status][data] $t : $u")
                         }
                         statusesMap.forEach { t, u ->
-                            Timber.d("[status][STATUS] $t : $u")
+                            Timber.d("[status][statuses] $t : $u")
                         }
                     }
 
@@ -129,6 +129,7 @@ class DecompilerProcessActivity : BaseActivity() {
             val hasFailed = statusesMap.values.any { it == State.FAILED }
             val isWaiting = statusesMap.values.any { it == State.ENQUEUED }
             val hasPassed = statusesMap.values.all { it == State.SUCCEEDED }
+            val isCancelled = statusesMap.values.any { it == State.CANCELLED }
 
             if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 statusesMap.forEach { t, u ->
@@ -139,6 +140,10 @@ class DecompilerProcessActivity : BaseActivity() {
             Timber.d("[status] [${packageInfo.name}] hasPassed: $hasPassed | hasFailed: $hasFailed")
 
             when {
+                isCancelled -> {
+                    hasCompleted = true
+                    finish()
+                }
                 hasFailed -> {
                     Toast.makeText(
                         context,
