@@ -30,6 +30,7 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.utils.cleanMemory
+import com.njlabs.showjava.utils.toFile
 import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
 import net.dongliu.apk.parser.AbstractApkFile
@@ -55,8 +56,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
     @Throws(Exception::class)
     private fun extractResourcesWithJadx() {
         cleanMemory()
-
-        val resDir = outputResSrcDirectory
+        val resDir = outputSrcDirectory
         val args = JadxArgs()
         args.outDirRes = resDir
         args.inputFiles = mutableListOf(inputPackageFile)
@@ -68,28 +68,23 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
     @Throws(Exception::class)
     private fun extractResourcesWithParser() {
         cleanMemory()
-
         writeManifest()
         val zipFile = ZipFile(inputPackageFile)
         val entries = zipFile.entries()
         while (entries.hasMoreElements()) {
             val zipEntry = entries.nextElement()
-            if (!zipEntry.isDirectory
-                && zipEntry.name != "AndroidManifest.xml"
-                && FilenameUtils.isExtension(zipEntry.name, "xml")) {
-                sendStatus(zipEntry.name)
-                try {
-                    writeXML(zipEntry.name)
-                } catch (e: ParserException) {
-                    sendStatus("Skipped ${zipEntry.name}")
+
+            try {
+                if (!zipEntry.isDirectory && zipEntry.name != "AndroidManifest.xml") {
+                    sendStatus(zipEntry.name)
+                    if (FilenameUtils.isExtension(zipEntry.name, "xml") && !zipEntry.name.startsWith("assets")) {
+                        writeXML(zipEntry.name)
+                    } else if (FilenameUtils.isExtension(zipEntry.name, images) || zipEntry.name.startsWith("assets")) {
+                        writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
+                    }
                 }
-            } else if (!zipEntry.isDirectory && FilenameUtils.isExtension(zipEntry.name, images)) {
-                sendStatus(zipEntry.name)
-                try {
-                    writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
-                } catch (e: java.lang.Exception) {
-                    sendStatus("Skipped ${zipEntry.name}")
-                }
+            } catch (e: java.lang.Exception) {
+                sendStatus("Skipped ${zipEntry.name}")
             }
         }
         zipFile.close()
@@ -100,7 +95,6 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
     @Throws(Exception::class)
     private fun loadResourcesTable() {
         cleanMemory()
-
         val resourceTableField = AbstractApkFile::class.java.getDeclaredField("resourceTable")
         resourceTableField.isAccessible = true
         val resourceTable = resourceTableField.get(parsedInputApkFile) as ResourceTable
@@ -120,7 +114,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
     @Throws(Exception::class)
     private fun writeFile(fileStream: InputStream, path: String) {
         val fileFolderPath =
-            outputResSrcDirectory.canonicalPath + "/" + path.replace(
+            outputSrcDirectory.canonicalPath + "/" + path.replace(
                 FilenameUtils.getName(
                     path
                 ), ""
@@ -129,24 +123,14 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         if (!fileFolder.exists() || !fileFolder.isDirectory) {
             fileFolder.mkdirs()
         }
-        val outputStream = FileOutputStream(File(fileFolderPath + FilenameUtils.getName(path)))
-        val buffer = ByteArray(1024)
-        while (true) {
-            val read = fileStream.read(buffer)
-            if (read <= 0) {
-                break
-            }
-            outputStream.write(buffer, 0, read)
-        }
-        fileStream.close()
-        outputStream.close()
+        fileStream.toFile(File(fileFolderPath, FilenameUtils.getName(path)))
     }
 
     @Throws(ParserException::class)
     private fun writeXML(path: String) {
         val xml = parsedInputApkFile.transBinaryXml(path)
         val fileFolderPath =
-            outputResSrcDirectory.canonicalPath + "/" + path.replace(
+            outputSrcDirectory.canonicalPath + "/" + path.replace(
                 FilenameUtils.getName(
                     path
                 ), ""
@@ -214,6 +198,8 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         // Not using JaDX for resource extraction.
         // Due to its dependency on the javax.imageio.ImageIO class which is unavailable on android
 
+        val sourceInfo = SourceInfo.from(workingDirectory)
+
         if (type == PackageInfo.Type.APK) {
             parsedInputApkFile = ApkFile(inputPackageFile)
             try {
@@ -223,10 +209,14 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
                 return exit(e)
             }
 
-            SourceInfo.from(workingDirectory)
+            sourceInfo
                 .setXmlSourcePresence(true)
                 .persist()
         }
+
+        sourceInfo
+            .setSourceSize(FileUtils.sizeOfDirectory(workingDirectory))
+            .persist()
 
         onCompleted()
 

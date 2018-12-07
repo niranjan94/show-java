@@ -27,6 +27,7 @@ import com.njlabs.showjava.utils.ZipUtils
 import com.njlabs.showjava.utils.cleanMemory
 import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
+import org.apache.commons.io.FileUtils
 import org.benf.cfr.reader.api.CfrDriver
 import org.benf.cfr.reader.util.getopt.GetOptParser
 import org.benf.cfr.reader.util.getopt.Options
@@ -133,6 +134,7 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
         sourceInfo
             .setJavaSourcePresence(true)
+            .setSourceSize(FileUtils.sizeOfDirectory(workingDirectory))
             .persist()
 
         return successIf(outputJavaSrcDirectory.list().isNotEmpty())

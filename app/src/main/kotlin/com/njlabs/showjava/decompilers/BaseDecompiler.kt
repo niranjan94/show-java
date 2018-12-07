@@ -62,8 +62,8 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
     protected val outputDexFiles: File = workingDirectory.resolve("dex-files")
     protected val outputJarFiles: File = workingDirectory.resolve("jar-files")
-    protected val outputJavaSrcDirectory: File = workingDirectory.resolve("src/java")
-    protected val outputResSrcDirectory: File = workingDirectory.resolve("src/res")
+    protected val outputSrcDirectory: File = workingDirectory.resolve("src")
+    protected val outputJavaSrcDirectory: File = outputSrcDirectory.resolve("java")
 
     private val disposables = CompositeDisposable()
     private var onLowMemory: ((Boolean) -> Unit)? = null
@@ -82,7 +82,6 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         cleanMemory()
         monitorMemory()
         outputJavaSrcDirectory.mkdirs()
-        outputResSrcDirectory.mkdirs()
         return ListenableWorker.Result.SUCCESS
     }
 

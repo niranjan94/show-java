@@ -19,11 +19,10 @@
 package com.njlabs.showjava.activities.decompiler
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
 import android.app.ActivityOptions
-import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
@@ -45,14 +44,16 @@ import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.BaseDecompiler.Companion.isAvailable
 import com.njlabs.showjava.utils.sourceDir
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_decompiler.*
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import kotlinx.android.synthetic.main.layout_pick_decompiler_list_item.view.*
 import org.apache.commons.io.FileUtils
-import timber.log.Timber
 import java.io.File
 import java.net.URI
-import org.apache.commons.io.FileUtils.byteCountToDisplaySize as h
 
 
 class DecompilerActivity : BaseActivity() {
@@ -72,8 +73,6 @@ class DecompilerActivity : BaseActivity() {
         }
 
         val apkSize = FileUtils.byteCountToDisplaySize(packageInfo.file.length())
-
-        itemIcon.setImageDrawable(packageInfo.loadIcon(context))
 
         itemLabel.itemLabel.text = if (packageInfo.isSystemPackage)
             SpannableString(
@@ -120,8 +119,16 @@ class DecompilerActivity : BaseActivity() {
             systemAppWarning.text = sb
         }
 
+        disposables.add(
+            Observable.create { emitter: ObservableEmitter<Drawable> ->
+                emitter.onNext(packageInfo.loadIcon(context))
+            }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { itemIcon.setImageDrawable(it) }
+        )
+
         assertSourceExistence(true)
-        getAvailableMemory()
     }
 
     private fun loadPackageInfoFromIntent() {
@@ -144,19 +151,17 @@ class DecompilerActivity : BaseActivity() {
     }
 
     private fun assertSourceExistence(addListener: Boolean = false) {
-        val sourceDirectory = sourceDir(packageInfo.name)
+        val sourceInfo = SourceInfo.from(sourceDir(packageInfo.name))
         if (addListener) {
             historyCard.setOnClickListener {
                 val intent = Intent(context, NavigatorActivity::class.java)
-                intent.putExtra("selectedApp", SourceInfo.from(sourceDirectory))
+                intent.putExtra("selectedApp", sourceInfo)
                 startActivity(intent)
             }
         }
-        if (SourceInfo.exists(sourceDirectory)) {
+        if (sourceInfo.exists()) {
             historyCard.visibility = View.VISIBLE
-            historyInfo.text = FileUtils.byteCountToDisplaySize(
-                FileUtils.sizeOfDirectory(sourceDirectory)
-            )
+            historyInfo.text = FileUtils.byteCountToDisplaySize(sourceInfo.sourceSize)
         } else {
             historyCard.visibility = View.GONE
         }
@@ -177,7 +182,8 @@ class DecompilerActivity : BaseActivity() {
                         userPreferences.getString("maxAttempts", MAX_ATTEMPTS.toString())?.toInt()
                                 ?: MAX_ATTEMPTS
                         ),
-                "memoryThreshold" to (userPreferences.getString("memoryThreshold", "80")?.toInt() ?: 80),
+                "memoryThreshold" to (userPreferences.getString("memoryThreshold", "80")?.toInt()
+                        ?: 80),
                 "decompiler" to decompiler,
                 "name" to packageInfo.name,
                 "label" to packageInfo.label,
@@ -200,22 +206,5 @@ class DecompilerActivity : BaseActivity() {
             startActivity(i)
         }
         finish()
-    }
-
-    // Get a MemoryInfo object for the device's current memory status.
-    private fun getAvailableMemory(): ActivityManager.MemoryInfo {
-        val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val memory = ActivityManager.MemoryInfo().also { memoryInfo ->
-            am.getMemoryInfo(memoryInfo)
-        }
-
-
-        Timber.d(
-            "[MC] ${am.memoryClass}/${am.largeMemoryClass} [T] ${h(memory.threshold)} [A] ${h(
-                memory.availMem
-            )} [L] ${memory.lowMemory}"
-        )
-
-        return memory
     }
 }

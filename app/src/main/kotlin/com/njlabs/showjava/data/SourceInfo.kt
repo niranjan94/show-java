@@ -40,6 +40,8 @@ class SourceInfo() : Parcelable {
     var createdAt: String = getDate()
     var updatedAt: String = getDate()
 
+    var sourceSize: Long = 0
+
     lateinit var sourceDirectory: File
 
     constructor(parcel: Parcel) : this() {
@@ -49,16 +51,18 @@ class SourceInfo() : Parcelable {
         hasXmlSource = parcel.readInt() == 1
         createdAt = parcel.readString()!!
         updatedAt = parcel.readString()!!
+        sourceSize = parcel.readLong()
         sourceDirectory = sourceDir(packageName)
     }
 
-    constructor(packageLabel: String, packageName: String, hasJavaSource: Boolean, hasXmlSource:Boolean, createdAt: String, updatedAt: String) : this() {
+    constructor(packageLabel: String, packageName: String, hasJavaSource: Boolean, hasXmlSource:Boolean, createdAt: String, updatedAt: String, sourceSize: Long) : this() {
         this.packageLabel = packageLabel
         this.packageName = packageName
         this.hasJavaSource = hasJavaSource
         this.hasXmlSource = hasXmlSource
         this.createdAt = createdAt
         this.updatedAt = updatedAt
+        this.sourceSize = sourceSize
         sourceDirectory = sourceDir(packageName)
     }
 
@@ -69,6 +73,7 @@ class SourceInfo() : Parcelable {
         parcel.writeInt(if (hasXmlSource) 1 else 0)
         parcel.writeString(createdAt)
         parcel.writeString(updatedAt)
+        parcel.writeLong(sourceSize)
     }
 
     override fun describeContents(): Int {
@@ -96,6 +101,11 @@ class SourceInfo() : Parcelable {
         return this
     }
 
+    fun setSourceSize(sourceSize: Long): SourceInfo {
+        this.sourceSize = sourceSize
+        return this
+    }
+
     fun persist(): SourceInfo {
         synchronized(this) {
             updatedAt = getDate()
@@ -108,6 +118,7 @@ class SourceInfo() : Parcelable {
                 json.put("has_xml_sources", hasXmlSource)
                 json.put("created_at", createdAt)
                 json.put("updated_at", updatedAt)
+                json.put("source_size", sourceSize)
                 FileUtils.writeStringToFile(
                     infoFile,
                     json.toString(2),
@@ -120,6 +131,10 @@ class SourceInfo() : Parcelable {
             }
             return this
         }
+    }
+
+    fun exists(): Boolean {
+        return hasJavaSource || hasXmlSource
     }
 
     companion object CREATOR : Parcelable.Creator<SourceInfo> {
@@ -157,7 +172,8 @@ class SourceInfo() : Parcelable {
                         json.getBoolean("has_java_sources"),
                         json.getBoolean("has_xml_sources"),
                         json.getString("created_at"),
-                        json.getString("updated_at")
+                        json.getString("updated_at"),
+                        json.getLong("source_size")
                     )
                 } else {
                     SourceInfo()

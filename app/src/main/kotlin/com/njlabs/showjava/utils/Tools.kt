@@ -22,6 +22,8 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.net.ConnectivityManager
 import android.os.Build
+import java.io.File
+import java.io.InputStream
 import java.security.MessageDigest
 import java.text.Normalizer
 import java.text.SimpleDateFormat
@@ -30,6 +32,14 @@ import java.util.regex.Pattern
 
 private val NON_LATIN = Pattern.compile("[^\\w-]")
 private val WHITESPACE = Pattern.compile("[\\s]")
+
+fun InputStream.toFile(path: String) {
+    toFile(File(path))
+}
+
+fun InputStream.toFile(file: File) {
+    file.outputStream().use { this.copyTo(it) }
+}
 
 /**
  * Convert a [packageName] in dot.notation to a class reference (Eg. Lclass/reference)
