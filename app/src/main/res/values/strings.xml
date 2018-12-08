@@ -86,8 +86,9 @@
     <string name="proNoAds">No advertisements</string>
     <string name="proEarlyAccess">Early access to new features</string>
     <string name="buyNow">Buy Now</string>
+
     <string-array name="decompilers" translatable="false">
-        <item><xliff:g>CFR 0.135</xliff:g></item>
+        <item><xliff:g>CFR 0.137</xliff:g></item>
         <item><xliff:g>JaDX 0.8.0</xliff:g></item>
         <item><xliff:g>FernFlower e9989d1</xliff:g></item>
     </string-array>

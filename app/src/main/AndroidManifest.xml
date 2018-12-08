@@ -61,7 +61,7 @@
 
         <receiver
             android:name=".receivers.DecompilerActionReceiver"
-            android:permission="com.njlabs.showjava.permission.CANCEL_WORKER"></receiver>
+            android:permission="com.njlabs.showjava.permission.CANCEL_WORKER" />
 
         <activity
             android:name=".activities.landing.LandingActivity"

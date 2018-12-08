@@ -17,13 +17,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'io.fabric'
-apply plugin: 'com.google.android.gms.oss-licenses-plugin'
-apply plugin: 'io.michaelrocks.paranoid'
-apply plugin: 'ru.tinkoff.gradle.jarjar'
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-android-extensions"
+apply plugin: "io.fabric"
+apply plugin: "com.google.android.gms.oss-licenses-plugin"
+apply plugin: "io.michaelrocks.paranoid"
+apply plugin: "ru.tinkoff.gradle.jarjar"
 
 def versionMajor = 3
 def versionMinor = 0
@@ -33,22 +33,22 @@ def versionBuild = 0
 def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
     exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        commandLine "git", "rev-parse", "--short", "HEAD"
         standardOutput = stdout
     }
     return stdout.toString().trim()
 }
 
-def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone('UTC'))
+def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
 
-def isCi = 'true' == System.getenv('CI')
-def preDexEnabled = 'true' == System.getProperty('PRE_DEX', 'true')
+def isCi = "true" == System.getenv("CI")
+def preDexEnabled = "true" == System.getProperty("PRE_DEX", "true")
 
 def props = new Properties()
 try {
-    props.load(new FileInputStream('app/keys.properties'))
+    props.load(new FileInputStream("app/keys.properties"))
 } catch (e) {
-    props.load(new FileInputStream('app/keys.properties.example'))
+    props.load(new FileInputStream("app/keys.properties.example"))
     println("===========")
     println(e.message)
     println("Loaded app/keys.properties.example instead.")
@@ -58,7 +58,7 @@ try {
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    buildToolsVersion "28.0.3"
 
     dexOptions {
         preDexLibraries = preDexEnabled && !isCi
@@ -68,37 +68,37 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         multiDexEnabled true
-        multiDexKeepProguard file('multidex-config.pro')
+        multiDexKeepProguard file("multidex-config.pro")
 
-        applicationId 'com.njlabs.showjava'
+        applicationId "com.njlabs.showjava"
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         resConfigs "en"
         vectorDrawables.useSupportLibrary true
 
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
 
-        resValue 'string', 'appName', 'Show Java'
-        resValue 'string', 'appNameGetPro', 'Get Show Java Pro'
-        resValue 'string', 'appVersion', android.defaultConfig.versionName
-        resValue 'string', 'appVersionExtended', "Version ${android.defaultConfig.versionName}"
-        resValue 'string', 'appVersionExtendedWithHash', "Version ${android.defaultConfig.versionName} (${getGitHash()})"
+        resValue "string", "appName", "Show Java"
+        resValue "string", "appNameGetPro", "Get Show Java Pro"
+        resValue "string", "appVersion", android.defaultConfig.versionName
+        resValue "string", "appVersionExtended", "Version ${android.defaultConfig.versionName}"
+        resValue "string", "appVersionExtendedWithHash", "Version ${android.defaultConfig.versionName} (${getGitHash()})"
 
-        resValue 'string', 'deviceId', props.getProperty('deviceId')
-        resValue 'string', 'adUnitId', props.getProperty('adUnitId')
-        resValue 'string', 'admobAppId', props.getProperty('admobAppId')
+        resValue "string", "deviceId", props.getProperty("deviceId")
+        resValue "string", "adUnitId", props.getProperty("adUnitId")
+        resValue "string", "admobAppId", props.getProperty("admobAppId")
 
-        buildConfigField 'String', 'GIT_SHA', "\"${getGitHash()}\""
-        buildConfigField 'String', 'BUILD_TIME', "\"${buildTime}\""
-        buildConfigField 'String', 'PLAY_LICENSE_KEY', "\"${props.getProperty('googlePlayLicenseKey')}\""
-        buildConfigField 'String', 'IAP_PRODUCT_ID', "\"${props.getProperty('IapProductId')}\""
-        buildConfigField 'Boolean', 'IS_CI', "${isCi}"
-        buildConfigField 'Boolean', 'EXTENDED_VALIDATION', 'false'
+        buildConfigField "String", "GIT_SHA", "\"${getGitHash()}\""
+        buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
+        buildConfigField "String", "PLAY_LICENSE_KEY", "\"${props.getProperty("googlePlayLicenseKey")}\""
+        buildConfigField "String", "IAP_PRODUCT_ID", "\"${props.getProperty("IapProductId")}\""
+        buildConfigField "Boolean", "IS_CI", "${isCi}"
+        buildConfigField "Boolean", "EXTENDED_VALIDATION", "false"
 
-        manifestPlaceholders = [admobAppId: props.getProperty('admobAppId')]
+        manifestPlaceholders = [admobAppId: props.getProperty("admobAppId")]
     }
 
     compileOptions {
@@ -107,26 +107,26 @@ android {
     }
 
     dexOptions {
-        javaMaxHeapSize '4g'
+        javaMaxHeapSize "4g"
     }
 
     packagingOptions {
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/MANIFEST.MF'
-        exclude 'META-INF/rxjava.properties'
+        exclude "META-INF/LICENSE"
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/NOTICE.txt"
+        exclude "META-INF/MANIFEST.MF"
+        exclude "META-INF/rxjava.properties"
     }
 
     lintOptions {
         abortOnError false
     }
 
-    flavorDimensions 'type'
+    flavorDimensions "type"
 
     productFlavors {
         standard {
-            dimension = 'type'
+            dimension = "type"
         }
     }
 
@@ -138,43 +138,43 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            buildConfigField 'Boolean', 'EXTENDED_VALIDATION', 'true'
+            buildConfigField "Boolean", "EXTENDED_VALIDATION", "true"
         }
         debug {
             minifyEnabled false
             shrinkResources false
-            testProguardFile 'test-proguard-rules.pro'
+            testProguardFile "test-proguard-rules.pro"
         }
     }
 
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-        main.resources.srcDirs += 'src/main/config'
-        test.java.srcDirs += 'src/test/kotlin'
-        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        main.java.srcDirs += "src/main/kotlin"
+        main.resources.srcDirs += "src/main/config"
+        test.java.srcDirs += "src/test/kotlin"
+        androidTest.java.srcDirs += "src/androidTest/kotlin"
     }
 }
 
 configurations.all {
     resolutionStrategy {
-        force 'com.google.code.findbugs:jsr305:2.0.3'
+        force "com.google.code.findbugs:jsr305:2.0.3"
     }
 }
 
-def androidxVersion = '1.0.0'
-def workVersion = '1.0.0-alpha10'
+def androidxVersion = "1.0.0"
+def workVersion = "1.0.0-alpha10"
 
 dependencies {
     // Multi-dex
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation "androidx.multidex:multidex:2.0.0"
 
     // KOTLIN STANDARD LIBRARY
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // FIREBASE LIBRARIES
-    implementation 'com.google.firebase:firebase-core:16.0.4'
-    implementation 'com.google.firebase:firebase-ads:17.1.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.6'
+    implementation "com.google.firebase:firebase-core:16.0.4"
+    implementation "com.google.firebase:firebase-ads:17.1.0"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.9.6"
 
     // ANDROID SUPPORT LIBRARIES
     implementation "androidx.appcompat:appcompat:$androidxVersion"
@@ -185,97 +185,97 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$androidxVersion"
     implementation "androidx.legacy:legacy-support-core-utils:$androidxVersion"
     implementation "androidx.core:core:$androidxVersion"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation 'com.google.android.gms:play-services-oss-licenses:16.0.1'
+    implementation "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
+    implementation "com.google.android.gms:play-services-oss-licenses:16.0.1"
 
     implementation("android.arch.work:work-runtime-ktx:$workVersion", {
-        exclude group: 'com.google.guava', module: 'listenablefuture'
+        exclude group: "com.google.guava", module: "listenablefuture"
     })
     implementation("android.arch.work:work-firebase:$workVersion", {
-        exclude group: 'com.google.guava', module: 'listenablefuture'
+        exclude group: "com.google.guava", module: "listenablefuture"
     })
 
     // APACHE COMMONS LIBRARIES
     //noinspection GradleDependency
-    implementation 'commons-io:commons-io:2.5' // Fix to 2.5 for compatibility
-    implementation 'commons-cli:commons-cli:1.4'
+    implementation "commons-io:commons-io:2.5" // Fix to 2.5 for compatibility
+    implementation "commons-cli:commons-cli:1.4"
 
     // DEX2JAR AND FRIENDS
-    implementation 'asm:asm-all:3.3.1'
-    implementation files('libs/smali-2.2.1.jar')
-    implementation files('libs/dex-ir-1.12.jar')
-    implementation files('libs/dex-reader-1.15.jar')
-    implementation files('libs/dex-tools-0.0.9.15.jar')
-    implementation files('libs/dex-translator-0.0.9.15.jar')
+    implementation "asm:asm-all:3.3.1"
+    implementation files("libs/smali-2.2.1.jar")
+    implementation files("libs/dex-ir-1.12.jar")
+    implementation files("libs/dex-reader-1.15.jar")
+    implementation files("libs/dex-tools-0.0.9.15.jar")
+    implementation files("libs/dex-translator-0.0.9.15.jar")
 
     // CLASS FILE READER - JAVA DECOMPILER
-    implementation files('libs/cfr-0.135.jar')
+    implementation "org.benf:cfr:0.137"
 
     // DX Tool. We are using jar-jar to repackage the dx lib.
     // As android comes with the same classes in the lib-art.jar package that is usually a tad bit
     // older than what we need and hence missing stuff.
-    jarJar files('libs/dx-1.14.jar')
+    jarJar files("libs/dx-1.14.jar")
 
     // DEPENDENCIES FOR JaDX
-    implementation files('libs/dx-1.14.jar')
-    implementation files('libs/android-5.1.jar')
-    implementation files('libs/jadx-core-0.8.0.jar')
-    implementation 'org.slf4j:slf4j-api:1.7.25'
-    implementation 'org.slf4j:slf4j-simple:1.7.25'
-    // implementation 'ch.qos.logback:logback-classic:1.2.3'
-    // implementation 'ch.qos.logback:logback-core:1.2.3'
+    implementation files("libs/dx-1.14.jar")
+    implementation files("libs/android-5.1.jar")
+    implementation files("libs/jadx-core-0.8.0.jar")
+    implementation "org.slf4j:slf4j-api:1.7.25"
+    implementation "org.slf4j:slf4j-simple:1.7.25"
+    // implementation "ch.qos.logback:logback-classic:1.2.3"
+    // implementation "ch.qos.logback:logback-core:1.2.3"
 
-    implementation 'uk.com.robust-it:cloning:1.9.10'
+    implementation "uk.com.robust-it:cloning:1.9.10"
 
     // APK PARSER AND BINARY XML DECODER
-    implementation 'net.dongliu:apk-parser:2.6.4'
+    implementation "net.dongliu:apk-parser:2.6.4"
 
     // FERN FLOWER
-    implementation 'com.github.fesh0r:fernflower:e9989d15e3'
+    implementation "com.github.fesh0r:fernflower:e9989d15e3"
 
     // RxJAVA AND FRIENDS
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
 
     // LEAKCANARY AND FRIENDS
-    androidTestImplementation 'junit:junit:4.12'
+    androidTestImplementation "junit:junit:4.12"
     androidTestImplementation "androidx.test:core:$androidxVersion"
     androidTestImplementation "androidx.test:rules:1.1.0"
     androidTestImplementation "androidx.test.ext:junit:$androidxVersion"
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.1.0", {
+        exclude group: "com.android.support", module: "support-annotations"
+        exclude group: "com.google.code.findbugs", module: "jsr305"
     })
 
     // EVERYBODY ELSE
-    implementation 'io.github.inflationx:calligraphy3:3.0.0'
-    implementation 'io.github.inflationx:viewpump:1.0.0'
-    implementation 'com.jakewharton.timber:timber:4.7.1'
-    implementation('org.solovyev.android:checkout:1.0.1', {
-        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    implementation "io.github.inflationx:calligraphy3:3.0.0"
+    implementation "io.github.inflationx:viewpump:1.0.0"
+    implementation "com.jakewharton.timber:timber:4.7.1"
+    implementation("org.solovyev.android:checkout:1.0.1", {
+        exclude group: "com.google.code.findbugs", module: "jsr305"
     })
-    implementation 'pub.devrel:easypermissions:2.0.0'
-    implementation('org.solovyev.android:checkout:1.2.1', {
-        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    implementation "pub.devrel:easypermissions:2.0.0"
+    implementation("org.solovyev.android:checkout:1.2.1", {
+        exclude group: "com.google.code.findbugs", module: "jsr305"
     })
-    implementation ('com.github.kobakei:MaterialFabSpeedDial:1.2.1', {
-        exclude group: 'com.google.android.material', module: 'material'
+    implementation ("com.github.kobakei:MaterialFabSpeedDial:1.2.1", {
+        exclude group: "com.google.android.material", module: "material"
     })
-    implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
-    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
-    implementation 'com.github.angads25:filepicker:1.1.1'
-    implementation 'com.github.javiersantos:PiracyChecker:1.2.4'
-    implementation 'com.scottyab:secure-preferences-lib:0.1.4'
-    implementation 'com.github.nekocode:Badge:2.0'
+    implementation "com.daimajia.numberprogressbar:library:1.4@aar"
+    implementation "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
+    implementation "com.github.angads25:filepicker:1.1.1"
+    implementation "com.github.javiersantos:PiracyChecker:1.2.4"
+    implementation "com.scottyab:secure-preferences-lib:0.1.4"
+    implementation "com.github.nekocode:Badge:2.0"
 
-    implementation fileTree(dir: 'build/libs', include: ['*.jar'])
+    implementation fileTree(dir: "build/libs", include: ["*.jar"])
 }
 
 jarJar {
-    rules = ['dx-1.14.jar': 'com.android.** xyz.codezero.android.@1']
+    rules = ["dx-1.14.jar": "com.android.** xyz.codezero.android.@1"]
 }
 
-apply plugin: 'hiBeaver'
+apply plugin: "hiBeaver"
 
 import com.bryansharp.gradle.hibeaver.utils.MethodLogAdapter
 import org.objectweb.asm.ClassVisitor
@@ -283,7 +283,7 @@ import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
 hiBeaver {
-    hiBeaverModifyName = 'showJavaDexModifications'
+    hiBeaverModifyName = "showJavaDexModifications"
     showHelp = false
     keepQuiet = false
     watchTimeConsume = false
@@ -296,8 +296,8 @@ hiBeaver {
              *
              * Note: this needs to be tested and adjusted for every update of JaDX.
              */
-            'jadx.core.dex.visitors.SaveCode': [
-                    ['methodName': 'save', 'methodDesc': '(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V', 'adapter': {
+            "jadx.core.dex.visitors.SaveCode": [
+                    ["methodName": "save", "methodDesc": "(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V", "adapter": {
                         ClassVisitor cv, int access, String name, String desc, String signature, String[] exceptions ->
                             MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions)
                             MethodVisitor adapter = new MethodLogAdapter(methodVisitor) {
@@ -309,9 +309,9 @@ hiBeaver {
                                     methodVisitor.visitVarInsn(Opcodes.ALOAD, 2)
                                     methodVisitor.visitMethodInsn(
                                             Opcodes.INVOKESTATIC,
-                                            className2Path('com.njlabs.showjava.utils.streams.Logger'),
-                                            'logJadxClassWrite',
-                                            '(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V',
+                                            className2Path("com.njlabs.showjava.utils.streams.Logger"),
+                                            "logJadxClassWrite",
+                                            "(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V",
                                             false
                                     )
                                 }
@@ -326,8 +326,8 @@ hiBeaver {
              *
              * Note: this needs to be tested and adjusted for every update of JaDX.
              */
-            'jadx.core.utils.files.FileUtils': [
-                    ['methodName': 'isCaseSensitiveFS', 'methodDesc': '(Ljava/io/File;)Z', 'adapter': {
+            "jadx.core.utils.files.FileUtils": [
+                    ["methodName": "isCaseSensitiveFS", "methodDesc": "(Ljava/io/File;)Z", "adapter": {
                         ClassVisitor cv, int access, String name, String desc, String signature, String[] exceptions ->
                             MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions)
                             MethodVisitor adapter = new MethodLogAdapter(methodVisitor) {
@@ -345,4 +345,4 @@ hiBeaver {
     ]
 }
 
-apply plugin: 'com.google.gms.google-services'
+apply plugin: "com.google.gms.google-services"
