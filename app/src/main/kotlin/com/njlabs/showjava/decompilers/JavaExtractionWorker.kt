@@ -29,9 +29,6 @@ import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
 import org.apache.commons.io.FileUtils
 import org.benf.cfr.reader.api.CfrDriver
-import org.benf.cfr.reader.util.getopt.GetOptParser
-import org.benf.cfr.reader.util.getopt.Options
-import org.benf.cfr.reader.util.getopt.OptionsImpl
 import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler
 import timber.log.Timber
 import java.io.File
@@ -43,23 +40,13 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
     @Throws(Exception::class)
     private fun decompileWithCFR(jarInputFiles: File, javaOutputDir: File) {
         cleanMemory()
-
         val jarFiles = jarInputFiles.listFiles()
-        val args = arrayOf(jarFiles.first().toString(), "--outputdir", javaOutputDir.toString())
-        val getOptParser = GetOptParser()
-        val options: Options?
-        val files: List<String?>?
-
-        val processedArgs = getOptParser.parse(args, OptionsImpl.getFactory())
-        files = jarFiles.map { it.canonicalPath }
-        options = processedArgs.second as Options
-
-        if (!options.optionIsSet(OptionsImpl.HELP) && !files.isEmpty()) {
-            val cfrDriver = CfrDriver.Builder().withBuiltOptions(options).build()
-            cfrDriver.analyse(files)
-        } else {
-            throw Exception("cfr_invalid_arguments")
-        }
+        val options = mapOf<String, String>(
+            "outputdir" to javaOutputDir.canonicalPath,
+            "lomem" to "true"
+        )
+        val cfrDriver = CfrDriver.Builder().withOptions(options).build()
+        cfrDriver.analyse(jarFiles.map { it.canonicalPath })
     }
 
     @Throws(Exception::class)

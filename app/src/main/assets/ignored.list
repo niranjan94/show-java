@@ -53,3 +53,4 @@ org.objectweb.asm
 com.appsflyer
 com.mobikwik.sdk
 com.clevertap.android.sdk
+com.mixpanel
