@@ -84,7 +84,6 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
                 throw FileNotFoundException("Decompiled jar does not exist")
             }
         }
-
     }
 
     override fun doWork(): ListenableWorker.Result {

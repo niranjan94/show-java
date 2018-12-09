@@ -36,7 +36,10 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class DecompilerWorker(val context: Context, private val params: WorkerParameters) : Worker(context, params) {
+/**
+ * A wrapper for each of the 3 extractors to be able to use with Android WorkManager
+ */
+class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
 
     private var worker: BaseDecompiler? = null
     private val maxAttempts = params.inputData.getInt("maxAttempts", UserPreferences.DEFAULTS.MAX_ATTEMPTS)
@@ -47,6 +50,9 @@ class DecompilerWorker(val context: Context, private val params: WorkerParameter
     private val inputPackageFile: File = File(params.inputData.getString("inputPackageFile"))
     private val decompilerExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
+    /**
+     * Initialize the appropriate extractor based on the current step of the job
+     */
     init {
         if (tags.contains("jar-extraction")) {
             worker = JarExtractionWorker(context, params.inputData)
@@ -59,6 +65,16 @@ class DecompilerWorker(val context: Context, private val params: WorkerParameter
         }
     }
 
+    /**
+     * Execute the extractor. Also handles
+     *
+     * - Retries based on the set max attempts and failure status.
+     * - Stopping of the job when memory usage reaches the given threshold
+     *
+     * Every extractor is run within an executor thread. This allows us to force kill the thread
+     * via [ExecutorService.shutdownNow] method when memory usage exceeds set threshold.
+     *
+     */
     override fun doWork(): Result {
         var result = if (runAttemptCount >= (maxAttempts - 1)) Result.FAILURE else Result.RETRY
         var ranOutOfMemory = false
@@ -112,6 +128,12 @@ class DecompilerWorker(val context: Context, private val params: WorkerParameter
         return result
     }
 
+    /**
+     * Called when the job is stopped. (Either by user-initiated cancel or when complete)
+     * We clean up the notifications and caches if any on shutdown.
+     *
+     * @param [cancelled] true if the job was cancelled by the user
+     */
     override fun onStopped(cancelled: Boolean) {
         super.onStopped(cancelled)
         if (worker != null) {
@@ -120,6 +142,9 @@ class DecompilerWorker(val context: Context, private val params: WorkerParameter
     }
 
     companion object {
+        /**
+         * A helper method to cancel a decompilation job by packageName ([id])
+         */
         fun cancel(context: Context, id: String) {
             ProcessNotifier(context, id).cancel()
             WorkManager.getInstance().cancelUniqueWork(id)

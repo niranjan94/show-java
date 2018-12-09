@@ -29,7 +29,10 @@ import com.njlabs.showjava.utils.isSystemPackage
 import com.njlabs.showjava.utils.jarPackageName
 import java.io.File
 
-
+/**
+ * [PackageInfo] holds information about an apk/jar/dex file in preparation for sending it for
+ * decompilation. It also providers helpers to auto-generate an instance from a given [File]
+ */
 class PackageInfo() : Parcelable {
     var label = ""
     var name = ""

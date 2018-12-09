@@ -24,6 +24,9 @@ import com.njlabs.showjava.R
 import org.apache.commons.io.FilenameUtils
 import java.io.File
 
+/**
+ * Each file/folder item displayed in [com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity]
+ */
 class FileItem() : Parcelable {
 
     var file: File = File("/")
@@ -33,6 +36,9 @@ class FileItem() : Parcelable {
     val name: String?
         get() = if (metaInfo == "parent") ".." else file.name
 
+    /**
+     * Returns the appropriate icon resource based on the file extension via reflection
+     */
     val iconResource: Int
         get() {
             if (metaInfo == "parent") {
