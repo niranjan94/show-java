@@ -23,3 +23,9 @@ io.reactivex
 dagger
 io.realm
 com.facebook.react
+com.android.volley
+com.facebook.fresco
+com.facebook.drawee
+com.facebook.rebound
+com.google.protobuf
+com.google.gson

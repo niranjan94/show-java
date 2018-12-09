@@ -24,24 +24,12 @@
         android:title="@string/decompilerSettings"
         app:iconSpaceReserved="false">
 
-        <CheckBoxPreference
+        <SwitchPreference
             app:iconSpaceReserved="false"
-            android:defaultValue="true"
             android:key="ignoreLibraries"
+            android:defaultValue="true"
             android:summary="@string/ignoreLibrariesPreferenceSummary"
             android:title="@string/speedUpDecompile" />
-
-        <!--
-        <ListPreference
-            app:iconSpaceReserved="false"
-            android:defaultValue="cfr"
-            android:entries="@array/decompilers"
-            android:entryValues="@array/decompilersValues"
-            android:key="decompiler"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null"
-            android:title="@string/selectDefaultDecompiler" />
-        -->
 
     </PreferenceCategory>
 
@@ -49,21 +37,12 @@
         app:iconSpaceReserved="false"
         android:title="@string/easeOfUse">
 
-        <CheckBoxPreference
+        <SwitchPreference
             app:iconSpaceReserved="false"
-            android:defaultValue="false"
             android:key="darkMode"
+            android:defaultValue="false"
             android:summary="@string/darkModeSummary"
             android:title="@string/darkMode" />
-
-<!--
-        <CheckBoxPreference
-            app:iconSpaceReserved="false"
-            android:defaultValue="false"
-            android:key="hideDecompilerSelect"
-            android:summary="@string/autoDecompilerSelectionPreferenceSummary"
-            android:title="@string/autoDecompilerSelection" />
--->
 
     </PreferenceCategory>
 
@@ -71,40 +50,40 @@
         app:iconSpaceReserved="false"
         android:title="@string/advanced">
 
-        <CheckBoxPreference
+        <SwitchPreference
             app:iconSpaceReserved="false"
-            android:defaultValue="false"
             android:key="showMemoryUsage"
+            android:defaultValue="true"
             android:summary="@string/showMemoryUsageSummary"
             android:title="@string/showMemoryUsage" />
 
-        <CheckBoxPreference
+        <SwitchPreference
             app:iconSpaceReserved="false"
-            android:defaultValue="false"
             android:key="showSystemApps"
+            android:defaultValue="false"
             android:summary="@string/showSystemAppsSummary"
             android:title="@string/showSystemApps" />
 
         <EditTextPreference
-            android:defaultValue="500"
             android:inputType="number"
+            android:defaultValue="500"
             android:key="chunkSize"
             android:maxLines="1"
             android:singleLine="true"
             android:title="@string/classesPerChunk" />
 
         <EditTextPreference
-            android:defaultValue="2"
             android:inputType="number"
             android:key="maxAttempts"
+            android:defaultValue="2"
             android:maxLines="1"
             android:singleLine="true"
             android:title="@string/maxDecompilerAttempts" />
 
         <EditTextPreference
-            android:defaultValue="80"
             android:inputType="number"
             android:key="memoryThreshold"
+            android:defaultValue="80"
             android:maxLines="1"
             android:singleLine="true"
             android:title="@string/memoryThreshold" />

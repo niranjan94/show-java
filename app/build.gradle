@@ -172,9 +172,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // FIREBASE LIBRARIES
-    implementation "com.google.firebase:firebase-core:16.0.4"
-    implementation "com.google.firebase:firebase-ads:17.1.0"
-    implementation "com.crashlytics.sdk.android:crashlytics:2.9.6"
+    implementation "com.google.firebase:firebase-core:16.0.6"
+    implementation "com.google.firebase:firebase-ads:17.1.2"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.9.7"
 
     // ANDROID SUPPORT LIBRARIES
     implementation "androidx.appcompat:appcompat:$androidxVersion"

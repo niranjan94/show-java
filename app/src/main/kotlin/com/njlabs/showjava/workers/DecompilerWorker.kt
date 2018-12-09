@@ -23,12 +23,12 @@ import androidx.work.Data
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.njlabs.showjava.Constants
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.JarExtractionWorker
 import com.njlabs.showjava.decompilers.JavaExtractionWorker
 import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
 import com.njlabs.showjava.utils.ProcessNotifier
+import com.njlabs.showjava.utils.UserPreferences
 import timber.log.Timber
 import java.io.File
 import java.util.concurrent.CountDownLatch
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit
 class DecompilerWorker(val context: Context, private val params: WorkerParameters) : Worker(context, params) {
 
     private var worker: BaseDecompiler? = null
-    private val maxAttempts = params.inputData.getInt("maxAttempts", Constants.WORKER.PARAMETERS.MAX_ATTEMPTS)
+    private val maxAttempts = params.inputData.getInt("maxAttempts", UserPreferences.DEFAULTS.MAX_ATTEMPTS)
 
     private val id: String = params.inputData.getString("id").toString()
     private val packageName: String = params.inputData.getString("name").toString()

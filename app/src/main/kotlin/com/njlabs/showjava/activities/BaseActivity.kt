@@ -41,6 +41,7 @@ import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import com.njlabs.showjava.activities.settings.SettingsActivity
 import com.njlabs.showjava.utils.SafetyNetLite
+import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.checkDataConnection
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.disposables.CompositeDisposable
@@ -52,7 +53,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
 
     protected lateinit var toolbar: Toolbar
     protected lateinit var context: Context
-    protected lateinit var userPreferences: SharedPreferences
+    protected lateinit var userPreferences: UserPreferences
     protected lateinit var safetyNet: SafetyNetLite
     protected val disposables = CompositeDisposable()
 
@@ -61,7 +62,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = this
-        userPreferences = getSharedPreferences(Constants.USER_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        userPreferences = UserPreferences(getSharedPreferences(UserPreferences.NAME, Context.MODE_PRIVATE))
         safetyNet = SafetyNetLite.getInstance(context)
 
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

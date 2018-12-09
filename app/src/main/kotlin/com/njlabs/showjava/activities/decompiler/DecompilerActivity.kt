@@ -33,8 +33,6 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
-import com.njlabs.showjava.Constants.WORKER.PARAMETERS.Companion.CLASSES_PER_CHUNK
-import com.njlabs.showjava.Constants.WORKER.PARAMETERS.Companion.MAX_ATTEMPTS
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.adapters.getSystemBadge
@@ -170,20 +168,10 @@ class DecompilerActivity : BaseActivity() {
     private fun startProcess(view: View, decompiler: String, decompilerIndex: Int) {
         BaseDecompiler.start(
             hashMapOf(
-                "shouldIgnoreLibs" to userPreferences.getBoolean("ignoreLibraries", true),
-                "chunkSize" to (
-                        userPreferences.getString(
-                            "chunkSize",
-                            CLASSES_PER_CHUNK.toString()
-                        )?.toInt()
-                                ?: CLASSES_PER_CHUNK
-                        ),
-                "maxAttempts" to (
-                        userPreferences.getString("maxAttempts", MAX_ATTEMPTS.toString())?.toInt()
-                                ?: MAX_ATTEMPTS
-                        ),
-                "memoryThreshold" to (userPreferences.getString("memoryThreshold", "80")?.toInt()
-                        ?: 80),
+                "shouldIgnoreLibs" to userPreferences.ignoreLibraries,
+                "maxAttempts" to userPreferences.maxAttempts,
+                "chunkSize" to userPreferences.chunkSize,
+                "memoryThreshold" to userPreferences.memoryThreshold,
                 "decompiler" to decompiler,
                 "name" to packageInfo.name,
                 "label" to packageInfo.label,

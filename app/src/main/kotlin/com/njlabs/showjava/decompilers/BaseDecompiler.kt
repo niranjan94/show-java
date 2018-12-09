@@ -22,10 +22,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.work.*
+import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.ProcessNotifier
+import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.appStorage
 import com.njlabs.showjava.utils.cleanMemory
 import com.njlabs.showjava.utils.streams.ProgressStream
@@ -49,7 +51,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
     protected val decompiler = data.getString("decompiler")
     protected val type = PackageInfo.Type.values()[data.getInt("type", 0)]
-    private val maxAttempts = data.getInt("maxAttempts", Constants.WORKER.PARAMETERS.MAX_ATTEMPTS)
+    private val maxAttempts = data.getInt("maxAttempts", UserPreferences.DEFAULTS.MAX_ATTEMPTS)
     private val memoryThreshold = data.getInt("memoryThreshold", 80)
 
     protected val packageName: String = data.getString("name").toString()
@@ -82,6 +84,13 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         cleanMemory()
         monitorMemory()
         outputJavaSrcDirectory.mkdirs()
+
+        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            data.keyValueMap.forEach { t, u ->
+                Timber.d("[WORKER] [INPUT] $t: $u")
+            }
+        }
+
         return ListenableWorker.Result.SUCCESS
     }
 

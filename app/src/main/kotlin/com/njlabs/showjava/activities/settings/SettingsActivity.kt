@@ -29,12 +29,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.njlabs.showjava.Constants
+import com.google.common.base.CaseFormat
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.utils.UserPreferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 
 class SettingsActivity : BaseActivity() {
@@ -56,7 +58,7 @@ class SettingsActivity : BaseActivity() {
         private var containerView: View? = null
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            preferenceManager.sharedPreferencesName = Constants.USER_PREFERENCES_NAME
+            preferenceManager.sharedPreferencesName = UserPreferences.NAME
             preferenceManager.sharedPreferencesMode = Context.MODE_PRIVATE
 
             progressBarView = activity?.findViewById(R.id.progressBar)
@@ -65,6 +67,10 @@ class SettingsActivity : BaseActivity() {
             settingsHandler = SettingsHandler(context!!)
 
             setPreferencesFromResource(R.xml.preferences, rootKey)
+
+            bindPreferenceSummaryToValue(findPreference("chunkSize"))
+            bindPreferenceSummaryToValue(findPreference("maxAttempts"))
+            bindPreferenceSummaryToValue(findPreference("memoryThreshold"))
 
             findPreference("clearSourceHistory").setOnPreferenceClickListener {
                 AlertDialog.Builder(context!!)
@@ -80,12 +86,6 @@ class SettingsActivity : BaseActivity() {
                     .show()
                 true
             }
-
-            // Remove decompiler selection.
-            // bindPreferenceSummaryToValue(findPreference("decompiler"))
-            bindPreferenceSummaryToValue(findPreference("chunkSize"))
-            bindPreferenceSummaryToValue(findPreference("maxAttempts"))
-            bindPreferenceSummaryToValue(findPreference("memoryThreshold"))
 
             findPreference("darkMode").setOnPreferenceChangeListener { _, newValue ->
                 AppCompatDelegate.setDefaultNightMode(
@@ -143,16 +143,8 @@ class SettingsActivity : BaseActivity() {
                     val index = preference.findIndexOfValue(stringValue)
                     stringValue = if (index >= 0) preference.entries[index].toString() else ""
                 }
-
                 if (stringValue != "") {
-                    val decompilersValues = preference.context.resources.getStringArray(R.array.decompilersValues)
-                    val index = decompilersValues.indexOf(stringValue)
-                    if (index >= 0) {
-                        val decompilers = preference.context.resources.getStringArray(R.array.decompilers)
-                        preference.summary = decompilers[index]
-                    } else {
-                        preference.summary = stringValue
-                    }
+                    preference.summary = stringValue
                     return@OnPreferenceChangeListener true
                 }
                 preference.summary = null
@@ -163,7 +155,7 @@ class SettingsActivity : BaseActivity() {
             preference.onPreferenceChangeListener = sBindPreferenceSummaryToValueListener
             sBindPreferenceSummaryToValueListener.onPreferenceChange(
                 preference,
-                preference.context.getSharedPreferences(Constants.USER_PREFERENCES_NAME, Context.MODE_PRIVATE)
+                preference.context.getSharedPreferences(UserPreferences.NAME, Context.MODE_PRIVATE)
                     .getString(preference.key, "")!!
             )
         }

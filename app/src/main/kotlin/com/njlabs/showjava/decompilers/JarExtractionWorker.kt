@@ -26,9 +26,9 @@ import com.googlecode.dex2jar.ir.IrMethod
 import com.googlecode.dex2jar.reader.DexFileReader
 import com.googlecode.dex2jar.v3.Dex2jar
 import com.googlecode.dex2jar.v3.DexExceptionHandler
-import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
+import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.cleanMemory
 import com.njlabs.showjava.utils.toClassName
 import org.apache.commons.io.FilenameUtils
@@ -59,6 +59,9 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         if (data.getBoolean("shouldIgnoreLibs", true)) {
             context.assets.open("ignored.list").bufferedReader().useLines {
                 it.forEach { line -> ignoredLibs.add(toClassName(line)) }
+            }
+            if (!packageName.contains("facebook", true)) {
+                ignoredLibs.add(toClassName("com.facebook"))
             }
         }
         Timber.d("Total libs to ignore: ${ignoredLibs.size}")
@@ -134,11 +137,12 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         Timber.d("Total class to write ${classes.size}")
         setStep(context.getString(R.string.writingDexFile))
 
-        val chunkedClasses = classes.chunked(data.getInt("chunkSize",
-            Constants.WORKER.PARAMETERS.CLASSES_PER_CHUNK
-        ))
+        val chunkedClasses = classes.chunked(
+            data.getInt("chunkSize", UserPreferences.DEFAULTS.CHUNK_SIZE)
+        )
+
         chunkedClasses.forEachIndexed { index, list ->
-            Timber.d("Chunk $index with classes: ${chunkedClasses.size}")
+            Timber.d("Chunk $index with classes: ${list.size}")
             sendStatus(context.getString(R.string.chunk, index + 1, chunkedClasses.size), true)
             val dexFile = ImmutableDexFile(Opcodes.getDefault(), list)
             DexFileFactory.writeDexFile(

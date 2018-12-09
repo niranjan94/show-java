@@ -55,7 +55,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_apps)
         appsHandler = AppsHandler(context)
-        withSystemApps = userPreferences.getBoolean("showSystemApps", false)
+        withSystemApps = userPreferences.showSystemApps
 
         loadingView.visibility = View.VISIBLE
         appsList.visibility = View.GONE

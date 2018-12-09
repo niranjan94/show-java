@@ -65,7 +65,7 @@ class DecompilerProcessActivity : BaseActivity() {
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_decompiler_process)
         packageInfo = intent.getParcelableExtra("packageInfo")
-        showMemoryUsage = userPreferences.getBoolean("showMemoryUsage", false)
+        showMemoryUsage = userPreferences.showMemoryUsage
 
         memoryUsage.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE
         memoryStatus.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE

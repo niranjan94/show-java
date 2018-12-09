@@ -247,15 +247,22 @@ class NavigatorActivity : BaseActivity() {
         )
     }
 
+    private fun goBack(): Boolean {
+        if (isAtRoot()) {
+            finish()
+            return true
+        }
+        currentDirectory?.parent?.let {
+            populateList(File(it))
+            return true
+        }
+        return false
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                if (isAtRoot()) {
-                    finish()
-                    return true
-                }
-                currentDirectory?.parent?.let {
-                    populateList(File(it))
+                if (goBack()) {
                     return true
                 }
             }
@@ -318,7 +325,6 @@ class NavigatorActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        goBack()
     }
 }

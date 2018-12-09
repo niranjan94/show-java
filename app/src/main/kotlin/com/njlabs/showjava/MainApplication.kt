@@ -24,8 +24,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
+import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import com.google.android.gms.ads.MobileAds
+import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.logging.ProductionTree
 import io.github.inflationx.calligraphy3.CalligraphyConfig
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor
@@ -41,11 +43,19 @@ class MainApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
+        PreferenceManager.setDefaultValues(
+            applicationContext,
+            UserPreferences.NAME,
+            Context.MODE_PRIVATE,
+            R.xml.preferences,
+            false
+        )
+
         val preferences =
-            applicationContext.getSharedPreferences(Constants.USER_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            UserPreferences(applicationContext.getSharedPreferences(UserPreferences.NAME, Context.MODE_PRIVATE))
 
         AppCompatDelegate.setDefaultNightMode(
-            if (preferences.getBoolean("darkMode", false))
+            if (preferences.darkMode)
                 AppCompatDelegate.MODE_NIGHT_YES
             else
                 AppCompatDelegate.MODE_NIGHT_NO

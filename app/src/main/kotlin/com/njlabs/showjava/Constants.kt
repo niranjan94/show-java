@@ -24,19 +24,11 @@ package com.njlabs.showjava
 object Constants {
 
     const val STORAGE_PERMISSION_REQUEST = 1009
-    const val USER_PREFERENCES_NAME = "user_preferences"
 
     /**
      * Workers related constants
      */
     interface WORKER {
-
-        interface PARAMETERS {
-            companion object {
-                const val CLASSES_PER_CHUNK = 500
-                const val MAX_ATTEMPTS = 2
-            }
-        }
 
         companion object {
             const val STATUS_TYPE = "com.njlabs.showjava.worker.STATUS_TYPE"
