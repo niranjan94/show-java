@@ -21,122 +21,74 @@ package com.njlabs.showjava.activities.purchase
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.utils.secure.PurchaseUtils
 import kotlinx.android.synthetic.main.activity_purchase.*
 import org.solovyev.android.checkout.*
-import timber.log.Timber
 
 
 class PurchaseActivity : BaseActivity() {
 
-    private lateinit var checkout: ActivityCheckout
-    private lateinit var inventory: Inventory
+    private lateinit var purchaseUtils: PurchaseUtils
+
+    private fun isLoading(loading: Boolean) {
+        buttonProgressBar.visibility = if (!loading) View.GONE else View.VISIBLE
+        buyButton.visibility = if (loading) View.GONE else View.VISIBLE
+    }
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_purchase, getString(R.string.appNameGetPro))
 
-        safetyNet.isSafeExtended(
+        secureUtils.isSafeExtended(
             {
                 runOnUiThread {
-                    buttonProgressBar.visibility = View.GONE
-                    buyButton.visibility = View.VISIBLE
+                    isLoading(false)
+                    purchaseUtils = PurchaseUtils(this, secureUtils) {
+                        isLoading(it)
+                    }
+                    purchaseUtils.initializeCheckout(true)
+                    buyButton.setOnClickListener {
+                        isLoading(true)
+                        makePurchase()
+                    }
                 }
             },
             {
                 runOnUiThread {
-                    buttonProgressBar.visibility = View.GONE
+                    isLoading(false)
                     buyButton.visibility = View.GONE
                 }
             },
             {
                 runOnUiThread {
-                    buttonProgressBar.visibility = View.GONE
+                    isLoading(false)
                     buyButton.visibility = View.GONE
                 }
             }
         )
-
-        checkout = Checkout.forActivity(this, safetyNet.getBilling())
-        checkout.start()
-        checkout.createPurchaseFlow(PurchaseListener())
-
-        inventory = checkout.makeInventory()
-        inventory.load(
-            Inventory.Request.create()
-                .loadAllPurchases()
-                .loadSkus(ProductTypes.IN_APP, safetyNet.getIapProductId()),
-            InventoryCallback()
-        )
-
-        buyButton.setOnClickListener {
-            makePurchase()
-        }
-    }
-
-    private fun onPurchaseComplete(purchase: Purchase) {
-        Timber.d("Purchase complete: %s", purchase.sku)
-        safetyNet.onPurchaseComplete()
     }
 
     private fun makePurchase() {
-        checkout.whenReady(object : Checkout.EmptyListener() {
+        purchaseUtils.checkout.whenReady(object : Checkout.EmptyListener() {
             override fun onReady(requests: BillingRequests) {
                 requests.purchase(
                     ProductTypes.IN_APP,
-                    safetyNet.getIapProductId(),
+                    secureUtils.iapProductId,
                     null,
-                    checkout.purchaseFlow
+                    purchaseUtils.checkout.purchaseFlow
                 )
             }
         })
     }
 
-    private inner class PurchaseListener : EmptyRequestListener<Purchase>() {
-        override fun onSuccess(purchase: Purchase) {
-            if (purchase.sku == safetyNet.getIapProductId() && purchase.state == Purchase.State.PURCHASED) {
-                onPurchaseComplete(purchase)
-            }
-        }
-
-        override fun onError(response: Int, e: Exception) {
-            val messageKey = when (response) {
-                ResponseCodes.USER_CANCELED -> R.string.errorUserCancelled
-                ResponseCodes.ITEM_ALREADY_OWNED -> R.string.errorAlreadyOwned
-                ResponseCodes.ITEM_UNAVAILABLE -> R.string.errorItemUnavailable
-                ResponseCodes.ACCOUNT_ERROR -> R.string.errorAccount
-                ResponseCodes.ERROR -> R.string.errorPayment
-                else -> R.string.errorRequest
-            }
-            Toast.makeText(context, getString(messageKey), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private inner class InventoryCallback : Inventory.Callback {
-        override fun onLoaded(products: Inventory.Products) {
-            products.forEach {
-                val isPurchased = it.isPurchased(safetyNet.getIapProductId())
-                if (isPurchased) {
-                    val purchase =
-                        it.getPurchaseInState(safetyNet.getIapProductId(), Purchase.State.PURCHASED)
-                    if (purchase != null) {
-                        onPurchaseComplete(purchase)
-                    }
-                }
-            }
-        }
-    }
-
     override fun onDestroy() {
-        if (this::checkout.isInitialized) {
-            checkout.stop()
-        }
+        purchaseUtils.onDestroy()
         super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        checkout.onActivityResult(requestCode, resultCode, data)
+        purchaseUtils.checkout.onActivityResult(requestCode, resultCode, data)
     }
 }

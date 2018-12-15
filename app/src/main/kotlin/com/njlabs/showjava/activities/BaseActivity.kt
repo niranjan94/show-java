@@ -21,7 +21,6 @@ package com.njlabs.showjava.activities
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -40,7 +39,7 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import com.njlabs.showjava.activities.settings.SettingsActivity
-import com.njlabs.showjava.utils.SafetyNetLite
+import com.njlabs.showjava.utils.secure.SecureUtils
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.checkDataConnection
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
@@ -52,9 +51,9 @@ import pub.devrel.easypermissions.EasyPermissions
 abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     protected lateinit var toolbar: Toolbar
-    protected lateinit var context: Context
+    protected lateinit var context: AppCompatActivity
     protected lateinit var userPreferences: UserPreferences
-    protected lateinit var safetyNet: SafetyNetLite
+    protected lateinit var secureUtils: SecureUtils
     protected val disposables = CompositeDisposable()
 
     abstract fun init(savedInstanceState: Bundle?)
@@ -63,7 +62,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         super.onCreate(savedInstanceState)
         context = this
         userPreferences = UserPreferences(getSharedPreferences(UserPreferences.NAME, Context.MODE_PRIVATE))
-        safetyNet = SafetyNetLite.getInstance(context)
+        secureUtils = SecureUtils.getInstance(applicationContext)
 
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             EasyPermissions.requestPermissions(
@@ -162,8 +161,8 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         }
     }
 
-    private fun isPro(): Boolean {
-        return safetyNet.hasPurchasedPro()
+    fun isPro(): Boolean {
+        return secureUtils.hasPurchasedPro()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

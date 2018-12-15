@@ -47,6 +47,7 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
     private val id: String = params.inputData.getString("id").toString()
     private val packageName: String = params.inputData.getString("name").toString()
     private val packageLabel: String = params.inputData.getString("label").toString()
+    private val decompiler: String = params.inputData.getString("decompiler").toString()
     private val inputPackageFile: File = File(params.inputData.getString("inputPackageFile"))
     private val decompilerExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
@@ -116,7 +117,7 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
         if (result == Result.FAILURE) {
             try {
                 if (ranOutOfMemory) {
-                    notifier.lowMemory()
+                    notifier.lowMemory(decompiler)
                 } else {
                     notifier.error()
                 }

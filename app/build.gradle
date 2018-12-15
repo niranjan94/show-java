@@ -95,6 +95,8 @@ android {
         buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
         buildConfigField "String", "PLAY_LICENSE_KEY", "\"${props.getProperty("googlePlayLicenseKey")}\""
         buildConfigField "String", "IAP_PRODUCT_ID", "\"${props.getProperty("IapProductId")}\""
+        buildConfigField "String", "BACKEND_URL", "\"${props.getProperty("backendUrl")}\""
+        buildConfigField "String", "PURCHASE_VERIFIER_PATH", "\"${props.getProperty("purchaseVerifierPath")}\""
         buildConfigField "Boolean", "IS_CI", "${isCi}"
         buildConfigField "Boolean", "EXTENDED_VALIDATION", "false"
 
@@ -187,6 +189,7 @@ dependencies {
     implementation "androidx.core:core:$androidxVersion"
     implementation "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
     implementation "com.google.android.gms:play-services-oss-licenses:16.0.1"
+    implementation "com.android.volley:volley:1.1.1"
 
     implementation("android.arch.work:work-runtime-ktx:$workVersion", {
         exclude group: "com.google.guava", module: "listenablefuture"

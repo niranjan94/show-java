@@ -16,29 +16,42 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.utils
+package com.njlabs.showjava.utils.secure
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.util.Base64
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
 import com.github.javiersantos.piracychecker.*
 import com.github.javiersantos.piracychecker.enums.InstallerID
 import com.njlabs.showjava.BuildConfig
+import com.njlabs.showjava.utils.RequestQueue
+import com.njlabs.showjava.utils.SingletonHolder
 import com.securepreferences.SecurePreferences
 import io.michaelrocks.paranoid.Obfuscate
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import org.json.JSONObject
 import org.solovyev.android.checkout.Billing
+import org.solovyev.android.checkout.Purchase
 import timber.log.Timber
 import java.security.MessageDigest
 
 
 @Obfuscate
-class SafetyNetLite(val context: Context) {
+class SecureUtils(val context: Context) {
 
     private val packageName = "com.njlabs.showjava"
+    private val backendUrl = BuildConfig.BACKEND_URL
     private var hasPurchasedPro: Boolean? = null
     private var preferences: SecurePreferences? = null
+
+    val iapProductId = BuildConfig.IAP_PRODUCT_ID
+
+    val purchaseVerifierPath = BuildConfig.PURCHASE_VERIFIER_PATH
 
     private fun getPreferences(): SecurePreferences {
         if (preferences == null) {
@@ -73,23 +86,33 @@ class SafetyNetLite(val context: Context) {
         })
     }
 
-    fun getIapProductId(): String {
-        return BuildConfig.IAP_PRODUCT_ID
-    }
-
     fun hasPurchasedPro(): Boolean {
         if (!this.isSafe()) {
             return false
         }
+
         if (hasPurchasedPro != null) {
             return hasPurchasedPro as Boolean
         }
-        return getPreferences().getBoolean("show-java-pro", false)
+
+        return getPreferences().getBoolean(iapProductId, false)
     }
 
-    fun onPurchaseComplete() {
+    fun isPurchaseValid(purchase: Purchase, jsonObject: JSONObject): Boolean {
+        if (jsonObject.has("isPurchased") && jsonObject.has("orderId")) {
+            return jsonObject.getBoolean("isPurchased") && jsonObject.getString("orderId") == purchase.orderId
+        }
+        return false
+    }
+
+    fun onPurchaseComplete(purchase: Purchase) {
         hasPurchasedPro = true
-        getPreferences().edit().putBoolean("show-java-pro", true).apply()
+        getPreferences().edit().putBoolean(purchase.sku, true).commit()
+    }
+
+    fun onPurchaseRevert() {
+        hasPurchasedPro = false
+        getPreferences().edit().putBoolean(iapProductId, false).commit()
     }
 
     @SuppressLint("PrivateApi")
@@ -117,7 +140,7 @@ class SafetyNetLite(val context: Context) {
     }
 
     private fun isSafe(): Boolean {
-        if (context.packageName == packageName) {
+        if (context.packageName != packageName) {
             return false
         }
 
@@ -137,7 +160,8 @@ class SafetyNetLite(val context: Context) {
             if (emu || goldfish || sdk) {
                 return false
             }
-        } catch (e: Exception) { }
+        } catch (e: Exception) {
+        }
 
         if (BuildConfig.DEBUG || 0 != context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
             return false
@@ -146,5 +170,37 @@ class SafetyNetLite(val context: Context) {
         return false
     }
 
-    companion object : SingletonHolder<SafetyNetLite, Context>(::SafetyNetLite)
+    /**
+     * Make a JSON Request to the backend and return and observable
+     */
+    fun makeJsonRequest(requestPath: String, payload: Map<String, String>): Observable<JSONObject> {
+        return Observable.create { emitter: ObservableEmitter<JSONObject> ->
+            val jsonBody = JSONObject()
+            var backendUrl = this.backendUrl
+            var path = requestPath
+            if (!backendUrl.endsWith("/")) {
+                backendUrl += "/"
+            }
+            if (path.startsWith("/")) {
+                path = path.removePrefix("/")
+            }
+            payload.entries.forEach {
+                jsonBody.put(it.key, it.value)
+            }
+            val request = JsonObjectRequest(
+                backendUrl + path,
+                jsonBody,
+                Response.Listener<JSONObject> {
+                    emitter.onNext(it)
+                    emitter.onComplete()
+                }, Response.ErrorListener {
+                    emitter.onError(it)
+                    emitter.onComplete()
+                }
+            )
+            RequestQueue.getInstance(context).addToRequestQueue(request)
+        }
+    }
+
+    companion object : SingletonHolder<SecureUtils, Context>(::SecureUtils)
 }

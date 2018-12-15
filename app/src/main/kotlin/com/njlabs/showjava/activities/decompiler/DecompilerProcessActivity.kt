@@ -75,6 +75,7 @@ class DecompilerProcessActivity : BaseActivity() {
         inputPackageLabel.text = packageInfo.label
 
         val decompilers = resources.getStringArray(R.array.decompilers)
+        val decompilerValues = resources.getStringArray(R.array.decompilersValues)
         val decompilerDescriptions = resources.getStringArray(R.array.decompilerDescriptions)
 
         decompilerItemCard.findViewById<TextView>(R.id.decompilerName).text = decompilers[decompilerIndex]
@@ -110,7 +111,10 @@ class DecompilerProcessActivity : BaseActivity() {
                     }
 
                     if (it.outputData.getBoolean("ranOutOfMemory", false)) {
-                        startActivity(Intent(context, LowMemoryActivity::class.java))
+                        val intent = Intent(context, LowMemoryActivity::class.java)
+                        intent.putExtra("packageInfo", packageInfo)
+                        intent.putExtra("decompiler", decompilerValues[decompilerIndex])
+                        startActivity(intent)
                         hasCompleted = true
                         finish()
                     } else {

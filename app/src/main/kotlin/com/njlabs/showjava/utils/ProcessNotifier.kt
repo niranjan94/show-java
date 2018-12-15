@@ -206,9 +206,13 @@ class ProcessNotifier(
         )
     }
 
-    fun lowMemory() {
+    fun lowMemory(decompiler: String) {
+        val intent = Intent(context, LowMemoryActivity::class.java)
+        val packageInfo = PackageInfo.fromFile(context, packageFile)
+        intent.putExtra("packageInfo", packageInfo)
+        intent.putExtra("decompiler", decompiler)
         complete(
-            Intent(context, LowMemoryActivity::class.java),
+            intent,
             context.getString(R.string.errorDecompilingApp, packageLabel),
             context.getString(R.string.lowMemoryStatusInfo),
             R.drawable.ic_stat_error

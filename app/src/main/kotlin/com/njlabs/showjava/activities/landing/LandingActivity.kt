@@ -37,6 +37,7 @@ import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.utils.secure.PurchaseUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_landing.*
@@ -49,6 +50,7 @@ class LandingActivity : BaseActivity() {
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var landingHandler: LandingHandler
     private lateinit var filePickerDialog: FilePickerDialog
+    private lateinit var purchaseUtils: PurchaseUtils
 
     private var historyListAdapter: HistoryListAdapter? = null
     private var historyItems = ArrayList<SourceInfo>()
@@ -66,7 +68,10 @@ class LandingActivity : BaseActivity() {
         navigationView.setNavigationItemSelectedListener {
             onOptionsItemSelected(it)
         }
-        navigationView.menu.findItem(R.id.get_pro_option).isVisible = true
+
+        if (!isPro()) {
+            navigationView.menu.findItem(R.id.get_pro_option).isVisible = true
+        }
 
         drawerLayout.addDrawerListener(drawerToggle)
         landingHandler = LandingHandler(context)
@@ -108,6 +113,8 @@ class LandingActivity : BaseActivity() {
         swipeRefresh.setOnRefreshListener {
             populateHistory(true)
         }
+
+        purchaseUtils = PurchaseUtils(this, secureUtils)
     }
 
     public override fun onResume() {
@@ -207,5 +214,10 @@ class LandingActivity : BaseActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        purchaseUtils.onDestroy()
     }
 }
