@@ -32,6 +32,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.google.common.base.CaseFormat
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.UserPreferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -61,8 +62,10 @@ class SettingsActivity : BaseActivity() {
             preferenceManager.sharedPreferencesName = UserPreferences.NAME
             preferenceManager.sharedPreferencesMode = Context.MODE_PRIVATE
 
-            progressBarView = activity?.findViewById(R.id.progressBar)
-            containerView = activity?.findViewById(R.id.container)
+            val activity = activity as SettingsActivity
+
+            progressBarView = activity.findViewById(R.id.progressBar)
+            containerView = activity.findViewById(R.id.container)
 
             settingsHandler = SettingsHandler(context!!)
 
@@ -71,6 +74,17 @@ class SettingsActivity : BaseActivity() {
             bindPreferenceSummaryToValue(findPreference("chunkSize"))
             bindPreferenceSummaryToValue(findPreference("maxAttempts"))
             bindPreferenceSummaryToValue(findPreference("memoryThreshold"))
+
+            val adPreferences = findPreference("adPreferences")
+
+            if (!activity.inEea || activity.isPro()) {
+                adPreferences.parent?.removePreference(adPreferences)
+            } else {
+                adPreferences.setOnPreferenceClickListener {
+                    Ads(activity).loadConsentScreen()
+                    return@setOnPreferenceClickListener true
+                }
+            }
 
             findPreference("clearSourceHistory").setOnPreferenceClickListener {
                 AlertDialog.Builder(context!!)

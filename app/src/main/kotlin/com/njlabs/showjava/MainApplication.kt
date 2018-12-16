@@ -27,6 +27,7 @@ import androidx.multidex.MultiDexApplication
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import com.google.android.gms.ads.MobileAds
+import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.logging.ProductionTree
 import io.github.inflationx.calligraphy3.CalligraphyConfig
@@ -61,6 +62,8 @@ class MainApplication : MultiDexApplication() {
                 AppCompatDelegate.MODE_NIGHT_NO
         )
 
+        Ads(this).init()
+
         ViewPump.init(
             ViewPump.builder()
                 .addInterceptor(
@@ -79,7 +82,6 @@ class MainApplication : MultiDexApplication() {
         } else {
             Timber.plant(ProductionTree())
         }
-        MobileAds.initialize(this, getString(R.string.admobAppId))
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             cleanStaleNotifications()

@@ -31,6 +31,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.google.ads.consent.ConsentInformation
+import com.google.ads.consent.ConsentStatus
+import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -55,12 +58,15 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     protected lateinit var userPreferences: UserPreferences
     protected lateinit var secureUtils: SecureUtils
     protected val disposables = CompositeDisposable()
+    protected var inEea = false
 
     abstract fun init(savedInstanceState: Bundle?)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = this
+        inEea = ConsentInformation.getInstance(this).isRequestLocationInEeaOrUnknown
+
         userPreferences = UserPreferences(getSharedPreferences(UserPreferences.NAME, Context.MODE_PRIVATE))
         secureUtils = SecureUtils.getInstance(applicationContext)
 
@@ -137,10 +143,18 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         findViewById<AdView>(R.id.adView)?.let {it ->
             it.visibility = View.GONE
             if (!isPro()) {
+                val extras = Bundle()
+                val consentStatus = ConsentStatus.values()[userPreferences.consentStatus]
+                if (consentStatus == ConsentStatus.NON_PERSONALIZED) {
+                    extras.putString("npa", "1")
+                }
+
                 val adRequest = AdRequest.Builder()
+                    .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .addTestDevice(getString(R.string.adUnitId))
                     .build()
+
                 it.adListener = object : AdListener() {
                     override fun onAdFailedToLoad(errorCode: Int) {
                         super.onAdFailedToLoad(errorCode)

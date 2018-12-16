@@ -19,6 +19,7 @@
 package com.njlabs.showjava.utils
 
 import android.content.SharedPreferences
+import com.google.ads.consent.ConsentStatus
 
 class UserPreferences(private val prefs: SharedPreferences) {
 
@@ -36,7 +37,6 @@ class UserPreferences(private val prefs: SharedPreferences) {
             const val CHUNK_SIZE = 500
             const val MAX_ATTEMPTS = 2
         }
-
     }
 
     val ignoreLibraries: Boolean
@@ -62,4 +62,7 @@ class UserPreferences(private val prefs: SharedPreferences) {
     val memoryThreshold: Int
         get() = prefs.getString("memoryThreshold", DEFAULTS.MEMORY_THRESHOLD.toString())?.toInt()
                 ?: DEFAULTS.MEMORY_THRESHOLD
+
+    val consentStatus: Int
+        get() = prefs.getInt("consentStatus", ConsentStatus.UNKNOWN.ordinal)
 }

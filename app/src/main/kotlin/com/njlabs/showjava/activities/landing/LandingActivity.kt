@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
 import com.github.angads25.filepicker.view.FilePickerDialog
+import com.google.ads.consent.ConsentStatus
 import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
@@ -38,6 +39,7 @@ import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.secure.PurchaseUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -123,6 +125,9 @@ class LandingActivity : BaseActivity() {
             }
         }
         purchaseUtils.initializeCheckout(false, true)
+        if (inEea && userPreferences.consentStatus == ConsentStatus.UNKNOWN.ordinal) {
+            Ads(context).loadConsentScreen()
+        }
     }
 
     public override fun onResume() {

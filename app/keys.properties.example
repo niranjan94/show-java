@@ -1,7 +1,9 @@
 deviceId=YourDeviceId
+admobPublisherId=pub-3940256099942544
 adUnitId=YourAdUnitId
 admobAppId=ca-app-pub-3940256099942544~3347511713
 IapProductId=pro_app
 googlePlayLicenseKey=xyzzy
 backendUrl=https://postb.in/iiolsQAd
 purchaseVerifierPath=check/buy
+privacyPolicyUrl=https://example.com/privacy-policy/

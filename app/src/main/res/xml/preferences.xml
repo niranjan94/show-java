@@ -102,6 +102,14 @@
 
         <Preference
             app:iconSpaceReserved="false"
+            android:key="adPreferences"
+            android:shouldDisableView="true"
+            android:summary="@string/adPreferencesSummary"
+            android:title="@string/adPreferences">
+        </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
             android:summary="@string/reportBugPreferenceSummary"
             android:title="@string/reportBug">
             <intent

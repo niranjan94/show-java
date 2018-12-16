@@ -28,7 +28,7 @@ apply plugin: "ru.tinkoff.gradle.jarjar"
 def versionMajor = 3
 def versionMinor = 0
 def versionPatch = 1
-def versionBuild = 5
+def versionBuild = 6
 
 def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
@@ -90,6 +90,8 @@ android {
         resValue "string", "deviceId", props.getProperty("deviceId")
         resValue "string", "adUnitId", props.getProperty("adUnitId")
         resValue "string", "admobAppId", props.getProperty("admobAppId")
+        resValue "string", "admobPublisherId", props.getProperty("admobPublisherId")
+        resValue "string", "privacyPolicyUrl", props.getProperty("privacyPolicyUrl")
 
         buildConfigField "String", "GIT_SHA", "\"${getGitHash()}\""
         buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
@@ -189,6 +191,7 @@ dependencies {
     implementation "androidx.core:core:$androidxVersion"
     implementation "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
     implementation "com.google.android.gms:play-services-oss-licenses:16.0.1"
+    implementation 'com.google.android.ads.consent:consent-library:1.0.6'
     implementation "com.android.volley:volley:1.1.1"
 
     implementation("android.arch.work:work-runtime-ktx:$workVersion", {

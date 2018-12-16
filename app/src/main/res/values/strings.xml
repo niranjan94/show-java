@@ -158,4 +158,6 @@
     <string name="purchaseSuccess">Thank you for purchasing Show Java Pro ! :) You are awesome !</string>
     <string name="purchaseInitError">An error occurred while initializing purchase. Please try again later.</string>
     <string name="deviceVerificationFailed">Device failed the verification for making in-app purchases on Show Java.</string>
+    <string name="adPreferences">Ads Preferences</string>
+    <string name="adPreferencesSummary">Change your personalization preferences for Ads</string>
 </resources>
