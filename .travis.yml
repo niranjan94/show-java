@@ -4,15 +4,27 @@ jdk: oraclejdk8
 
 sudo: false
 
+env:
+  global:
+    MALLOC_ARENA_MAX=1
+  matrix:
+  - ANDROID_TARGET=android-28 ANDROID_ABI=x86
+  - ANDROID_TARGET=android-24 ANDROID_ABI=x86
+  - ANDROID_TARGET=android-21 ANDROID_ABI=x86
+  - ANDROID_TARGET=android-19 ANDROID_ABI=x86
+  - ANDROID_TARGET=android-16 ANDROID_ABI=x86
+
 android:
   components:
     - tools
-    - android-27
-    - build-tools-27.0.3
+    - android-28
+    - build-tools-28.0.3
     - platform-tools
+    - extra
     - extra-google-m2repository
     - extra-android-m2repository
     - extra-google-google_play_services
+    - sys-img-$ANDROID_ABI-$ANDROID_TARGET
 
 before_cache:
   - rm -rf  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -24,21 +36,16 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
 
-env:
-  global:
-    MALLOC_ARENA_MAX=1
-   
 install:
   - ulimit -s 1082768
   - touch app/keys.properties
 
-script:
-  - ./gradlew build
-  - ./gradlew assembleStandardRelease --stacktrace
+before_script:
+  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
 
-after_failure:
-  # tests
-  - cat app/build/reports/tests/testDebugUnitTest/index.html
-  # app
-  - cat app/build/reports/lint-results.xml
-  - cat app/build/reports/lint-results.html
+script:
+  - ./gradlew connectedAndroidTest
+  - ./gradlew assembleStandardRelease --stacktrace
