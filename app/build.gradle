@@ -28,7 +28,7 @@ apply plugin: "ru.tinkoff.gradle.jarjar"
 def versionMajor = 3
 def versionMinor = 0
 def versionPatch = 1
-def versionBuild = 0
+def versionBuild = 5
 
 def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
@@ -243,7 +243,7 @@ dependencies {
     // LEAKCANARY AND FRIENDS
     androidTestImplementation "junit:junit:4.12"
     androidTestImplementation "androidx.test:core:$androidxVersion"
-    androidTestImplementation "androidx.test:rules:1.1.0"
+    androidTestImplementation "androidx.test:rules:1.1.1"
     androidTestImplementation "androidx.test.ext:junit:$androidxVersion"
     androidTestImplementation("androidx.test.espresso:espresso-core:3.1.0", {
         exclude group: "com.android.support", module: "support-annotations"

@@ -61,19 +61,24 @@ class SecureUtils(val context: Context) {
     }
 
     fun isSafeExtended(allow: (() -> Unit), doNotAllow: (() -> Unit), onError: (() -> Unit)) {
+        Timber.d("[pa] isSafeExtended")
         context.piracyChecker {
             enableGooglePlayLicensing(BuildConfig.PLAY_LICENSE_KEY)
             if (BuildConfig.EXTENDED_VALIDATION) {
                 enableInstallerId(InstallerID.GOOGLE_PLAY)
                 enableUnauthorizedAppsCheck(true)
                 enableDebugCheck(true)
-                enableEmulatorCheck()
             }
-            saveResultToSharedPreferences(getPreferences(), "is_safe")
             callback {
-                doNotAllow { _, _ -> doNotAllow() }
+                doNotAllow { a, b ->
+                    Timber.d("[isSafeExtended][doNotAllow] ${a.name} $b")
+                    doNotAllow()
+                }
                 allow { allow() }
-                onError { onError() }
+                onError {
+                    Timber.d("[isSafeExtended][doNotAllow] ${it.name}")
+                    onError()
+                }
             }
         }.start()
     }
@@ -87,14 +92,9 @@ class SecureUtils(val context: Context) {
     }
 
     fun hasPurchasedPro(): Boolean {
-        if (!this.isSafe()) {
-            return false
-        }
-
         if (hasPurchasedPro != null) {
             return hasPurchasedPro as Boolean
         }
-
         return getPreferences().getBoolean(iapProductId, false)
     }
 
@@ -137,37 +137,6 @@ class SecureUtils(val context: Context) {
             val currentSignature = Base64.encodeToString(md.digest(), Base64.DEFAULT)
             Timber.d("[currentSignature] %s", currentSignature)
         }
-    }
-
-    private fun isSafe(): Boolean {
-        if (context.packageName != packageName) {
-            return false
-        }
-
-        if (!BuildConfig.EXTENDED_VALIDATION) {
-            return true
-        }
-
-        val installer = context.packageManager.getInstallerPackageName(packageName)
-        if (installer == null || installer != "com.android.vending") {
-            return false
-        }
-
-        try {
-            val goldfish = getSystemProperty("ro.hardware").contains("goldfish")
-            val emu = getSystemProperty("ro.kernel.qemu").isNotEmpty()
-            val sdk = getSystemProperty("ro.product.model") == "sdk"
-            if (emu || goldfish || sdk) {
-                return false
-            }
-        } catch (e: Exception) {
-        }
-
-        if (BuildConfig.DEBUG || 0 != context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
-            return false
-        }
-
-        return false
     }
 
     /**

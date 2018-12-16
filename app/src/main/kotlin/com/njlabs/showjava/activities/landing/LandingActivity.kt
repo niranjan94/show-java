@@ -122,7 +122,7 @@ class LandingActivity : BaseActivity() {
                 navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
             }
         }
-        purchaseUtils.initializeCheckout(false)
+        purchaseUtils.initializeCheckout(false, true)
     }
 
     public override fun onResume() {

@@ -21,11 +21,13 @@ package com.njlabs.showjava.activities.purchase
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.utils.secure.PurchaseUtils
 import kotlinx.android.synthetic.main.activity_purchase.*
 import org.solovyev.android.checkout.*
+import timber.log.Timber
 
 
 class PurchaseActivity : BaseActivity() {
@@ -39,9 +41,10 @@ class PurchaseActivity : BaseActivity() {
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_purchase, getString(R.string.appNameGetPro))
+        Timber.d("[pa] init")
 
         secureUtils.isSafeExtended(
-            {
+            { // allow
                 runOnUiThread {
                     isLoading(false)
                     purchaseUtils = PurchaseUtils(this, secureUtils) {
@@ -57,19 +60,24 @@ class PurchaseActivity : BaseActivity() {
                     }
                 }
             },
-            {
+            { // Do not allow
                 runOnUiThread {
                     isLoading(false)
                     buyButton.visibility = View.GONE
+                    Toast.makeText(context, R.string.deviceVerificationFailed, Toast.LENGTH_SHORT).show()
                 }
             },
-            {
+            { // On Error
                 runOnUiThread {
                     isLoading(false)
                     buyButton.visibility = View.GONE
+                    Toast.makeText(context, R.string.purchaseInitError, Toast.LENGTH_SHORT).show()
                 }
             }
         )
+
+        Timber.d("[pa] initComplete")
+
     }
 
     private fun makePurchase() {
@@ -86,12 +94,16 @@ class PurchaseActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        purchaseUtils.onDestroy()
+        if (::purchaseUtils.isInitialized) {
+            purchaseUtils.onDestroy()
+        }
         super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        purchaseUtils.checkout.onActivityResult(requestCode, resultCode, data)
+        if (::purchaseUtils.isInitialized) {
+            purchaseUtils.checkout.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }

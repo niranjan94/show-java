@@ -156,4 +156,6 @@
     <string name="appReportThanks">Thanks for reporting :). The high memory usage will be investigated.</string>
     <string name="purchaseVerificationFailed">Purchase verification failed. Please try again. If issue persists, drop in an email at me\@niranjan.io</string>
     <string name="purchaseSuccess">Thank you for purchasing Show Java Pro ! :) You are awesome !</string>
+    <string name="purchaseInitError">An error occurred while initializing purchase. Please try again later.</string>
+    <string name="deviceVerificationFailed">Device failed the verification for making in-app purchases on Show Java.</string>
 </resources>

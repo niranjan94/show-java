@@ -40,12 +40,14 @@ class PurchaseUtils(
 
     lateinit var checkout: ActivityCheckout
     private lateinit var inventory: Inventory
+    private var lessVerbose: Boolean = false
 
     fun doOnComplete(completeCallback: () -> Unit) {
         this.completeCallback = completeCallback
     }
 
-    fun initializeCheckout(withPurchaseFlow: Boolean = false): ActivityCheckout {
+    fun initializeCheckout(withPurchaseFlow: Boolean = false, lessVerbose: Boolean = false): ActivityCheckout {
+        this.lessVerbose = lessVerbose
         checkout = Checkout.forActivity(activityContext, secureUtils.getBilling())
         checkout.start()
 
@@ -136,16 +138,20 @@ class PurchaseUtils(
                     isLoading(false)
                     Timber.d("Verification done: %s", it.toString())
                     if (secureUtils.isPurchaseValid(purchase, it)) {
+                        if (!secureUtils.hasPurchasedPro()) {
+                            Toast.makeText(activityContext, R.string.purchaseSuccess, Toast.LENGTH_LONG)
+                                .show()
+                        }
                         secureUtils.onPurchaseComplete(purchase)
-                        Toast.makeText(activityContext, R.string.purchaseSuccess, Toast.LENGTH_LONG)
-                            .show()
                         completeCallback()
                     } else {
-                        Toast.makeText(
-                            activityContext,
-                            R.string.purchaseVerificationFailed,
-                            Toast.LENGTH_LONG
-                        ).show()
+                        if (!lessVerbose) {
+                            Toast.makeText(
+                                activityContext,
+                                R.string.purchaseVerificationFailed,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                         secureUtils.onPurchaseRevert()
                     }
                 }
