@@ -14,7 +14,7 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 ## Features
 
-- Select either **CFR 0.137**, **JaDX 0.8.0** or **FernFlower [`e9989d1`](https://github.com/fesh0r/fernflower/tree/e9989d15e3c1ad1ae28e168f306becfd0abe101c) (analytical decompiler)** to use as the decompiler.
+- Select either **CFR 0.138**, **JaDX 0.8.0** or **FernFlower [`f320e3a`](https://github.com/fesh0r/fernflower/tree/e9989d15e3c1ad1ae28e168f306becfd0abe101c) (analytical decompiler)** to use as the decompiler.
 - Runs directly on an android device (4.1.x and above).
 - Select apk/jar/dex from sdcard (or) from a list of installed applications.
 - Decompiles android resources (layouts, Drawables, Menus, AndroidManifest, image assets, values, etc).
@@ -29,7 +29,7 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 JaDX and Fernflower use newer Java features such as some types of lambda's which are not available on pre-N versions of Android. 
 
-|             | CFR 0.137          | JaDX 0.8.0         | Fernflower         |
+|             | CFR 0.138          | JaDX 0.8.0         | Fernflower         |
 |------------:|:------------------:|:------------------:|:------------------:|
 | Oreo        | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Nougat      | :white_check_mark: | :white_check_mark: | :white_check_mark: |

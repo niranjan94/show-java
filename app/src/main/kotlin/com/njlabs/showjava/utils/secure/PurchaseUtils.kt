@@ -29,7 +29,11 @@ import org.solovyev.android.checkout.*
 import timber.log.Timber
 
 @Obfuscate
-class PurchaseUtils(private val activityContext: Activity, val secureUtils: SecureUtils, val isLoading: (Boolean) -> Unit = {}) {
+class PurchaseUtils(
+    private val activityContext: Activity,
+    val secureUtils: SecureUtils,
+    val isLoading: (Boolean) -> Unit = {}
+) {
 
     private val disposables: CompositeDisposable = CompositeDisposable()
     private var completeCallback: () -> Unit = {}
@@ -77,7 +81,11 @@ class PurchaseUtils(private val activityContext: Activity, val secureUtils: Secu
                 else -> R.string.errorRequest
             }
             isLoading(false)
-            Toast.makeText(activityContext, activityContext.getString(messageKey), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activityContext,
+                activityContext.getString(messageKey),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -87,12 +95,10 @@ class PurchaseUtils(private val activityContext: Activity, val secureUtils: Secu
             products.forEach {
                 val isPurchased = it.isPurchased(secureUtils.iapProductId)
                 if (isPurchased) {
-                    val purchase =
-                        it.getPurchaseInState(
-                            secureUtils.iapProductId,
-                            Purchase.State.PURCHASED
-                        )
-                    if (purchase != null) {
+                    it.getPurchaseInState(
+                        secureUtils.iapProductId,
+                        Purchase.State.PURCHASED
+                    )?.let { purchase ->
                         onPurchaseComplete(purchase)
                         wasAnyPurchased = true
                     }
@@ -119,7 +125,11 @@ class PurchaseUtils(private val activityContext: Activity, val secureUtils: Secu
                 .doOnError {
                     isLoading(false)
                     Timber.e(it)
-                    Toast.makeText(activityContext, R.string.purchaseVerificationFailed, Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        activityContext,
+                        R.string.purchaseVerificationFailed,
+                        Toast.LENGTH_LONG
+                    ).show()
                     secureUtils.onPurchaseRevert()
                 }
                 .subscribe {
@@ -127,10 +137,15 @@ class PurchaseUtils(private val activityContext: Activity, val secureUtils: Secu
                     Timber.d("Verification done: %s", it.toString())
                     if (secureUtils.isPurchaseValid(purchase, it)) {
                         secureUtils.onPurchaseComplete(purchase)
-                        Toast.makeText(activityContext, R.string.purchaseSuccess, Toast.LENGTH_LONG).show()
+                        Toast.makeText(activityContext, R.string.purchaseSuccess, Toast.LENGTH_LONG)
+                            .show()
                         completeCallback()
                     } else {
-                        Toast.makeText(activityContext, R.string.purchaseVerificationFailed, Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            activityContext,
+                            R.string.purchaseVerificationFailed,
+                            Toast.LENGTH_LONG
+                        ).show()
                         secureUtils.onPurchaseRevert()
                     }
                 }

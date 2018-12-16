@@ -62,8 +62,8 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         typeRadioGroup.visibility = View.GONE
         searchMenuItem?.isVisible = false
 
-        if (savedInstanceState != null) {
-            val apps = savedInstanceState.getParcelableArrayList<PackageInfo>("apps")
+        savedInstanceState?.let {
+            val apps = it.getParcelableArrayList<PackageInfo>("apps")
             if (!apps.isNullOrEmpty()) {
                 this.apps = apps
                 this.filteredApps = apps
@@ -71,6 +71,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
                 filterApps(R.id.userRadioButton)
             }
         }
+
         if (this.apps.isEmpty( )) {
             loadApps()
         }

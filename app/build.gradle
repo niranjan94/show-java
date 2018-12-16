@@ -212,7 +212,7 @@ dependencies {
     implementation files("libs/dex-translator-0.0.9.15.jar")
 
     // CLASS FILE READER - JAVA DECOMPILER
-    implementation "org.benf:cfr:0.137"
+    implementation "org.benf:cfr:0.138"
 
     // DX Tool. We are using jar-jar to repackage the dx lib.
     // As android comes with the same classes in the lib-art.jar package that is usually a tad bit
@@ -234,7 +234,7 @@ dependencies {
     implementation "net.dongliu:apk-parser:2.6.4"
 
     // FERN FLOWER
-    implementation "com.github.fesh0r:fernflower:e9989d15e3"
+    implementation 'com.github.fesh0r:fernflower:f320e3abd4'
 
     // RxJAVA AND FRIENDS
     implementation "io.reactivex.rxjava2:rxandroid:2.1.0"

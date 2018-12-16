@@ -108,21 +108,15 @@ class CodeView @JvmOverloads constructor(
                     addJavascriptInterface(object : Any() {
                         @JavascriptInterface
                         fun onStartCodeHighlight() {
-                            if (onHighlightListener != null) {
-                                onHighlightListener!!.onStartCodeHighlight()
-                            }
+                            onHighlightListener?.onStartCodeHighlight()
                         }
                         @JavascriptInterface
                         fun onFinishCodeHighlight() {
-                            if (onHighlightListener != null) {
-                                onHighlightListener!!.onFinishCodeHighlight()
-                            }
+                            onHighlightListener?.onFinishCodeHighlight()
                         }
                         @JavascriptInterface
                         fun onLineClicked(lineNumber: Int, content: String) {
-                            if (onHighlightListener != null) {
-                                onHighlightListener!!.onLineClicked(lineNumber, content)
-                            }
+                            onHighlightListener?.onLineClicked(lineNumber, content)
                         }
                     }, "android")
                 }
@@ -285,8 +279,8 @@ highlightLineNumber($highlightLineNumber)
             fontSize = this@CodeView.fontSize * detector.scaleFactor
             if (fontSize >= 8) {
                 changeFontSize(fontSize.toInt())
-                if (onHighlightListener != null && oldFontSize != fontSize.toInt()) {
-                    onHighlightListener!!.onFontSizeChanged(fontSize.toInt())
+                if (oldFontSize != fontSize.toInt()) {
+                    onHighlightListener?.onFontSizeChanged(fontSize.toInt())
                 }
                 oldFontSize = fontSize.toInt()
             } else {

@@ -79,12 +79,11 @@ class LandingActivity : BaseActivity() {
         setupFab()
 
         if (savedInstanceState != null) {
-            val historyItems = savedInstanceState.getParcelableArrayList<SourceInfo>("historyItems")
-            if (historyItems != null) {
-                this.historyItems = historyItems
-                shouldLoadHistory = false
-                setupList()
-            }
+             savedInstanceState.getParcelableArrayList<SourceInfo>("historyItems")?.let {
+                 this.historyItems = it
+                 shouldLoadHistory = false
+                 setupList()
+             }
         }
 
         val properties = DialogProperties()

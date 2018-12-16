@@ -134,28 +134,27 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     }
 
     private fun setupGoogleAds() {
-        val mAdView = findViewById<AdView>(R.id.adView)
-        if (mAdView != null) {
-            mAdView.visibility = View.GONE
+        findViewById<AdView>(R.id.adView)?.let {it ->
+            it.visibility = View.GONE
             if (!isPro()) {
                 val adRequest = AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .addTestDevice(getString(R.string.adUnitId))
                     .build()
-                mAdView.adListener = object : AdListener() {
+                it.adListener = object : AdListener() {
                     override fun onAdFailedToLoad(errorCode: Int) {
                         super.onAdFailedToLoad(errorCode)
-                        mAdView.visibility = View.GONE
+                        it.visibility = View.GONE
                     }
 
                     override fun onAdLoaded() {
                         super.onAdLoaded()
-                        mAdView.visibility = View.VISIBLE
+                        it.visibility = View.VISIBLE
                     }
                 }
-                mAdView.loadAd(adRequest)
+                it.loadAd(adRequest)
                 if (!checkDataConnection(context)) {
-                    mAdView.visibility = View.GONE
+                    it.visibility = View.GONE
                 }
             }
         }

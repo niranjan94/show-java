@@ -88,9 +88,9 @@
     <string name="buyNow">Buy Now</string>
 
     <string-array name="decompilers" translatable="false">
-        <item><xliff:g>CFR 0.137</xliff:g></item>
+        <item><xliff:g>CFR 0.138</xliff:g></item>
         <item><xliff:g>JaDX 0.8.0</xliff:g></item>
-        <item><xliff:g>FernFlower e9989d1</xliff:g></item>
+        <item><xliff:g>FernFlower f320e3a</xliff:g></item>
     </string-array>
 
     <string-array name="decompilersValues" translatable="false">

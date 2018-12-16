@@ -137,9 +137,7 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
      */
     override fun onStopped(cancelled: Boolean) {
         super.onStopped(cancelled)
-        if (worker != null) {
-            return worker!!.onStopped(cancelled)
-        }
+        worker?.onStopped(cancelled)
     }
 
     companion object {
