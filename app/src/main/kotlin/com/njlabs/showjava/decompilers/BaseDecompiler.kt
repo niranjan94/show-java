@@ -71,6 +71,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     private var onLowMemory: ((Boolean) -> Unit)? = null
 
     init {
+        @Suppress("LeakingThis")
         printStream = PrintStream(ProgressStream(this))
         System.setErr(printStream)
         System.setOut(printStream)

@@ -29,7 +29,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.google.common.base.CaseFormat
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.utils.Ads
@@ -37,7 +36,6 @@ import com.njlabs.showjava.utils.UserPreferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 
 
 class SettingsActivity : BaseActivity() {
@@ -111,7 +109,7 @@ class SettingsActivity : BaseActivity() {
 
                 Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
 
-                activity?.let {
+                activity.let {
                     it.startActivity(Intent(it, SettingsActivity::class.java))
                     it.finish()
                 }

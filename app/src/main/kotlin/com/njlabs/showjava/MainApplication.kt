@@ -26,7 +26,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
-import com.google.android.gms.ads.MobileAds
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.logging.ProductionTree

@@ -36,7 +36,6 @@ import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.data.PackageInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_apps.*
 import timber.log.Timber

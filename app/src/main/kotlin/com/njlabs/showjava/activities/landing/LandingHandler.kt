@@ -23,7 +23,6 @@ import androidx.work.WorkManager
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.utils.appStorage
 import io.reactivex.Observable
-import org.apache.commons.io.FileUtils
 import timber.log.Timber
 import java.io.File
 import java.io.IOException

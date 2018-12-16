@@ -21,9 +21,7 @@ package com.njlabs.showjava.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.work.WorkManager
 import com.njlabs.showjava.Constants
-import com.njlabs.showjava.utils.ProcessNotifier
 import com.njlabs.showjava.workers.DecompilerWorker
 import timber.log.Timber
 

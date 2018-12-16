@@ -20,7 +20,6 @@ package com.njlabs.showjava.utils.secure
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.util.Base64
 import com.android.volley.Response
