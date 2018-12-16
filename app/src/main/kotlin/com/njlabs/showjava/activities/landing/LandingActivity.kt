@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
 import com.github.angads25.filepicker.view.FilePickerDialog
+import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.AppsActivity
@@ -115,12 +116,25 @@ class LandingActivity : BaseActivity() {
         }
 
         purchaseUtils = PurchaseUtils(this, secureUtils)
+        purchaseUtils.doOnComplete {
+            if (isPro()) {
+                supportActionBar?.title = "${getString(R.string.appName)} Pro"
+                findViewById<AdView>(R.id.adView)?.visibility = View.GONE
+                navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
+            }
+        }
+        purchaseUtils.initializeCheckout(false)
     }
 
     public override fun onResume() {
         super.onResume()
         if (hasValidPermissions()) {
             populateHistory(true)
+        }
+        if (isPro()) {
+            supportActionBar?.title = "${getString(R.string.appName)} Pro"
+            findViewById<AdView>(R.id.adView)?.visibility = View.GONE
+            navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
         }
     }
 

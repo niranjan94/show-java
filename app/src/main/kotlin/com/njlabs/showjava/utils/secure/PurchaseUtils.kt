@@ -31,9 +31,15 @@ import timber.log.Timber
 @Obfuscate
 class PurchaseUtils(private val activityContext: Activity, val secureUtils: SecureUtils, val isLoading: (Boolean) -> Unit = {}) {
 
-    val disposables: CompositeDisposable = CompositeDisposable()
+    private val disposables: CompositeDisposable = CompositeDisposable()
+    private var completeCallback: () -> Unit = {}
+
     lateinit var checkout: ActivityCheckout
-    lateinit var inventory: Inventory
+    private lateinit var inventory: Inventory
+
+    fun doOnComplete(completeCallback: () -> Unit) {
+        this.completeCallback = completeCallback
+    }
 
     fun initializeCheckout(withPurchaseFlow: Boolean = false): ActivityCheckout {
         checkout = Checkout.forActivity(activityContext, secureUtils.getBilling())
@@ -122,7 +128,7 @@ class PurchaseUtils(private val activityContext: Activity, val secureUtils: Secu
                     if (secureUtils.isPurchaseValid(purchase, it)) {
                         secureUtils.onPurchaseComplete(purchase)
                         Toast.makeText(activityContext, R.string.purchaseSuccess, Toast.LENGTH_LONG).show()
-                        activityContext.finish()
+                        completeCallback()
                     } else {
                         Toast.makeText(activityContext, R.string.purchaseVerificationFailed, Toast.LENGTH_LONG).show()
                         secureUtils.onPurchaseRevert()

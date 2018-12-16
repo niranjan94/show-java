@@ -47,6 +47,9 @@ class PurchaseActivity : BaseActivity() {
                     purchaseUtils = PurchaseUtils(this, secureUtils) {
                         isLoading(it)
                     }
+                    purchaseUtils.doOnComplete {
+                        finish()
+                    }
                     purchaseUtils.initializeCheckout(true)
                     buyButton.setOnClickListener {
                         isLoading(true)
