@@ -7,3 +7,5 @@ googlePlayLicenseKey=xyzzy
 backendUrl=https://postb.in/iiolsQAd
 purchaseVerifierPath=check/buy
 privacyPolicyUrl=https://example.com/privacy-policy/
+minifyEnabled=true
+shrinkResources=true

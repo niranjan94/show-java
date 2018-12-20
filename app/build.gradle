@@ -145,8 +145,8 @@ android {
             buildConfigField "Boolean", "EXTENDED_VALIDATION", "true"
         }
         debug {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled props.getProperty("minifyEnabled", "true") == "true"
+            shrinkResources props.getProperty("shrinkResources", "true") == "true"
             testProguardFile "test-proguard-rules.pro"
         }
     }
