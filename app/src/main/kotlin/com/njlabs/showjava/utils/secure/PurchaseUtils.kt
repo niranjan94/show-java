@@ -46,7 +46,10 @@ class PurchaseUtils(
         this.completeCallback = completeCallback
     }
 
-    fun initializeCheckout(withPurchaseFlow: Boolean = false, lessVerbose: Boolean = false): ActivityCheckout {
+    fun initializeCheckout(
+        withPurchaseFlow: Boolean = false,
+        lessVerbose: Boolean = false
+    ): ActivityCheckout {
         this.lessVerbose = lessVerbose
         checkout = Checkout.forActivity(activityContext, secureUtils.getBilling())
         checkout.start()
@@ -124,27 +127,34 @@ class PurchaseUtils(
                 )
             ).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError {
-                    isLoading(false)
-                    Timber.e(it)
-                    Toast.makeText(
-                        activityContext,
-                        R.string.purchaseVerificationFailed,
-                        Toast.LENGTH_LONG
-                    ).show()
-                    secureUtils.onPurchaseRevert()
-                }
-                .subscribe {
-                    isLoading(false)
-                    Timber.d("Verification done: %s", it.toString())
-                    if (secureUtils.isPurchaseValid(purchase, it)) {
-                        if (!secureUtils.hasPurchasedPro()) {
-                            Toast.makeText(activityContext, R.string.purchaseSuccess, Toast.LENGTH_LONG)
-                                .show()
+                .subscribe(
+                    {
+                        isLoading(false)
+                        Timber.d("Verification done: %s", it.toString())
+                        if (secureUtils.isPurchaseValid(purchase, it)) {
+                            if (!secureUtils.hasPurchasedPro()) {
+                                Toast.makeText(
+                                    activityContext,
+                                    R.string.purchaseSuccess,
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+                            }
+                            secureUtils.onPurchaseComplete(purchase)
+                            completeCallback()
+                        } else {
+                            if (!lessVerbose) {
+                                Toast.makeText(
+                                    activityContext,
+                                    R.string.purchaseVerificationFailed,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            secureUtils.onPurchaseRevert()
                         }
-                        secureUtils.onPurchaseComplete(purchase)
-                        completeCallback()
-                    } else {
+                    }, {
+                        isLoading(false)
+                        Timber.e(it)
                         if (!lessVerbose) {
                             Toast.makeText(
                                 activityContext,
@@ -152,9 +162,8 @@ class PurchaseUtils(
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-                        secureUtils.onPurchaseRevert()
                     }
-                }
+                )
         )
         secureUtils.onPurchaseComplete(purchase)
     }
