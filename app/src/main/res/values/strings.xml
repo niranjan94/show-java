@@ -90,7 +90,7 @@
     <string-array name="decompilers" translatable="false">
         <item><xliff:g>CFR 0.138</xliff:g></item>
         <item><xliff:g>JaDX 0.8.0</xliff:g></item>
-        <item><xliff:g>FernFlower f320e3a</xliff:g></item>
+        <item><xliff:g>FernFlower 2c2b00b</xliff:g></item>
     </string-array>
 
     <string-array name="decompilersValues" translatable="false">
