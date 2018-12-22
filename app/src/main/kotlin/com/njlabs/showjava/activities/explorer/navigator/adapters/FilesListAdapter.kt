@@ -25,6 +25,9 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.data.FileItem
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 
+/**
+ * List adapter for the code navigator
+ */
 class FilesListAdapter(
     private var fileItems: List<FileItem>,
     private val itemClick: (FileItem) -> Unit

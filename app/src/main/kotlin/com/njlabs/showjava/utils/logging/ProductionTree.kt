@@ -22,6 +22,10 @@ import android.util.Log
 import com.crashlytics.android.Crashlytics
 import timber.log.Timber
 
+/**
+ * Logs all exceptions and anything with priority higher than [Log.WARN] to [Crashlytics] and ignores
+ * the rest.
+ */
 class ProductionTree : Timber.Tree() {
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {

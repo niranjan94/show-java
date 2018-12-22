@@ -23,6 +23,9 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue as VolleyRequestQueue
 import com.android.volley.toolbox.Volley
 
+/**
+ * A singleton request queue to use with Volley for all network requests.
+ */
 class RequestQueue constructor(context: Context) {
     companion object {
         @Volatile

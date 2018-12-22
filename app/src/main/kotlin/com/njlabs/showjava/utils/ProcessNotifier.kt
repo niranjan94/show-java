@@ -39,7 +39,10 @@ import com.njlabs.showjava.receivers.DecompilerActionReceiver
 import java.io.File
 
 
-
+/**
+ * Takes care of creating, updates progress notifications along with success and failure notifications
+ * for the decompiler process.
+ */
 class ProcessNotifier(
     private val context: Context,
     private val notificationTag: String?,

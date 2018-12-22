@@ -28,6 +28,11 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_low_memory.*
 import timber.log.Timber
 
+/**
+ * If an app's decompilation was stopped due to low memory, explain what happened to the user
+ * And also provide user a way to report the app that failed to decompile. This can then
+ * be investigated later on to see what can be done to reduce the memory usage.
+ */
 class LowMemoryActivity : BaseActivity() {
 
     override fun init(savedInstanceState: Bundle?) {

@@ -41,6 +41,10 @@ import java.io.File
 import java.io.PrintStream
 import java.util.concurrent.TimeUnit
 
+/**
+ * The base decompiler. This reads the input [Data] into easy to use properties of the class.
+ * All other components of the decompiler will extend this one.
+ */
 abstract class BaseDecompiler(val context: Context, val data: Data) {
     var printStream: PrintStream? = null
 
@@ -149,6 +153,9 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         this.broadcastStatus(null, message)
     }
 
+    /**
+     * Set the current decompilation step
+     */
     fun setStep(title: String) {
         sendStatus(title, context.getString(R.string.initializing), true)
     }
@@ -166,6 +173,9 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             ListenableWorker.Result.RETRY
     }
 
+    /**
+     * Return a success only if the conditions is true. Else exit with an exception.
+     */
     protected fun successIf(condition: Boolean): ListenableWorker.Result {
         disposables.clear()
         return if (condition)
@@ -202,6 +212,9 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         )
     }
 
+    /**
+     * Clear notifications and show a success notification.
+     */
     fun onCompleted() {
         processNotifier?.success()
         broadcastStatus(
@@ -224,6 +237,9 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
     companion object {
 
+        /**
+         * Check if the specified decompiler is available on the device based on the android version
+         */
         fun isAvailable(decompiler: String): Boolean {
             return when (decompiler) {
                 "cfr" -> true

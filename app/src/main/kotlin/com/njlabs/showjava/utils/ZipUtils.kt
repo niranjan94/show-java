@@ -25,7 +25,9 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-
+/**
+ * [ZipUtils] to extract and compress directories
+ */
 object ZipUtils {
 
     fun zipDir(dir: File, packageId: String): File {

@@ -21,6 +21,9 @@ package com.njlabs.showjava.utils
 import android.content.SharedPreferences
 import com.google.ads.consent.ConsentStatus
 
+/**
+ * A thin-wrapper around [SharedPreferences] to expose preferences as getters.
+ */
 class UserPreferences(private val prefs: SharedPreferences) {
 
     companion object {

@@ -219,11 +219,10 @@ class NavigatorActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Check if the current folder the user is in, is the root
+     */
     private fun isAtRoot(): Boolean {
-
-        Timber.d("[isAtRoot] currentDirectory: ${currentDirectory?.canonicalPath}")
-        Timber.d("[isAtRoot] sourceDirectory: ${selectedApp?.sourceDirectory?.canonicalPath}")
-
         return currentDirectory?.canonicalPath == selectedApp?.sourceDirectory?.canonicalPath
     }
 

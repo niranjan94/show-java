@@ -53,6 +53,15 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
     private lateinit var parsedInputApkFile: ApkFile
     private val images = listOf("jpg", "png", "gif", "jpeg", "webp", "tiff", "bmp")
 
+    /**
+     * Extract xml & image resources using JaDX. JaDX has a better resources decompiler compared
+     * to others. But sadly, JaDX also uses javax.imageio classes that are not available in android
+     * at present. So, we don't use it.
+     *
+     * TODO Figure out how to use it only for XML though.
+     *
+     * @experimental
+     */
     @Throws(Exception::class)
     private fun extractResourcesWithJadx() {
         cleanMemory()
@@ -65,6 +74,10 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         jadx.saveResources()
     }
 
+    /**
+     * Read the APK as zip, and extract XML resources using the apk-parser and image/other resources
+     * by just extracting it from the zip.
+     */
     @Throws(Exception::class)
     private fun extractResourcesWithParser() {
         cleanMemory()
@@ -90,6 +103,13 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         zipFile.close()
     }
 
+    /**
+     * Currently the extracted XML resources, refer to the resource used within them via their
+     * numeric ID. This is an experiment to parse the resource table in the APK and get the human
+     * readable names from the numeric ID.
+     *
+     * @experimental
+     */
     @Suppress("UNCHECKED_CAST")
     @RequiresApi(Build.VERSION_CODES.N)
     @Throws(Exception::class)
@@ -111,6 +131,9 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         }
     }
 
+    /**
+     * Write a file at the appropriate output path within the source directory
+     */
     @Throws(Exception::class)
     private fun writeFile(fileStream: InputStream, path: String) {
         val fileFolderPath =
@@ -126,6 +149,9 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         fileStream.toFile(File(fileFolderPath, FilenameUtils.getName(path)))
     }
 
+    /**
+     * Read and decompile an XML resource from the APK and write it to the source directory.
+     */
     @Throws(ParserException::class)
     private fun writeXML(path: String) {
         val xml = parsedInputApkFile.transBinaryXml(path)
@@ -146,6 +172,9 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         )
     }
 
+    /**
+     * Write the AndroidManifest file to the source directory
+     */
     @Throws(Exception::class)
     private fun writeManifest() {
         val manifestXml = parsedInputApkFile.manifestXml
@@ -156,6 +185,9 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         )
     }
 
+    /**
+     * Get bitmap from drawable. This is used to read the app icon and save to the source directory.
+     */
     // Borrowed from from https://stackoverflow.com/a/52453231/1562480
     private fun getBitmapFromDrawable(drawable: Drawable): Bitmap {
         val bmp = Bitmap.createBitmap(
@@ -169,6 +201,9 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         return bmp
     }
 
+    /**
+     * Save the app icon to the source directory
+     */
     @Throws(Exception::class)
     private fun saveIcon() {
         val packageInfo = context.packageManager.getPackageArchiveInfo(inputPackageFile.canonicalPath, 0)

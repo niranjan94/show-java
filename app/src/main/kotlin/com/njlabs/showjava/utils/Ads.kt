@@ -29,7 +29,10 @@ import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import timber.log.Timber
 import java.net.URL
 
-
+/**
+ * Initialize the ads library. Also, takes care of showing a consent screen for users within EU
+ * and persisting the consent.
+ */
 class Ads(val context: Context) {
     private val consentInformation: ConsentInformation = ConsentInformation.getInstance(context)
     private lateinit var consentForm: ConsentForm
@@ -58,6 +61,9 @@ class Ads(val context: Context) {
             })
     }
 
+    /**
+     * Load the consent screen and prepare to display.
+     */
     fun loadConsentScreen(): ConsentForm? {
         consentForm = ConsentForm.Builder(context, URL(context.getString(R.string.privacyPolicyUrl)))
             .withListener(object : ConsentFormListener() {

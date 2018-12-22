@@ -29,6 +29,11 @@ import timber.log.Timber
 import java.io.File
 import java.io.IOException
 
+/**
+ * [SourceInfo] holds information about a specific decompiled source on the app storage.
+ * The source info is persisted to disk as a simple json file at the root of each package's
+ * decompiled source folder.
+ */
 class SourceInfo() : Parcelable {
 
     lateinit var packageLabel: String

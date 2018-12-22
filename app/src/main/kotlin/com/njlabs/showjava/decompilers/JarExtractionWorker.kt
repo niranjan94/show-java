@@ -44,7 +44,22 @@ import java.io.BufferedInputStream
 import java.io.InputStream
 import java.util.zip.ZipFile
 
-
+/**
+ * The [JarExtractionWorker] worker handles optimization and extraction of the jar/dex file from the source
+ *
+ * a. For APKs & Dex files:
+ *      1. All the classes within the input are read
+ *      2. Classes are checked against the ignore list.
+ *      3. Multiple dex files are created with the classes that are not ignored.
+ *      4. For inputs with a large number of classes, creating a single dex file causes devices to
+ *         run out of memory. So, we chunk them to smaller dex files containing lesser number
+ *         of classes.
+ *      5. The dex files are then converted to jar. (With the exception of JaDX which prefers dex files)
+ *
+ * b. For Jar files:
+ *      1. They are directly passed to the next step. (With the exception of JaDX where the jar is
+ *         read and converted into dex chunks and then passed on to JaDX)
+ */
 class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
     private var ignoredLibs: ArrayList<String> = ArrayList()

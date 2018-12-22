@@ -27,12 +27,16 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import kotlinx.android.synthetic.main.activity_about.*
 
+/**
+ * Show information about the app, its version & licenses to all open source libraries used
+ */
 class AboutActivity : BaseActivity() {
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_about)
         if (BuildConfig.GIT_SHA.isNotEmpty()) {
             version.setText(R.string.appVersionExtendedWithHash)
         }
+
         viewOpenSourceLicenses.setOnClickListener {
             Crashlytics.getInstance().crash()
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

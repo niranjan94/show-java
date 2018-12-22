@@ -28,6 +28,11 @@ import io.reactivex.ObservableEmitter
 
 class AppsHandler(private var context: Context) {
 
+    /**
+     * Load all installed applications.
+     *
+     * @return [Observable] which can be used to track the loading progress and completion state.
+     */
     fun loadApps(withSystemApps: Boolean): Observable<ProcessStatus<ArrayList<PackageInfo>>> {
         return Observable.create { emitter: ObservableEmitter<ProcessStatus<ArrayList<PackageInfo>>> ->
             val installedApps = ArrayList<PackageInfo>()

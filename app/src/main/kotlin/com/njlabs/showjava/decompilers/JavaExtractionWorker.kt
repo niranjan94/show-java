@@ -34,9 +34,21 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
 
-
+/**
+ * The [JavaExtractionWorker] does the actual decompilation of extracting the `java` source from
+ * the inputs. All of the three decompiler that we support, allow passing in multiple input files.
+ * So, we pass in all of the chunks of either dex (in case of JaDX) or jar files (in case of CFR &
+ * fernflower) as the input.
+ */
 class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(context, data) {
 
+    /**
+     * Do the decompilation using the CFR decompiler.
+     *
+     * We set the `lowmem` flag as true to let CFR know that it has to be more aggressive in terms
+     * of garbage collection and less-aggressive caching. This results in reduced performance. But
+     * increase success rates for large inputs. Which is a good trade-off.
+     */
     @Throws(Exception::class)
     private fun decompileWithCFR(jarInputFiles: File, javaOutputDir: File) {
         cleanMemory()
@@ -49,6 +61,12 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
         cfrDriver.analyse(jarFiles.map { it.canonicalPath })
     }
 
+    /**
+     * Do the decompilation using the JaDX decompiler.
+     *
+     * We set `threadsCount` as 1. This instructs JaDX to not spawn additional threads to prevent
+     * issues on some devices.
+     */
     @Throws(Exception::class)
     private fun decompileWithJaDX(dexInputFiles: File, javaOutputDir: File) {
         cleanMemory()
@@ -66,6 +84,12 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
         }
     }
 
+    /**
+     * Do the decompilation using FernFlower decompiler.
+     *
+     * The out of the decompiler is a jar archive containing the decompiled java files. So, we look
+     * for and extract the archive after the decompilation.
+     */
     @Throws(Exception::class)
     private fun decompileWithFernFlower(jarInputFiles: File, javaOutputDir: File) {
         cleanMemory()

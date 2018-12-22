@@ -25,6 +25,10 @@ import com.njlabs.showjava.Constants
 import com.njlabs.showjava.workers.DecompilerWorker
 import timber.log.Timber
 
+/**
+ * [DecompilerActionReceiver] is used to receive the cancel request from the notification action,
+ * and cancel the decompilation process.
+ */
 class DecompilerActionReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {

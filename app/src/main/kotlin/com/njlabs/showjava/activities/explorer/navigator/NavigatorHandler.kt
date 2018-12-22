@@ -34,11 +34,14 @@ import kotlin.collections.sortBy
 
 class NavigatorHandler(private var context: Context) {
 
-    fun loadFiles(currentFile: File): Observable<ArrayList<FileItem>> {
+    /**
+     * Load all files in the given directory
+     */
+    fun loadFiles(currentDirectory: File): Observable<ArrayList<FileItem>> {
         return Observable.fromCallable {
             val directories = ArrayList<FileItem>()
             val files = ArrayList<FileItem>()
-            val items = currentFile.listFiles()
+            val items = currentDirectory.listFiles()
             if (items.isNullOrEmpty()) {
                 return@fromCallable directories
             }
@@ -66,13 +69,19 @@ class NavigatorHandler(private var context: Context) {
         }
     }
 
+    /**
+     * Package an entire directory containing the source code into a .zip archive.
+     */
     fun archiveDirectory(sourceDirectory: File, packageName: String): Observable<File> {
         return Observable.fromCallable {
             ZipUtils.zipDir(sourceDirectory, packageName)
         }
     }
 
-    fun deleteDirectory(sourceDirectory: File): Observable<Any> {
+    /**
+     * Delete the source directory
+     */
+    fun deleteDirectory(sourceDirectory: File): Observable<Unit> {
         return Observable.fromCallable {
             try {
                 if (sourceDirectory.exists()) {
