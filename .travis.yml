@@ -8,9 +8,9 @@ env:
   global:
     MALLOC_ARENA_MAX=1
   matrix:
-  - ANDROID_TARGET=android-28 ANDROID_ABI=armeabi-v7a
-  - ANDROID_TARGET=android-24 ANDROID_ABI=armeabi-v7a
-  - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
+  - ANDROID_TARGET=android-28 ANDROID_ABI=x86
+  - ANDROID_TARGET=android-24 ANDROID_ABI=x86
+  - ANDROID_TARGET=android-21 ANDROID_ABI=x86
   - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
   - ANDROID_TARGET=android-16 ANDROID_ABI=armeabi-v7a
 
@@ -45,6 +45,7 @@ before_script:
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
+  - cp -f app/keys.properties.example app/keys.properties
 
 script:
   - ./gradlew connectedAndroidTest
