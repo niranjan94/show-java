@@ -8,16 +8,16 @@ env:
   global:
     MALLOC_ARENA_MAX=1
   matrix:
-  - ANDROID_TARGET=android-28 ANDROID_ABI=x86
-  - ANDROID_TARGET=android-24 ANDROID_ABI=x86
-  - ANDROID_TARGET=android-21 ANDROID_ABI=x86
-  - ANDROID_TARGET=android-19 ANDROID_ABI=x86
-  - ANDROID_TARGET=android-16 ANDROID_ABI=x86
+  - ANDROID_TARGET=android-28 ANDROID_ABI=armeabi-v7a
+  - ANDROID_TARGET=android-24 ANDROID_ABI=armeabi-v7a
+  - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
+  - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
+  - ANDROID_TARGET=android-16 ANDROID_ABI=armeabi-v7a
 
 android:
   components:
     - tools
-    - android-28
+    - $ANDROID_TARGET
     - build-tools-28.0.3
     - platform-tools
     - extra
