@@ -32,14 +32,16 @@ import com.njlabs.showjava.utils.logging.ProductionTree
 import io.github.inflationx.calligraphy3.CalligraphyConfig
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor
 import io.github.inflationx.viewpump.ViewPump
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 
 class MainApplication : MultiDexApplication() {
 
-    /**
-     * Setup fonts, plant the correct logging tree for Timber and init ads
-     */
+    val disposables = CompositeDisposable()
+
     override fun onCreate() {
         super.onCreate()
 
@@ -52,7 +54,12 @@ class MainApplication : MultiDexApplication() {
         )
 
         val preferences =
-            UserPreferences(applicationContext.getSharedPreferences(UserPreferences.NAME, Context.MODE_PRIVATE))
+            UserPreferences(
+                applicationContext.getSharedPreferences(
+                    UserPreferences.NAME,
+                    Context.MODE_PRIVATE
+                )
+            )
 
         AppCompatDelegate.setDefaultNightMode(
             if (preferences.darkMode)
@@ -83,7 +90,13 @@ class MainApplication : MultiDexApplication() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            cleanStaleNotifications()
+            disposables.add(
+                cleanStaleNotifications()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
+                    .onErrorReturn {}
+                    .subscribe()
+            )
         }
     }
 
@@ -91,16 +104,23 @@ class MainApplication : MultiDexApplication() {
      * Clean any stale notifications not linked to any decompiler process
      */
     @RequiresApi(Build.VERSION_CODES.M)
-    fun cleanStaleNotifications() {
-        val manager = applicationContext
-            .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val workManager = WorkManager.getInstance()
-        manager.activeNotifications.forEach { notification ->
-            val status = workManager.getStatusesForUniqueWorkLiveData(notification.tag)
-                .value?.any { it.state.isFinished }
-            if (status == null || status == true) {
-                manager.cancel(notification.tag, notification.id)
+    fun cleanStaleNotifications(): Observable<Unit> {
+        return Observable.fromCallable {
+            val manager = applicationContext
+                .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val workManager = WorkManager.getInstance()
+            manager.activeNotifications.forEach { notification ->
+                val status = workManager.getStatusesForUniqueWorkLiveData(notification.tag)
+                    .value?.any { it.state.isFinished }
+                if (status == null || status == true) {
+                    manager.cancel(notification.tag, notification.id)
+                }
             }
         }
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        disposables.clear()
     }
 }

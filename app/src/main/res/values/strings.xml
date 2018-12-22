@@ -160,4 +160,5 @@
     <string name="deviceVerificationFailed">Device failed the verification for making in-app purchases on Show Java.</string>
     <string name="adPreferences">Ads Preferences</string>
     <string name="adPreferencesSummary">Change your personalization preferences for Ads</string>
+    <string name="initializing">Initializing</string>
 </resources>

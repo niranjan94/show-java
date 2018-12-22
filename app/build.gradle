@@ -170,17 +170,17 @@ def workVersion = "1.0.0-alpha10"
 
 dependencies {
     // Multi-dex
-    implementation "androidx.multidex:multidex:2.0.0"
+    implementation "androidx.multidex:multidex:2.0.1"
 
-    // KOTLIN STANDARD LIBRARY
+    // Kotlin Standard library
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    // FIREBASE LIBRARIES
+    // Firebase-related dependencies
     implementation "com.google.firebase:firebase-core:16.0.6"
     implementation "com.google.firebase:firebase-ads:17.1.2"
     implementation "com.crashlytics.sdk.android:crashlytics:2.9.7"
 
-    // ANDROID SUPPORT LIBRARIES
+    // AndroidX support libraries
     implementation "androidx.appcompat:appcompat:$androidxVersion"
     implementation "com.google.android.material:material:$androidxVersion"
     implementation "androidx.cardview:cardview:$androidxVersion"
@@ -194,19 +194,13 @@ dependencies {
     implementation 'com.google.android.ads.consent:consent-library:1.0.6'
     implementation "com.android.volley:volley:1.1.1"
 
+    // Android WorkManager
     implementation("android.arch.work:work-runtime-ktx:$workVersion", {
         exclude group: "com.google.guava", module: "listenablefuture"
     })
-    implementation("android.arch.work:work-firebase:$workVersion", {
-        exclude group: "com.google.guava", module: "listenablefuture"
-    })
 
-    // APACHE COMMONS LIBRARIES
-    //noinspection GradleDependency
-    implementation "commons-io:commons-io:2.5" // Fix to 2.5 for compatibility
-    implementation "commons-cli:commons-cli:1.4"
 
-    // DEX2JAR AND FRIENDS
+    // Dex2Jar & friends
     implementation "asm:asm-all:3.3.1"
     implementation files("libs/smali-2.2.1.jar")
     implementation files("libs/dex-ir-1.12.jar")
@@ -214,7 +208,7 @@ dependencies {
     implementation files("libs/dex-tools-0.0.9.15.jar")
     implementation files("libs/dex-translator-0.0.9.15.jar")
 
-    // CLASS FILE READER - JAVA DECOMPILER
+    // CFR Decompiler
     implementation "org.benf:cfr:0.138"
 
     // DX Tool. We are using jar-jar to repackage the dx lib.
@@ -222,28 +216,27 @@ dependencies {
     // older than what we need and hence missing stuff.
     jarJar files("libs/dx-1.14.jar")
 
-    // DEPENDENCIES FOR JaDX
+    // JaDX & friends
+    implementation files("libs/jadx-core-0.8.0.jar")
     implementation files("libs/dx-1.14.jar")
     implementation files("libs/android-5.1.jar")
-    implementation files("libs/jadx-core-0.8.0.jar")
     implementation "org.slf4j:slf4j-api:1.7.25"
     implementation "org.slf4j:slf4j-simple:1.7.25"
+    implementation "uk.com.robust-it:cloning:1.9.10"
     // implementation "ch.qos.logback:logback-classic:1.2.3"
     // implementation "ch.qos.logback:logback-core:1.2.3"
 
-    implementation "uk.com.robust-it:cloning:1.9.10"
-
-    // APK PARSER AND BINARY XML DECODER
+    // APK parser
     implementation "net.dongliu:apk-parser:2.6.4"
 
-    // FERN FLOWER
+    // Fernflower decompiler
     implementation 'com.github.fesh0r:fernflower:2c2b00b369'
 
-    // RxJAVA AND FRIENDS
+    // RxAndroid & friends
     implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
     implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
 
-    // LEAKCANARY AND FRIENDS
+    // Testing tools
     androidTestImplementation "junit:junit:4.12"
     androidTestImplementation "androidx.test:core:$androidxVersion"
     androidTestImplementation "androidx.test:rules:1.1.1"
@@ -253,7 +246,9 @@ dependencies {
         exclude group: "com.google.code.findbugs", module: "jsr305"
     })
 
-    // EVERYBODY ELSE
+    // Everybody else
+    //noinspection GradleDependency
+    implementation "commons-io:commons-io:2.5" // Fix to 2.5 for compatibility
     implementation "io.github.inflationx:calligraphy3:3.0.0"
     implementation "io.github.inflationx:viewpump:1.0.0"
     implementation "com.jakewharton.timber:timber:4.7.1"

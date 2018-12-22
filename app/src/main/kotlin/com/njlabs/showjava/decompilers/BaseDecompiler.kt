@@ -150,7 +150,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     }
 
     fun setStep(title: String) {
-        sendStatus(title, "", true)
+        sendStatus(title, context.getString(R.string.initializing), true)
     }
 
     /**
