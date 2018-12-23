@@ -196,19 +196,21 @@ class DecompilerProcessActivity : BaseActivity() {
                 if (!showMemoryUsage) {
                     return
                 }
-                val percentage = message.toDouble()
-                memoryStatus.text = "$message%"
-                val textColor = ContextCompat.getColor(
-                    context,
-                    when {
-                        percentage < 40 -> R.color.green_500
-                        percentage < 60 -> R.color.amber_500
-                        percentage < 80 -> R.color.orange_500
-                        else -> R.color.red_500
-                    }
-                )
-                memoryStatus.setTextColor(textColor)
-                memoryUsage.setTextColor(textColor)
+                try {
+                    val percentage = message.toDouble()
+                    memoryStatus.text = "$message%"
+                    val textColor = ContextCompat.getColor(
+                        context,
+                        when {
+                            percentage < 40 -> R.color.green_500
+                            percentage < 60 -> R.color.amber_500
+                            percentage < 80 -> R.color.orange_500
+                            else -> R.color.red_500
+                        }
+                    )
+                    memoryStatus.setTextColor(textColor)
+                    memoryUsage.setTextColor(textColor)
+                } catch (ignored: Exception) { }
                 return
             }
 
