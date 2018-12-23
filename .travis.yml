@@ -6,25 +6,24 @@ sudo: false
 
 env:
   global:
-    MALLOC_ARENA_MAX=1
+    - MALLOC_ARENA_MAX=1
+    - ANDROID_ABI=armeabi-v7a
   matrix:
-  - ANDROID_TARGET=android-28 ANDROID_ABI=x86
-  - ANDROID_TARGET=android-24 ANDROID_ABI=x86
-  - ANDROID_TARGET=android-21 ANDROID_ABI=x86
-  - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
-  - ANDROID_TARGET=android-16 ANDROID_ABI=armeabi-v7a
+  - API_LEVEL=25 SYS_IMAGE_TAG=google_apis ANDROID_ABI=arm64-v8a
+  - API_LEVEL=24 SYS_IMAGE_TAG=google_apis ANDROID_ABI=arm64-v8a
+  - API_LEVEL=21 SYS_IMAGE_TAG=google_apis ANDROID_ABI=armeabi-v7a
+  - API_LEVEL=19 SYS_IMAGE_TAG=google_apis ANDROID_ABI=armeabi-v7a
+  - API_LEVEL=17 SYS_IMAGE_TAG=google_apis ANDROID_ABI=armeabi-v7a
 
 android:
   components:
     - tools
-    - $ANDROID_TARGET
+    - android-28
+    - android-$API_LEVEL
     - build-tools-28.0.3
     - platform-tools
     - extra
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - extra-google-google_play_services
-    - sys-img-$ANDROID_ABI-$ANDROID_TARGET
+    - sys-img-$ANDROID_ABI-$SYS_IMAGE_TAG-$API_LEVEL
 
 before_cache:
   - rm -rf  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -39,14 +38,15 @@ cache:
 install:
   - ulimit -s 1082768
   - touch app/keys.properties
-
-before_script:
-  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
-  - emulator -avd test -no-skin -no-audio -no-window &
+  - echo no | android create avd --force -n test -t android-$API_LEVEL --abi $ANDROID_ABI --tag $SYS_IMAGE_TAG
+  - emulator -avd test -no-skin -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
+
+before_script:
+  - cp -f app/mock-google-services.json app/google-services.json
   - cp -f app/keys.properties.example app/keys.properties
 
 script:
-  - ./gradlew connectedAndroidTest
+  - ./gradlew connectedAndroidTest --stacktrace
   - ./gradlew assembleStandardRelease --stacktrace

@@ -237,6 +237,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
 
     // Testing tools
+    testImplementation "junit:junit:4.12"
     androidTestImplementation "junit:junit:4.12"
     androidTestImplementation "androidx.test:core:$androidxVersion"
     androidTestImplementation "androidx.test:rules:1.1.1"
