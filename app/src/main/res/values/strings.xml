@@ -157,7 +157,14 @@
     <string name="purchaseVerificationFailed">Purchase verification failed. Please try again. If issue persists, drop in an email at me\@niranjan.io</string>
     <string name="purchaseSuccess">Thank you for purchasing Show Java Pro ! :) You are awesome !</string>
     <string name="purchaseInitError">An error occurred while initializing purchase. Please try again later.</string>
-    <string name="deviceVerificationFailed">Device failed the verification for making in-app purchases on Show Java.</string>
+    <string name="deviceVerificationFailed">
+        Device failed the verification for making in-app purchases on Show Java.
+        (<xliff:g example="PIRATE_APP_CHECK" id="errorName">%1$s</xliff:g>)
+    </string>
+    <string name="deviceVerificationFailedPirateApp">
+        You cannot make in-app purchases on Show Java due to the presence of the app <xliff:g example="Lucky Patcher" id="appName">%1$s</xliff:g>
+        which is flagged as one that is used for piracy.
+    </string>
     <string name="adPreferences">Ads Preferences</string>
     <string name="adPreferencesSummary">Change your personalization preferences for Ads</string>
     <string name="initializing">Initializing</string>

@@ -60,11 +60,23 @@ class PurchaseActivity : BaseActivity() {
                     }
                 }
             },
-            { // Do not allow
+            { err, app ->// Do not allow
                 runOnUiThread {
                     isLoading(false)
                     buyButton.visibility = View.GONE
-                    Toast.makeText(context, R.string.deviceVerificationFailed, Toast.LENGTH_SHORT).show()
+                    if (app != null) {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.deviceVerificationFailedPirateApp, "${app.name} (${app.packageName})"),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.deviceVerificationFailed, err.name),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             },
             { // On Error

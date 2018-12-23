@@ -26,6 +26,8 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.github.javiersantos.piracychecker.*
 import com.github.javiersantos.piracychecker.enums.InstallerID
+import com.github.javiersantos.piracychecker.enums.PiracyCheckerError
+import com.github.javiersantos.piracychecker.enums.PirateApp
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.utils.RequestQueue
 import com.njlabs.showjava.utils.SingletonHolder
@@ -59,7 +61,7 @@ class SecureUtils(val context: Context) {
         return preferences as SecurePreferences
     }
 
-    fun isSafeExtended(allow: (() -> Unit), doNotAllow: (() -> Unit), onError: (() -> Unit)) {
+    fun isSafeExtended(allow: (() -> Unit), doNotAllow: ((PiracyCheckerError, PirateApp?) -> Unit), onError: (() -> Unit)) {
         Timber.d("[pa] isSafeExtended")
         context.piracyChecker {
             enableGooglePlayLicensing(BuildConfig.PLAY_LICENSE_KEY)
@@ -71,7 +73,7 @@ class SecureUtils(val context: Context) {
             callback {
                 doNotAllow { a, b ->
                     Timber.d("[isSafeExtended][doNotAllow] ${a.name} $b")
-                    doNotAllow()
+                    doNotAllow(a, b)
                 }
                 allow { allow() }
                 onError {
