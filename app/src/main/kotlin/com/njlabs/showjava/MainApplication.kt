@@ -36,6 +36,10 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
+
+
 
 
 class MainApplication : MultiDexApplication() {
@@ -69,6 +73,7 @@ class MainApplication : MultiDexApplication() {
         )
 
         Ads(this).init()
+        Fabric.with(this, Crashlytics())
 
         ViewPump.init(
             ViewPump.builder()

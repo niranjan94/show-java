@@ -46,6 +46,10 @@
         tools:replace="android:label,android:supportsRtl">
 
         <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="${crashlyticsApiKey}" />
+
+        <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="${admobAppId}" />
 

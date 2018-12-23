@@ -102,7 +102,7 @@ android {
         buildConfigField "Boolean", "IS_CI", "${isCi}"
         buildConfigField "Boolean", "EXTENDED_VALIDATION", "false"
 
-        manifestPlaceholders = [admobAppId: props.getProperty("admobAppId")]
+        manifestPlaceholders = [admobAppId: props.getProperty("admobAppId"), crashlyticsApiKey: props.getProperty("crashlyticsApiKey")]
     }
 
     compileOptions {
@@ -178,7 +178,7 @@ dependencies {
     // Firebase-related dependencies
     implementation "com.google.firebase:firebase-core:16.0.6"
     implementation "com.google.firebase:firebase-ads:17.1.2"
-    implementation "com.crashlytics.sdk.android:crashlytics:2.9.7"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.9.8"
 
     // AndroidX support libraries
     implementation "androidx.appcompat:appcompat:$androidxVersion"
