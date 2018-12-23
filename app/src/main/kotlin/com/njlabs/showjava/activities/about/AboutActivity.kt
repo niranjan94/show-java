@@ -38,7 +38,6 @@ class AboutActivity : BaseActivity() {
         }
 
         viewOpenSourceLicenses.setOnClickListener {
-            Crashlytics.getInstance().crash()
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             startActivity(Intent(context, OssLicensesMenuActivity::class.java))
         }

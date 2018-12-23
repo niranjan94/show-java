@@ -7,7 +7,6 @@ sudo: false
 env:
   global:
     - MALLOC_ARENA_MAX=1
-    - ANDROID_ABI=armeabi-v7a
   matrix:
   - API_LEVEL=25 SYS_IMAGE_TAG=google_apis ANDROID_ABI=arm64-v8a
   - API_LEVEL=24 SYS_IMAGE_TAG=google_apis ANDROID_ABI=arm64-v8a
@@ -48,5 +47,4 @@ before_script:
   - cp -f app/keys.properties.example app/keys.properties
 
 script:
-  - ./gradlew connectedAndroidTest --stacktrace
-  - ./gradlew assembleStandardRelease --stacktrace
+  - ./gradlew connectedAndroidTest --stacktrace -w
