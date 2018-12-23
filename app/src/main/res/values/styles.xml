@@ -24,6 +24,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

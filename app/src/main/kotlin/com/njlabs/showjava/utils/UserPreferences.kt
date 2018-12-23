@@ -32,6 +32,7 @@ class UserPreferences(private val prefs: SharedPreferences) {
 
     interface DEFAULTS {
         companion object {
+            const val CUSTOM_FONT = true
             const val DARK_MODE = false
             const val SHOW_MEMORY_USAGE = true
             const val SHOW_SYSTEM_APPS = false
@@ -44,6 +45,9 @@ class UserPreferences(private val prefs: SharedPreferences) {
 
     val ignoreLibraries: Boolean
         get() = prefs.getBoolean("ignoreLibraries", DEFAULTS.IGNORE_LIBRARIES)
+
+    val customFont: Boolean
+        get() = prefs.getBoolean("customFont", DEFAULTS.CUSTOM_FONT)
 
     val darkMode: Boolean
         get() = prefs.getBoolean("darkMode", DEFAULTS.DARK_MODE)

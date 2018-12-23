@@ -72,21 +72,12 @@ class MainApplication : MultiDexApplication() {
                 AppCompatDelegate.MODE_NIGHT_NO
         )
 
+        if (preferences.customFont) {
+            initCustomFont()
+        }
+
         Ads(this).init()
         Fabric.with(this, Crashlytics())
-
-        ViewPump.init(
-            ViewPump.builder()
-                .addInterceptor(
-                    CalligraphyInterceptor(
-                        CalligraphyConfig.Builder()
-                            .setDefaultFontPath("fonts/lato-light.ttf")
-                            .setFontAttrId(R.attr.fontPath)
-                            .build()
-                    )
-                )
-                .build()
-        )
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
@@ -127,5 +118,22 @@ class MainApplication : MultiDexApplication() {
     override fun onTerminate() {
         super.onTerminate()
         disposables.clear()
+    }
+
+    companion object {
+        fun initCustomFont() {
+            ViewPump.init(
+                ViewPump.builder()
+                    .addInterceptor(
+                        CalligraphyInterceptor(
+                            CalligraphyConfig.Builder()
+                                .setDefaultFontPath("fonts/lato-light.ttf")
+                                .setFontAttrId(R.attr.fontPath)
+                                .build()
+                        )
+                    )
+                    .build()
+            )
+        }
     }
 }

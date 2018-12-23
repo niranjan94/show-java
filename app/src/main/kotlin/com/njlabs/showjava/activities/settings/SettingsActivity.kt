@@ -29,10 +29,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.njlabs.showjava.MainApplication
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.UserPreferences
+import io.github.inflationx.viewpump.ViewPump
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -96,6 +98,21 @@ class SettingsActivity : BaseActivity() {
                     }
                     .setNegativeButton(android.R.string.no, null)
                     .show()
+                true
+            }
+
+            findPreference("customFont").setOnPreferenceChangeListener { _, newValue ->
+                if (newValue as Boolean) {
+                    MainApplication.initCustomFont()
+                } else {
+                    ViewPump.init(ViewPump.builder().build())
+                }
+                Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
+
+                activity.let {
+                    it.startActivity(Intent(it, SettingsActivity::class.java))
+                    it.finish()
+                }
                 true
             }
 

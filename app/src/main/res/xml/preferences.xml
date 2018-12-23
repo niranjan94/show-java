@@ -35,7 +35,14 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        android:title="@string/easeOfUse">
+        android:title="@string/userInterface">
+
+        <SwitchPreference
+            app:iconSpaceReserved="false"
+            android:key="customFont"
+            android:defaultValue="true"
+            android:summary="@string/useCustomFontSummary"
+            android:title="@string/useCustomFont" />
 
         <SwitchPreference
             app:iconSpaceReserved="false"

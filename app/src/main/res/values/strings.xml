@@ -161,4 +161,7 @@
     <string name="adPreferences">Ads Preferences</string>
     <string name="adPreferencesSummary">Change your personalization preferences for Ads</string>
     <string name="initializing">Initializing</string>
+    <string name="useCustomFont">Use custom font</string>
+    <string name="useCustomFontSummary">Choose between lato or system default font</string>
+    <string name="userInterface">User interface</string>
 </resources>
