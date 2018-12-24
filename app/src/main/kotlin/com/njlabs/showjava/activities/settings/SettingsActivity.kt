@@ -29,6 +29,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.njlabs.showjava.Constants
 import com.njlabs.showjava.MainApplication
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
@@ -38,6 +40,8 @@ import io.github.inflationx.viewpump.ViewPump
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+
+
 
 
 class SettingsActivity : BaseActivity() {
@@ -87,6 +91,7 @@ class SettingsActivity : BaseActivity() {
             }
 
             findPreference("clearSourceHistory").setOnPreferenceClickListener {
+                activity.firebaseAnalytics.logEvent(Constants.EVENTS.CLEAR_SOURCE_HISTORY, null)
                 AlertDialog.Builder(context!!)
                     .setTitle(getString(R.string.deleteSourceHistory))
                     .setMessage(getString(R.string.deleteSourceHistoryConfirm))
@@ -102,6 +107,10 @@ class SettingsActivity : BaseActivity() {
             }
 
             findPreference("customFont").setOnPreferenceChangeListener { _, newValue ->
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
+                activity.firebaseAnalytics.logEvent(Constants.EVENTS.CHANGE_FONT, bundle)
+
                 if (newValue as Boolean) {
                     MainApplication.initCustomFont()
                 } else {
@@ -117,6 +126,10 @@ class SettingsActivity : BaseActivity() {
             }
 
             findPreference("darkMode").setOnPreferenceChangeListener { _, newValue ->
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
+                activity.firebaseAnalytics.logEvent(Constants.EVENTS.TOGGLE_DARK_MODE, bundle)
+
                 AppCompatDelegate.setDefaultNightMode(
                     if (newValue as Boolean)
                         AppCompatDelegate.MODE_NIGHT_YES

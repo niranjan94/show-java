@@ -37,6 +37,7 @@ import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
@@ -57,6 +58,8 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     protected lateinit var context: AppCompatActivity
     protected lateinit var userPreferences: UserPreferences
     protected lateinit var secureUtils: SecureUtils
+    lateinit var firebaseAnalytics: FirebaseAnalytics
+
     protected val disposables = CompositeDisposable()
     protected var inEea = false
 
@@ -66,6 +69,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         super.onCreate(savedInstanceState)
         context = this
         inEea = ConsentInformation.getInstance(this).isRequestLocationInEeaOrUnknown
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         userPreferences = UserPreferences(getSharedPreferences(UserPreferences.NAME, Context.MODE_PRIVATE))
         secureUtils = SecureUtils.getInstance(applicationContext)

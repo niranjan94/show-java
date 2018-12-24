@@ -33,6 +33,8 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.adapters.getSystemBadge
@@ -42,6 +44,7 @@ import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.BaseDecompiler.Companion.isAvailable
 import com.njlabs.showjava.utils.sourceDir
+import com.njlabs.showjava.utils.toBundle
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -166,23 +169,28 @@ class DecompilerActivity : BaseActivity() {
     }
 
     private fun startProcess(view: View, decompiler: String, decompilerIndex: Int) {
-        BaseDecompiler.start(
-            hashMapOf(
-                "shouldIgnoreLibs" to userPreferences.ignoreLibraries,
-                "maxAttempts" to userPreferences.maxAttempts,
-                "chunkSize" to userPreferences.chunkSize,
-                "memoryThreshold" to userPreferences.memoryThreshold,
-                "decompiler" to decompiler,
-                "name" to packageInfo.name,
-                "label" to packageInfo.label,
-                "inputPackageFile" to packageInfo.filePath,
-                "type" to packageInfo.type.ordinal
-            )
+
+        val inputMap = hashMapOf(
+            "shouldIgnoreLibs" to userPreferences.ignoreLibraries,
+            "maxAttempts" to userPreferences.maxAttempts,
+            "chunkSize" to userPreferences.chunkSize,
+            "memoryThreshold" to userPreferences.memoryThreshold,
+            "decompiler" to decompiler,
+            "name" to packageInfo.name,
+            "label" to packageInfo.label,
+            "inputPackageFile" to packageInfo.filePath,
+            "type" to packageInfo.type.ordinal
         )
 
+        BaseDecompiler.start(inputMap)
+
+        firebaseAnalytics.logEvent(Constants.EVENTS.SELECT_DECOMPILER, hashMapOf(
+            FirebaseAnalytics.Param.VALUE to decompiler
+        ).toBundle())
+
+        firebaseAnalytics.logEvent(Constants.EVENTS.DECOMPILE_APP, inputMap.toBundle())
 
         val i = Intent(this, DecompilerProcessActivity::class.java)
-        // i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         i.putExtra("packageInfo", packageInfo)
         i.putExtra("decompilerIndex", decompilerIndex)
 

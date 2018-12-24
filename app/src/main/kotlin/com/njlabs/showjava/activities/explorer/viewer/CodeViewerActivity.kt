@@ -18,6 +18,8 @@
 
 package com.njlabs.showjava.activities.explorer.viewer
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -44,7 +46,13 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
         "yml" to "yaml",
         "md" to "markdown"
     )
-    private var darkMode = true
+
+    private lateinit var codeViewPreferences: SharedPreferences
+
+    private var wrapLine = false
+    private var zoomable = true
+    private var showLineNumbers = true
+    private var invertColors = true
 
     override fun init(savedInstanceState: Bundle?) {
 
@@ -83,6 +91,16 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
             language = it
         }
 
+        codeViewPreferences = getSharedPreferences(
+            "code_view_prefs",
+            Context.MODE_PRIVATE
+        )
+
+        wrapLine = codeViewPreferences.getBoolean("wrapLine", false)
+        zoomable = codeViewPreferences.getBoolean("zoomable", true)
+        showLineNumbers = codeViewPreferences.getBoolean("showLineNumbers", true)
+        invertColors = codeViewPreferences.getBoolean("invertColors", true)
+
         disposables.add(
             loadFile(file)
                 .subscribeOn(Schedulers.io())
@@ -91,10 +109,11 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
                 .subscribe { status ->
                     codeView.setCode(status.result)
                         .setLanguage(language)
-                        .setWrapLine(false)
+                        .setWrapLine(wrapLine)
+                        .setDarkMode(invertColors)
                         .setFontSize(14F)
-                        .setZoomEnabled(true)
-                        .setShowLineNumber(true)
+                        .setZoomEnabled(zoomable)
+                        .setShowLineNumber(showLineNumbers)
                         .setOnHighlightListener(this)
                         .load()
                 }
@@ -140,25 +159,29 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
         when (item.itemId) {
             R.id.wrap_text -> {
                 val newState = !item.isChecked
+                codeViewPreferences.edit().putBoolean("wrapLine", newState).apply()
                 codeView.setWrapLine(newState).apply()
                 item.isChecked = newState
                 return true
             }
             R.id.zoomable -> {
                 val newState = !item.isChecked
+                codeViewPreferences.edit().putBoolean("zoomable", newState).apply()
                 codeView.setZoomEnabled(newState)
                 item.isChecked = newState
                 return true
             }
             R.id.line_number -> {
                 val newState = !item.isChecked
+                codeViewPreferences.edit().putBoolean("showLineNumbers", newState).apply()
                 codeView.setShowLineNumber(newState).apply()
                 item.isChecked = newState
                 return true
             }
             R.id.invert_colors -> {
-                darkMode = !darkMode
-                codeView.setDarkMode(darkMode).apply()
+                invertColors = !invertColors
+                codeViewPreferences.edit().putBoolean("invertColors", invertColors).apply()
+                codeView.setDarkMode(invertColors).apply()
                 return true
             }
         }

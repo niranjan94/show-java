@@ -22,6 +22,9 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.net.ConnectivityManager
 import android.os.Build
+import android.os.Bundle
+import android.os.IBinder
+import android.os.Parcelable
 import java.io.File
 import java.io.InputStream
 import java.security.MessageDigest
@@ -123,4 +126,26 @@ fun getVersionCode(packageInfo: PackageInfo): Number {
         packageInfo.longVersionCode
     else
         packageInfo.versionCode
+}
+
+
+fun <V> Map<String, V>.toBundle(bundle: Bundle = Bundle()): Bundle = bundle.apply {
+    forEach {
+        val k = it.key
+        val v = it.value
+        when (v) {
+            is Bundle -> putBundle(k, v)
+            is Char -> putChar(k, v)
+            is Boolean -> putBoolean(k, v)
+            is CharArray -> putCharArray(k, v)
+            is CharSequence -> putCharSequence(k, v)
+            is Float -> putFloat(k, v)
+            is FloatArray -> putFloatArray(k, v)
+            is Int -> putInt(k, v)
+            is IntArray -> putIntArray(k, v)
+            is Short -> putShort(k, v)
+            is ShortArray -> putShortArray(k, v)
+            is String -> putString(k, v)
+        }
+    }
 }

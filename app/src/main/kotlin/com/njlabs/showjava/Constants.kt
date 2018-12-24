@@ -25,6 +25,16 @@ object Constants {
 
     const val STORAGE_PERMISSION_REQUEST = 1009
 
+    interface EVENTS {
+        companion object {
+            const val CLEAR_SOURCE_HISTORY = "clear_source_history"
+            const val CHANGE_FONT = "change_font"
+            const val TOGGLE_DARK_MODE = "toggle_dark_mode"
+            const val SELECT_DECOMPILER = "select_decompiler"
+            const val DECOMPILE_APP = "decompile_app"
+        }
+    }
+
     /**
      * Workers related constants
      */

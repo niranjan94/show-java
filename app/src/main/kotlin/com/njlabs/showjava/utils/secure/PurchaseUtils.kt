@@ -20,7 +20,9 @@ package com.njlabs.showjava.utils.secure
 
 import android.app.Activity
 import android.widget.Toast
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.R
+import com.njlabs.showjava.activities.BaseActivity
 import io.michaelrocks.paranoid.Obfuscate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -30,7 +32,7 @@ import timber.log.Timber
 
 @Obfuscate
 class PurchaseUtils(
-    private val activityContext: Activity,
+    private val activityContext: BaseActivity,
     val secureUtils: SecureUtils,
     val isLoading: (Boolean) -> Unit = {}
 ) {
@@ -133,6 +135,9 @@ class PurchaseUtils(
                         Timber.d("Verification done: %s", it.toString())
                         if (secureUtils.isPurchaseValid(purchase, it)) {
                             if (!secureUtils.hasPurchasedPro()) {
+                                activityContext.firebaseAnalytics.logEvent(
+                                    FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, null
+                                )
                                 Toast.makeText(
                                     activityContext,
                                     R.string.purchaseSuccess,

@@ -22,6 +22,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.utils.secure.PurchaseUtils
@@ -93,8 +94,10 @@ class PurchaseActivity : BaseActivity() {
     }
 
     private fun makePurchase() {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, null)
         purchaseUtils.checkout.whenReady(object : Checkout.EmptyListener() {
             override fun onReady(requests: BillingRequests) {
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.CHECKOUT_PROGRESS, null)
                 requests.purchase(
                     ProductTypes.IN_APP,
                     secureUtils.iapProductId,
