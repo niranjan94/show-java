@@ -20,7 +20,6 @@ package com.njlabs.showjava.activities.about
 
 import android.content.Intent
 import android.os.Bundle
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.R
@@ -36,6 +35,8 @@ class AboutActivity : BaseActivity() {
         if (BuildConfig.GIT_SHA.isNotEmpty()) {
             version.setText(R.string.appVersionExtendedWithHash)
         }
+
+        appInstanceId.text = getString(R.string.instanceId, mainApplication.instanceId)
 
         viewOpenSourceLicenses.setOnClickListener {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

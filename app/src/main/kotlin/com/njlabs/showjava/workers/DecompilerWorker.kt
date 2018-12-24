@@ -23,6 +23,7 @@ import androidx.work.Data
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.crashlytics.android.Crashlytics
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.JarExtractionWorker
 import com.njlabs.showjava.decompilers.JavaExtractionWorker
@@ -42,13 +43,17 @@ import java.util.concurrent.TimeUnit
 class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
 
     private var worker: BaseDecompiler? = null
+    private lateinit var step: String
     private val maxAttempts = params.inputData.getInt("maxAttempts", UserPreferences.DEFAULTS.MAX_ATTEMPTS)
 
     private val id: String = params.inputData.getString("id").toString()
     private val packageName: String = params.inputData.getString("name").toString()
     private val packageLabel: String = params.inputData.getString("label").toString()
     private val decompiler: String = params.inputData.getString("decompiler").toString()
+    private val chunkSize: Int = params.inputData.getInt("chunkSize", UserPreferences.DEFAULTS.CHUNK_SIZE)
+    private val memoryThreshold: Int = params.inputData.getInt("memoryThreshold", UserPreferences.DEFAULTS.MEMORY_THRESHOLD)
     private val inputPackageFile: File = File(params.inputData.getString("inputPackageFile"))
+
     private val decompilerExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     /**
@@ -56,12 +61,15 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
      */
     init {
         if (tags.contains("jar-extraction")) {
+            step = "jar-extraction"
             worker = JarExtractionWorker(context, params.inputData)
         }
         if (tags.contains("java-extraction")) {
+            step = "java-extraction"
             worker = JavaExtractionWorker(context, params.inputData)
         }
         if (tags.contains("resources-extraction")) {
+            step = "resources-extraction"
             worker = ResourcesExtractionWorker(context, params.inputData)
         }
     }
@@ -81,6 +89,13 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
         var ranOutOfMemory = false
         val notifier = ProcessNotifier(context, id)
             .withPackageInfo(packageName, packageLabel, inputPackageFile)
+
+        Crashlytics.setString("decompilation_step", step)
+        Crashlytics.setString("decompilation_decompiler", decompiler)
+        Crashlytics.setString("decompilation_package_name", packageName)
+        Crashlytics.setString("decompilation_package_label", packageLabel)
+        Crashlytics.setInt("decompilation_chunk_size", chunkSize)
+        Crashlytics.setInt("decompilation_memory_threshold", memoryThreshold)
 
         worker ?.let {
             try {
@@ -125,6 +140,13 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
                 Timber.e(e)
             }
         }
+
+        Crashlytics.setString("decompilation_step", "")
+        Crashlytics.setString("decompilation_decompiler", "")
+        Crashlytics.setString("decompilation_package_name", "")
+        Crashlytics.setString("decompilation_package_label", "")
+        Crashlytics.setInt("decompilation_chunk_size", -1)
+        Crashlytics.setInt("decompilation_memory_threshold", -1)
 
         return result
     }

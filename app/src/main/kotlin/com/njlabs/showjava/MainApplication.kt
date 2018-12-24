@@ -37,17 +37,18 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.iid.FirebaseInstanceId
 import io.fabric.sdk.android.Fabric
-
-
 
 
 class MainApplication : MultiDexApplication() {
 
     val disposables = CompositeDisposable()
+    lateinit var instanceId: String
 
     override fun onCreate() {
         super.onCreate()
+        instanceId = FirebaseInstanceId.getInstance().id
 
         PreferenceManager.setDefaultValues(
             applicationContext,
@@ -78,6 +79,7 @@ class MainApplication : MultiDexApplication() {
 
         Ads(this).init()
         Fabric.with(this, Crashlytics())
+        Crashlytics.setUserIdentifier(instanceId)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
