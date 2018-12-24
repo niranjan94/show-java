@@ -16,17 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.utils
+package com.njlabs.showjava.utils.ktx
 
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.net.ConnectivityManager
 import android.os.Build
-import android.os.Bundle
-import android.os.IBinder
-import android.os.Parcelable
-import java.io.File
-import java.io.InputStream
 import java.security.MessageDigest
 import java.text.Normalizer
 import java.text.SimpleDateFormat
@@ -35,14 +30,6 @@ import java.util.regex.Pattern
 
 private val NON_LATIN = Pattern.compile("[^\\w-]")
 private val WHITESPACE = Pattern.compile("[\\s]")
-
-fun InputStream.toFile(path: String) {
-    toFile(File(path))
-}
-
-fun InputStream.toFile(file: File) {
-    file.outputStream().use { this.copyTo(it) }
-}
 
 /**
  * Convert a [packageName] in dot.notation to a class reference (Eg. Lclass/reference)
@@ -126,26 +113,4 @@ fun getVersionCode(packageInfo: PackageInfo): Number {
         packageInfo.longVersionCode
     else
         packageInfo.versionCode
-}
-
-
-fun <V> Map<String, V>.toBundle(bundle: Bundle = Bundle()): Bundle = bundle.apply {
-    forEach {
-        val k = it.key
-        val v = it.value
-        when (v) {
-            is Bundle -> putBundle(k, v)
-            is Char -> putChar(k, v)
-            is Boolean -> putBoolean(k, v)
-            is CharArray -> putCharArray(k, v)
-            is CharSequence -> putCharSequence(k, v)
-            is Float -> putFloat(k, v)
-            is FloatArray -> putFloatArray(k, v)
-            is Int -> putInt(k, v)
-            is IntArray -> putIntArray(k, v)
-            is Short -> putShort(k, v)
-            is ShortArray -> putShortArray(k, v)
-            is String -> putString(k, v)
-        }
-    }
 }

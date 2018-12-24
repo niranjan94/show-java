@@ -21,7 +21,7 @@ package com.njlabs.showjava.activities.landing
 import android.content.Context
 import androidx.work.WorkManager
 import com.njlabs.showjava.data.SourceInfo
-import com.njlabs.showjava.utils.appStorage
+import com.njlabs.showjava.utils.ktx.appStorage
 import io.reactivex.Observable
 import timber.log.Timber
 import java.io.File

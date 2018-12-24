@@ -29,8 +29,8 @@ import com.googlecode.dex2jar.v3.DexExceptionHandler
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.UserPreferences
-import com.njlabs.showjava.utils.cleanMemory
-import com.njlabs.showjava.utils.toClassName
+import com.njlabs.showjava.utils.ktx.cleanMemory
+import com.njlabs.showjava.utils.ktx.toClassName
 import org.apache.commons.io.FilenameUtils
 import org.jf.dexlib2.DexFileFactory
 import org.jf.dexlib2.Opcodes

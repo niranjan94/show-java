@@ -2,30 +2,9 @@ package com.njlabs.showjava.utils
 
 import android.graphics.*
 import androidx.annotation.Nullable
+import com.njlabs.showjava.utils.ktx.getCircularBitmap
 import java.security.MessageDigest
 import kotlin.experimental.and
-
-/**
- * Get a circular [Bitmap] from the original
- *
- * Borrowed from: https://stackoverflow.com/a/46613094/1562480 (Yuriy Seredyuk)
- */
-fun Bitmap.getCircularBitmap(config: Bitmap.Config = Bitmap.Config.ARGB_8888): Bitmap {
-    // circle configuration
-    val circlePaint = Paint().apply { isAntiAlias = true }
-    val circleRadius = Math.max(width, height) / 2f
-
-    // output bitmap
-    val outputBitmapPaint = Paint(circlePaint).apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN) }
-    val outputBounds = Rect(0, 0, width, height)
-    val output = Bitmap.createBitmap(width, height, config)
-
-    return Canvas(output).run {
-        drawCircle(circleRadius, circleRadius, circleRadius, circlePaint)
-        drawBitmap(this@getCircularBitmap, outputBounds, outputBounds, outputBitmapPaint)
-        output
-    }
-}
 
 /**
  * Generate an Identicon [Bitmap] from the given seed [String]

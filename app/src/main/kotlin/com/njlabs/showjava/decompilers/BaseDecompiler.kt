@@ -28,8 +28,8 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.ProcessNotifier
 import com.njlabs.showjava.utils.UserPreferences
-import com.njlabs.showjava.utils.appStorage
-import com.njlabs.showjava.utils.cleanMemory
+import com.njlabs.showjava.utils.ktx.appStorage
+import com.njlabs.showjava.utils.ktx.cleanMemory
 import com.njlabs.showjava.utils.streams.ProgressStream
 import com.njlabs.showjava.workers.DecompilerWorker
 import io.reactivex.Observable

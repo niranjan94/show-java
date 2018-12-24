@@ -19,7 +19,7 @@
 package com.njlabs.showjava.activities.settings
 
 import android.content.Context
-import com.njlabs.showjava.utils.appStorage
+import com.njlabs.showjava.utils.ktx.appStorage
 import io.reactivex.Observable
 
 class SettingsHandler(private var context: Context) {

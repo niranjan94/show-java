@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.utils
+package com.njlabs.showjava.utils.ktx
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo

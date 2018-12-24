@@ -46,7 +46,7 @@ import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import com.njlabs.showjava.activities.settings.SettingsActivity
 import com.njlabs.showjava.utils.secure.SecureUtils
 import com.njlabs.showjava.utils.UserPreferences
-import com.njlabs.showjava.utils.checkDataConnection
+import com.njlabs.showjava.utils.ktx.checkDataConnection
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.disposables.CompositeDisposable
 import pub.devrel.easypermissions.AppSettingsDialog

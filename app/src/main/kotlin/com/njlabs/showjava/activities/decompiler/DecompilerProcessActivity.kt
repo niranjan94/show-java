@@ -44,7 +44,7 @@ import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.SourceInfo
-import com.njlabs.showjava.utils.sourceDir
+import com.njlabs.showjava.utils.ktx.sourceDir
 import com.njlabs.showjava.workers.DecompilerWorker
 import timber.log.Timber
 
@@ -159,7 +159,11 @@ class DecompilerProcessActivity : BaseActivity() {
                 }
                 hasPassed -> {
                     val intent = Intent(context, NavigatorActivity::class.java)
-                    intent.putExtra("selectedApp", SourceInfo.from(sourceDir(packageInfo.name)))
+                    intent.putExtra("selectedApp", SourceInfo.from(
+                        sourceDir(
+                            packageInfo.name
+                        )
+                    ))
                     startActivity(intent)
                     hasCompleted = true
                     finish()

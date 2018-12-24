@@ -21,7 +21,7 @@ package com.njlabs.showjava.activities.apps
 import android.content.Context
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
-import com.njlabs.showjava.utils.isSystemPackage
+import com.njlabs.showjava.utils.ktx.isSystemPackage
 import com.njlabs.showjava.utils.rx.ProcessStatus
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter

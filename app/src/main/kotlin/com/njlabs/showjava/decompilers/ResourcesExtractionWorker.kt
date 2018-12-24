@@ -29,8 +29,8 @@ import androidx.work.ListenableWorker
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
-import com.njlabs.showjava.utils.cleanMemory
-import com.njlabs.showjava.utils.toFile
+import com.njlabs.showjava.utils.ktx.cleanMemory
+import com.njlabs.showjava.utils.ktx.toFile
 import jadx.api.JadxArgs
 import jadx.api.JadxDecompiler
 import net.dongliu.apk.parser.AbstractApkFile

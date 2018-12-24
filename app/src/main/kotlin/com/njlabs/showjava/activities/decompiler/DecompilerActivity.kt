@@ -43,8 +43,8 @@ import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.decompilers.BaseDecompiler.Companion.isAvailable
-import com.njlabs.showjava.utils.sourceDir
-import com.njlabs.showjava.utils.toBundle
+import com.njlabs.showjava.utils.ktx.sourceDir
+import com.njlabs.showjava.utils.ktx.toBundle
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers

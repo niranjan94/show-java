@@ -36,6 +36,7 @@ import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.receivers.DecompilerActionReceiver
+import com.njlabs.showjava.utils.ktx.sourceDir
 import java.io.File
 
 
@@ -224,7 +225,11 @@ class ProcessNotifier(
 
     fun success() {
         val intent = Intent(context, NavigatorActivity::class.java)
-        intent.putExtra("selectedApp", SourceInfo.from(sourceDir(packageName)))
+        intent.putExtra("selectedApp", SourceInfo.from(
+            sourceDir(
+                packageName
+            )
+        ))
         complete(
             intent,
             context.getString(R.string.appHasBeenDecompiled, packageLabel),

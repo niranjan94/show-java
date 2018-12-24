@@ -41,7 +41,7 @@ class ProcessStatus<T> {
 
     constructor(result: T) {
         this.progress = 1f
-        this.status = "Finalising …"
+        this.status = ""
         this.secondaryStatus = ""
         this.result = result
     }

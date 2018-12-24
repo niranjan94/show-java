@@ -24,9 +24,9 @@ import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
 import com.njlabs.showjava.utils.Identicon
-import com.njlabs.showjava.utils.getVersion
-import com.njlabs.showjava.utils.isSystemPackage
-import com.njlabs.showjava.utils.jarPackageName
+import com.njlabs.showjava.utils.ktx.getVersion
+import com.njlabs.showjava.utils.ktx.isSystemPackage
+import com.njlabs.showjava.utils.ktx.jarPackageName
 import java.io.File
 
 /**

@@ -20,8 +20,8 @@ package com.njlabs.showjava.data
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.njlabs.showjava.utils.getDate
-import com.njlabs.showjava.utils.sourceDir
+import com.njlabs.showjava.utils.ktx.getDate
+import com.njlabs.showjava.utils.ktx.sourceDir
 import org.apache.commons.io.FileUtils
 import org.json.JSONException
 import org.json.JSONObject
