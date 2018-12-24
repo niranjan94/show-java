@@ -27,8 +27,8 @@ apply plugin: "ru.tinkoff.gradle.jarjar"
 
 def versionMajor = 3
 def versionMinor = 0
-def versionPatch = 3
-def versionBuild = 0
+def versionPatch = 4
+def versionBuild = 1
 
 def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
