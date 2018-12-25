@@ -31,17 +31,13 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.Constants
-import com.njlabs.showjava.MainApplication
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.UserPreferences
-import io.github.inflationx.viewpump.ViewPump
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-
-
 
 
 class SettingsActivity : BaseActivity() {
@@ -110,14 +106,7 @@ class SettingsActivity : BaseActivity() {
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
                 activity.firebaseAnalytics.logEvent(Constants.EVENTS.CHANGE_FONT, bundle)
-
-                if (newValue as Boolean) {
-                    MainApplication.initCustomFont()
-                } else {
-                    ViewPump.init(ViewPump.builder().build())
-                }
                 Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
-
                 activity.let {
                     it.startActivity(Intent(it, SettingsActivity::class.java))
                     it.finish()

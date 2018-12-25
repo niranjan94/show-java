@@ -47,7 +47,6 @@ import com.njlabs.showjava.activities.settings.SettingsActivity
 import com.njlabs.showjava.utils.secure.SecureUtils
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.ktx.checkDataConnection
-import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.disposables.CompositeDisposable
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -79,6 +78,10 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         userPreferences = UserPreferences(getSharedPreferences(UserPreferences.NAME, Context.MODE_PRIVATE))
         secureUtils = SecureUtils.getInstance(applicationContext)
 
+        if (userPreferences.customFont) {
+            context.theme.applyStyle(R.style.LatoFontStyle, true)
+        }
+
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             EasyPermissions.requestPermissions(
                 this,
@@ -91,10 +94,6 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
             init(savedInstanceState)
             postPermissionsGrant()
         }
-    }
-
-    override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(newBase?.let { ViewPumpContextWrapper.wrap(it) })
     }
 
     fun setupLayout(layoutRef: Int) {

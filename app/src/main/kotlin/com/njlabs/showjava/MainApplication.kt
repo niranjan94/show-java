@@ -29,9 +29,6 @@ import androidx.work.WorkManager
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.logging.ProductionTree
-import io.github.inflationx.calligraphy3.CalligraphyConfig
-import io.github.inflationx.calligraphy3.CalligraphyInterceptor
-import io.github.inflationx.viewpump.ViewPump
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -72,10 +69,6 @@ class MainApplication : MultiDexApplication() {
             else
                 AppCompatDelegate.MODE_NIGHT_NO
         )
-
-        if (preferences.customFont) {
-            initCustomFont()
-        }
 
         Ads(this).init()
         Fabric.with(this, Crashlytics())
@@ -120,22 +113,5 @@ class MainApplication : MultiDexApplication() {
     override fun onTerminate() {
         super.onTerminate()
         disposables.clear()
-    }
-
-    companion object {
-        fun initCustomFont() {
-            ViewPump.init(
-                ViewPump.builder()
-                    .addInterceptor(
-                        CalligraphyInterceptor(
-                            CalligraphyConfig.Builder()
-                                .setDefaultFontPath("fonts/lato-light.ttf")
-                                .setFontAttrId(R.attr.fontPath)
-                                .build()
-                        )
-                    )
-                    .build()
-            )
-        }
     }
 }

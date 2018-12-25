@@ -251,8 +251,6 @@ dependencies {
     // Everybody else
     //noinspection GradleDependency
     implementation "commons-io:commons-io:2.5" // Fix to 2.5 for compatibility
-    implementation "io.github.inflationx:calligraphy3:3.0.0"
-    implementation "io.github.inflationx:viewpump:1.0.0"
     implementation "com.jakewharton.timber:timber:4.7.1"
     implementation("org.solovyev.android:checkout:1.0.1", {
         exclude group: "com.google.code.findbugs", module: "jsr305"
