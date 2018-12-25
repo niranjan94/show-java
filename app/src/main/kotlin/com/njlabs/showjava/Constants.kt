@@ -32,6 +32,7 @@ object Constants {
             const val TOGGLE_DARK_MODE = "toggle_dark_mode"
             const val SELECT_DECOMPILER = "select_decompiler"
             const val DECOMPILE_APP = "decompile_app"
+            const val REPORT_APP_LOW_MEMORY = "report_app_low_memory"
         }
     }
 
