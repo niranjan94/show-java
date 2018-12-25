@@ -278,7 +278,11 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
         }
 
         return successIf(
-            outputJarFiles.listFiles().isNotEmpty() || outputDexFiles.listFiles().isNotEmpty()
+            try {
+                outputJarFiles.listFiles().isNotEmpty() || outputDexFiles.listFiles().isNotEmpty()
+            } catch (e: IllegalStateException) {
+                false
+            }
         )
     }
 }
