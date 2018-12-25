@@ -21,10 +21,10 @@ package com.njlabs.showjava.activities.settings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.preference.ListPreference
 import android.view.Menu
 import android.view.View
 import android.widget.Toast
+import androidx.preference.ListPreference
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.Preference
@@ -50,6 +50,7 @@ class SettingsActivity : BaseActivity() {
             .commit()
     }
 
+
     class PrefsFragment : PreferenceFragmentCompat() {
 
         private lateinit var settingsHandler: SettingsHandler
@@ -57,6 +58,8 @@ class SettingsActivity : BaseActivity() {
 
         private var progressBarView: View? = null
         private var containerView: View? = null
+
+        private val numericKeys = arrayOf("chunkSize", "maxAttempts", "memoryThreshold")
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             preferenceManager.sharedPreferencesName = UserPreferences.NAME
@@ -160,22 +163,29 @@ class SettingsActivity : BaseActivity() {
                 deleteSubscription.dispose()
             }
         }
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        return true
-    }
+        private fun numberCheck(newValue: Any): Boolean {
+            return if (newValue.toString().trim() != "" && newValue.toString().trim().matches("\\d*".toRegex())) {
+                true
+            } else {
+                Toast.makeText(activity, R.string.onlyPositiveIntegersAllowed, Toast.LENGTH_SHORT).show()
+                false
+            }
+        }
 
-    companion object {
-        private val sBindPreferenceSummaryToValueListener =
+        private val bindPreferenceSummaryToValueListener =
             Preference.OnPreferenceChangeListener { preference, value ->
+                if (numericKeys.contains(preference.key) && !numberCheck(value)) {
+                    return@OnPreferenceChangeListener false
+                }
+
                 var stringValue = value.toString()
                 if (preference is ListPreference) {
                     val index = preference.findIndexOfValue(stringValue)
                     stringValue = if (index >= 0) preference.entries[index].toString() else ""
                 }
                 if (stringValue != "") {
-                    preference.summary = stringValue
+                    preference.summary = stringValue.trim()
                     return@OnPreferenceChangeListener true
                 }
                 preference.summary = null
@@ -183,12 +193,16 @@ class SettingsActivity : BaseActivity() {
             }
 
         private fun bindPreferenceSummaryToValue(preference: Preference) {
-            preference.onPreferenceChangeListener = sBindPreferenceSummaryToValueListener
-            sBindPreferenceSummaryToValueListener.onPreferenceChange(
+            preference.onPreferenceChangeListener = bindPreferenceSummaryToValueListener
+            bindPreferenceSummaryToValueListener.onPreferenceChange(
                 preference,
                 preference.context.getSharedPreferences(UserPreferences.NAME, Context.MODE_PRIVATE)
                     .getString(preference.key, "")!!
             )
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        return true
     }
 }

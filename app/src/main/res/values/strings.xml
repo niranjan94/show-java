@@ -172,4 +172,5 @@
     <string name="useCustomFontSummary">Choose between lato or system default font</string>
     <string name="userInterface">User interface</string>
     <string name="instanceId">(ID: <xliff:g example="abc134_GTF" id="instanceIdString">%1$s</xliff:g>)</string>
+    <string name="onlyPositiveIntegersAllowed">Only positive integers are allowed.</string>
 </resources>
