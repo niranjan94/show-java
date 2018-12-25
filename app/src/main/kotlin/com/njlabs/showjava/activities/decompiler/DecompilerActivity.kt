@@ -126,6 +126,13 @@ class DecompilerActivity : BaseActivity() {
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .onErrorReturn {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        resources.getDrawable(R.drawable.ic_list_generic, null)
+                    } else {
+                        resources.getDrawable(R.drawable.ic_list_generic)
+                    }
+                }
                 .subscribe { itemIcon.setImageDrawable(it) }
         )
 
@@ -134,7 +141,12 @@ class DecompilerActivity : BaseActivity() {
 
     private fun loadPackageInfoFromIntent() {
         if (intent.dataString.isNullOrEmpty()) {
-            packageInfo = intent.getParcelableExtra("packageInfo")
+            if (intent.hasExtra("packageInfo")) {
+                packageInfo = intent.getParcelableExtra("packageInfo")
+            } else {
+                Toast.makeText(context, R.string.errorLoadingInputFile, Toast.LENGTH_SHORT).show()
+                finish()
+            }
         } else {
             val info = PackageInfo.fromFile(
                 context,
