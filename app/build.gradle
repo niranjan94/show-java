@@ -186,13 +186,10 @@ dependencies {
     implementation "com.google.android.material:material:$androidxVersion"
     implementation "androidx.cardview:cardview:$androidxVersion"
     implementation "androidx.preference:preference:$androidxVersion"
-    implementation "androidx.legacy:legacy-support-v4:$androidxVersion"
     implementation "androidx.recyclerview:recyclerview:$androidxVersion"
-    implementation "androidx.legacy:legacy-support-core-utils:$androidxVersion"
     implementation "androidx.core:core:$androidxVersion"
-    implementation "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
     implementation "com.google.android.gms:play-services-oss-licenses:16.0.1"
-    implementation 'com.google.android.ads.consent:consent-library:1.0.6'
+    implementation "com.google.android.ads.consent:consent-library:1.0.6"
     implementation "com.android.volley:volley:1.1.1"
 
     // Android WorkManager
@@ -231,7 +228,7 @@ dependencies {
     implementation "net.dongliu:apk-parser:2.6.4"
 
     // Fernflower decompiler
-    implementation 'com.github.fesh0r:fernflower:2c2b00b369'
+    implementation "com.github.fesh0r:fernflower:2c2b00b369"
 
     // RxAndroid & friends
     implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
