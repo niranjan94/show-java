@@ -172,7 +172,10 @@ class LandingActivity : BaseActivity() {
         disposables.add(landingHandler.loadHistory()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError { Timber.e(it) }
+            .onErrorReturn {
+                Timber.e(it)
+                ArrayList()
+            }
             .subscribe {
                 historyItems = it
                 swipeRefresh.isRefreshing = false

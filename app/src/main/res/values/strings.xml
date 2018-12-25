@@ -174,4 +174,6 @@
     <string name="instanceId">(ID: <xliff:g example="abc134_GTF" id="instanceIdString">%1$s</xliff:g>)</string>
     <string name="onlyPositiveIntegersAllowed">Only positive integers are allowed</string>
     <string name="errorLoadingInputFile">Error loading input file</string>
+    <string name="genericError">An unexpected error occurred</string>
+    <string name="errorLoadingFiles">An error occurred while loading files</string>
 </resources>

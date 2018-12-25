@@ -22,7 +22,6 @@ import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Typeface
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
@@ -46,7 +45,6 @@ import com.njlabs.showjava.decompilers.BaseDecompiler.Companion.isAvailable
 import com.njlabs.showjava.utils.ktx.sourceDir
 import com.njlabs.showjava.utils.ktx.toBundle
 import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_decompiler.*
@@ -121,8 +119,8 @@ class DecompilerActivity : BaseActivity() {
         }
 
         disposables.add(
-            Observable.create { emitter: ObservableEmitter<Drawable> ->
-                emitter.onNext(packageInfo.loadIcon(context))
+            Observable.fromCallable {
+                packageInfo.loadIcon(context)
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -196,9 +194,11 @@ class DecompilerActivity : BaseActivity() {
 
         BaseDecompiler.start(inputMap)
 
-        firebaseAnalytics.logEvent(Constants.EVENTS.SELECT_DECOMPILER, hashMapOf(
-            FirebaseAnalytics.Param.VALUE to decompiler
-        ).toBundle())
+        firebaseAnalytics.logEvent(
+            Constants.EVENTS.SELECT_DECOMPILER, hashMapOf(
+                FirebaseAnalytics.Param.VALUE to decompiler
+            ).toBundle()
+        )
 
         firebaseAnalytics.logEvent(Constants.EVENTS.DECOMPILE_APP, inputMap.toBundle())
 

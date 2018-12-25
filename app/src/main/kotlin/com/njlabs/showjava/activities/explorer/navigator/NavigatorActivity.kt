@@ -104,7 +104,11 @@ class NavigatorActivity : BaseActivity() {
         disposables.add(navigationHandler.loadFiles(startDirectory)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError { Timber.e(it) }
+            .onErrorReturn {
+                Timber.e(it)
+                Toast.makeText(context, R.string.errorLoadingFiles, Toast.LENGTH_SHORT).show()
+                ArrayList()
+            }
             .subscribe {
                 updateList(it)
                 swipeRefresh.isRefreshing = false
@@ -226,7 +230,12 @@ class NavigatorActivity : BaseActivity() {
         return currentDirectory?.canonicalPath == selectedApp?.sourceDirectory?.canonicalPath
     }
 
-    private fun shareArchive(file: File) {
+    private fun shareArchive(file: File?) {
+        if (file == null) {
+            Toast.makeText(context, R.string.genericError, Toast.LENGTH_SHORT).show()
+            return
+        }
+
         dismissProgressDialog()
         val shareIntent = Intent()
         shareIntent.action = Intent.ACTION_SEND
@@ -277,7 +286,10 @@ class NavigatorActivity : BaseActivity() {
                 )
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnError { Timber.e(it) }
+                    .onErrorReturn {
+                        Timber.e(it)
+                        null
+                    }
                     .subscribe {
                         sourceArchive = it
                         shareArchive(it)

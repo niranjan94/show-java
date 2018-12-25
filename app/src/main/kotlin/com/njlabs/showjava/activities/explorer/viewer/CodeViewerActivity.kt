@@ -28,14 +28,11 @@ import android.view.MenuItem
 import android.view.View
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
-import com.njlabs.showjava.utils.rx.ProcessStatus
 import com.njlabs.showjava.utils.views.CodeView
 import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_code_viewer.*
-import timber.log.Timber
 import java.io.File
 
 class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
@@ -105,9 +102,11 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
             loadFile(file)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError { error -> Timber.e(error) }
-                .subscribe { status ->
-                    codeView.setCode(status.result)
+                .onErrorReturn {
+                    it.localizedMessage
+                }
+                .subscribe { fileContent ->
+                    codeView.setCode(fileContent)
                         .setLanguage(language)
                         .setWrapLine(wrapLine)
                         .setDarkMode(invertColors)
@@ -120,10 +119,9 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
         )
     }
 
-    private fun loadFile(fileToLoad: File): Observable<ProcessStatus<String>> {
-        return Observable.create { emitter: ObservableEmitter<ProcessStatus<String>> ->
-            emitter.onNext(ProcessStatus(fileToLoad.readText()))
-            emitter.onComplete()
+    private fun loadFile(fileToLoad: File): Observable<String> {
+        return Observable.fromCallable {
+            fileToLoad.readText()
         }
     }
 
