@@ -9,4 +9,4 @@ purchaseVerifierPath=check/buy
 privacyPolicyUrl=https://example.com/privacy-policy/
 minifyEnabled=true
 shrinkResources=true
-crashlyticsApiKey=xyz
+crashlyticsApiKey=$CRASHLYTICS_API_KEY
