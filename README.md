@@ -46,8 +46,7 @@ JaDX and Fernflower use newer Java features such as some types of lambda's which
 |------------:|:------------------:|:------------------:|:------------------:|
 | ICS & Above | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
-> Available from the [Play Store](https://play.google.com/store/apps/details?id=com.njlabs.showjava) on all Android devices running ICS.<br>
-> Can also be downloaded from [here](https://github.com/niranjan94/show-java/releases/tag/v2.1.0).
+> Can be downloaded from [here](https://github.com/niranjan94/show-java/releases/tag/v2.1.0).
 
 ## Contributing to ShowJava
 
