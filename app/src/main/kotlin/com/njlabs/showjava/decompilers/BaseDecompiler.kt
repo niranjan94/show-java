@@ -74,6 +74,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     private val disposables = CompositeDisposable()
     private var onLowMemory: ((Boolean) -> Unit)? = null
     private var memoryThresholdCrossCount = 0
+    protected open val maxMemoryAdjustmentFactor = 1.25
 
     init {
         @Suppress("LeakingThis")
@@ -121,7 +122,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    val maxAdjusted = Runtime.getRuntime().maxMemory() / 1.25
+                    val maxAdjusted = Runtime.getRuntime().maxMemory() / maxMemoryAdjustmentFactor
                     val used = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()).toDouble().let { m ->
                         if (m > maxAdjusted) maxAdjusted else m
                     }
@@ -129,13 +130,13 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
                     Timber.d("[mem] ----")
                     Timber.d("[mem] Used: ${FileUtils.byteCountToDisplaySize(used.toLong())}")
-                    Timber.d("[mem] Max: ${FileUtils.byteCountToDisplaySize(maxAdjusted.toLong())}")
+                    Timber.d("[mem] Max: ${FileUtils.byteCountToDisplaySize(maxAdjusted.toLong())} at factor $maxMemoryAdjustmentFactor")
                     Timber.d("[mem] Used %: $usedPercentage")
 
                     broadcastStatus("memory", "%.2f".format(usedPercentage), "memory")
 
                     if (usedPercentage > memoryThreshold) {
-                        if (memoryThresholdCrossCount > 2) {
+                        if (memoryThresholdCrossCount > 1) {
                             onLowMemory?.invoke(true)
                         } else {
                             memoryThresholdCrossCount++
