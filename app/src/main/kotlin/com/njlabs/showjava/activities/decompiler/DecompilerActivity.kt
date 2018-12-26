@@ -118,6 +118,10 @@ class DecompilerActivity : BaseActivity() {
             systemAppWarning.text = sb
         }
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            decompilersUnavailableNotification.visibility = View.VISIBLE
+        }
+
         disposables.add(
             Observable.fromCallable {
                 packageInfo.loadIcon(context)

@@ -156,8 +156,17 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/systemAppWarning"
+        android:id="@+id/decompilersUnavailableNotification"
         android:layout_below="@id/primaryLayout"
+        android:layout_width="match_parent"
+        android:padding="8dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/decompilersUnavailable" />
+
+    <TextView
+        android:id="@+id/systemAppWarning"
+        android:layout_below="@id/decompilersUnavailableNotification"
         android:layout_width="match_parent"
         android:padding="8dp"
         android:layout_height="wrap_content"

@@ -176,4 +176,5 @@
     <string name="errorLoadingInputFile">Error loading input file</string>
     <string name="genericError">An unexpected error occurred</string>
     <string name="errorLoadingFiles">An error occurred while loading files</string>
+    <string name="decompilersUnavailable">JaDX and Fernflower decompilers are available only on android devices running Android 7.0 and above.</string>
 </resources>
