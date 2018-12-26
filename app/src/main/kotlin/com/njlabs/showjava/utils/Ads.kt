@@ -19,6 +19,7 @@
 package com.njlabs.showjava.utils
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -68,7 +69,9 @@ class Ads(val context: Context) {
         consentForm = ConsentForm.Builder(context, URL(context.getString(R.string.privacyPolicyUrl)))
             .withListener(object : ConsentFormListener() {
                 override fun onConsentFormLoaded() {
-                    consentForm.show()
+                    if (context is Activity && !context.isFinishing) {
+                        consentForm.show()
+                    }
                 }
 
                 override fun onConsentFormOpened() {
