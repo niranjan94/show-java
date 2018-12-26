@@ -93,7 +93,7 @@
             android:inputType="number"
             android:key="memoryThreshold"
             android:numeric="integer"
-            android:defaultValue="80"
+            android:defaultValue="90"
             android:maxLines="1"
             android:singleLine="true"
             android:title="@string/memoryThreshold" />

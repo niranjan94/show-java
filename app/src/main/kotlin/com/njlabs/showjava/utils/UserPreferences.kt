@@ -36,7 +36,7 @@ class UserPreferences(private val prefs: SharedPreferences) {
             const val DARK_MODE = false
             const val SHOW_MEMORY_USAGE = true
             const val SHOW_SYSTEM_APPS = false
-            const val MEMORY_THRESHOLD = 80
+            const val MEMORY_THRESHOLD = 90
             const val IGNORE_LIBRARIES = true
             const val CHUNK_SIZE = 500
             const val MAX_ATTEMPTS = 2

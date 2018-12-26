@@ -120,15 +120,15 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    val maxAdjusted = Runtime.getRuntime().maxMemory() / 2
-                    val used = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()).let { m ->
+                    val maxAdjusted = Runtime.getRuntime().maxMemory() / 1.25
+                    val used = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()).toDouble().let { m ->
                         if (m > maxAdjusted) maxAdjusted else m
                     }
-                    val usedPercentage = (used.toDouble() / maxAdjusted.toDouble()) * 100
+                    val usedPercentage = (used / maxAdjusted) * 100
 
                     Timber.d("[mem] ----")
-                    Timber.d("[mem] Used: ${FileUtils.byteCountToDisplaySize(used)}")
-                    Timber.d("[mem] Max: ${FileUtils.byteCountToDisplaySize(maxAdjusted)}")
+                    Timber.d("[mem] Used: ${FileUtils.byteCountToDisplaySize(used.toLong())}")
+                    Timber.d("[mem] Max: ${FileUtils.byteCountToDisplaySize(maxAdjusted.toLong())}")
                     Timber.d("[mem] Used %: $usedPercentage")
 
                     broadcastStatus("memory", "%.2f".format(usedPercentage), "memory")
