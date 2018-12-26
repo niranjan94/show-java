@@ -138,14 +138,20 @@
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/adView"
+        android:layout_above="@+id/adViewHolder"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="14dp"
         android:text="@string/cancel"
         android:textColor="@color/grey_400" />
 
-    <include
-        android:id="@+id/adView"
-        layout="@layout/layout_admob" />
+    <FrameLayout
+        android:id="@+id/adViewHolder"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include
+            android:id="@+id/adView"
+            layout="@layout/layout_admob" />
+    </FrameLayout>
 
 </RelativeLayout>

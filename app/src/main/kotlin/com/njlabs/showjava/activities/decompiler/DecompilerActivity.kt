@@ -92,7 +92,7 @@ class DecompilerActivity : BaseActivity() {
 
         decompilersValues.forEachIndexed { index, decompiler ->
             if (!isAvailable(decompiler)) {
-                return
+                return@forEachIndexed
             }
             val view = LayoutInflater.from(pickerList.context)
                 .inflate(R.layout.layout_pick_decompiler_list_item, pickerList, false)
