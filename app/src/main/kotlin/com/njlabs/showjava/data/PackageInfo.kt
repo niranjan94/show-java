@@ -28,6 +28,7 @@ import com.njlabs.showjava.utils.ktx.getVersion
 import com.njlabs.showjava.utils.ktx.isSystemPackage
 import com.njlabs.showjava.utils.ktx.jarPackageName
 import java.io.File
+import java.lang.NullPointerException
 
 /**
  * [PackageInfo] holds information about an apk/jar/dex file in preparation for sending it for
@@ -117,7 +118,7 @@ class PackageInfo() : Parcelable {
         /**
          * Get [PackageInfo] for an apk using the [context] and the [file].
          */
-        private fun fromApk(context: Context, file: File): PackageInfo {
+        private fun fromApk(context: Context, file: File): PackageInfo? {
             val pack = context.packageManager.getPackageArchiveInfo(file.canonicalPath, 0)
             return PackageInfo(
                 pack.applicationInfo.loadLabel(context.packageManager).toString(),
@@ -132,7 +133,7 @@ class PackageInfo() : Parcelable {
         /**
          * Get [PackageInfo] for a jar from the [file].
          */
-        private fun fromJar(file: File, type: Type = Type.JAR): PackageInfo {
+        private fun fromJar(file: File, type: Type = Type.JAR): PackageInfo? {
             return PackageInfo(
                 file.name,
                 jarPackageName(file.name),
@@ -145,7 +146,7 @@ class PackageInfo() : Parcelable {
         /**
          * Get [PackageInfo] for a dex from the [file].
          */
-        private fun fromDex(file: File): PackageInfo {
+        private fun fromDex(file: File): PackageInfo? {
             return fromJar(file, Type.DEX)
         }
 
@@ -154,11 +155,15 @@ class PackageInfo() : Parcelable {
          * Get [PackageInfo] from a [file].
          */
         fun fromFile(context: Context, file: File): PackageInfo? {
-            return when(file.extension) {
-                "apk" -> fromApk(context, file)
-                "jar" -> fromJar(file)
-                "dex", "odex" -> fromDex(file)
-                else -> null
+            return try {
+                when(file.extension) {
+                    "apk" -> fromApk(context, file)
+                    "jar" -> fromJar(file)
+                    "dex", "odex" -> fromDex(file)
+                    else -> null
+                }
+            } catch (e: NullPointerException) {
+                null
             }
         }
 
