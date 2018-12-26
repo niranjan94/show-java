@@ -73,6 +73,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
     private val disposables = CompositeDisposable()
     private var onLowMemory: ((Boolean) -> Unit)? = null
+    private var memoryThresholdCrossCount = 0
 
     init {
         @Suppress("LeakingThis")
@@ -134,7 +135,13 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
                     broadcastStatus("memory", "%.2f".format(usedPercentage), "memory")
 
                     if (usedPercentage > memoryThreshold) {
-                        onLowMemory?.invoke(true)
+                        if (memoryThresholdCrossCount > 2) {
+                            onLowMemory?.invoke(true)
+                        } else {
+                            memoryThresholdCrossCount++
+                        }
+                    } else {
+                        memoryThresholdCrossCount = 0
                     }
                 }
         )
