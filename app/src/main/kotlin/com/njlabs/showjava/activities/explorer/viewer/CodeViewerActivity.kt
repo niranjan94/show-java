@@ -144,11 +144,17 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
+
         menu.findItem(R.id.wrap_text).isVisible = true
         menu.findItem(R.id.invert_colors).isVisible = true
         menu.findItem(R.id.zoomable).isVisible = true
+
+        menu.findItem(R.id.wrap_text).isChecked = wrapLine
+        menu.findItem(R.id.zoomable).isChecked = zoomable
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             menu.findItem(R.id.line_number).isVisible = true
+            menu.findItem(R.id.line_number).isChecked = showLineNumbers
         }
         return true
     }
