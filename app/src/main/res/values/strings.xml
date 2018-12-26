@@ -146,7 +146,7 @@
     <string name="showMemoryUsageSummary">Display live app memory usage on the decompiler screen</string>
     <string name="lowMemory">Low memory</string>
     <string name="lowMemoryInfo">The selected decompiler ran out of RAM while attempting to decompile</string>
-    <string name="lowMemoryExtraInfo">Try reducing the classes per chunk (in settings) and/or pick another decompiler.</string>
+    <string name="lowMemoryExtraInfo">Try reducing the classes per chunk or increasing memory threshold and/or pick another decompiler.</string>
     <string name="lowMemoryStatusInfo">Ran out of RAM. Tap for more info.</string>
     <string name="memoryThreshold">Memory usage threshold (in %)</string>
     <string name="darkMode">Dark mode (Beta)</string>

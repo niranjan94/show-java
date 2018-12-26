@@ -118,7 +118,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
 
     private fun monitorMemory() {
         disposables.add(
-            Observable.interval(1, TimeUnit.SECONDS)
+            Observable.interval(1000, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe {
@@ -136,7 +136,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
                     broadcastStatus("memory", "%.2f".format(usedPercentage), "memory")
 
                     if (usedPercentage > memoryThreshold) {
-                        if (memoryThresholdCrossCount > 1) {
+                        if (memoryThresholdCrossCount > 2) {
                             onLowMemory?.invoke(true)
                         } else {
                             memoryThresholdCrossCount++
