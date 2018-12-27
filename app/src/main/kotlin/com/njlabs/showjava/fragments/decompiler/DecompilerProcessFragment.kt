@@ -40,12 +40,12 @@ import androidx.work.WorkStatus
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.decompiler.LowMemoryActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.utils.ktx.sourceDir
+import com.njlabs.showjava.utils.ktx.toBundle
 import com.njlabs.showjava.workers.DecompilerWorker
 import kotlinx.android.synthetic.main.fragment_decompiler_process.*
 import timber.log.Timber
@@ -109,12 +109,12 @@ class DecompilerProcessFragment: BaseFragment<ViewModel>() {
                     }
 
                     if (it.outputData.getBoolean("ranOutOfMemory", false)) {
-                        val intent = Intent(context, LowMemoryActivity::class.java)
-                        intent.putExtra("packageInfo", packageInfo)
-                        intent.putExtra("decompiler", decompilerValues[decompilerIndex])
-                        startActivity(intent)
+                        containerActivity.supportFragmentManager.popBackStack()
+                        containerActivity.gotoFragment(LowMemoryFragment(), mapOf(
+                            "packageInfo" to packageInfo,
+                            "decompiler" to decompilerValues[decompilerIndex]
+                        ).toBundle())
                         hasCompleted = true
-                        finish()
                     } else {
                         reconcileDecompilerStatus()
                     }

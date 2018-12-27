@@ -27,11 +27,10 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
-import androidx.core.view.MenuCompat
-import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import com.google.ads.consent.ConsentStatus
 import com.google.android.gms.ads.AdView
+import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.activities.purchase.PurchaseActivity
@@ -53,10 +52,17 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
     private var searchView: SearchView? = null
     private var searchMenuItem: MenuItem? = null
 
+    private var wasRestored = false
+
     private val currentFragment: Fragment?
         get() = supportFragmentManager.findFragmentById(R.id.fragmentHolder)
 
     override fun init(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            wasRestored = true
+            homeShouldOpenDrawer = it.getBoolean("homeShouldOpenDrawer", this.homeShouldOpenDrawer)
+        }
+
         setupLayout(R.layout.activity_container)
         navigationView.setNavigationItemSelectedListener {
             onOptionsItemSelected(it)
@@ -79,6 +85,7 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
             Ads(context).loadConsentScreen()
         }
 
+
         supportFragmentManager.addOnBackStackChangedListener {
             currentFragment?.let {
                 if (it is LandingFragment) {
@@ -88,6 +95,11 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
                 }
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("homeShouldOpenDrawer", homeShouldOpenDrawer)
     }
 
     private fun enableDrawerIcon(enable: Boolean) {
@@ -110,6 +122,10 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
     }
 
     override fun postPermissionsGrant() {
+        if (wasRestored) {
+            return
+        }
+
         var fragmentClass = LandingFragment::class.java.name
 
         if (intent.hasExtra("fragmentClass")) {
@@ -133,7 +149,7 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-            .replace(R.id.fragmentHolder, fragment.withMenu(menu))
+            .replace(R.id.fragmentHolder, fragment.withMenu(menu), Constants.FRAGMENT_TAG)
             .commit()
     }
 
@@ -200,7 +216,7 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-            .replace(R.id.fragmentHolder, fragment)
+            .replace(R.id.fragmentHolder, fragment, Constants.FRAGMENT_TAG)
             .addToBackStack(null)
             .commit()
     }

@@ -30,12 +30,12 @@ import androidx.core.app.NotificationCompat
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.ContainerActivity
-import com.njlabs.showjava.activities.decompiler.LowMemoryActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
 import com.njlabs.showjava.fragments.decompiler.DecompilerProcessFragment
+import com.njlabs.showjava.fragments.decompiler.LowMemoryFragment
 import com.njlabs.showjava.receivers.DecompilerActionReceiver
 import com.njlabs.showjava.utils.ktx.sourceDir
 import java.io.File
@@ -214,9 +214,10 @@ class ProcessNotifier(
     }
 
     fun lowMemory(decompiler: String) {
-        val intent = Intent(context, LowMemoryActivity::class.java)
+        val intent = Intent(context, ContainerActivity::class.java)
         val packageInfo = PackageInfo.fromFile(context, packageFile)
         intent.putExtra("packageInfo", packageInfo)
+        intent.putExtra("fragmentClass", LowMemoryFragment::class.java.name)
         intent.putExtra("decompiler", decompiler)
         complete(
             intent,

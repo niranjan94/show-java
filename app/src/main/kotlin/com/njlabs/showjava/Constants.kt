@@ -24,6 +24,7 @@ package com.njlabs.showjava
 object Constants {
 
     const val STORAGE_PERMISSION_REQUEST = 1009
+    const val FRAGMENT_TAG = "com.njlabs.showjava.fragments.primary"
 
     interface EVENTS {
         companion object {
