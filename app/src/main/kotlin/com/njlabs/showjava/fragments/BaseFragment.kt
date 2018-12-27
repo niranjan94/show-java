@@ -83,6 +83,10 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
         init(savedInstanceState)
     }
 
+    fun finish() {
+        containerActivity.onBackPressed()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         disposables.clear()

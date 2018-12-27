@@ -198,11 +198,6 @@
         </activity>
 
         <activity
-            android:name=".activities.decompiler.DecompilerProcessActivity"
-            android:theme="@style/AppTheme.WithTransition">
-        </activity>
-
-        <activity
             android:name=".activities.decompiler.LowMemoryActivity">
         </activity>
 

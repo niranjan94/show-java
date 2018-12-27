@@ -19,18 +19,11 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.decompiler.DecompilerProcessActivity">
-
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/layout_toolbar" />
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/decompilerItemCard"
-        android:layout_below="@id/toolbar"
         layout="@layout/layout_pick_decompiler_list_item"
         android:layout_height="75dp"
         android:layout_width="match_parent" />
@@ -138,20 +131,10 @@
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/adViewHolder"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="14dp"
         android:text="@string/cancel"
         android:textColor="@color/grey_400" />
-
-    <FrameLayout
-        android:id="@+id/adViewHolder"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <include
-            android:id="@+id/adView"
-            layout="@layout/layout_admob" />
-    </FrameLayout>
 
 </RelativeLayout>

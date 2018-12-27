@@ -36,7 +36,6 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.decompiler.DecompilerProcessActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
@@ -160,7 +159,7 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
             this.packageInfo = packageInfo as PackageInfo
         } else {
             Toast.makeText(context, R.string.cannotDecompileFile, Toast.LENGTH_LONG).show()
-            containerActivity.onBackPressed()
+            finish()
         }
     }
 
@@ -210,18 +209,11 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
 
         firebaseAnalytics.logEvent(Constants.EVENTS.DECOMPILE_APP, inputMap.toBundle())
 
-        val i = Intent(context, DecompilerProcessActivity::class.java)
-        i.putExtra("packageInfo", packageInfo)
-        i.putExtra("decompilerIndex", decompilerIndex)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val options = ActivityOptions.makeSceneTransitionAnimation(
-                containerActivity, view, "decompilerItemCard"
-            )
-            startActivity(i, options.toBundle())
-        } else {
-            startActivity(i)
-        }
+        containerActivity.gotoFragment(DecompilerProcessFragment(), mapOf(
+            "packageInfo" to packageInfo,
+            "decompilerIndex" to decompilerIndex,
+            "fragmentClass" to DecompilerProcessFragment::class.java.name
+        ).toBundle())
     }
 
 }

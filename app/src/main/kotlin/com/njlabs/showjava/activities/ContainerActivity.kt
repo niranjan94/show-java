@@ -25,28 +25,23 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuCompat
+import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import com.google.ads.consent.ConsentStatus
 import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.activities.purchase.PurchaseActivity
-import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.fragments.BaseFragment
-import com.njlabs.showjava.fragments.apps.AppsFragment
 import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
 import com.njlabs.showjava.fragments.landing.LandingFragment
 import com.njlabs.showjava.fragments.settings.SettingsFragment
 import com.njlabs.showjava.utils.Ads
-import com.njlabs.showjava.utils.ktx.toBundle
 import com.njlabs.showjava.utils.secure.PurchaseUtils
 import kotlinx.android.synthetic.main.activity_container.*
-import java.io.File
-import java.net.URI
 
 
 class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
@@ -55,6 +50,8 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
 
     private var homeShouldOpenDrawer = true
     private var menu: Menu? = null
+    private var searchView: SearchView? = null
+    private var searchMenuItem: MenuItem? = null
 
     private val currentFragment: Fragment?
         get() = supportFragmentManager.findFragmentById(R.id.fragmentHolder)
@@ -115,7 +112,9 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
     override fun postPermissionsGrant() {
         var fragmentClass = LandingFragment::class.java.name
 
-        if (!intent.dataString.isNullOrEmpty() || intent.hasExtra("packageInfo")) {
+        if (intent.hasExtra("fragmentClass")) {
+            fragmentClass = intent.getStringExtra("fragmentClass")
+        } else if (!intent.dataString.isNullOrEmpty() || intent.hasExtra("packageInfo")) {
             fragmentClass = DecompilerFragment::class.java.name
         }
 
@@ -148,11 +147,16 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
         menuInflater.inflate(R.menu.menu_main, menu)
         this.menu = menu
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = menu.findItem(R.id.search)?.actionView as SearchView
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.isSubmitButtonEnabled = true
-        searchView.setOnQueryTextListener(this)
-        searchView.setOnCloseListener(this)
+        searchMenuItem = menu.findItem(R.id.search)
+        searchView = searchMenuItem?.actionView as SearchView?
+
+        searchView?.let {
+            it.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            it.isSubmitButtonEnabled = true
+            it.setOnQueryTextListener(this)
+            it.setOnCloseListener(this)
+        }
+
         return true
     }
 
@@ -199,6 +203,12 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
             .replace(R.id.fragmentHolder, fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    fun collapseSearch() {
+        searchView?.isIconified = true
+        searchView?.onActionViewCollapsed()
+        searchMenuItem?.collapseActionView()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

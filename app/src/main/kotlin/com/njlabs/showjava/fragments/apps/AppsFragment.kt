@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
@@ -42,6 +43,7 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
     private lateinit var historyListAdapter: AppsListAdapter
 
     private var searchMenuItem: MenuItem? = null
+    private var searchView: SearchView? = null
 
     private var apps = ArrayList<PackageInfo>()
     private var filteredApps = ArrayList<PackageInfo>()
@@ -50,6 +52,7 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
     override fun init(savedInstanceState: Bundle?) {
         withSystemApps = containerActivity.userPreferences.showSystemApps
         searchMenuItem = menu?.findItem(R.id.search)
+        searchView = menu?.findItem(R.id.search)?.actionView as SearchView?
 
         showList(false)
 
@@ -70,6 +73,7 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
         }
 
         typeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            containerActivity.collapseSearch()
             filterApps(checkedId)
         }
     }
@@ -114,7 +118,7 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
         appsList.setHasFixedSize(true)
         appsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         historyListAdapter = AppsListAdapter(apps) { selectedApp: PackageInfo, view: View ->
-            Timber.d(selectedApp.name)
+            containerActivity.collapseSearch()
             if (selectedApp.name.toLowerCase().contains(BuildConfig.APPLICATION_ID.toLowerCase())) {
                 Toast.makeText(context, getString(R.string.checkoutSourceLink), Toast.LENGTH_SHORT).show()
             }

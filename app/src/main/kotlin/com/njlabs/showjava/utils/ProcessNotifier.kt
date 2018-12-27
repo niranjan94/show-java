@@ -30,12 +30,12 @@ import androidx.core.app.NotificationCompat
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.ContainerActivity
-import com.njlabs.showjava.activities.decompiler.DecompilerProcessActivity
 import com.njlabs.showjava.activities.decompiler.LowMemoryActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
+import com.njlabs.showjava.fragments.decompiler.DecompilerProcessFragment
 import com.njlabs.showjava.receivers.DecompilerActionReceiver
 import com.njlabs.showjava.utils.ktx.sourceDir
 import java.io.File
@@ -81,9 +81,10 @@ class ProcessNotifier(
         stopIntent.putExtra("packageName", packageName)
         val pendingIntentForStop = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val viewIntent = Intent(context, DecompilerProcessActivity::class.java)
+        val viewIntent = Intent(context, ContainerActivity::class.java)
         viewIntent.putExtra("packageInfo", PackageInfo(packageLabel, packageName))
         viewIntent.putExtra("decompilerIndex", decompilerIndex)
+        viewIntent.putExtra("fragmentClass", DecompilerProcessFragment::class.java.name)
 
         val manager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val pendingIntentForView = PendingIntent.getActivity(
