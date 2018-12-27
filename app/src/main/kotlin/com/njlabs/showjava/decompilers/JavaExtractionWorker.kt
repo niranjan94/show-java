@@ -79,7 +79,7 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
         val jadx = JadxDecompiler(args)
         jadx.load()
         jadx.saveSources()
-        if (dexInputFiles.exists() && dexInputFiles.isDirectory) {
+        if (dexInputFiles.exists() && dexInputFiles.isDirectory && !keepIntermediateFiles) {
             dexInputFiles.deleteRecursively()
         }
     }
@@ -134,11 +134,11 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
             return exit(e)
         }
 
-        if (outputDexFiles.exists() && outputDexFiles.isDirectory) {
+        if (outputDexFiles.exists() && outputDexFiles.isDirectory && !keepIntermediateFiles) {
             outputDexFiles.deleteRecursively()
         }
 
-        if (outputJarFiles.exists() && outputJarFiles.isDirectory) {
+        if (outputJarFiles.exists() && outputJarFiles.isDirectory && !keepIntermediateFiles) {
             outputJarFiles.deleteRecursively()
         }
 

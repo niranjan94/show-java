@@ -177,4 +177,6 @@
     <string name="genericError">An unexpected error occurred</string>
     <string name="errorLoadingFiles">An error occurred while loading files</string>
     <string name="decompilersUnavailable">JaDX and Fernflower decompilers are available only on android devices running Android 7.0 and above.</string>
+    <string name="keepIntermediateFiles">Keep intermediate files</string>
+    <string name="keepIntermediateFilesSummary">Do not delete dex &amp; jar files created during the decompilation</string>
 </resources>

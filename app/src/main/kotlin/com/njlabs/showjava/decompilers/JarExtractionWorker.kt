@@ -220,7 +220,10 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
                         .verbose(verbose)
                     dex2jar.exceptionHandler = dexExceptionHandlerMod
                     dex2jar.to(outputJarFiles.resolve("$index.jar"))
-                    outputDexFile.delete()
+
+                    if (!keepIntermediateFiles) {
+                        outputDexFile.delete()
+                    }
                 }
             }
         }

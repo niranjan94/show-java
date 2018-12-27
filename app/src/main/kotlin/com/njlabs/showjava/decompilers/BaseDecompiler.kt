@@ -51,15 +51,17 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     private var id = data.getString("id")
     private var processNotifier: ProcessNotifier? = null
     private var runAttemptCount: Int = 0
-    protected var outOfMemory: Boolean = false
+    protected var outOfMemory = false
 
     protected val decompiler = data.getString("decompiler")
     protected val type = PackageInfo.Type.values()[data.getInt("type", 0)]
     private val maxAttempts = data.getInt("maxAttempts", UserPreferences.DEFAULTS.MAX_ATTEMPTS)
     private val memoryThreshold = data.getInt("memoryThreshold", 80)
 
-    protected val packageName: String = data.getString("name").toString()
-    protected val packageLabel: String = data.getString("label").toString()
+    protected val packageName = data.getString("name").toString()
+    protected val packageLabel = data.getString("label").toString()
+
+    protected val keepIntermediateFiles = data.getBoolean("keepIntermediateFiles", UserPreferences.DEFAULTS.KEEP_INTERMEDIATE_FILES)
 
     protected val workingDirectory: File = appStorage.resolve("sources/$packageName/")
     protected val cacheDirectory: File = appStorage.resolve("sources/.cache/")

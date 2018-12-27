@@ -31,6 +31,13 @@
             android:summary="@string/ignoreLibrariesPreferenceSummary"
             android:title="@string/speedUpDecompile" />
 
+        <SwitchPreference
+            app:iconSpaceReserved="false"
+            android:key="keepIntermediateFiles"
+            android:defaultValue="false"
+            android:summary="@string/keepIntermediateFilesSummary"
+            android:title="@string/keepIntermediateFiles" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

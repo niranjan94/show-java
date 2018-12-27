@@ -189,6 +189,7 @@ class DecompilerActivity : BaseActivity() {
             "maxAttempts" to userPreferences.maxAttempts,
             "chunkSize" to userPreferences.chunkSize,
             "memoryThreshold" to userPreferences.memoryThreshold,
+            "keepIntermediateFiles" to userPreferences.keepIntermediateFiles,
             "decompiler" to decompiler,
             "name" to packageInfo.name,
             "label" to packageInfo.label,

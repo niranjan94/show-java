@@ -38,6 +38,7 @@ class UserPreferences(private val prefs: SharedPreferences) {
             const val SHOW_SYSTEM_APPS = false
             const val MEMORY_THRESHOLD = 80
             const val IGNORE_LIBRARIES = true
+            const val KEEP_INTERMEDIATE_FILES = false
             const val CHUNK_SIZE = 500
             const val MAX_ATTEMPTS = 2
         }
@@ -45,6 +46,9 @@ class UserPreferences(private val prefs: SharedPreferences) {
 
     val ignoreLibraries: Boolean
         get() = prefs.getBoolean("ignoreLibraries", DEFAULTS.IGNORE_LIBRARIES)
+
+    val keepIntermediateFiles: Boolean
+        get() = prefs.getBoolean("keepIntermediateFiles", DEFAULTS.KEEP_INTERMEDIATE_FILES)
 
     val customFont: Boolean
         get() = prefs.getBoolean("customFont", DEFAULTS.CUSTOM_FONT)

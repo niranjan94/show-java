@@ -88,6 +88,7 @@ abstract class DecompilerTestBase {
     fun testDecompiler() {
         val data = BaseDecompiler.formData(hashMapOf(
             "shouldIgnoreLibs" to true,
+            "keepIntermediateFiles" to true,
             "chunkSize" to 2000,
             "maxAttempts" to 1,
             "memoryThreshold" to 80,
