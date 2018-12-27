@@ -18,35 +18,34 @@
 
 package com.njlabs.showjava.activities
 
-import android.content.res.Configuration
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
 import com.google.ads.consent.ConsentStatus
 import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.settings.SettingsActivity
+import com.njlabs.showjava.activities.about.AboutActivity
+import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import com.njlabs.showjava.fragments.landing.LandingFragment
-import com.njlabs.showjava.fragments.landing.LandingViewModel
+import com.njlabs.showjava.fragments.settings.SettingsFragment
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.secure.PurchaseUtils
 import kotlinx.android.synthetic.main.activity_container.*
 
+
 class ContainerActivity: BaseActivity() {
 
-    private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var purchaseUtils: PurchaseUtils
+
+    private var homeShouldOpenDrawer = true
 
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_container)
-        drawerToggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            R.string.drawerOpen,
-            R.string.drawerClose
-        )
         navigationView.setNavigationItemSelectedListener {
             onOptionsItemSelected(it)
         }
@@ -54,8 +53,6 @@ class ContainerActivity: BaseActivity() {
         if (!isPro()) {
             navigationView.menu.findItem(R.id.get_pro_option).isVisible = true
         }
-
-        drawerLayout.addDrawerListener(drawerToggle)
 
         purchaseUtils = PurchaseUtils(this, secureUtils)
         purchaseUtils.doOnComplete {
@@ -68,6 +65,28 @@ class ContainerActivity: BaseActivity() {
         purchaseUtils.initializeCheckout(false, true)
         if (inEea && userPreferences.consentStatus == ConsentStatus.UNKNOWN.ordinal) {
             Ads(context).loadConsentScreen()
+        }
+
+        enableDrawerIcon(true)
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            supportFragmentManager.findFragmentById(R.id.fragmentHolder)?.let {
+                if (it is LandingFragment) {
+                    enableDrawerIcon(true)
+                } else {
+                    enableDrawerIcon(false)
+                }
+            }
+        }
+    }
+
+    private fun enableDrawerIcon(enable: Boolean) {
+        homeShouldOpenDrawer = if (enable) {
+            supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu_white)
+            true
+        } else {
+            supportActionBar!!.setHomeAsUpIndicator(null)
+            false
         }
     }
 
@@ -83,29 +102,51 @@ class ContainerActivity: BaseActivity() {
     override fun postPermissionsGrant() {
         supportFragmentManager
             .beginTransaction()
+            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
             .replace(R.id.fragmentHolder, LandingFragment())
             .commit()
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        drawerToggle.syncState()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-        drawerToggle.onConfigurationChanged(newConfig)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         purchaseUtils.onDestroy()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        drawerLayout.closeDrawers()
+
+        when (item.itemId) {
+            android.R.id.home -> {
+                if (homeShouldOpenDrawer) {
+                    drawerLayout.openDrawer(GravityCompat.START)
+                } else {
+                    onBackPressed()
+                }
+                return true
+            }
+            R.id.about_option -> {
+                startActivity(Intent(baseContext, AboutActivity::class.java))
+                return true
+            }
+            R.id.settings_option -> {
+                gotoFragment(SettingsFragment())
+                return true
+            }
+            R.id.get_pro_option -> {
+                startActivity(Intent(baseContext, PurchaseActivity::class.java))
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun gotoFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+            .replace(R.id.fragmentHolder, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

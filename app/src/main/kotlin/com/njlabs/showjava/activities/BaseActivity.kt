@@ -44,6 +44,7 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import com.njlabs.showjava.activities.settings.SettingsActivity
+import com.njlabs.showjava.fragments.settings.SettingsFragment
 import com.njlabs.showjava.utils.secure.SecureUtils
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.ktx.checkDataConnection
@@ -63,7 +64,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     lateinit var firebaseAnalytics: FirebaseAnalytics
 
     protected val disposables = CompositeDisposable()
-    protected var inEea = false
+    var inEea = false
 
     abstract fun init(savedInstanceState: Bundle?)
 

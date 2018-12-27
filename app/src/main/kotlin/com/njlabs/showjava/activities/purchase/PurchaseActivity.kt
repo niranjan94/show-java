@@ -20,6 +20,7 @@ package com.njlabs.showjava.activities.purchase
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -90,7 +91,6 @@ class PurchaseActivity : BaseActivity() {
         )
 
         Timber.d("[pa] initComplete")
-
     }
 
     private fun makePurchase() {
@@ -120,5 +120,9 @@ class PurchaseActivity : BaseActivity() {
         if (::purchaseUtils.isInitialized) {
             purchaseUtils.checkout.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        return true
     }
 }

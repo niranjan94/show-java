@@ -20,6 +20,7 @@ package com.njlabs.showjava.activities.about
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.R
@@ -42,5 +43,9 @@ class AboutActivity : BaseActivity() {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             startActivity(Intent(context, OssLicensesMenuActivity::class.java))
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        return true
     }
 }
