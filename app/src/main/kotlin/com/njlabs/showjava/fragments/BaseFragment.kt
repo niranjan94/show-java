@@ -27,19 +27,23 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.activities.ContainerActivity
+import com.njlabs.showjava.utils.UserPreferences
 import io.reactivex.disposables.CompositeDisposable
 
 abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
-    protected abstract val viewModelClass: Class<T>
+    protected open val viewModelClass: Class<T>? = null
     protected abstract val layoutResource: Int
     abstract fun init(savedInstanceState: Bundle?)
 
     protected lateinit var viewModel: T
     protected val disposables = CompositeDisposable()
 
-    protected val containerActivity: ContainerActivity
-        get() = activity as ContainerActivity
+    protected lateinit var userPreferences: UserPreferences
+    protected lateinit var firebaseAnalytics: FirebaseAnalytics
+
+    protected lateinit var containerActivity: ContainerActivity
 
     protected var menu: Menu? = null
 
@@ -69,7 +73,13 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(viewModelClass)
+        viewModelClass?.let {
+            viewModel = ViewModelProviders.of(this).get(it)
+        }
+        containerActivity = activity as ContainerActivity
+        userPreferences = containerActivity.userPreferences
+        firebaseAnalytics = containerActivity.firebaseAnalytics
+
         init(savedInstanceState)
     }
 

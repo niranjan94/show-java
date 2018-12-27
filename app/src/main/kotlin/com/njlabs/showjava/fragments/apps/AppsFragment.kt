@@ -18,17 +18,17 @@
 
 package com.njlabs.showjava.fragments.apps
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.apps.adapters.AppsListAdapter
+import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
+import com.njlabs.showjava.utils.ktx.toBundle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_apps.*
@@ -124,9 +124,9 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
     }
 
     private fun openProcessActivity(packageInfo: PackageInfo, view: View) {
-        val i = Intent(context, DecompilerActivity::class.java)
-        i.putExtra("packageInfo", packageInfo)
-        startActivity(i)
+        containerActivity.gotoFragment(DecompilerFragment(), mapOf(
+            "packageInfo" to packageInfo
+        ).toBundle())
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {
@@ -150,6 +150,11 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
             }
         } as ArrayList<PackageInfo>
         historyListAdapter.updateList(filteredApps)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        searchMenuItem?.isVisible = false
     }
 
     override fun onDestroy() {

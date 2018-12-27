@@ -25,21 +25,28 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import com.google.ads.consent.ConsentStatus
 import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.activities.purchase.PurchaseActivity
+import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.apps.AppsFragment
+import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
 import com.njlabs.showjava.fragments.landing.LandingFragment
 import com.njlabs.showjava.fragments.settings.SettingsFragment
 import com.njlabs.showjava.utils.Ads
+import com.njlabs.showjava.utils.ktx.toBundle
 import com.njlabs.showjava.utils.secure.PurchaseUtils
 import kotlinx.android.synthetic.main.activity_container.*
+import java.io.File
+import java.net.URI
 
 
 class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
@@ -75,8 +82,6 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
             Ads(context).loadConsentScreen()
         }
 
-        enableDrawerIcon(true)
-
         supportFragmentManager.addOnBackStackChangedListener {
             currentFragment?.let {
                 if (it is LandingFragment) {
@@ -108,10 +113,28 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
     }
 
     override fun postPermissionsGrant() {
+        var fragmentClass = LandingFragment::class.java.name
+
+        if (!intent.dataString.isNullOrEmpty() || intent.hasExtra("packageInfo")) {
+            fragmentClass = DecompilerFragment::class.java.name
+        }
+
+        val fragment: BaseFragment<*> = Class.forName(fragmentClass).newInstance() as BaseFragment<*>
+        val extras = intent.extras
+        extras?.putString("dataString", intent.dataString)
+
+        fragment.arguments = extras
+
+        if (fragment is LandingFragment) {
+            enableDrawerIcon(true)
+        } else {
+            enableDrawerIcon(false)
+        }
+
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-            .replace(R.id.fragmentHolder, LandingFragment().withMenu(menu))
+            .replace(R.id.fragmentHolder, fragment.withMenu(menu))
             .commit()
     }
 

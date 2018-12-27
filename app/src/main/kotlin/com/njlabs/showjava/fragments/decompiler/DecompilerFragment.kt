@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.activities.decompiler
+package com.njlabs.showjava.fragments.decompiler
 
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
@@ -32,45 +32,38 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.BaseActivity
-import com.njlabs.showjava.fragments.apps.adapters.getSystemBadge
+import com.njlabs.showjava.activities.decompiler.DecompilerProcessActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.decompilers.BaseDecompiler
-import com.njlabs.showjava.decompilers.BaseDecompiler.Companion.isAvailable
+import com.njlabs.showjava.fragments.BaseFragment
+import com.njlabs.showjava.fragments.apps.adapters.getSystemBadge
 import com.njlabs.showjava.utils.ktx.sourceDir
 import com.njlabs.showjava.utils.ktx.toBundle
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_decompiler.*
+import kotlinx.android.synthetic.main.fragment_decompiler.*
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import kotlinx.android.synthetic.main.layout_pick_decompiler_list_item.view.*
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.net.URI
 
+class DecompilerFragment: BaseFragment<ViewModel>() {
 
-class DecompilerActivity : BaseActivity() {
+    override val layoutResource = R.layout.fragment_decompiler
 
     private lateinit var packageInfo: PackageInfo
 
     @SuppressLint("SetTextI18n")
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_decompiler)
-
-        loadPackageInfoFromIntent()
-
-        if (!::packageInfo.isInitialized) {
-            Toast.makeText(context, R.string.cannotDecompileFile, Toast.LENGTH_LONG).show()
-            finish()
-            return
-        }
+        loadPackageInfoFromArguments()
 
         val apkSize = FileUtils.byteCountToDisplaySize(packageInfo.file.length())
 
@@ -79,7 +72,7 @@ class DecompilerActivity : BaseActivity() {
                 TextUtils.concat(
                     packageInfo.label,
                     " ", " ",
-                    getSystemBadge(context).toSpannable()
+                    getSystemBadge(context!!).toSpannable()
                 )
             )
         else
@@ -92,6 +85,9 @@ class DecompilerActivity : BaseActivity() {
         val decompilerDescriptions = resources.getStringArray(R.array.decompilerDescriptions)
 
         decompilersValues.forEachIndexed { index, decompiler ->
+            if (!BaseDecompiler.isAvailable(decompiler)) {
+                return@forEachIndexed
+            }
             val view = LayoutInflater.from(pickerList.context)
                 .inflate(R.layout.layout_pick_decompiler_list_item, pickerList, false)
             view.decompilerName.text = decompilers[index]
@@ -122,7 +118,7 @@ class DecompilerActivity : BaseActivity() {
 
         disposables.add(
             Observable.fromCallable {
-                packageInfo.loadIcon(context)
+                packageInfo.loadIcon(context!!)
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -137,24 +133,34 @@ class DecompilerActivity : BaseActivity() {
         )
 
         assertSourceExistence(true)
+
     }
 
-    private fun loadPackageInfoFromIntent() {
-        if (intent.dataString.isNullOrEmpty()) {
-            if (intent.hasExtra("packageInfo")) {
-                packageInfo = intent.getParcelableExtra("packageInfo")
+    private fun loadPackageInfoFromArguments() {
+        var packageInfo: PackageInfo? = null
+        arguments?.let {
+            val dataString = it.getString("dataString")
+            if (dataString.isNullOrEmpty()) {
+                if (it.containsKey("packageInfo")) {
+                    packageInfo = it.getParcelable("packageInfo")
+                } else {
+                    Toast.makeText(context, R.string.errorLoadingInputFile, Toast.LENGTH_SHORT).show()
+                }
             } else {
-                Toast.makeText(context, R.string.errorLoadingInputFile, Toast.LENGTH_SHORT).show()
-                finish()
+                val info = PackageInfo.fromFile(
+                    context!!,
+                    File(URI.create(dataString)).canonicalFile
+                )
+                if (info != null) {
+                    packageInfo = info
+                }
             }
+        }
+        if (packageInfo != null) {
+            this.packageInfo = packageInfo as PackageInfo
         } else {
-            val info = PackageInfo.fromFile(
-                context,
-                File(URI.create(intent.dataString)).canonicalFile
-            )
-            if (info != null) {
-                packageInfo = info
-            }
+            Toast.makeText(context, R.string.cannotDecompileFile, Toast.LENGTH_LONG).show()
+            containerActivity.onBackPressed()
         }
     }
 
@@ -181,17 +187,6 @@ class DecompilerActivity : BaseActivity() {
     }
 
     private fun startProcess(view: View, decompiler: String, decompilerIndex: Int) {
-
-        if (!isAvailable(decompiler)) {
-            AlertDialog.Builder(context)
-                .setTitle(getString(R.string.decompilerUnavailable))
-                .setMessage(getString(R.string.decompilerUnavailableExplanation))
-                .setIcon(R.drawable.ic_error_outline_black)
-                .setNegativeButton(android.R.string.ok, null)
-                .show()
-            return
-        }
-
         val inputMap = hashMapOf(
             "shouldIgnoreLibs" to userPreferences.ignoreLibraries,
             "maxAttempts" to userPreferences.maxAttempts,
@@ -215,17 +210,18 @@ class DecompilerActivity : BaseActivity() {
 
         firebaseAnalytics.logEvent(Constants.EVENTS.DECOMPILE_APP, inputMap.toBundle())
 
-        val i = Intent(this, DecompilerProcessActivity::class.java)
+        val i = Intent(context, DecompilerProcessActivity::class.java)
         i.putExtra("packageInfo", packageInfo)
         i.putExtra("decompilerIndex", decompilerIndex)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val options = ActivityOptions
-                .makeSceneTransitionAnimation(this, view, "decompilerItemCard")
+            val options = ActivityOptions.makeSceneTransitionAnimation(
+                containerActivity, view, "decompilerItemCard"
+            )
             startActivity(i, options.toBundle())
         } else {
             startActivity(i)
         }
-        finish()
     }
+
 }

@@ -27,13 +27,14 @@ import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
 import com.github.angads25.filepicker.view.FilePickerDialog
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
-import com.njlabs.showjava.fragments.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.apps.AppsFragment
+import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
+import com.njlabs.showjava.fragments.landing.adapters.HistoryListAdapter
+import com.njlabs.showjava.utils.ktx.toBundle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_landing.*
@@ -80,9 +81,11 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
                 val selectedFile = File(files.first())
                 if (selectedFile.exists() && selectedFile.isFile) {
                     PackageInfo.fromFile(context!!, selectedFile)?.let {
-                        val i = Intent(context, DecompilerActivity::class.java)
-                        i.putExtra("packageInfo", it)
-                        startActivity(i)
+                        containerActivity.gotoFragment(
+                            DecompilerFragment(), mapOf(
+                                "packageInfo" to it
+                            ).toBundle()
+                        )
                     }
                 }
             }

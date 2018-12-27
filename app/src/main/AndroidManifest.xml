@@ -75,47 +75,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
 
-        <activity
-            android:name=".activities.decompiler.DecompilerProcessActivity"
-            android:theme="@style/AppTheme.WithTransition">
-        </activity>
-
-        <activity
-            android:name=".activities.decompiler.LowMemoryActivity">
-        </activity>
-
-        <activity
-            android:name=".activities.explorer.viewer.CodeViewerActivity"
-            android:theme="@style/SourceViewerTheme" />
-
-        <activity android:name=".activities.explorer.navigator.NavigatorActivity">
-        </activity>
-
-        <activity
-            android:name=".activities.explorer.viewer.ImageViewerActivity"
-            android:theme="@style/SourceViewerTheme" />
-
-        <activity android:name=".activities.about.AboutActivity">
-        </activity>
-
-        <activity android:name=".activities.purchase.PurchaseActivity">
-        </activity>
-
-        <activity
-            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.about.AboutActivity" />
-        </activity>
-
-
-        <activity
-            android:name=".activities.decompiler.DecompilerActivity"
-            android:label="@string/appName"
-            android:theme="@style/AppTheme.WithTransition">
             <intent-filter
                 android:icon="@mipmap/ic_launcher_round"
                 android:label="@string/appName"
@@ -235,9 +195,41 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.odex" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.odex" />
             </intent-filter>
+        </activity>
 
+        <activity
+            android:name=".activities.decompiler.DecompilerProcessActivity"
+            android:theme="@style/AppTheme.WithTransition">
+        </activity>
+
+        <activity
+            android:name=".activities.decompiler.LowMemoryActivity">
+        </activity>
+
+        <activity
+            android:name=".activities.explorer.viewer.CodeViewerActivity"
+            android:theme="@style/SourceViewerTheme" />
+
+        <activity android:name=".activities.explorer.navigator.NavigatorActivity">
+        </activity>
+
+        <activity
+            android:name=".activities.explorer.viewer.ImageViewerActivity"
+            android:theme="@style/SourceViewerTheme" />
+
+        <activity android:name=".activities.about.AboutActivity">
+        </activity>
+
+        <activity android:name=".activities.purchase.PurchaseActivity">
+        </activity>
+
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.about.AboutActivity" />
         </activity>
 
     </application>
-
 </manifest>

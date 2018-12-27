@@ -29,12 +29,13 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.decompiler.DecompilerActivity
+import com.njlabs.showjava.activities.ContainerActivity
 import com.njlabs.showjava.activities.decompiler.DecompilerProcessActivity
 import com.njlabs.showjava.activities.decompiler.LowMemoryActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
 import com.njlabs.showjava.receivers.DecompilerActionReceiver
 import com.njlabs.showjava.utils.ktx.sourceDir
 import java.io.File
@@ -200,8 +201,9 @@ class ProcessNotifier(
     }
 
     fun error() {
-        val intent = Intent(context, DecompilerActivity::class.java)
+        val intent = Intent(context, ContainerActivity::class.java)
         intent.putExtra("packageInfo", PackageInfo.fromFile(context, packageFile))
+        intent.putExtra("fragmentClass", DecompilerFragment::class.java.name)
         complete(
             intent,
             context.getString(R.string.errorDecompilingApp, packageLabel),
