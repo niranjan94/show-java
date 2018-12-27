@@ -16,15 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.activities.explorer.navigator
+package com.njlabs.showjava.fragments.explorer.navigator
 
 import android.app.ProgressDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.webkit.MimeTypeMap
@@ -32,22 +32,23 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.BaseActivity
-import com.njlabs.showjava.fragments.explorer.navigator.adapters.FilesListAdapter
 import com.njlabs.showjava.activities.explorer.viewer.CodeViewerActivity
 import com.njlabs.showjava.activities.explorer.viewer.ImageViewerActivity
 import com.njlabs.showjava.data.FileItem
 import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.fragments.BaseFragment
+import com.njlabs.showjava.fragments.explorer.navigator.adapters.FilesListAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_navigator.*
 import timber.log.Timber
 import java.io.File
 
+class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
+    override val viewModelClass = NavigatorViewModel::class.java
 
-class NavigatorActivity : BaseActivity() {
+    override val layoutResource = R.layout.fragment_navigator
 
-    private lateinit var navigationHandler: NavigatorHandler
     private lateinit var filesListAdapter: FilesListAdapter
     private var currentDirectory: File? = null
     private var sourceArchive: File? = null
@@ -57,11 +58,11 @@ class NavigatorActivity : BaseActivity() {
     private var fileItems: ArrayList<FileItem> = ArrayList()
     private var selectedApp: SourceInfo? = null
 
-    override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_navigator)
-        selectedApp = intent.extras?.getParcelable("selectedApp")
-        navigationHandler = NavigatorHandler(this)
+    private var originalTitle: String? = null
+    private var originalSubtitle: String? = null
 
+    override fun init(savedInstanceState: Bundle?) {
+        selectedApp = arguments?.getParcelable("selectedApp")
         if (savedInstanceState != null) {
             savedInstanceState.getParcelableArrayList<FileItem>("fileItems")?.let {
                 fileItems = it
@@ -71,8 +72,17 @@ class NavigatorActivity : BaseActivity() {
             currentDirectoryString?.let {
                 currentDirectory = File(it)
             }
+
+            originalTitle = savedInstanceState.getString("originalTitle")
+            originalSubtitle = savedInstanceState.getString("originalSubtitle")
+
+        } else {
+            originalTitle = containerActivity.supportActionBar?.title?.toString()
+            originalSubtitle = containerActivity.supportActionBar?.subtitle?.toString()
         }
-        supportActionBar?.title = selectedApp?.packageLabel
+
+        containerActivity.supportActionBar?.title = selectedApp?.packageLabel
+        containerActivity.setSubtitle(selectedApp?.packageName)
         currentDirectory = currentDirectory ?: selectedApp?.sourceDirectory
         setupList()
         filesListAdapter.updateData(fileItems)
@@ -81,6 +91,8 @@ class NavigatorActivity : BaseActivity() {
         swipeRefresh.setOnRefreshListener {
             currentDirectory?.let { populateList(it) }
         }
+
+        setHasOptionsMenu(true)
     }
 
     private fun setListVisibility(isListVisible: Boolean = true) {
@@ -92,9 +104,9 @@ class NavigatorActivity : BaseActivity() {
         currentDirectory = startDirectory
         val packageName = selectedApp?.packageName
         if (isAtRoot()) {
-            setSubtitle(packageName)
+            containerActivity.setSubtitle(packageName)
         } else {
-            setSubtitle(
+            containerActivity.setSubtitle(
                 startDirectory.canonicalPath.replace(
                     "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
                     ""
@@ -102,7 +114,7 @@ class NavigatorActivity : BaseActivity() {
             )
         }
         swipeRefresh.isRefreshing = true
-        disposables.add(navigationHandler.loadFiles(startDirectory)
+        disposables.add(viewModel.loadFiles(startDirectory)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .onErrorReturn {
@@ -145,7 +157,7 @@ class NavigatorActivity : BaseActivity() {
                         startActivity(intent)
                     }
                     arrayOf(
-                        "java", "xml", "json", "txt", "properties", "sql",
+                        "java", "xml", "json", "txt", "properties",
                         "yml", "yaml", "md", "html", "class",
                         "js", "css", "scss", "sass"
                     ).contains(selectedFile.file.extension) -> {
@@ -155,29 +167,32 @@ class NavigatorActivity : BaseActivity() {
                         startActivity(intent)
                     }
                     else -> {
-                        val mimeTypeDetector = MimeTypeMap.getSingleton()
-                        val fileIntent = Intent(Intent.ACTION_VIEW)
-                        val mimeType =
-                            mimeTypeDetector.getMimeTypeFromExtension(selectedFile.file.extension)
-                        fileIntent.setDataAndType(
-                            FileProvider.getUriForFile(
-                                context,
-                                context.applicationContext.packageName + ".provider",
-                                selectedFile.file
-                            ),
-                            mimeType
-                        )
-                        fileIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        fileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        try {
-                            context.startActivity(fileIntent)
-                        } catch (e: ActivityNotFoundException) {
-                            Toast.makeText(
-                                context,
-                                getString(R.string.noSupportedHandlerForFileType),
-                                Toast.LENGTH_LONG
-                            ).show()
+                        context?.let {
+                            val mimeTypeDetector = MimeTypeMap.getSingleton()
+                            val fileIntent = Intent(Intent.ACTION_VIEW)
+                            val mimeType =
+                                mimeTypeDetector.getMimeTypeFromExtension(selectedFile.file.extension)
+                            fileIntent.setDataAndType(
+                                FileProvider.getUriForFile(
+                                    it,
+                                    it.applicationContext.packageName + ".provider",
+                                    selectedFile.file
+                                ),
+                                mimeType
+                            )
+                            fileIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            fileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            try {
+                                it.startActivity(fileIntent)
+                            } catch (e: ActivityNotFoundException) {
+                                Toast.makeText(
+                                    context,
+                                    getString(R.string.noSupportedHandlerForFileType),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
                         }
+
                     }
                 }
             }
@@ -197,18 +212,13 @@ class NavigatorActivity : BaseActivity() {
         currentDirectory?.let {
             bundle.putString("currentDirectory", it.canonicalPath)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        menu.findItem(R.id.share_code).isVisible = true
-        menu.findItem(R.id.delete_code).isVisible = true
-        return true
+        bundle.putString("originalTitle", originalTitle)
+        bundle.putString("originalSubtitle", originalSubtitle)
     }
 
     private fun showProgressDialog() {
         if (zipProgressDialog == null) {
-            zipProgressDialog = ProgressDialog(this)
+            zipProgressDialog = ProgressDialog(context)
             zipProgressDialog!!.isIndeterminate = false
             zipProgressDialog!!.setCancelable(false)
             zipProgressDialog!!.setInverseBackgroundForced(false)
@@ -237,20 +247,25 @@ class NavigatorActivity : BaseActivity() {
             return
         }
 
-        dismissProgressDialog()
-        val shareIntent = Intent()
-        shareIntent.action = Intent.ACTION_SEND
-        shareIntent.putExtra(
-            Intent.EXTRA_STREAM,
-            FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", file)
-        )
-        shareIntent.type = "application/zip"
-        startActivity(
-            Intent.createChooser(
-                shareIntent,
-                getString(R.string.sendSourceVia)
+        context?.let {
+            dismissProgressDialog()
+            val shareIntent = Intent()
+            shareIntent.action = Intent.ACTION_SEND
+            shareIntent.setDataAndType(
+                FileProvider.getUriForFile(
+                    it,
+                    it.applicationContext.packageName + ".provider",
+                    file
+                ),
+                MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
             )
-        )
+            startActivity(
+                Intent.createChooser(
+                    shareIntent,
+                    getString(R.string.sendSourceVia)
+                )
+            )
+        }
     }
 
     private fun goBack(): Boolean {
@@ -265,6 +280,14 @@ class NavigatorActivity : BaseActivity() {
         return false
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.let {
+            it.findItem(R.id.share_code).isVisible = true
+            it.findItem(R.id.delete_code).isVisible = true
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -277,9 +300,8 @@ class NavigatorActivity : BaseActivity() {
                     shareArchive(it)
                     return true
                 }
-
                 showProgressDialog()
-                disposables.add(navigationHandler.archiveDirectory(
+                disposables.add(viewModel.archiveDirectory(
                     selectedApp!!.sourceDirectory, selectedApp!!.packageName
                 )
                     .subscribeOn(Schedulers.io())
@@ -297,7 +319,7 @@ class NavigatorActivity : BaseActivity() {
 
             }
             R.id.delete_code -> {
-                AlertDialog.Builder(this)
+                AlertDialog.Builder(context!!)
                     .setTitle(getString(R.string.deleteSource))
                     .setMessage(getString(R.string.deleteSourceConfirm))
                     .setIcon(R.drawable.ic_error_outline_black)
@@ -314,16 +336,18 @@ class NavigatorActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+
+
     private fun deleteSource() {
         selectedApp?.let {
             deleteProgress.visibility = View.VISIBLE
             filesList.visibility = View.GONE
-            disposables.add(navigationHandler.deleteDirectory(it.sourceDirectory)
+            disposables.add(viewModel.deleteDirectory(it.sourceDirectory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     Toast.makeText(
-                        baseContext,
+                        context,
                         getString(R.string.sourceDeleted),
                         Toast.LENGTH_SHORT
                     ).show()
@@ -333,7 +357,33 @@ class NavigatorActivity : BaseActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        goBack()
+    override fun onResume() {
+        super.onResume()
+        menu?.let {
+            it.findItem(R.id.share_code).isVisible = true
+            it.findItem(R.id.delete_code).isVisible = true
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        menu?.let {
+            it.findItem(R.id.share_code).isVisible = false
+            it.findItem(R.id.delete_code).isVisible = false
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        containerActivity.supportActionBar?.title = originalTitle
+        containerActivity.setSubtitle(originalSubtitle)
+
+    }
+
+    override fun onBackPressed():Boolean {
+        if (isAtRoot()) {
+            return false
+        }
+        return goBack()
     }
 }

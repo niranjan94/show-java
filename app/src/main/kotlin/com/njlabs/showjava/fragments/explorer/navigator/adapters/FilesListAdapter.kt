@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.activities.explorer.navigator.adapters
+package com.njlabs.showjava.fragments.explorer.navigator.adapters
 
 import android.view.LayoutInflater
 import android.view.View

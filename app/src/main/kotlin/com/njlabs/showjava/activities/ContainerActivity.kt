@@ -41,6 +41,7 @@ import com.njlabs.showjava.fragments.settings.SettingsFragment
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.secure.PurchaseUtils
 import kotlinx.android.synthetic.main.activity_container.*
+import timber.log.Timber
 
 
 class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
@@ -188,16 +189,8 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
                 }
                 return true
             }
-            R.id.about_option -> {
-                startActivity(Intent(baseContext, AboutActivity::class.java))
-                return true
-            }
             R.id.settings_option -> {
                 gotoSimpleFragment(SettingsFragment())
-                return true
-            }
-            R.id.get_pro_option -> {
-                startActivity(Intent(baseContext, PurchaseActivity::class.java))
                 return true
             }
         }
@@ -252,5 +245,17 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
             }
         }
         return true
+    }
+
+    override fun onBackPressed() {
+        var overridden = false
+        currentFragment?.let {
+            if (it is BaseFragment<*>) {
+                overridden = it.onBackPressed()
+            }
+        }
+        if (!overridden) {
+            super.onBackPressed()
+        }
     }
 }

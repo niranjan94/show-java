@@ -33,6 +33,7 @@ import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.apps.AppsFragment
 import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
+import com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment
 import com.njlabs.showjava.fragments.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.utils.ktx.toBundle
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -160,9 +161,9 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
             historyListView.setHasFixedSize(true)
             historyListView.layoutManager = LinearLayoutManager(context)
             historyListAdapter = HistoryListAdapter(historyItems) { selectedHistoryItem ->
-                val intent = Intent(context, NavigatorActivity::class.java)
-                intent.putExtra("selectedApp", selectedHistoryItem)
-                startActivity(intent)
+                containerActivity.gotoFragment(NavigatorFragment(), mapOf(
+                    "selectedApp" to selectedHistoryItem
+                ).toBundle())
             }
             historyListView.adapter = historyListAdapter
         }

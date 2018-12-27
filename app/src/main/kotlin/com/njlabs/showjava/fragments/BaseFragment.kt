@@ -19,10 +19,7 @@
 package com.njlabs.showjava.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -102,5 +99,9 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
 
     override fun onClose(): Boolean {
         return true
+    }
+
+    open fun onBackPressed(): Boolean {
+        return false
     }
 }
