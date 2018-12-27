@@ -19,7 +19,6 @@
 package com.njlabs.showjava.fragments.settings
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -32,7 +31,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
-import com.njlabs.showjava.activities.settings.SettingsActivity
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.ktx.appStorage
@@ -98,7 +96,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             activity.firebaseAnalytics.logEvent(Constants.EVENTS.CHANGE_FONT, bundle)
             Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
             activity.let {
-                it.startActivity(Intent(it, SettingsActivity::class.java))
+                //it.startActivity(Intent(it, SettingsActivity::class.java))
                 it.finish()
             }
             true
@@ -119,7 +117,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
 
             activity.let {
-                it.startActivity(Intent(it, SettingsActivity::class.java))
+                //it.startActivity(Intent(it, SettingsActivity::class.java))
                 it.finish()
             }
 

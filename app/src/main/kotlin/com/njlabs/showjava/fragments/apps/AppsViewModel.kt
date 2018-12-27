@@ -16,9 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.activities.apps
+package com.njlabs.showjava.fragments.apps
 
-import android.content.Context
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import com.njlabs.showjava.MainApplication
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.ktx.isSystemPackage
@@ -26,7 +28,9 @@ import com.njlabs.showjava.utils.rx.ProcessStatus
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 
-class AppsHandler(private var context: Context) {
+class AppsViewModel(application: Application): AndroidViewModel(application) {
+
+    private val application: MainApplication = getApplication()
 
     /**
      * Load all installed applications.
@@ -36,21 +40,21 @@ class AppsHandler(private var context: Context) {
     fun loadApps(withSystemApps: Boolean): Observable<ProcessStatus<ArrayList<PackageInfo>>> {
         return Observable.create { emitter: ObservableEmitter<ProcessStatus<ArrayList<PackageInfo>>> ->
             val installedApps = ArrayList<PackageInfo>()
-            var packages = context.packageManager.getInstalledPackages(0)
+            var packages = application.packageManager.getInstalledPackages(0)
             packages = packages.filter { pack ->
                 withSystemApps || !isSystemPackage(pack)
             }
             packages.forEachIndexed { index, pack ->
-                val packageInfo = PackageInfo.fromApkPackageInfo(context, pack)
-                packageInfo.icon = pack.applicationInfo.loadIcon(context.packageManager)
+                val packageInfo = PackageInfo.fromApkPackageInfo(application, pack)
+                packageInfo.icon = pack.applicationInfo.loadIcon(application.packageManager)
                 packageInfo.isSystemPackage = isSystemPackage(pack)
                 installedApps.add(packageInfo)
                 val currentCount = index + 1
                 emitter.onNext(
                     ProcessStatus(
                         (currentCount.toFloat() / packages.size.toFloat()) * 100f,
-                        context.getString(R.string.loadingApp, packageInfo.label),
-                        context.getString(R.string.loadingStatistic, currentCount, packages.size)
+                        application.getString(R.string.loadingApp, packageInfo.label),
+                        application.getString(R.string.loadingStatistic, currentCount, packages.size)
                     )
                 )
             }
@@ -61,4 +65,5 @@ class AppsHandler(private var context: Context) {
             emitter.onComplete()
         }
     }
+
 }

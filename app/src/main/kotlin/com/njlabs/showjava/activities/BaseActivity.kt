@@ -43,8 +43,6 @@ import com.njlabs.showjava.MainApplication
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.activities.purchase.PurchaseActivity
-import com.njlabs.showjava.activities.settings.SettingsActivity
-import com.njlabs.showjava.fragments.settings.SettingsFragment
 import com.njlabs.showjava.utils.secure.SecureUtils
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.ktx.checkDataConnection
@@ -57,7 +55,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
 
     protected lateinit var toolbar: Toolbar
     protected lateinit var context: AppCompatActivity
-    protected lateinit var userPreferences: UserPreferences
+    lateinit var userPreferences: UserPreferences
     protected lateinit var secureUtils: SecureUtils
     protected lateinit var mainApplication: MainApplication
 
@@ -209,7 +207,6 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                 return true
             }
             R.id.settings_option -> {
-                startActivity(Intent(baseContext, SettingsActivity::class.java))
                 return true
             }
             R.id.get_pro_option -> {

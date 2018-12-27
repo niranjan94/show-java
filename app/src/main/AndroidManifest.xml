@@ -78,29 +78,12 @@
         </activity>
 
         <activity
-            android:name=".activities.apps.AppsActivity"
-            android:label="@string/appName"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.WithTransition"
-            android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
-
-        <activity
             android:name=".activities.decompiler.DecompilerProcessActivity"
             android:theme="@style/AppTheme.WithTransition">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.apps.AppsActivity" />
         </activity>
 
         <activity
             android:name=".activities.decompiler.LowMemoryActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.apps.AppsActivity" />
         </activity>
 
         <activity
@@ -108,9 +91,6 @@
             android:theme="@style/SourceViewerTheme" />
 
         <activity android:name=".activities.explorer.navigator.NavigatorActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.landing.LandingActivity" />
         </activity>
 
         <activity
@@ -118,21 +98,9 @@
             android:theme="@style/SourceViewerTheme" />
 
         <activity android:name=".activities.about.AboutActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.landing.LandingActivity" />
         </activity>
 
         <activity android:name=".activities.purchase.PurchaseActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.landing.LandingActivity" />
-        </activity>
-
-        <activity android:name=".activities.settings.SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.landing.LandingActivity" />
         </activity>
 
         <activity
@@ -148,10 +116,6 @@
             android:name=".activities.decompiler.DecompilerActivity"
             android:label="@string/appName"
             android:theme="@style/AppTheme.WithTransition">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.apps.AppsActivity" />
-
             <intent-filter
                 android:icon="@mipmap/ic_launcher_round"
                 android:label="@string/appName"

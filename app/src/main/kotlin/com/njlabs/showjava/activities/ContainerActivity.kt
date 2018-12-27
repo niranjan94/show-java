@@ -18,11 +18,14 @@
 
 package com.njlabs.showjava.activities
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.google.ads.consent.ConsentStatus
@@ -30,6 +33,8 @@ import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.activities.purchase.PurchaseActivity
+import com.njlabs.showjava.fragments.BaseFragment
+import com.njlabs.showjava.fragments.apps.AppsFragment
 import com.njlabs.showjava.fragments.landing.LandingFragment
 import com.njlabs.showjava.fragments.settings.SettingsFragment
 import com.njlabs.showjava.utils.Ads
@@ -37,12 +42,15 @@ import com.njlabs.showjava.utils.secure.PurchaseUtils
 import kotlinx.android.synthetic.main.activity_container.*
 
 
-class ContainerActivity: BaseActivity() {
+class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     private lateinit var purchaseUtils: PurchaseUtils
 
     private var homeShouldOpenDrawer = true
+    private var menu: Menu? = null
 
+    private val currentFragment: Fragment?
+        get() = supportFragmentManager.findFragmentById(R.id.fragmentHolder)
 
     override fun init(savedInstanceState: Bundle?) {
         setupLayout(R.layout.activity_container)
@@ -70,7 +78,7 @@ class ContainerActivity: BaseActivity() {
         enableDrawerIcon(true)
 
         supportFragmentManager.addOnBackStackChangedListener {
-            supportFragmentManager.findFragmentById(R.id.fragmentHolder)?.let {
+            currentFragment?.let {
                 if (it is LandingFragment) {
                     enableDrawerIcon(true)
                 } else {
@@ -103,13 +111,26 @@ class ContainerActivity: BaseActivity() {
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-            .replace(R.id.fragmentHolder, LandingFragment())
+            .replace(R.id.fragmentHolder, LandingFragment().withMenu(menu))
             .commit()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         purchaseUtils.onDestroy()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        this.menu = menu
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = menu.findItem(R.id.search)?.actionView as SearchView
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView.isSubmitButtonEnabled = true
+        searchView.setOnQueryTextListener(this)
+        searchView.setOnCloseListener(this)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -129,7 +150,7 @@ class ContainerActivity: BaseActivity() {
                 return true
             }
             R.id.settings_option -> {
-                gotoFragment(SettingsFragment())
+                gotoSimpleFragment(SettingsFragment())
                 return true
             }
             R.id.get_pro_option -> {
@@ -141,12 +162,46 @@ class ContainerActivity: BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun gotoFragment(fragment: Fragment) {
+    fun gotoFragment(fragment: BaseFragment<*>, bundle: Bundle? = null) {
+        gotoSimpleFragment(fragment.withMenu(menu), bundle)
+    }
+
+    private fun gotoSimpleFragment(fragment: Fragment, bundle: Bundle? = null) {
+        bundle?.let {
+            fragment.arguments = bundle
+        }
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
             .replace(R.id.fragmentHolder, fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        currentFragment?.let {
+            if (it is BaseFragment<*>) {
+                return it.onQueryTextSubmit(query)
+            }
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        currentFragment?.let {
+            if (it is BaseFragment<*>) {
+                return it.onQueryTextChange(newText)
+            }
+        }
+        return true
+    }
+
+    override fun onClose(): Boolean {
+        currentFragment?.let {
+            if (it is BaseFragment<*>) {
+                return it.onClose()
+            }
+        }
+        return true
     }
 }

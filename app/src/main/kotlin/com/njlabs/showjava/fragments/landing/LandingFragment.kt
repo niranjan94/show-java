@@ -27,13 +27,13 @@ import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
 import com.github.angads25.filepicker.view.FilePickerDialog
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.apps.AppsActivity
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.fragments.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.fragments.BaseFragment
+import com.njlabs.showjava.fragments.apps.AppsFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_landing.*
@@ -105,9 +105,7 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
         selectionFab.addOnMenuItemClickListener { _, _, itemId ->
             when (itemId) {
                 R.id.action_pick_installed -> {
-                    startActivity(
-                        Intent(context, AppsActivity::class.java)
-                    )
+                    containerActivity.gotoFragment(AppsFragment())
                 }
                 R.id.action_pick_sdcard -> {
                     pickFile()

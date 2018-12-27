@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.activities.apps.adapters
+package com.njlabs.showjava.fragments.apps.adapters
 
 import android.content.Context
 import android.text.SpannableString

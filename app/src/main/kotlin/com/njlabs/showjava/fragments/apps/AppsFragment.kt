@@ -16,33 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.activities.apps
+package com.njlabs.showjava.fragments.apps
 
-import android.app.ActivityOptions
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.BaseActivity
-import com.njlabs.showjava.activities.apps.adapters.AppsListAdapter
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.data.PackageInfo
+import com.njlabs.showjava.fragments.BaseFragment
+import com.njlabs.showjava.fragments.apps.adapters.AppsListAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_apps.*
+import kotlinx.android.synthetic.main.fragment_apps.*
 import timber.log.Timber
 
 
-class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
-    private lateinit var appsHandler: AppsHandler
+class AppsFragment : BaseFragment<AppsViewModel>() {
+    override val viewModelClass = AppsViewModel::class.java
+    override val layoutResource = R.layout.fragment_apps
+
     private lateinit var historyListAdapter: AppsListAdapter
 
     private var searchMenuItem: MenuItem? = null
@@ -52,35 +48,34 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
     private var withSystemApps: Boolean = false
 
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_apps)
-        appsHandler = AppsHandler(context)
-        withSystemApps = userPreferences.showSystemApps
+        withSystemApps = containerActivity.userPreferences.showSystemApps
+        searchMenuItem = menu?.findItem(R.id.search)
 
-        loadingView.visibility = View.VISIBLE
-        appsList.visibility = View.GONE
-        typeRadioGroup.visibility = View.GONE
-        searchMenuItem?.isVisible = false
+        showList(false)
 
-        savedInstanceState?.let {
-            val apps = it.getParcelableArrayList<PackageInfo>("apps")
+        if (savedInstanceState != null) {
+            val apps = savedInstanceState.getParcelableArrayList<PackageInfo>("apps")
             if (!apps.isNullOrEmpty()) {
                 this.apps = apps
                 this.filteredApps = apps
                 setupList()
                 filterApps(R.id.userRadioButton)
             }
+        } else {
+            if (this.apps.isNullOrEmpty()) {
+                loadApps()
+            } else {
+                setupList()
+            }
         }
 
-        if (this.apps.isEmpty( )) {
-            loadApps()
-        }
         typeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             filterApps(checkedId)
         }
     }
 
     private fun loadApps() {
-        disposables.add(appsHandler.loadApps(withSystemApps)
+        disposables.add(viewModel.loadApps(withSystemApps)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -107,21 +102,21 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
         )
     }
 
+    private fun showList(isListVisible: Boolean) {
+        loadingView.visibility = if (!isListVisible) View.VISIBLE else View.GONE
+        appsList.visibility = if (isListVisible) View.VISIBLE else View.GONE
+        typeRadioGroup.visibility = if (withSystemApps && isListVisible) View.VISIBLE else View.GONE
+        searchMenuItem?.isVisible = isListVisible
+    }
+
     private fun setupList() {
-        loadingView.visibility = View.GONE
-        appsList.visibility = View.VISIBLE
-        typeRadioGroup.visibility = if (withSystemApps) View.VISIBLE else View.GONE
-        searchMenuItem?.isVisible = true
+        showList(true)
         appsList.setHasFixedSize(true)
         appsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         historyListAdapter = AppsListAdapter(apps) { selectedApp: PackageInfo, view: View ->
             Timber.d(selectedApp.name)
             if (selectedApp.name.toLowerCase().contains(BuildConfig.APPLICATION_ID.toLowerCase())) {
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.checkoutSourceLink),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, getString(R.string.checkoutSourceLink), Toast.LENGTH_SHORT).show()
             }
             openProcessActivity(selectedApp, view)
         }
@@ -131,30 +126,12 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
     private fun openProcessActivity(packageInfo: PackageInfo, view: View) {
         val i = Intent(context, DecompilerActivity::class.java)
         i.putExtra("packageInfo", packageInfo)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val options = ActivityOptions
-                .makeSceneTransitionAnimation(this, view.findViewById(R.id.itemCard), "appListItem")
-            return startActivity(i, options.toBundle())
-        }
-
         startActivity(i)
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)
         bundle.putParcelableArrayList("apps", apps)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_app, menu)
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchMenuItem = menu.findItem(R.id.search)
-        val searchView = searchMenuItem?.actionView as SearchView
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.isSubmitButtonEnabled = true
-        searchView.setOnQueryTextListener(this)
-        searchView.setOnCloseListener(this)
-        return true
     }
 
     private fun searchApps(query: String?) {
@@ -173,6 +150,11 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
             }
         } as ArrayList<PackageInfo>
         historyListAdapter.updateList(filteredApps)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        searchMenuItem?.isVisible = false
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

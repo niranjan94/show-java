@@ -19,7 +19,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.njlabs.showjava.activities.landing.LandingActivity">
+    tools:context="com.njlabs.showjava.activities.ContainerActivity">
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search_white"
+        android:title="@string/searchApps"
+        android:visible="false"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
 
     <group android:id="@+id/code_explorer_group"
         android:checkableBehavior="none">

@@ -37,7 +37,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
-import com.njlabs.showjava.activities.apps.adapters.getSystemBadge
+import com.njlabs.showjava.fragments.apps.adapters.getSystemBadge
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo

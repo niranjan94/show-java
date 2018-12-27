@@ -20,15 +20,17 @@ package com.njlabs.showjava.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.njlabs.showjava.activities.ContainerActivity
 import io.reactivex.disposables.CompositeDisposable
 
-abstract class BaseFragment<T : ViewModel> : Fragment() {
+abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
     protected abstract val viewModelClass: Class<T>
     protected abstract val layoutResource: Int
     abstract fun init(savedInstanceState: Bundle?)
@@ -36,8 +38,15 @@ abstract class BaseFragment<T : ViewModel> : Fragment() {
     protected lateinit var viewModel: T
     protected val disposables = CompositeDisposable()
 
-    private val containerActivity: ContainerActivity
+    protected val containerActivity: ContainerActivity
         get() = activity as ContainerActivity
+
+    protected var menu: Menu? = null
+
+    fun withMenu(menu: Menu?): BaseFragment<T> {
+        this.menu = menu
+        return this
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,5 +76,17 @@ abstract class BaseFragment<T : ViewModel> : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         disposables.clear()
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        return true
+    }
+
+    override fun onClose(): Boolean {
+        return true
     }
 }
