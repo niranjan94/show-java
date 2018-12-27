@@ -68,7 +68,7 @@
             android:permission="com.njlabs.showjava.permission.CANCEL_WORKER" />
 
         <activity
-            android:name=".activities.landing.LandingActivity"
+            android:name=".activities.ContainerActivity"
             android:label="@string/appName"
             android:theme="@style/AppTheme.WithDrawer">
             <intent-filter>

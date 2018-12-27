@@ -16,44 +16,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.activities.landing
+package com.njlabs.showjava.fragments.landing
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Environment
-import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
 import com.github.angads25.filepicker.view.FilePickerDialog
-import com.google.ads.consent.ConsentStatus
-import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.activities.apps.AppsActivity
 import com.njlabs.showjava.activities.decompiler.DecompilerActivity
 import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
-import com.njlabs.showjava.activities.landing.adapters.HistoryListAdapter
+import com.njlabs.showjava.fragments.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
-import com.njlabs.showjava.utils.Ads
-import com.njlabs.showjava.utils.secure.PurchaseUtils
+import com.njlabs.showjava.fragments.BaseFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_landing.*
+import kotlinx.android.synthetic.main.fragment_landing.*
 import timber.log.Timber
 import java.io.File
 
+class LandingFragment : BaseFragment<LandingViewModel>() {
 
-class LandingActivity : BaseActivity() {
+    override val viewModelClass: Class<LandingViewModel> = LandingViewModel::class.java
+    override val layoutResource: Int = R.layout.fragment_landing
 
-    private lateinit var drawerToggle: ActionBarDrawerToggle
-    private lateinit var landingHandler: LandingHandler
     private lateinit var filePickerDialog: FilePickerDialog
-    private lateinit var purchaseUtils: PurchaseUtils
 
     private var historyListAdapter: HistoryListAdapter? = null
     private var historyItems = ArrayList<SourceInfo>()
@@ -61,32 +53,16 @@ class LandingActivity : BaseActivity() {
     private var shouldLoadHistory = true
 
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_landing)
-        drawerToggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            R.string.drawerOpen,
-            R.string.drawerClose
-        )
-        navigationView.setNavigationItemSelectedListener {
-            onOptionsItemSelected(it)
-        }
-
-        if (!isPro()) {
-            navigationView.menu.findItem(R.id.get_pro_option).isVisible = true
-        }
-
-        drawerLayout.addDrawerListener(drawerToggle)
-        landingHandler = LandingHandler(context)
-        setupFab()
 
         if (savedInstanceState != null) {
-             savedInstanceState.getParcelableArrayList<SourceInfo>("historyItems")?.let {
-                 this.historyItems = it
-                 shouldLoadHistory = false
-                 setupList()
-             }
+            savedInstanceState.getParcelableArrayList<SourceInfo>("historyItems")?.let {
+                this.historyItems = it
+                shouldLoadHistory = false
+                setupList()
+            }
         }
+
+        setupFab()
 
         val properties = DialogProperties()
         properties.selection_mode = DialogConfigs.SINGLE_MODE
@@ -96,14 +72,14 @@ class LandingActivity : BaseActivity() {
         properties.offset = properties.root
         properties.extensions = arrayOf("apk", "jar", "dex", "odex")
 
-        filePickerDialog = FilePickerDialog(this, properties)
+        filePickerDialog = FilePickerDialog(context, properties)
         filePickerDialog.setTitle(getString(R.string.selectFile))
 
         filePickerDialog.setDialogSelectionListener { files ->
             if (files.isNotEmpty()) {
                 val selectedFile = File(files.first())
                 if (selectedFile.exists() && selectedFile.isFile) {
-                    PackageInfo.fromFile(context, selectedFile) ?. let {
+                    PackageInfo.fromFile(context!!, selectedFile)?.let {
                         val i = Intent(context, DecompilerActivity::class.java)
                         i.putExtra("packageInfo", it)
                         startActivity(i)
@@ -112,34 +88,17 @@ class LandingActivity : BaseActivity() {
             }
         }
 
+        populateHistory()
+
         swipeRefresh.setOnRefreshListener {
             populateHistory(true)
         }
 
-        purchaseUtils = PurchaseUtils(this, secureUtils)
-        purchaseUtils.doOnComplete {
-            if (isPro()) {
-                supportActionBar?.title = "${getString(R.string.appName)} Pro"
-                findViewById<AdView>(R.id.adView)?.visibility = View.GONE
-                navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
-            }
-        }
-        purchaseUtils.initializeCheckout(false, true)
-        if (inEea && userPreferences.consentStatus == ConsentStatus.UNKNOWN.ordinal) {
-            Ads(context).loadConsentScreen()
-        }
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
-        if (hasValidPermissions()) {
-            populateHistory(true)
-        }
-        if (isPro()) {
-            supportActionBar?.title = "${getString(R.string.appName)} Pro"
-            findViewById<AdView>(R.id.adView)?.visibility = View.GONE
-            navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
-        }
+        populateHistory(true)
     }
 
     private fun setupFab() {
@@ -161,15 +120,9 @@ class LandingActivity : BaseActivity() {
         filePickerDialog.show()
     }
 
-    override fun postPermissionsGrant() {
-        if (shouldLoadHistory) {
-            populateHistory()
-        }
-    }
-
     private fun populateHistory(resume: Boolean = false) {
         swipeRefresh.isRefreshing = true
-        disposables.add(landingHandler.loadHistory()
+        disposables.add(viewModel.loadHistory()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .onErrorReturn {
@@ -198,7 +151,6 @@ class LandingActivity : BaseActivity() {
         welcomeLayout.visibility = defaultGroupVisibility
     }
 
-
     private fun setupList() {
         if (historyItems.isEmpty()) {
             setListVisibility(false)
@@ -218,27 +170,5 @@ class LandingActivity : BaseActivity() {
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)
         bundle.putParcelableArrayList("historyItems", historyItems)
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        drawerToggle.syncState()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-        drawerToggle.onConfigurationChanged(newConfig)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        purchaseUtils.onDestroy()
     }
 }

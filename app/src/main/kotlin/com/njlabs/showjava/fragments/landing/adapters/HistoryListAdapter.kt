@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.activities.landing.adapters
+package com.njlabs.showjava.fragments.landing.adapters
 
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable

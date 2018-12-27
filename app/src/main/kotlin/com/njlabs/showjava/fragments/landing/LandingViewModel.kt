@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.activities.landing
+package com.njlabs.showjava.fragments.landing
 
-import android.content.Context
-import androidx.work.WorkManager
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.utils.ktx.appStorage
 import io.reactivex.Observable
@@ -27,14 +27,7 @@ import timber.log.Timber
 import java.io.File
 import java.io.IOException
 
-class LandingHandler(private var context: Context) {
-
-
-    private fun isDecompilerRunning(): Boolean {
-        return WorkManager.getInstance().getWorkInfosByTagLiveData("decompiler").value?.any {
-            !it.state.isFinished
-        } ?: false
-    }
+class LandingViewModel(application: Application): AndroidViewModel(application) {
 
     fun loadHistory(): Observable<ArrayList<SourceInfo>> {
         return Observable.fromCallable {
@@ -57,30 +50,11 @@ class LandingHandler(private var context: Context) {
                             SourceInfo.from(file).let {
                                 historyItems.add(it)
                             }
-                        } else {
-/* // Not deleting directories.
-                            if (!isDecompilerRunning()) {
-                                try {
-                                    if (file.exists()) {
-                                        if (file.isDirectory) {
-                                            FileUtils.deleteDirectory(file)
-                                        } else {
-                                            file.delete()
-                                        }
-                                    }
-
-                                } catch (e: Exception) {
-                                    Timber.d(e)
-                                }
-                                if (file.exists() && !file.isDirectory) {
-                                    file.delete()
-                                }
-                            }
-*/
                         }
                     }
             }
             historyItems
         }
     }
+
 }
