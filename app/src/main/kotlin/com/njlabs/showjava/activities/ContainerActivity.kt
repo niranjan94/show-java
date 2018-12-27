@@ -20,7 +20,6 @@ package com.njlabs.showjava.activities
 
 import android.app.SearchManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -32,8 +31,6 @@ import com.google.ads.consent.ConsentStatus
 import com.google.android.gms.ads.AdView
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.about.AboutActivity
-import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
 import com.njlabs.showjava.fragments.landing.LandingFragment
@@ -41,7 +38,6 @@ import com.njlabs.showjava.fragments.settings.SettingsFragment
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.secure.PurchaseUtils
 import kotlinx.android.synthetic.main.activity_container.*
-import timber.log.Timber
 
 
 class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
@@ -150,7 +146,7 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-            .replace(R.id.fragmentHolder, fragment.withMenu(menu), Constants.FRAGMENT_TAG)
+            .replace(R.id.fragmentHolder, fragment, Constants.FRAGMENT_TAG)
             .commit()
     }
 
@@ -190,7 +186,7 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
                 return true
             }
             R.id.settings_option -> {
-                gotoSimpleFragment(SettingsFragment())
+                gotoFragment(SettingsFragment())
                 return true
             }
         }
@@ -198,11 +194,7 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
         return super.onOptionsItemSelected(item)
     }
 
-    fun gotoFragment(fragment: BaseFragment<*>, bundle: Bundle? = null) {
-        gotoSimpleFragment(fragment.withMenu(menu), bundle)
-    }
-
-    private fun gotoSimpleFragment(fragment: Fragment, bundle: Bundle? = null) {
+    fun gotoFragment(fragment: Fragment, bundle: Bundle? = null) {
         bundle?.let {
             fragment.arguments = bundle
         }

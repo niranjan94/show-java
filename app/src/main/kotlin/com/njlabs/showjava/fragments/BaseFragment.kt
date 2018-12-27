@@ -44,11 +44,6 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
 
     protected var menu: Menu? = null
 
-    fun withMenu(menu: Menu?): BaseFragment<T> {
-        this.menu = menu
-        return this
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,7 +71,7 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
         containerActivity = activity as ContainerActivity
         userPreferences = containerActivity.userPreferences
         firebaseAnalytics = containerActivity.firebaseAnalytics
-
+        setHasOptionsMenu(true)
         init(savedInstanceState)
     }
 
@@ -87,6 +82,11 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
     override fun onDestroy() {
         super.onDestroy()
         disposables.clear()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        this.menu = menu
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

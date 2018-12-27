@@ -19,6 +19,8 @@
 package com.njlabs.showjava.fragments.apps
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -51,9 +53,6 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
 
     override fun init(savedInstanceState: Bundle?) {
         withSystemApps = containerActivity.userPreferences.showSystemApps
-        searchMenuItem = menu?.findItem(R.id.search)
-        searchView = menu?.findItem(R.id.search)?.actionView as SearchView?
-
         showList(false)
 
         if (savedInstanceState != null) {
@@ -136,6 +135,12 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)
         bundle.putParcelableArrayList("apps", apps)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        searchMenuItem = menu?.findItem(R.id.search)
+        searchView = menu?.findItem(R.id.search)?.actionView as SearchView?
     }
 
     private fun searchApps(query: String?) {

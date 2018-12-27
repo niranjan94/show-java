@@ -91,8 +91,6 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
         swipeRefresh.setOnRefreshListener {
             currentDirectory?.let { populateList(it) }
         }
-
-        setHasOptionsMenu(true)
     }
 
     private fun setListVisibility(isListVisible: Boolean = true) {
