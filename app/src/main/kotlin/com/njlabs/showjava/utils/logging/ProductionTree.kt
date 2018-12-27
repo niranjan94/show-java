@@ -32,12 +32,12 @@ class ProductionTree : Timber.Tree() {
             return
         }
 
-        if (message.isNotEmpty()) {
-            Crashlytics.log("[$tag] $message")
-        }
-
-        if (t !== null) {
+        if (t !== null && t !is OutOfMemoryError) {
+            if (message.isNotEmpty()) {
+                Crashlytics.log("[$tag] $message")
+            }
             Crashlytics.logException(t)
+            return
         }
 
         if (priority > Log.WARN) {
