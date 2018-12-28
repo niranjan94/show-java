@@ -36,6 +36,9 @@ import timber.log.Timber
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.iid.FirebaseInstanceId
 import io.fabric.sdk.android.Fabric
+import com.crashlytics.android.core.CrashlyticsCore
+
+
 
 
 class MainApplication : MultiDexApplication() {
@@ -71,7 +74,13 @@ class MainApplication : MultiDexApplication() {
         )
 
         Ads(this).init()
-        Fabric.with(this, Crashlytics())
+
+        val crashlyticsCore = CrashlyticsCore.Builder()
+            .disabled(BuildConfig.DEBUG)
+            .build()
+
+        Fabric.with(this, Crashlytics.Builder().core(crashlyticsCore).build())
+
         Crashlytics.setUserIdentifier(instanceId)
 
         if (BuildConfig.DEBUG) {

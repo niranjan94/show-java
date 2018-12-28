@@ -140,11 +140,13 @@ android {
 
     buildTypes {
         release {
+            manifestPlaceholders = [crashlytics:"true"]
             minifyEnabled true
             shrinkResources true
             buildConfigField "Boolean", "EXTENDED_VALIDATION", "true"
         }
         debug {
+            manifestPlaceholders = [crashlytics:"false"]
             buildConfigField "Boolean", "EXTENDED_VALIDATION", props.getProperty("debugExtendedValidation", "false")
             minifyEnabled props.getProperty("minifyEnabled", "true") == "true"
             shrinkResources props.getProperty("shrinkResources", "true") == "true"
