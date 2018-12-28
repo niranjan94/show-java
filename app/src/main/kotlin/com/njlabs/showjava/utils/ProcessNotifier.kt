@@ -30,12 +30,12 @@ import androidx.core.app.NotificationCompat
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.ContainerActivity
-import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
 import com.njlabs.showjava.fragments.decompiler.DecompilerProcessFragment
 import com.njlabs.showjava.fragments.decompiler.LowMemoryFragment
+import com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment
 import com.njlabs.showjava.receivers.DecompilerActionReceiver
 import com.njlabs.showjava.utils.ktx.sourceDir
 import java.io.File
@@ -228,7 +228,8 @@ class ProcessNotifier(
     }
 
     fun success() {
-        val intent = Intent(context, NavigatorActivity::class.java)
+        val intent = Intent(context, ContainerActivity::class.java)
+        intent.putExtra("fragmentClass", NavigatorFragment::class.java.name)
         intent.putExtra("selectedApp", SourceInfo.from(
             sourceDir(
                 packageName

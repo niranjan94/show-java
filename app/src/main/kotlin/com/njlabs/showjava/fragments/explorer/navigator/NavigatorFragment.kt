@@ -83,6 +83,7 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
 
         containerActivity.supportActionBar?.title = selectedApp?.packageLabel
         containerActivity.setSubtitle(selectedApp?.packageName)
+
         currentDirectory = currentDirectory ?: selectedApp?.sourceDirectory
         setupList()
         filesListAdapter.updateData(fileItems)

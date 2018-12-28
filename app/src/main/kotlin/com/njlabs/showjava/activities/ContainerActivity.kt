@@ -38,6 +38,7 @@ import com.njlabs.showjava.fragments.settings.SettingsFragment
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.secure.PurchaseUtils
 import kotlinx.android.synthetic.main.activity_container.*
+import timber.log.Timber
 
 
 class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
@@ -92,6 +93,7 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
                 }
             }
         }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -200,7 +202,7 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
         }
         supportFragmentManager
             .beginTransaction()
-            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+            //.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
             .replace(R.id.fragmentHolder, fragment, Constants.FRAGMENT_TAG)
             .addToBackStack(null)
             .commit()

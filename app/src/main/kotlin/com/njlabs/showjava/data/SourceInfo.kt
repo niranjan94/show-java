@@ -36,8 +36,8 @@ import java.io.IOException
  */
 class SourceInfo() : Parcelable {
 
-    lateinit var packageLabel: String
-    lateinit var packageName: String
+    var packageLabel: String = "Unknown package"
+    var packageName: String = "unknown.package"
 
     var hasJavaSource: Boolean = false
     var hasXmlSource: Boolean = false

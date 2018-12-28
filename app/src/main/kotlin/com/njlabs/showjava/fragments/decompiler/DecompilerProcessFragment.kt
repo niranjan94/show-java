@@ -40,17 +40,17 @@ import androidx.work.WorkStatus
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.fragments.BaseFragment
+import com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment
 import com.njlabs.showjava.utils.ktx.sourceDir
 import com.njlabs.showjava.utils.ktx.toBundle
 import com.njlabs.showjava.workers.DecompilerWorker
 import kotlinx.android.synthetic.main.fragment_decompiler_process.*
 import timber.log.Timber
 
-class DecompilerProcessFragment: BaseFragment<ViewModel>() {
+class DecompilerProcessFragment : BaseFragment<ViewModel>() {
     override val layoutResource = R.layout.fragment_decompiler_process
 
     private val statusesMap = mutableMapOf(
@@ -79,8 +79,10 @@ class DecompilerProcessFragment: BaseFragment<ViewModel>() {
         val decompilerValues = resources.getStringArray(R.array.decompilersValues)
         val decompilerDescriptions = resources.getStringArray(R.array.decompilerDescriptions)
 
-        decompilerItemCard.findViewById<TextView>(R.id.decompilerName).text = decompilers[decompilerIndex]
-        decompilerItemCard.findViewById<TextView>(R.id.decompilerDescription).text = decompilerDescriptions[decompilerIndex]
+        decompilerItemCard.findViewById<TextView>(R.id.decompilerName).text =
+                decompilers[decompilerIndex]
+        decompilerItemCard.findViewById<TextView>(R.id.decompilerDescription).text =
+                decompilerDescriptions[decompilerIndex]
 
         setupGears()
 
@@ -110,10 +112,12 @@ class DecompilerProcessFragment: BaseFragment<ViewModel>() {
 
                     if (it.outputData.getBoolean("ranOutOfMemory", false)) {
                         containerActivity.supportFragmentManager.popBackStack()
-                        containerActivity.gotoFragment(LowMemoryFragment(), mapOf(
-                            "packageInfo" to packageInfo,
-                            "decompiler" to decompilerValues[decompilerIndex]
-                        ).toBundle())
+                        containerActivity.gotoFragment(
+                            LowMemoryFragment(), mapOf(
+                                "packageInfo" to packageInfo,
+                                "decompiler" to decompilerValues[decompilerIndex]
+                            ).toBundle()
+                        )
                         hasCompleted = true
                     } else {
                         reconcileDecompilerStatus()
@@ -156,15 +160,18 @@ class DecompilerProcessFragment: BaseFragment<ViewModel>() {
                     finish()
                 }
                 hasPassed -> {
-                    val intent = Intent(context, NavigatorActivity::class.java)
-                    intent.putExtra("selectedApp", SourceInfo.from(
-                        sourceDir(
-                            packageInfo.name
-                        )
-                    ))
-                    startActivity(intent)
+                    containerActivity.supportFragmentManager.popBackStack()
                     hasCompleted = true
-                    finish()
+
+                    containerActivity.gotoFragment(
+                        NavigatorFragment(), mapOf(
+                            "selectedApp" to SourceInfo.from(
+                                sourceDir(
+                                    packageInfo.name
+                                )
+                            )
+                        ).toBundle()
+                    )
                 }
                 isWaiting -> statusText.text = getString(R.string.waitingToStart)
             }
@@ -211,7 +218,8 @@ class DecompilerProcessFragment: BaseFragment<ViewModel>() {
                     )
                     memoryStatus.setTextColor(textColor)
                     memoryUsage.setTextColor(textColor)
-                } catch (ignored: Exception) { }
+                } catch (ignored: Exception) {
+                }
                 return
             }
 
@@ -236,6 +244,7 @@ class DecompilerProcessFragment: BaseFragment<ViewModel>() {
         super.onPause()
         try {
             containerActivity.unregisterReceiver(progressReceiver)
-        } catch (ignored: Exception) { }
+        } catch (ignored: Exception) {
+        }
     }
 }

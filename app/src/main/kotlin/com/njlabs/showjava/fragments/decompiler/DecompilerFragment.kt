@@ -19,7 +19,6 @@
 package com.njlabs.showjava.fragments.decompiler
 
 import android.annotation.SuppressLint
-import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Build
@@ -36,12 +35,12 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.apps.adapters.getSystemBadge
+import com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment
 import com.njlabs.showjava.utils.ktx.sourceDir
 import com.njlabs.showjava.utils.ktx.toBundle
 import io.reactivex.Observable
@@ -128,7 +127,7 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
                         resources.getDrawable(R.drawable.ic_list_generic)
                     }
                 }
-                .subscribe { itemIcon.setImageDrawable(it) }
+                .subscribe { itemIcon?.setImageDrawable(it) }
         )
 
         assertSourceExistence(true)
@@ -172,9 +171,9 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
         val sourceInfo = SourceInfo.from(sourceDir(packageInfo.name))
         if (addListener) {
             historyCard.setOnClickListener {
-                val intent = Intent(context, NavigatorActivity::class.java)
-                intent.putExtra("selectedApp", sourceInfo)
-                startActivity(intent)
+                containerActivity.gotoFragment(NavigatorFragment(), mapOf(
+                    "selectedApp" to sourceInfo
+                ).toBundle())
             }
         }
         if (sourceInfo.exists()) {
