@@ -18,18 +18,22 @@
 
 package com.njlabs.showjava.fragments
 
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.ContainerActivity
 import com.njlabs.showjava.utils.UserPreferences
 import io.reactivex.disposables.CompositeDisposable
 
 abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+
     protected open val viewModelClass: Class<T>? = null
     protected abstract val layoutResource: Int
     abstract fun init(savedInstanceState: Bundle?)
@@ -42,7 +46,10 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
 
     protected lateinit var containerActivity: ContainerActivity
 
+    protected open var isBlack: Boolean = false
     protected var menu: Menu? = null
+    private var originalTitle: String? = null
+    private var originalSubtitle: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +61,9 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
 
     override fun onResume() {
         super.onResume()
+        menu?.let {
+            onSetToolbar(it)
+        }
         containerActivity
             .firebaseAnalytics
             .setCurrentScreen(
@@ -72,7 +82,22 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
         userPreferences = containerActivity.userPreferences
         firebaseAnalytics = containerActivity.firebaseAnalytics
         setHasOptionsMenu(true)
+
+        if (savedInstanceState != null) {
+            originalTitle = savedInstanceState.getString("originalTitle")
+            originalSubtitle = savedInstanceState.getString("originalSubtitle")
+        } else {
+            originalTitle = containerActivity.supportActionBar?.title?.toString()
+            originalSubtitle = containerActivity.supportActionBar?.subtitle?.toString()
+        }
+
         init(savedInstanceState)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("originalTitle", originalTitle)
+        outState.putString("originalSubtitle", originalSubtitle)
     }
 
     fun finish() {
@@ -81,12 +106,45 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
 
     override fun onDestroy() {
         super.onDestroy()
+        containerActivity.supportActionBar?.title = originalTitle
+        containerActivity.setSubtitle("")
         disposables.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         this.menu = menu
         super.onCreateOptionsMenu(menu, inflater)
+        menu?.let {
+            onSetToolbar(it)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        containerActivity.supportActionBar?.title = originalTitle
+        containerActivity.setSubtitle("")
+        menu?.let {
+            onResetToolbar(it)
+        }
+    }
+
+    protected open fun setDecor(overrideIsBlack: Boolean = isBlack) {
+        if (overrideIsBlack) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                containerActivity.window.statusBarColor = ContextCompat.getColor(context!!, R.color.grey_900_darker)
+                containerActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            }
+            containerActivity.toolbar.setBackgroundColor(ContextCompat.getColor(context!!, R.color.grey_900))
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                containerActivity.window
+                    .setFlags(
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    )
+            }
+            containerActivity.toolbar.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
+        }
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -103,5 +161,12 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
 
     open fun onBackPressed(): Boolean {
         return false
+    }
+
+    open fun onSetToolbar(menu: Menu) {
+
+    }
+
+    open fun onResetToolbar(menu: Menu) {
     }
 }

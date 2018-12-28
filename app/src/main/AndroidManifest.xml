@@ -81,19 +81,9 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activities.explorer.viewer.CodeViewerActivity"
-            android:theme="@style/SourceViewerTheme" />
+        <activity android:name=".activities.about.AboutActivity" />
 
-        <activity
-            android:name=".activities.explorer.viewer.ImageViewerActivity"
-            android:theme="@style/SourceViewerTheme" />
-
-        <activity android:name=".activities.about.AboutActivity">
-        </activity>
-
-        <activity android:name=".activities.purchase.PurchaseActivity">
-        </activity>
+        <activity android:name=".activities.purchase.PurchaseActivity" />
 
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"

@@ -44,8 +44,8 @@ import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment
+import com.njlabs.showjava.utils.ktx.bundleOf
 import com.njlabs.showjava.utils.ktx.sourceDir
-import com.njlabs.showjava.utils.ktx.toBundle
 import com.njlabs.showjava.workers.DecompilerWorker
 import kotlinx.android.synthetic.main.fragment_decompiler_process.*
 import timber.log.Timber
@@ -113,10 +113,10 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
                     if (it.outputData.getBoolean("ranOutOfMemory", false)) {
                         containerActivity.supportFragmentManager.popBackStack()
                         containerActivity.gotoFragment(
-                            LowMemoryFragment(), mapOf(
+                            LowMemoryFragment(), bundleOf(
                                 "packageInfo" to packageInfo,
                                 "decompiler" to decompilerValues[decompilerIndex]
-                            ).toBundle()
+                            )
                         )
                         hasCompleted = true
                     } else {
@@ -164,13 +164,13 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
                     hasCompleted = true
 
                     containerActivity.gotoFragment(
-                        NavigatorFragment(), mapOf(
+                        NavigatorFragment(), bundleOf(
                             "selectedApp" to SourceInfo.from(
                                 sourceDir(
                                     packageInfo.name
                                 )
                             )
-                        ).toBundle()
+                        )
                     )
                 }
                 isWaiting -> statusText.text = getString(R.string.waitingToStart)

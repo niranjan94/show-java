@@ -18,6 +18,7 @@
 
 package com.njlabs.showjava.utils.ktx
 
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Paint
 import android.graphics.Canvas
@@ -53,30 +54,36 @@ fun <V> Map<String, V>.toBundle(bundle: Bundle = Bundle()): Bundle = bundle.appl
     forEach {
         val k = it.key
         val v = it.value
-        when (v) {
-            is IBinder -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    putBinder(k, v)
-                }
-            }
-            is Bundle -> putBundle(k, v)
-            is Byte -> putByte(k, v)
-            is ByteArray -> putByteArray(k, v)
-            is String -> putString(k, v)
-            is Char -> putChar(k, v)
-            is CharArray -> putCharArray(k, v)
-            is CharSequence -> putCharSequence(k, v)
-            is Float -> putFloat(k, v)
-            is FloatArray -> putFloatArray(k, v)
-            is Parcelable -> putParcelable(k, v)
-            is Serializable -> putSerializable(k, v)
-            is Short -> putShort(k, v)
-            is ShortArray -> putShortArray(k, v)
-            is Boolean -> putBoolean(k, v)
-            is Int -> putInt(k, v)
-            is IntArray -> putIntArray(k, v)
-        }
+        bundle.putSmart(k, v)
     }
+}
+
+/**
+ * Put to [Bundle] using the right method based on the type
+ */
+fun Bundle.putSmart(k: String, v: Any?) = when (v) {
+    is IBinder -> {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            putBinder(k, v)
+        } else { }
+    }
+    is Bundle -> putBundle(k, v)
+    is Byte -> putByte(k, v)
+    is ByteArray -> putByteArray(k, v)
+    is String -> putString(k, v)
+    is Char -> putChar(k, v)
+    is CharArray -> putCharArray(k, v)
+    is CharSequence -> putCharSequence(k, v)
+    is Float -> putFloat(k, v)
+    is FloatArray -> putFloatArray(k, v)
+    is Parcelable -> putParcelable(k, v)
+    is Serializable -> putSerializable(k, v)
+    is Short -> putShort(k, v)
+    is ShortArray -> putShortArray(k, v)
+    is Boolean -> putBoolean(k, v)
+    is Int -> putInt(k, v)
+    is IntArray -> putIntArray(k, v)
+    else -> { }
 }
 
 /**
@@ -100,4 +107,3 @@ fun Bitmap.getCircularBitmap(config: Bitmap.Config = Bitmap.Config.ARGB_8888): B
         output
     }
 }
-

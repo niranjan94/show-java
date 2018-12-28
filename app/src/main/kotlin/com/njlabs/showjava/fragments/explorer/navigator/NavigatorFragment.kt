@@ -24,7 +24,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.webkit.MimeTypeMap
@@ -32,17 +31,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.explorer.viewer.CodeViewerActivity
-import com.njlabs.showjava.activities.explorer.viewer.ImageViewerActivity
 import com.njlabs.showjava.data.FileItem
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.explorer.navigator.adapters.FilesListAdapter
+import com.njlabs.showjava.fragments.explorer.viewer.CodeViewerFragment
+import com.njlabs.showjava.fragments.explorer.viewer.ImageViewerFragment
+import com.njlabs.showjava.utils.ktx.bundleOf
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_navigator.*
+import kotlinx.android.synthetic.main.fragment_navigator.*
 import timber.log.Timber
 import java.io.File
+
 
 class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
     override val viewModelClass = NavigatorViewModel::class.java
@@ -58,9 +59,6 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
     private var fileItems: ArrayList<FileItem> = ArrayList()
     private var selectedApp: SourceInfo? = null
 
-    private var originalTitle: String? = null
-    private var originalSubtitle: String? = null
-
     override fun init(savedInstanceState: Bundle?) {
         selectedApp = arguments?.getParcelable("selectedApp")
         if (savedInstanceState != null) {
@@ -72,17 +70,7 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
             currentDirectoryString?.let {
                 currentDirectory = File(it)
             }
-
-            originalTitle = savedInstanceState.getString("originalTitle")
-            originalSubtitle = savedInstanceState.getString("originalSubtitle")
-
-        } else {
-            originalTitle = containerActivity.supportActionBar?.title?.toString()
-            originalSubtitle = containerActivity.supportActionBar?.subtitle?.toString()
         }
-
-        containerActivity.supportActionBar?.title = selectedApp?.packageLabel
-        containerActivity.setSubtitle(selectedApp?.packageName)
 
         currentDirectory = currentDirectory ?: selectedApp?.sourceDirectory
         setupList()
@@ -101,17 +89,7 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
 
     private fun populateList(startDirectory: File) {
         currentDirectory = startDirectory
-        val packageName = selectedApp?.packageName
-        if (isAtRoot()) {
-            containerActivity.setSubtitle(packageName)
-        } else {
-            containerActivity.setSubtitle(
-                startDirectory.canonicalPath.replace(
-                    "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
-                    ""
-                )
-            )
-        }
+        updateToolbarTitle()
         swipeRefresh.isRefreshing = true
         disposables.add(viewModel.loadFiles(startDirectory)
             .subscribeOn(Schedulers.io())
@@ -150,20 +128,20 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
             } else {
                 when {
                     arrayOf("jpeg", "jpg", "png").contains(selectedFile.file.extension) -> {
-                        val intent = Intent(context, ImageViewerActivity::class.java)
-                        intent.putExtra("filePath", selectedFile.file.canonicalPath)
-                        intent.putExtra("name", selectedApp?.packageName)
-                        startActivity(intent)
+                        containerActivity.gotoFragment(ImageViewerFragment(), bundleOf(
+                            "filePath" to selectedFile.file.canonicalPath,
+                            "name" to selectedApp?.packageName
+                        ))
                     }
                     arrayOf(
                         "java", "xml", "json", "txt", "properties",
                         "yml", "yaml", "md", "html", "class",
                         "js", "css", "scss", "sass"
                     ).contains(selectedFile.file.extension) -> {
-                        val intent = Intent(context, CodeViewerActivity::class.java)
-                        intent.putExtra("filePath", selectedFile.file.canonicalPath)
-                        intent.putExtra("name", selectedApp?.packageName)
-                        startActivity(intent)
+                        containerActivity.gotoFragment(CodeViewerFragment(), bundleOf(
+                            "filePath" to selectedFile.file.canonicalPath,
+                            "name" to selectedApp?.packageName
+                        ))
                     }
                     else -> {
                         context?.let {
@@ -200,19 +178,17 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
         updateList(fileItems)
     }
 
-    override fun onSaveInstanceState(bundle: Bundle) {
-        super.onSaveInstanceState(bundle)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
         if (fileItems.size <= 1000) {
-            bundle.putParcelableArrayList("fileItems", fileItems)
+            outState.putParcelableArrayList("fileItems", fileItems)
         }
         selectedApp?.let {
-            bundle.putParcelable("selectedApp", it)
+            outState.putParcelable("selectedApp", it)
         }
         currentDirectory?.let {
-            bundle.putString("currentDirectory", it.canonicalPath)
+            outState.putString("currentDirectory", it.canonicalPath)
         }
-        bundle.putString("originalTitle", originalTitle)
-        bundle.putString("originalSubtitle", originalSubtitle)
     }
 
     private fun showProgressDialog() {
@@ -277,14 +253,6 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
             return true
         }
         return false
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        menu?.let {
-            it.findItem(R.id.share_code).isVisible = true
-            it.findItem(R.id.delete_code).isVisible = true
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -356,27 +324,32 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        menu?.let {
-            it.findItem(R.id.share_code).isVisible = true
-            it.findItem(R.id.delete_code).isVisible = true
+    private fun updateToolbarTitle() {
+        containerActivity.supportActionBar?.title = selectedApp?.packageLabel
+        containerActivity.setSubtitle(selectedApp?.packageName)
+        if (isAtRoot()) {
+            containerActivity.setSubtitle(selectedApp?.packageName)
+        } else {
+            containerActivity.setSubtitle(
+                currentDirectory?.canonicalPath?.replace(
+                    "${Environment.getExternalStorageDirectory()}/show-java/sources/${selectedApp?.packageName}/",
+                    ""
+                )
+            )
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        menu?.let {
-            it.findItem(R.id.share_code).isVisible = false
-            it.findItem(R.id.delete_code).isVisible = false
-        }
+    override fun onSetToolbar(menu: Menu) {
+        super.onSetToolbar(menu)
+        menu.findItem(R.id.share_code).isVisible = true
+        menu.findItem(R.id.delete_code).isVisible = true
+        updateToolbarTitle()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        containerActivity.supportActionBar?.title = originalTitle
-        containerActivity.setSubtitle(originalSubtitle)
-
+    override fun onResetToolbar(menu: Menu) {
+        super.onResetToolbar(menu)
+        menu.findItem(R.id.share_code).isVisible = false
+        menu.findItem(R.id.delete_code).isVisible = false
     }
 
     override fun onBackPressed():Boolean {

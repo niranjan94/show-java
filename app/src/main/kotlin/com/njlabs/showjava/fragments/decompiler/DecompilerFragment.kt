@@ -19,7 +19,6 @@
 package com.njlabs.showjava.fragments.decompiler
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
@@ -41,6 +40,7 @@ import com.njlabs.showjava.decompilers.BaseDecompiler
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.apps.adapters.getSystemBadge
 import com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment
+import com.njlabs.showjava.utils.ktx.bundleOf
 import com.njlabs.showjava.utils.ktx.sourceDir
 import com.njlabs.showjava.utils.ktx.toBundle
 import io.reactivex.Observable
@@ -171,9 +171,9 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
         val sourceInfo = SourceInfo.from(sourceDir(packageInfo.name))
         if (addListener) {
             historyCard.setOnClickListener {
-                containerActivity.gotoFragment(NavigatorFragment(), mapOf(
+                containerActivity.gotoFragment(NavigatorFragment(), bundleOf(
                     "selectedApp" to sourceInfo
-                ).toBundle())
+                ))
             }
         }
         if (sourceInfo.exists()) {
@@ -201,18 +201,18 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
         BaseDecompiler.start(inputMap)
 
         firebaseAnalytics.logEvent(
-            Constants.EVENTS.SELECT_DECOMPILER, hashMapOf(
+            Constants.EVENTS.SELECT_DECOMPILER, bundleOf(
                 FirebaseAnalytics.Param.VALUE to decompiler
-            ).toBundle()
+            )
         )
 
         firebaseAnalytics.logEvent(Constants.EVENTS.DECOMPILE_APP, inputMap.toBundle())
 
-        containerActivity.gotoFragment(DecompilerProcessFragment(), mapOf(
+        containerActivity.gotoFragment(DecompilerProcessFragment(), bundleOf(
             "packageInfo" to packageInfo,
             "decompilerIndex" to decompilerIndex,
             "fragmentClass" to DecompilerProcessFragment::class.java.name
-        ).toBundle())
+        ))
     }
 
 }

@@ -16,56 +16,48 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.activities.explorer.viewer
+package com.njlabs.showjava.fragments.explorer.viewer
 
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.ViewModel
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.ImageViewState
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.BaseActivity
-import kotlinx.android.synthetic.main.activity_image_viewer.*
+import com.njlabs.showjava.fragments.BaseFragment
+import kotlinx.android.synthetic.main.fragment_image_viewer.*
 import org.apache.commons.io.FilenameUtils
 
+class ImageViewerFragment: BaseFragment<ViewModel>() {
+    override val layoutResource = R.layout.fragment_image_viewer
 
-class ImageViewerActivity : BaseActivity() {
-    private var isBlack: Boolean = true
+    override var isBlack: Boolean = true
     private val bundleState = "ImageViewState"
 
+    private lateinit var fileName: String
+    private lateinit var packageName: String
+    private lateinit var subtitle: String
+
     override fun init(savedInstanceState: Bundle?) {
-        setupLayout(R.layout.activity_image_viewer)
-        window.decorView.setBackgroundColor(Color.BLACK)
-        toolbar.popupTheme = R.style.AppTheme_DarkPopupOverlay
-
-        val extras = intent.extras
-        extras?.let {
-
+        arguments?.let {
             var imageViewState: ImageViewState? = null
             if (savedInstanceState != null && savedInstanceState.containsKey(bundleState)) {
                 imageViewState = savedInstanceState.getSerializable(bundleState) as ImageViewState
+                isBlack = savedInstanceState.getBoolean("isBlack", true)
             }
-
             val filePath = it.getString("filePath")
-            val packageName = it.getString("name")
-            val fileName = FilenameUtils.getName(filePath)
-            supportActionBar?.title = fileName
-            val subtitle = FilenameUtils
+            this.packageName = it.getString("name")!!
+            this.fileName = FilenameUtils.getName(filePath)
+            this.subtitle = FilenameUtils
                 .getFullPath(filePath)
                 .replace(
                     "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
                     ""
                 )
-
-            if (fileName.trim().equals("icon.png", true)) {
-                setSubtitle(packageName)
-            } else {
-                setSubtitle(subtitle)
-            }
-
             imageView.setImage(ImageSource.uri(filePath!!), imageViewState)
             imageView.orientation = SubsamplingScaleImageView.ORIENTATION_USE_EXIF
             imageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_CENTER)
@@ -73,35 +65,52 @@ class ImageViewerActivity : BaseActivity() {
             imageView.setMinimumDpi(100)
             imageView.setMaximumDpi(600)
         }
-
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        menu.findItem(R.id.invert_colors).isVisible = true
-        return true
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val state = imageView.state
+        if (state != null) {
+            outState.putSerializable(bundleState, imageView.state)
+        }
+        outState.putBoolean("isBlack", isBlack)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.invert_colors -> {
-                if (isBlack) {
-                    window.decorView.setBackgroundColor(Color.WHITE)
-                } else {
-                    window.decorView.setBackgroundColor(Color.BLACK)
-                }
                 isBlack = !isBlack
+                setDecor()
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    public override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        val state = imageView.state
-        if (state != null) {
-            outState.putSerializable(bundleState, imageView.state)
+    override fun setDecor(overrideIsBlack: Boolean) {
+        super.setDecor(overrideIsBlack)
+        if (overrideIsBlack) {
+            imageView.setBackgroundColor(Color.BLACK)
+        } else {
+            imageView.setBackgroundColor(Color.WHITE)
         }
+    }
+
+    override fun onSetToolbar(menu: Menu) {
+        super.onSetToolbar(menu)
+        setDecor()
+        containerActivity.supportActionBar?.title = fileName
+        if (fileName.trim().equals("icon.png", true)) {
+            containerActivity.setSubtitle(packageName)
+        } else {
+            containerActivity.setSubtitle(subtitle)
+        }
+        menu.findItem(R.id.invert_colors).isVisible = true
+    }
+
+    override fun onResetToolbar(menu: Menu) {
+        super.onResetToolbar(menu)
+        setDecor(false)
+        menu.findItem(R.id.invert_colors).isVisible = false
     }
 }

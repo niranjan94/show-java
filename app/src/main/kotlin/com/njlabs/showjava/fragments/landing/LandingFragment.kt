@@ -34,7 +34,7 @@ import com.njlabs.showjava.fragments.apps.AppsFragment
 import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
 import com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment
 import com.njlabs.showjava.fragments.landing.adapters.HistoryListAdapter
-import com.njlabs.showjava.utils.ktx.toBundle
+import com.njlabs.showjava.utils.ktx.bundleOf
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_landing.*
@@ -82,9 +82,9 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
                 if (selectedFile.exists() && selectedFile.isFile) {
                     PackageInfo.fromFile(context!!, selectedFile)?.let {
                         containerActivity.gotoFragment(
-                            DecompilerFragment(), mapOf(
+                            DecompilerFragment(), bundleOf(
                                 "packageInfo" to it
-                            ).toBundle()
+                            )
                         )
                     }
                 }
@@ -160,16 +160,16 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
             historyListView.setHasFixedSize(true)
             historyListView.layoutManager = LinearLayoutManager(context)
             historyListAdapter = HistoryListAdapter(historyItems) { selectedHistoryItem ->
-                containerActivity.gotoFragment(NavigatorFragment(), mapOf(
+                containerActivity.gotoFragment(NavigatorFragment(), bundleOf(
                     "selectedApp" to selectedHistoryItem
-                ).toBundle())
+                ))
             }
             historyListView.adapter = historyListAdapter
         }
     }
 
-    override fun onSaveInstanceState(bundle: Bundle) {
-        super.onSaveInstanceState(bundle)
-        bundle.putParcelableArrayList("historyItems", historyItems)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList("historyItems", historyItems)
     }
 }

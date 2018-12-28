@@ -31,7 +31,7 @@ import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.apps.adapters.AppsListAdapter
 import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
-import com.njlabs.showjava.utils.ktx.toBundle
+import com.njlabs.showjava.utils.ktx.bundleOf
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_apps.*
@@ -127,14 +127,14 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
     }
 
     private fun openProcessActivity(packageInfo: PackageInfo, view: View) {
-        containerActivity.gotoFragment(DecompilerFragment(), mapOf(
+        containerActivity.gotoFragment(DecompilerFragment(), bundleOf(
             "packageInfo" to packageInfo
-        ).toBundle())
+        ))
     }
 
-    override fun onSaveInstanceState(bundle: Bundle) {
-        super.onSaveInstanceState(bundle)
-        bundle.putParcelableArrayList("apps", apps)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList("apps", apps)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

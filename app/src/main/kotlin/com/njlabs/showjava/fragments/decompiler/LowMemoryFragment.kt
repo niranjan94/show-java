@@ -25,7 +25,7 @@ import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.fragments.BaseFragment
-import com.njlabs.showjava.utils.ktx.toBundle
+import com.njlabs.showjava.utils.ktx.bundleOf
 import kotlinx.android.synthetic.main.fragment_low_memory.*
 
 /**
@@ -41,7 +41,7 @@ class LowMemoryFragment : BaseFragment<ViewModel>() {
         val decompiler = arguments?.getString("decompiler")
         reportButton.setOnClickListener {
             firebaseAnalytics.logEvent(
-                Constants.EVENTS.REPORT_APP_LOW_MEMORY, mapOf(
+                Constants.EVENTS.REPORT_APP_LOW_MEMORY, bundleOf(
                     "shouldIgnoreLibs" to userPreferences.ignoreLibraries,
                     "maxAttempts" to userPreferences.maxAttempts,
                     "chunkSize" to userPreferences.chunkSize,
@@ -50,7 +50,7 @@ class LowMemoryFragment : BaseFragment<ViewModel>() {
                     "name" to packageInfo?.name,
                     "type" to packageInfo?.type?.name,
                     "decompiler" to decompiler
-                ).toBundle()
+                )
             )
             Toast.makeText(context, R.string.appReportThanks, Toast.LENGTH_LONG).show()
         }

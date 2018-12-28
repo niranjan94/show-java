@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.net.ConnectivityManager
 import android.os.Build
+import android.os.Bundle
 import java.security.MessageDigest
 import java.text.Normalizer
 import java.text.SimpleDateFormat
@@ -114,3 +115,13 @@ fun getVersionCode(packageInfo: PackageInfo): Number {
     else
         packageInfo.versionCode
 }
+
+/**
+ * Create a [Bundle] from vararg pairs
+ */
+fun bundleOf(vararg pairs: Pair<String, Any?>) =
+    Bundle(pairs.size).apply {
+        for ((key, value) in pairs) {
+            putSmart(key, value)
+        }
+    }

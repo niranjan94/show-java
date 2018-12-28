@@ -16,24 +16,24 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/holder"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/layout_toolbar" />
+    <com.njlabs.showjava.utils.views.CodeView
+        android:id="@+id/codeView"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.njlabs.showjava.utils.views.CodeView>
 
-    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-        android:id="@+id/imageView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/adView"
-        android:layout_below="@+id/toolbar" />
-
-    <include
-        android:id="@+id/adView"
-        layout="@layout/layout_admob" />
+    <ProgressBar
+        android:id="@+id/codeLoadProgress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

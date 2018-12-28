@@ -16,26 +16,8 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
-
-<resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#D32F2F</color>
-
-    <color name="ic_launcher_background">@color/white</color>
-
-    <color name="black">#000000</color>
-    <color name="grey_900_darker">#1A1A1A</color>
-    <color name="grey_900">#212121</color>
-    <color name="grey_700">#616161</color>
-    <color name="grey_400">#BDBDBD</color>
-
-    <color name="green_500">#4CAF50</color>
-    <color name="amber_500">#FFC107</color>
-    <color name="orange_500">#FF9800</color>
-    <color name="red_500">#F44336</color>
-
-    <color name="white">#ffffff</color>
-    <color name="danger_color">#22d32f2f</color>
-    <color name="androidStudioBackground">#282b2e</color>
-</resources>
+<com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/imageView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"/>

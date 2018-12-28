@@ -53,7 +53,7 @@ import pub.devrel.easypermissions.EasyPermissions
 
 abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
-    protected lateinit var toolbar: Toolbar
+    lateinit var toolbar: Toolbar
     protected lateinit var context: AppCompatActivity
     lateinit var userPreferences: UserPreferences
     protected lateinit var secureUtils: SecureUtils

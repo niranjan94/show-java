@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.njlabs.showjava.activities.explorer.viewer
+package com.njlabs.showjava.fragments.explorer.viewer
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -26,16 +26,21 @@ import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
 import com.njlabs.showjava.R
-import com.njlabs.showjava.activities.BaseActivity
+import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.utils.views.CodeView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_code_viewer.*
+import kotlinx.android.synthetic.main.fragment_code_viewer.*
 import java.io.File
 
-class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
+class CodeViewerFragment: BaseFragment<ViewModel>(), CodeView.OnHighlightListener {
+    override val layoutResource = R.layout.fragment_code_viewer
+
+    override var isBlack: Boolean = true
 
     private var extensionTypeMap = hashMapOf(
         "txt" to "plaintext",
@@ -45,6 +50,7 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
     )
 
     private lateinit var codeViewPreferences: SharedPreferences
+    private lateinit var file: File
 
     private var wrapLine = false
     private var zoomable = true
@@ -53,27 +59,8 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
 
     override fun init(savedInstanceState: Bundle?) {
 
-        setupLayout(R.layout.activity_code_viewer)
-        val extras = intent.extras
-
-        val file = File(extras?.getString("filePath"))
-        val packageName = extras?.getString("name")
-
-        toolbar.popupTheme = R.style.AppTheme_DarkPopupOverlay
-
-        supportActionBar?.title = file.name
-        val subtitle = file.canonicalPath.replace(
-            "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
-            ""
-        )
-
-        file.name.trim().let {
-            if (it.equals("AndroidManifest.xml", true) || it.equals("info.json", true)) {
-                setSubtitle(packageName)
-            } else {
-                setSubtitle(subtitle)
-            }
-        }
+        file = File(arguments?.getString("filePath"))
+        holder.setBackgroundColor(ContextCompat.getColor(context!!, R.color.grey_900))
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             codeView.visibility = View.INVISIBLE
@@ -88,7 +75,7 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
             language = it
         }
 
-        codeViewPreferences = getSharedPreferences(
+        codeViewPreferences = containerActivity.getSharedPreferences(
             "code_view_prefs",
             Context.MODE_PRIVATE
         )
@@ -117,6 +104,7 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
                         .load()
                 }
         )
+
     }
 
     private fun loadFile(fileToLoad: File): Observable<String> {
@@ -129,21 +117,22 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
     override fun onLineClicked(lineNumber: Int, content: String) {}
 
     override fun onStartCodeHighlight() {
-        runOnUiThread {
+        containerActivity.runOnUiThread {
             codeView.visibility = View.INVISIBLE
             codeLoadProgress.visibility = View.VISIBLE
         }
     }
 
     override fun onFinishCodeHighlight() {
-        runOnUiThread {
+        containerActivity.runOnUiThread {
             codeView.visibility = View.VISIBLE
             codeLoadProgress.visibility = View.GONE
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
+    override fun onSetToolbar(menu: Menu) {
+        super.onSetToolbar(menu)
+        setDecor()
 
         menu.findItem(R.id.wrap_text).isVisible = true
         menu.findItem(R.id.invert_colors).isVisible = true
@@ -156,7 +145,31 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
             menu.findItem(R.id.line_number).isVisible = true
             menu.findItem(R.id.line_number).isChecked = showLineNumbers
         }
-        return true
+
+        val packageName = arguments?.getString("name")
+
+        containerActivity.supportActionBar?.title = file.name
+        val subtitle = file.canonicalPath.replace(
+            "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+            ""
+        )
+
+        file.name.trim().let {
+            if (it.equals("AndroidManifest.xml", true) || it.equals("info.json", true)) {
+                containerActivity.setSubtitle(packageName)
+            } else {
+                containerActivity.setSubtitle(subtitle)
+            }
+        }
+    }
+
+    override fun onResetToolbar(menu: Menu) {
+        super.onResetToolbar(menu)
+        setDecor(false)
+        menu.findItem(R.id.wrap_text).isVisible = false
+        menu.findItem(R.id.invert_colors).isVisible = false
+        menu.findItem(R.id.zoomable).isVisible = false
+        menu.findItem(R.id.line_number).isVisible = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -191,4 +204,5 @@ class CodeViewerActivity : BaseActivity(), CodeView.OnHighlightListener {
         }
         return super.onOptionsItemSelected(item)
     }
+
 }
