@@ -128,7 +128,7 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
     private fun openProcessActivity(packageInfo: PackageInfo, view: View) {
         containerActivity.gotoFragment(DecompilerFragment(), bundleOf(
             "packageInfo" to packageInfo,
-            "transitionName" to "appsListItemTransition"
+            "transitionName" to getString(R.string.appsListItemTransitionName)
         ), view.findViewById(R.id.itemCard))
     }
 

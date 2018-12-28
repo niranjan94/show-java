@@ -59,6 +59,8 @@ class AppsViewModel(application: Application): AndroidViewModel(application) {
             installedApps.sortBy {
                 it.label.toLowerCase()
             }
+
+
             emitter.onNext(ProcessStatus(installedApps))
             emitter.onComplete()
         }

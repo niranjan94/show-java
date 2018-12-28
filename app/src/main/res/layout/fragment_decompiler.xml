@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:transitionName="appsListItemTransition"
+        android:transitionName="@string/appsListItemTransitionName"
         android:focusable="true"
         app:cardElevation="1dp"
         app:cardCornerRadius="0dp"
@@ -86,6 +86,7 @@
         android:focusable="true"
         android:visibility="gone"
         android:foreground="?attr/selectableItemBackground"
+        android:transitionName="@string/decompilerListItemTransitionName"
         app:cardElevation="1dp"
         app:cardCornerRadius="0dp"
         tools:ignore="UnusedAttribute">

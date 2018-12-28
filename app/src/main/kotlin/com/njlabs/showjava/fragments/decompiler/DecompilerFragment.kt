@@ -91,6 +91,9 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
             view.decompilerName.text = decompilers[index]
             view.decompilerDescription.text = decompilerDescriptions[index]
             view.decompilerItemCard.cardElevation = 1F
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                view.decompilerItemCard.transitionName = decompiler
+            }
             view.decompilerItemCard.setOnClickListener {
                 startProcess(it, decompiler, index)
             }
@@ -213,8 +216,8 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
         containerActivity.gotoFragment(DecompilerProcessFragment(), bundleOf(
             "packageInfo" to packageInfo,
             "decompilerIndex" to decompilerIndex,
-            "fragmentClass" to DecompilerProcessFragment::class.java.name
-        ))
+            "transitionName" to getString(R.string.decompilerListItemTransitionName)
+        ), view)
     }
 
 }
