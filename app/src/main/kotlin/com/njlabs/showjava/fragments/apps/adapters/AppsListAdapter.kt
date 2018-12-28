@@ -19,6 +19,7 @@
 package com.njlabs.showjava.fragments.apps.adapters
 
 import android.content.Context
+import android.os.Build
 import android.text.SpannableString
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -74,6 +75,10 @@ class AppsListAdapter(
                     )
                 else
                     packageInfo.label
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    itemView.itemCard.transitionName = packageInfo.name
+                }
 
                 itemView.itemSecondaryLabel.text = packageInfo.version
                 itemView.itemIcon.setImageDrawable(packageInfo.icon)

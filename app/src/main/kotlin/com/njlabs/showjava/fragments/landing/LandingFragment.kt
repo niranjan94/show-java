@@ -18,7 +18,6 @@
 
 package com.njlabs.showjava.fragments.landing
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.view.View

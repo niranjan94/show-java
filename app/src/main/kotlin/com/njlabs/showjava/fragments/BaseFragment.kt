@@ -31,6 +31,8 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.ContainerActivity
 import com.njlabs.showjava.utils.UserPreferences
 import io.reactivex.disposables.CompositeDisposable
+import androidx.transition.TransitionInflater
+
 
 abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
@@ -50,6 +52,14 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
     protected var menu: Menu? = null
     private var originalTitle: String? = null
     private var originalSubtitle: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            sharedElementEnterTransition =
+                    TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -112,8 +122,8 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        this.menu = menu
         super.onCreateOptionsMenu(menu, inflater)
+        this.menu = menu
         menu?.let {
             onSetToolbar(it)
         }
@@ -121,6 +131,7 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
 
     override fun onPause() {
         super.onPause()
+        disposables.clear()
         containerActivity.supportActionBar?.title = originalTitle
         containerActivity.setSubtitle("")
         menu?.let {

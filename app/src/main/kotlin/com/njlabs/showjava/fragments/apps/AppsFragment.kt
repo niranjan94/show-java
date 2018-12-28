@@ -20,7 +20,6 @@ package com.njlabs.showjava.fragments.apps
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -49,7 +48,7 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
 
     private var apps = ArrayList<PackageInfo>()
     private var filteredApps = ArrayList<PackageInfo>()
-    private var withSystemApps: Boolean = false
+    private var withSystemApps = false
 
     override fun init(savedInstanceState: Bundle?) {
         withSystemApps = containerActivity.userPreferences.showSystemApps
@@ -128,19 +127,14 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
 
     private fun openProcessActivity(packageInfo: PackageInfo, view: View) {
         containerActivity.gotoFragment(DecompilerFragment(), bundleOf(
-            "packageInfo" to packageInfo
-        ))
+            "packageInfo" to packageInfo,
+            "transitionName" to "appsListItemTransition"
+        ), view.findViewById(R.id.itemCard))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList("apps", apps)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        searchMenuItem = menu?.findItem(R.id.search)
-        searchView = menu?.findItem(R.id.search)?.actionView as SearchView?
     }
 
     private fun searchApps(query: String?) {
@@ -161,13 +155,15 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
         historyListAdapter.updateList(filteredApps)
     }
 
-    override fun onPause() {
-        super.onPause()
-        searchMenuItem?.isVisible = false
+    override fun onSetToolbar(menu: Menu) {
+        super.onSetToolbar(menu)
+        searchMenuItem = menu.findItem(R.id.search)
+        searchView = menu.findItem(R.id.search)?.actionView as SearchView?
+        searchMenuItem?.isVisible = appsList.visibility == View.VISIBLE
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onResetToolbar(menu: Menu) {
+        super.onResetToolbar(menu)
         searchMenuItem?.isVisible = false
     }
 

@@ -31,8 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:transitionName="appsListItemTransition"
         android:focusable="true"
-        android:transitionName="appListItem"
         app:cardElevation="1dp"
         app:cardCornerRadius="0dp"
         tools:ignore="UnusedAttribute">

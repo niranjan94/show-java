@@ -25,6 +25,7 @@ object Constants {
 
     const val STORAGE_PERMISSION_REQUEST = 1009
     const val FRAGMENT_TAG = "com.njlabs.showjava.fragments.primary"
+    const val FRAGMENT_BACKSTACK = "com.njlabs.showjava.fragments.backstack.primary"
 
     interface EVENTS {
         companion object {

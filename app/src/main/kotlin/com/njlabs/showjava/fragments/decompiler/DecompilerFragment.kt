@@ -127,7 +127,9 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
                         resources.getDrawable(R.drawable.ic_list_generic)
                     }
                 }
-                .subscribe { itemIcon?.setImageDrawable(it) }
+                .subscribe {
+                    itemIcon?.setImageDrawable(it)
+                }
         )
 
         assertSourceExistence(true)

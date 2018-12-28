@@ -39,16 +39,13 @@ class AppsViewModel(application: Application): AndroidViewModel(application) {
      */
     fun loadApps(withSystemApps: Boolean): Observable<ProcessStatus<ArrayList<PackageInfo>>> {
         return Observable.create { emitter: ObservableEmitter<ProcessStatus<ArrayList<PackageInfo>>> ->
-            val installedApps = ArrayList<PackageInfo>()
             var packages = application.packageManager.getInstalledPackages(0)
             packages = packages.filter { pack ->
                 withSystemApps || !isSystemPackage(pack)
             }
-            packages.forEachIndexed { index, pack ->
+            val installedApps = ArrayList(packages.mapIndexed { index, pack ->
                 val packageInfo = PackageInfo.fromApkPackageInfo(application, pack)
                 packageInfo.icon = pack.applicationInfo.loadIcon(application.packageManager)
-                packageInfo.isSystemPackage = isSystemPackage(pack)
-                installedApps.add(packageInfo)
                 val currentCount = index + 1
                 emitter.onNext(
                     ProcessStatus(
@@ -57,7 +54,8 @@ class AppsViewModel(application: Application): AndroidViewModel(application) {
                         application.getString(R.string.loadingStatistic, currentCount, packages.size)
                     )
                 )
-            }
+                packageInfo
+            })
             installedApps.sortBy {
                 it.label.toLowerCase()
             }

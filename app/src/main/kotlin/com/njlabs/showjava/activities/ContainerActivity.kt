@@ -73,7 +73,7 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
         purchaseUtils.doOnComplete {
             if (isPro()) {
                 supportActionBar?.title = "${getString(R.string.appName)} Pro"
-                findViewById<AdView>(R.id.adView)?.visibility = View.GONE
+                findViewById<View>(R.id.adView)?.visibility = View.GONE
                 navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
             }
         }
@@ -81,7 +81,6 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
         if (inEea && userPreferences.consentStatus == ConsentStatus.UNKNOWN.ordinal) {
             Ads(context).loadConsentScreen()
         }
-
 
         supportFragmentManager.addOnBackStackChangedListener {
             currentFragment?.let {
@@ -195,15 +194,30 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
         return super.onOptionsItemSelected(item)
     }
 
-    fun gotoFragment(fragment: Fragment, bundle: Bundle? = null) {
+    fun gotoFragment(fragment: Fragment, bundle: Bundle? = null, sharedView: View? = null) {
         bundle?.let {
             fragment.arguments = bundle
         }
-        supportFragmentManager
+        val transaction = supportFragmentManager
             .beginTransaction()
-            //.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+
+        if (sharedView != null) {
+            transaction.addSharedElement(
+                sharedView,
+                bundle?.getString("transitionName", "sharedElementTransition") ?: "sharedElementTransition"
+            )
+
+        } else {
+            transaction
+                .setCustomAnimations(
+                    android.R.anim.fade_in, android.R.anim.fade_out,
+                    android.R.anim.fade_in, android.R.anim.fade_out
+                )
+        }
+
+        transaction
             .replace(R.id.fragmentHolder, fragment, Constants.FRAGMENT_TAG)
-            .addToBackStack(null)
+            .addToBackStack(Constants.FRAGMENT_BACKSTACK)
             .commit()
     }
 
