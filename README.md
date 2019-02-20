@@ -57,7 +57,7 @@ Head over [here](https://github.com/niranjan94/show-java/blob/master/CONTRIBUTIN
 Unless explicitly stated otherwise all files in this repository are licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0-standalone.html). All projects **must** properly attribute [The Original Source](https://github.com/niranjan94/show-java). 
     
     Show Java - A java/apk decompiler for android
-    Copyright (C) 2018 Niranjan Rajendran
+    Copyright (C) 2019 Niranjan Rajendran
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
