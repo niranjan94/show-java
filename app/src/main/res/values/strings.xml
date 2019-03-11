@@ -111,6 +111,8 @@
     <string name="startingDexToJar">Starting DEX to JAR Conversion</string>
     <string name="shareSource">Share source</string>
     <string name="deleteSource">Delete source</string>
+    <string name="decompilerUnavailable">Decompiler Unavailable</string>
+    <string name="decompilerUnavailableExplanation">JaDX and Fernflower use newer Java features such as some types of lambda\'s which are not available on pre-N versions of Android.\n\nPlease use CFR instead.</string>
     <string name="deleteSourceHistory">Delete source history</string>
     <string name="deleteSourceConfirm">Are you sure you want to delete the decompiled source ?</string>
     <string name="deleteSourceHistoryConfirm">Are you sure you want to delete source history ?</string>
