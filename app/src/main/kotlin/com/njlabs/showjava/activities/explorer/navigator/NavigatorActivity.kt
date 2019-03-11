@@ -145,7 +145,7 @@ class NavigatorActivity : BaseActivity() {
                         startActivity(intent)
                     }
                     arrayOf(
-                        "java", "xml", "json", "txt", "properties",
+                        "java", "xml", "json", "txt", "properties", "sql",
                         "yml", "yaml", "md", "html", "class",
                         "js", "css", "scss", "sass"
                     ).contains(selectedFile.file.extension) -> {
