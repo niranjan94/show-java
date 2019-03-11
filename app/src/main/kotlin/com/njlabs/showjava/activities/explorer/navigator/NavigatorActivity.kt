@@ -21,6 +21,7 @@ package com.njlabs.showjava.activities.explorer.navigator
 import android.app.ProgressDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.view.Menu
@@ -239,14 +240,11 @@ class NavigatorActivity : BaseActivity() {
         dismissProgressDialog()
         val shareIntent = Intent()
         shareIntent.action = Intent.ACTION_SEND
-        shareIntent.setDataAndType(
-            FileProvider.getUriForFile(
-                context,
-                context.applicationContext.packageName + ".provider",
-                file
-            ),
-            MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+        shareIntent.putExtra(
+            Intent.EXTRA_STREAM,
+            FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", file)
         )
+        shareIntent.type = "application/zip"
         startActivity(
             Intent.createChooser(
                 shareIntent,
