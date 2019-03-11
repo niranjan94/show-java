@@ -31,7 +31,7 @@ class LandingHandler(private var context: Context) {
 
 
     private fun isDecompilerRunning(): Boolean {
-        return WorkManager.getInstance().getStatusesByTagLiveData("decompiler").value?.any {
+        return WorkManager.getInstance().getWorkInfosByTagLiveData("decompiler").value?.any {
             !it.state.isFinished
         } ?: false
     }

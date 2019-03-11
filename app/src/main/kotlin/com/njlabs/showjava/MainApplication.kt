@@ -101,7 +101,7 @@ class MainApplication : MultiDexApplication() {
                 .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val workManager = WorkManager.getInstance()
             manager.activeNotifications.forEach { notification ->
-                val status = workManager.getStatusesForUniqueWorkLiveData(notification.tag)
+                val status = workManager.getWorkInfosForUniqueWorkLiveData(notification.tag)
                     .value?.any { it.state.isFinished }
                 if (status == null || status == true) {
                     manager.cancel(notification.tag, notification.id)

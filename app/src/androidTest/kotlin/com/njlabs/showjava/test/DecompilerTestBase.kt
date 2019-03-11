@@ -122,16 +122,16 @@ abstract class DecompilerTestBase {
         worker = JarExtractionWorker(appContext.targetContext, data)
         result = worker.doWork()
         worker.onStopped()
-        TestCase.assertEquals("Can extract JAR", ListenableWorker.Result.SUCCESS, result)
+        TestCase.assertEquals("Can extract JAR", ListenableWorker.Result.success(), result)
 
         worker = JavaExtractionWorker(appContext.targetContext, data)
         result = worker.doWork()
         worker.onStopped()
-        TestCase.assertEquals("Can extract JAVA Code", ListenableWorker.Result.SUCCESS, result)
+        TestCase.assertEquals("Can extract JAVA Code", ListenableWorker.Result.success(), result)
 
         worker = ResourcesExtractionWorker(appContext.targetContext, data)
         result = worker.doWork()
         worker.onStopped()
-        TestCase.assertEquals("Can extract resources", ListenableWorker.Result.SUCCESS, result)
+        TestCase.assertEquals("Can extract resources", ListenableWorker.Result.success(), result)
     }
 }

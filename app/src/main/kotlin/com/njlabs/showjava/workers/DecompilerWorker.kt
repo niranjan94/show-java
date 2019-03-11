@@ -85,7 +85,7 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
      *
      */
     override fun doWork(): Result {
-        var result = if (runAttemptCount >= (maxAttempts - 1)) Result.FAILURE else Result.RETRY
+        var result = if (runAttemptCount >= (maxAttempts - 1)) Result.failure() else Result.retry()
         var ranOutOfMemory = false
         val notifier = ProcessNotifier(context, id)
             .withPackageInfo(packageName, packageLabel, inputPackageFile)
@@ -96,6 +96,8 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
         Crashlytics.setString("decompilation_package_label", packageLabel)
         Crashlytics.setInt("decompilation_chunk_size", chunkSize)
         Crashlytics.setInt("decompilation_memory_threshold", memoryThreshold)
+
+        var outputData = Data.Builder().build()
 
         worker ?.let {
             try {
@@ -122,14 +124,14 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
             } catch (e: Exception) {
                 Timber.e(e)
             }
-            it.onStopped(false)
+            it.onStopped()
         }
 
         if (ranOutOfMemory) {
-            result = Result.FAILURE
+            result = Result.failure(outputData)
         }
 
-        if (result == Result.FAILURE) {
+        if (result == Result.failure()) {
             try {
                 if (ranOutOfMemory) {
                     notifier.lowMemory(decompiler)
@@ -155,11 +157,10 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
      * Called when the job is stopped. (Either by user-initiated cancel or when complete)
      * We clean up the notifications and caches if any on shutdown.
      *
-     * @param [cancelled] true if the job was cancelled by the user
      */
-    override fun onStopped(cancelled: Boolean) {
-        super.onStopped(cancelled)
-        worker?.onStopped(cancelled)
+    override fun onStopped() {
+        super.onStopped()
+        worker?.onStopped()
     }
 
     companion object {

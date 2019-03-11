@@ -257,6 +257,6 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
 
         onCompleted()
 
-        return ListenableWorker.Result.SUCCESS
+        return ListenableWorker.Result.success()
     }
 }

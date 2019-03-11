@@ -100,7 +100,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             }
         }
 
-        return ListenableWorker.Result.SUCCESS
+        return ListenableWorker.Result.success()
     }
 
     fun withAttempt(attempt: Int = 0): ListenableWorker.Result {
@@ -175,12 +175,12 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      */
     protected fun exit(exception: Exception?): ListenableWorker.Result {
         Timber.e(exception)
-        onStopped(false)
+        onStopped()
         disposables.clear()
         return if (runAttemptCount >= (maxAttempts - 1))
-            ListenableWorker.Result.FAILURE
+            ListenableWorker.Result.failure()
         else
-            ListenableWorker.Result.RETRY
+            ListenableWorker.Result.retry()
     }
 
     /**
@@ -189,7 +189,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected fun successIf(condition: Boolean): ListenableWorker.Result {
         disposables.clear()
         return if (condition)
-            ListenableWorker.Result.SUCCESS
+            ListenableWorker.Result.success()
         else
             exit(Exception("Success condition failed"))
     }
@@ -236,13 +236,10 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     /**
      * Cancel notification on worker stop
      */
-    open fun onStopped(cancelled: Boolean = false) {
-        Timber.d("[cancel-request] cancelled: $cancelled")
+    open fun onStopped() {
+        Timber.d("[cancel-request] cancelled")
         disposables.clear()
         processNotifier?.cancel()
-        if (cancelled) {
-            FileUtils.deleteQuietly(workingDirectory)
-        }
     }
 
     companion object {

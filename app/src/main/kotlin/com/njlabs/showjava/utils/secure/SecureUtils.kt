@@ -67,8 +67,8 @@ class SecureUtils(val context: Context) {
             enableGooglePlayLicensing(BuildConfig.PLAY_LICENSE_KEY)
             if (BuildConfig.EXTENDED_VALIDATION) {
                 enableInstallerId(InstallerID.GOOGLE_PLAY)
-                enableUnauthorizedAppsCheck(true)
-                enableDebugCheck(true)
+                enableUnauthorizedAppsCheck()
+                enableDebugCheck()
             }
             callback {
                 doNotAllow { a, b ->
