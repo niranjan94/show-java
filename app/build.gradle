@@ -27,8 +27,8 @@ apply plugin: "ru.tinkoff.gradle.jarjar"
 
 def versionMajor = 3
 def versionMinor = 0
-def versionPatch = 5
-def versionBuild = 2
+def versionPatch = 6
+def versionBuild = 1
 
 def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
@@ -212,11 +212,11 @@ dependencies {
     // DX Tool. We are using jar-jar to repackage the dx lib.
     // As android comes with the same classes in the lib-art.jar package that is usually a tad bit
     // older than what we need and hence missing stuff.
-    jarJar files("libs/dx-1.14.jar")
+    jarJar files("libs/dx-1.16.jar")
 
     // JaDX & friends
-    implementation files("libs/jadx-core-0.8.0.jar")
-    implementation files("libs/dx-1.14.jar")
+    implementation files("libs/jadx-core-0.9.0.jar")
+    implementation files("libs/dx-1.16.jar")
     implementation files("libs/android-5.1.jar")
     implementation "org.slf4j:slf4j-api:1.7.25"
     implementation "org.slf4j:slf4j-simple:1.7.25"
@@ -270,7 +270,7 @@ dependencies {
 }
 
 jarJar {
-    rules = ["dx-1.14.jar": "com.android.** xyz.codezero.android.@1"]
+    rules = ["dx-1.16.jar": "com.android.** xyz.codezero.android.@1"]
 }
 
 apply plugin: "hiBeaver"
