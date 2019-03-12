@@ -32,7 +32,7 @@ class ProductionTree : Timber.Tree() {
             return
         }
 
-        if (t !== null && t !is OutOfMemoryError) {
+        if (t !== null && t !is OutOfMemoryError && t !is StackOverflowError && t !is NoClassDefFoundError) {
             if (message.isNotEmpty()) {
                 Crashlytics.log("[$tag] $message")
             }
