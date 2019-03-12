@@ -147,6 +147,6 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
             .setSourceSize(FileUtils.sizeOfDirectory(workingDirectory))
             .persist()
 
-        return successIf(outputJavaSrcDirectory.list().isNotEmpty())
+        return successIf(!outputJavaSrcDirectory.list().isNullOrEmpty())
     }
 }
