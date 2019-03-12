@@ -104,7 +104,7 @@ class LandingActivity : BaseActivity() {
                 val selectedFile = File(files.first())
                 if (selectedFile.exists() && selectedFile.isFile) {
                     PackageInfo.fromFile(context, selectedFile) ?. let {
-                        val i = Intent(applicationContext, DecompilerActivity::class.java)
+                        val i = Intent(context, DecompilerActivity::class.java)
                         i.putExtra("packageInfo", it)
                         startActivity(i)
                     }

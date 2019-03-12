@@ -129,7 +129,7 @@ class AppsActivity : BaseActivity(), SearchView.OnQueryTextListener, SearchView.
     }
 
     private fun openProcessActivity(packageInfo: PackageInfo, view: View) {
-        val i = Intent(applicationContext, DecompilerActivity::class.java)
+        val i = Intent(context, DecompilerActivity::class.java)
         i.putExtra("packageInfo", packageInfo)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val options = ActivityOptions
