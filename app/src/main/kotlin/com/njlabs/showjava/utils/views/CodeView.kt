@@ -240,7 +240,7 @@ highlightLineNumber($highlightLineNumber)
     }
 
     private fun insertLineNumber(code: String?): String {
-        val m = Pattern.compile("(.*?)&#10;").matcher(code!!)
+        val m = Pattern.compile("(.*?)&#10;").matcher(code ?: "")
         val sb = StringBuffer()
         var pos = startLineNumber
         lineCount = 0

@@ -164,8 +164,10 @@ class SecureUtils(val context: Context) {
                     emitter.onNext(it)
                     emitter.onComplete()
                 }, Response.ErrorListener {
-                    emitter.onError(it)
-                    emitter.onComplete()
+                    if (!emitter.isDisposed) {
+                        emitter.onError(it)
+                        emitter.onComplete()
+                    }
                 }
             )
             RequestQueue.getInstance(context).addToRequestQueue(request)
