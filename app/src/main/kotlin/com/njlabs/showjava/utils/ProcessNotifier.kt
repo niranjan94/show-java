@@ -137,7 +137,7 @@ class ProcessNotifier(
 
     fun updateTitle(title: String, forceSet: Boolean = false) {
         val currentTime = System.currentTimeMillis()
-        if (!isCancelled && (currentTime - time >= 500 || forceSet)) {
+        if (!isCancelled && (currentTime - time >= 500 || forceSet) && ::builder.isInitialized) {
             builder.setContentTitle(title)
             manager.notify(notificationTag, notificationId, silence(builder.build()))
             time = currentTime
@@ -146,7 +146,7 @@ class ProcessNotifier(
 
     fun updateText(text: String, forceSet: Boolean = false) {
         val currentTime = System.currentTimeMillis()
-        if (!isCancelled && (currentTime - time >= 500 || forceSet)) {
+        if (!isCancelled && (currentTime - time >= 500 || forceSet) && ::builder.isInitialized) {
             builder.setContentText(text)
             manager.notify(notificationTag, notificationId, silence(builder.build()))
             time = currentTime
@@ -155,7 +155,7 @@ class ProcessNotifier(
 
     fun updateTitleText(title: String, text: String, forceSet: Boolean = false) {
         val currentTime = System.currentTimeMillis()
-        if (!isCancelled && (currentTime - time >= 500 || forceSet)) {
+        if (!isCancelled && (currentTime - time >= 500 || forceSet) && ::builder.isInitialized) {
             builder.setContentTitle(title)
             builder.setContentText(text)
             manager.notify(notificationTag, notificationId, silence(builder.build()))
