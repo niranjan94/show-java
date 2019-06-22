@@ -18,6 +18,7 @@
 
 package com.njlabs.showjava.fragments.settings
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -33,7 +34,7 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.UserPreferences
-import com.njlabs.showjava.utils.ktx.appStorage
+import com.njlabs.showjava.utils.ktx.Storage
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -144,7 +145,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun deleteHistory(): Observable<Any> {
         return Observable.fromCallable {
-            appStorage.resolve("sources")
+            Storage.getInstance().appStorage.resolve("sources")
                 .deleteRecursively()
         }
     }

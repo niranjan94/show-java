@@ -28,7 +28,7 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.ProcessNotifier
 import com.njlabs.showjava.utils.UserPreferences
-import com.njlabs.showjava.utils.ktx.appStorage
+import com.njlabs.showjava.utils.ktx.Storage
 import com.njlabs.showjava.utils.ktx.cleanMemory
 import com.njlabs.showjava.utils.streams.ProgressStream
 import com.njlabs.showjava.workers.DecompilerWorker
@@ -62,6 +62,10 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected val packageLabel = data.getString("label").toString()
 
     protected val keepIntermediateFiles = data.getBoolean("keepIntermediateFiles", UserPreferences.DEFAULTS.KEEP_INTERMEDIATE_FILES)
+
+    private val appStorage: File by lazy {
+        Storage.getInstance(context).appStorage
+    }
 
     protected val workingDirectory: File = appStorage.resolve("sources/$packageName/")
     protected val cacheDirectory: File = appStorage.resolve("sources/.cache/")

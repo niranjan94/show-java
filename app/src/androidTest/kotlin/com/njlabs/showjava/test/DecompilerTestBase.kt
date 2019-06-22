@@ -41,8 +41,10 @@ abstract class DecompilerTestBase {
     abstract val type: PackageInfo.Type
 
     private val testAssets: File
-        get() = File(Environment.getExternalStorageDirectory(), "show-java")
-            .resolve("test-assets")
+        get() {
+            val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+            return appContext.filesDir.resolve("test-assets")
+        }
 
     private val testApplicationFile: File
         get() = testAssets.resolve("test-application.${type.name.toLowerCase()}")
@@ -86,6 +88,8 @@ abstract class DecompilerTestBase {
 
     @Test
     fun testDecompiler() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+
         val data = BaseDecompiler.formData(hashMapOf(
             "shouldIgnoreLibs" to true,
             "keepIntermediateFiles" to true,
@@ -99,37 +103,34 @@ abstract class DecompilerTestBase {
             "type" to type.ordinal
         ))
 
-        val packageInfo = PackageInfo.fromFile(
-            InstrumentationRegistry.getInstrumentation().targetContext,
-            testApplicationFile
-        )
+        val packageInfo = PackageInfo.fromFile(context, testApplicationFile)
 
         TestCase.assertNotNull("Can parse PackageInfo from file", packageInfo)
 
         val outputDirectory = File(
-            Environment.getExternalStorageDirectory(), "show-java/sources/${data.getString("name")}"
+            context.filesDir, "show-java/sources/${data.getString("name")}"
         )
 
         if (outputDirectory.exists()) {
             outputDirectory.deleteRecursively()
+        } else {
+            outputDirectory.mkdirs()
         }
-
-        val appContext = InstrumentationRegistry.getInstrumentation()
 
         var result: ListenableWorker.Result
         var worker: BaseDecompiler
 
-        worker = JarExtractionWorker(appContext.targetContext, data)
+        worker = JarExtractionWorker(context, data)
         result = worker.doWork()
         worker.onStopped()
         TestCase.assertEquals("Can extract JAR", ListenableWorker.Result.success(), result)
 
-        worker = JavaExtractionWorker(appContext.targetContext, data)
+        worker = JavaExtractionWorker(context, data)
         result = worker.doWork()
         worker.onStopped()
         TestCase.assertEquals("Can extract JAVA Code", ListenableWorker.Result.success(), result)
 
-        worker = ResourcesExtractionWorker(appContext.targetContext, data)
+        worker = ResourcesExtractionWorker(context, data)
         result = worker.doWork()
         worker.onStopped()
         TestCase.assertEquals("Can extract resources", ListenableWorker.Result.success(), result)

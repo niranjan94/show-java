@@ -37,8 +37,7 @@ import com.crashlytics.android.Crashlytics
 import com.google.firebase.iid.FirebaseInstanceId
 import io.fabric.sdk.android.Fabric
 import com.crashlytics.android.core.CrashlyticsCore
-
-
+import com.njlabs.showjava.utils.ktx.Storage
 
 
 class MainApplication : MultiDexApplication() {
@@ -48,6 +47,9 @@ class MainApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+
+        Storage.init(this)
+
         instanceId = FirebaseInstanceId.getInstance().id
 
         PreferenceManager.setDefaultValues(

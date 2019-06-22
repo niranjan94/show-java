@@ -21,7 +21,7 @@ package com.njlabs.showjava.fragments.landing
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.njlabs.showjava.data.SourceInfo
-import com.njlabs.showjava.utils.ktx.appStorage
+import com.njlabs.showjava.utils.ktx.Storage
 import io.reactivex.Observable
 import timber.log.Timber
 import java.io.File
@@ -30,6 +30,7 @@ import java.io.IOException
 class LandingViewModel(application: Application): AndroidViewModel(application) {
 
     fun loadHistory(): Observable<ArrayList<SourceInfo>> {
+        val appStorage = Storage.getInstance().appStorage
         return Observable.fromCallable {
             val historyItems = ArrayList<SourceInfo>()
             appStorage.mkdirs()

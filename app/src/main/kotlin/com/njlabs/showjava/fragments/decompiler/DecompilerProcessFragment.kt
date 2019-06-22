@@ -64,7 +64,7 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
     private var ranOutOfMemory = false
 
     override fun init(savedInstanceState: Bundle?) {
-        packageInfo = arguments!!.getParcelable("packageInfo") as PackageInfo
+        packageInfo = (arguments?.getParcelable("packageInfo"))!!
         showMemoryUsage = userPreferences.showMemoryUsage
 
         memoryUsage.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE
