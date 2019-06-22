@@ -168,6 +168,8 @@ configurations.all {
     }
 }
 
+def work_version = "2.1.0-beta02"
+
 dependencies {
     // Multi-dex
     implementation "androidx.multidex:multidex:2.0.1"
@@ -183,6 +185,7 @@ dependencies {
     // AndroidX support libraries
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation "com.google.android.material:material:1.0.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.preference:preference:1.0.0"
     implementation "androidx.recyclerview:recyclerview:1.0.0"
@@ -192,7 +195,10 @@ dependencies {
     implementation "com.android.volley:volley:1.1.1"
 
     // Android WorkManager
-    implementation("android.arch.work:work-runtime-ktx:1.0.1", {
+    implementation("androidx.work:work-runtime-ktx:$work_version", {
+        exclude group: "com.google.guava", module: "listenablefuture"
+    })
+    implementation("androidx.work:work-rxjava2:$work_version", {
         exclude group: "com.google.guava", module: "listenablefuture"
     })
 

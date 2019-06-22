@@ -3,7 +3,6 @@
 -dontskipnonpubliclibraryclasses
 -dontpreverify
 -verbose
--libraryjars libs
 
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*,!code/allocation/variable
 -allowaccessmodification
@@ -31,7 +30,6 @@
 
 -keep class android.support.** { *; }
 -keep interface android.support.** { *; }
-
 
 -keepattributes *Annotation*
 -keepattributes Signature

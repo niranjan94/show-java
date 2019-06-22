@@ -34,9 +34,8 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import androidx.work.State
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import androidx.work.WorkStatus
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
@@ -54,9 +53,9 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
     override val layoutResource = R.layout.fragment_decompiler_process
 
     private val statusesMap = mutableMapOf(
-        "jar-extraction" to State.ENQUEUED,
-        "java-extraction" to State.ENQUEUED,
-        "resources-extraction" to State.ENQUEUED
+        "jar-extraction" to WorkInfo.State.ENQUEUED,
+        "java-extraction" to WorkInfo.State.ENQUEUED,
+        "resources-extraction" to WorkInfo.State.ENQUEUED
     )
 
     private lateinit var packageInfo: PackageInfo
@@ -91,9 +90,9 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
             finish()
         }
 
-        WorkManager.getInstance()
-            .getStatusesForUniqueWorkLiveData(packageInfo.name)
-            .observe(this, Observer<List<WorkStatus>> { statuses ->
+        WorkManager.getInstance(context!!)
+            .getWorkInfosForUniqueWorkLiveData(packageInfo.name)
+            .observe(this, Observer<List<WorkInfo>> { statuses ->
                 statuses.forEach {
                     statusesMap.keys.forEach { tag ->
                         if (it.tags.contains(tag)) {
@@ -102,10 +101,10 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
                     }
 
                     if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        it.outputData.keyValueMap.forEach { t, u ->
+                        it.outputData.keyValueMap.forEach { (t, u) ->
                             Timber.d("[status][data] $t : $u")
                         }
-                        statusesMap.forEach { t, u ->
+                        statusesMap.forEach { (t, u) ->
                             Timber.d("[status][statuses] $t : $u")
                         }
                     }
@@ -131,11 +130,10 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
             if (hasCompleted) {
                 return
             }
-
-            val hasFailed = statusesMap.values.any { it == State.FAILED }
-            val isWaiting = statusesMap.values.any { it == State.ENQUEUED }
-            val hasPassed = statusesMap.values.all { it == State.SUCCEEDED }
-            val isCancelled = statusesMap.values.any { it == State.CANCELLED }
+            val hasFailed = statusesMap.values.any { it == WorkInfo.State.FAILED }
+            val isWaiting = statusesMap.values.any { it == WorkInfo.State.ENQUEUED }
+            val hasPassed = statusesMap.values.all { it == WorkInfo.State.SUCCEEDED }
+            val isCancelled = statusesMap.values.any { it == WorkInfo.State.CANCELLED }
 
             if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 statusesMap.forEach { t, u ->

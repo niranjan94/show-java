@@ -169,7 +169,7 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
          */
         fun cancel(context: Context, id: String) {
             ProcessNotifier(context, id).cancel()
-            WorkManager.getInstance().cancelUniqueWork(id)
+            WorkManager.getInstance(context).cancelUniqueWork(id)
         }
     }
 }

@@ -66,7 +66,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
     // Set a lower max memory than available.
     // Creating a dex file can easily use up memory before we get a chance to exit gracefully
-    override val maxMemoryAdjustmentFactor = 1.5
+    override val maxMemoryAdjustmentFactor = 1.65
 
     /**
      * Load a list of library classes that are to be ignored from the assets

@@ -76,7 +76,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     private val disposables = CompositeDisposable()
     private var onLowMemory: ((Boolean) -> Unit)? = null
     private var memoryThresholdCrossCount = 0
-    protected open val maxMemoryAdjustmentFactor = 1.25
+    protected open val maxMemoryAdjustmentFactor = 1.3
 
     init {
         @Suppress("LeakingThis")
@@ -270,7 +270,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         /**
          * Start the jobs using the given map
          */
-        fun start(dataMap: Map<String, Any>): String {
+        fun start(context: Context, dataMap: Map<String, Any>): String {
 
             val data = formData(dataMap)
             val id = data.getString("id")!!
@@ -285,7 +285,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
                     .build()
             }
 
-            WorkManager.getInstance()
+            WorkManager.getInstance(context)
                 .beginUniqueWork(
                     id,
                     ExistingWorkPolicy.REPLACE,

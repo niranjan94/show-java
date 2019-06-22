@@ -203,7 +203,7 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
             "type" to packageInfo.type.ordinal
         )
 
-        BaseDecompiler.start(inputMap)
+        BaseDecompiler.start(context!!, inputMap)
 
         firebaseAnalytics.logEvent(
             Constants.EVENTS.SELECT_DECOMPILER, bundleOf(

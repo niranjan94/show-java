@@ -108,7 +108,7 @@ class MainApplication : MultiDexApplication() {
         return Observable.fromCallable {
             val manager = applicationContext
                 .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val workManager = WorkManager.getInstance()
+            val workManager = WorkManager.getInstance(this)
             manager.activeNotifications.forEach { notification ->
                 val status = workManager.getWorkInfosForUniqueWorkLiveData(notification.tag)
                     .value?.any { it.state.isFinished }
