@@ -166,9 +166,6 @@ configurations.all {
     }
 }
 
-def androidxVersion = "1.0.0"
-def workVersion = "1.0.0"
-
 dependencies {
     // Multi-dex
     implementation "androidx.multidex:multidex:2.0.1"
@@ -177,23 +174,23 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Firebase-related dependencies
-    implementation "com.google.firebase:firebase-core:16.0.7"
-    implementation "com.google.firebase:firebase-ads:17.1.3"
-    implementation "com.crashlytics.sdk.android:crashlytics:2.9.9"
+    implementation 'com.google.firebase:firebase-core:17.0.0'
+    implementation 'com.google.firebase:firebase-ads:18.0.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     // AndroidX support libraries
-    implementation "androidx.appcompat:appcompat:$androidxVersion"
-    implementation "com.google.android.material:material:$androidxVersion"
-    implementation "androidx.cardview:cardview:$androidxVersion"
-    implementation "androidx.preference:preference:$androidxVersion"
-    implementation "androidx.recyclerview:recyclerview:$androidxVersion"
-    implementation "androidx.core:core:$androidxVersion"
-    implementation "com.google.android.gms:play-services-oss-licenses:16.0.2"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation "com.google.android.material:material:1.0.0"
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation "androidx.preference:preference:1.0.0"
+    implementation "androidx.recyclerview:recyclerview:1.0.0"
+    implementation 'androidx.core:core:1.0.2'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
     implementation "com.google.android.ads.consent:consent-library:1.0.7"
     implementation "com.android.volley:volley:1.1.1"
 
     // Android WorkManager
-    implementation("android.arch.work:work-runtime-ktx:$workVersion", {
+    implementation("android.arch.work:work-runtime-ktx:1.0.1", {
         exclude group: "com.google.guava", module: "listenablefuture"
     })
 
@@ -207,7 +204,7 @@ dependencies {
     implementation files("libs/dex-translator-0.0.9.15.jar")
 
     // CFR Decompiler
-    implementation "org.benf:cfr:0.140"
+    implementation 'org.benf:cfr:0.144'
 
     // DX Tool. We are using jar-jar to repackage the dx lib.
     // As android comes with the same classes in the lib-art.jar package that is usually a tad bit
@@ -218,14 +215,15 @@ dependencies {
     implementation files("libs/jadx-core-0.9.0.jar")
     implementation files("libs/dx-1.16.jar")
     implementation files("libs/android-5.1.jar")
-    implementation "org.slf4j:slf4j-api:1.7.25"
-    implementation "org.slf4j:slf4j-simple:1.7.25"
-    implementation "uk.com.robust-it:cloning:1.9.11" // Fix version to 1.9.11. Update to 1.9.12 causes compilation to fail due to org.objenesis:3.0.1
+    implementation 'org.slf4j:slf4j-api:1.7.26'
+    implementation 'org.slf4j:slf4j-simple:1.7.26'
+    implementation 'uk.com.robust-it:cloning:1.9.12'
+    // Fix version to 1.9.11. Update to 1.9.12 causes compilation to fail due to org.objenesis:3.0.1
     // implementation "ch.qos.logback:logback-classic:1.2.3"
     // implementation "ch.qos.logback:logback-core:1.2.3"
 
     // APK parser
-    implementation "net.dongliu:apk-parser:2.6.5"
+    implementation 'net.dongliu:apk-parser:2.6.9'
 
     // Fernflower decompiler
     implementation "com.github.fesh0r:fernflower:a0a8f0a8dd"
@@ -237,10 +235,10 @@ dependencies {
     // Testing tools
     testImplementation "junit:junit:4.12"
     androidTestImplementation "junit:junit:4.12"
-    androidTestImplementation "androidx.test:core:$androidxVersion"
-    androidTestImplementation "androidx.test:rules:1.1.1"
-    androidTestImplementation "androidx.test.ext:junit:$androidxVersion"
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.1.0", {
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0', {
         exclude group: "com.android.support", module: "support-annotations"
         exclude group: "com.google.code.findbugs", module: "jsr305"
     })
@@ -249,7 +247,7 @@ dependencies {
     //noinspection GradleDependency
     implementation "commons-io:commons-io:2.5" // Fix to 2.5 for compatibility
     implementation "com.jakewharton.timber:timber:4.7.1"
-    implementation("org.solovyev.android:checkout:1.0.1", {
+    implementation('org.solovyev.android:checkout:1.2.1', {
         exclude group: "com.google.code.findbugs", module: "jsr305"
     })
     implementation "pub.devrel:easypermissions:3.0.0"
@@ -263,7 +261,7 @@ dependencies {
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
     implementation "com.github.angads25:filepicker:1.1.1"
     implementation "com.github.javiersantos:PiracyChecker:1.2.5"
-    implementation "com.scottyab:secure-preferences-lib:0.1.4"
+    implementation 'com.scottyab:secure-preferences-lib:0.1.7'
     implementation "com.github.nekocode:Badge:2.1"
 
     implementation fileTree(dir: "build/libs", include: ["*.jar"])
