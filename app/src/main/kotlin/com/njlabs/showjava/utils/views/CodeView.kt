@@ -86,7 +86,7 @@ class CodeView @JvmOverloads constructor(
         settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
         settings.loadWithOverviewMode = true
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && BuildConfig.DEBUG) {
-            WebView.setWebContentsDebuggingEnabled(true)
+            setWebContentsDebuggingEnabled(true)
         }
     }
 
@@ -291,7 +291,7 @@ highlightLineNumber($highlightLineNumber)
     }
 
     private fun executeJavaScript(js: String) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             evaluateJavascript("javascript:$js", null)
         } else {
             loadUrl("javascript:$js")

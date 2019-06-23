@@ -25,7 +25,7 @@ import org.apache.commons.io.FilenameUtils
 import java.io.File
 
 /**
- * Each file/folder item displayed in [com.njlabs.showjava.activities.explorer.navigator.NavigatorActivity]
+ * Each file/folder item displayed in [com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment]
  */
 class FileItem() : Parcelable {
 

@@ -121,9 +121,9 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
         val packageMapField = resourceTable.javaClass.getDeclaredField("packageMap")
         packageMapField.isAccessible = true
         val packageMap = packageMapField.get(resourceTable) as Map<Short, ResourcePackage>
-        packageMap.forEach { _, u ->
+        packageMap.forEach { (_, u) ->
             Timber.d("[res] ID: ${u.id} Name: ${u.name}")
-            u.typesMap.forEach { _, iu ->
+            u.typesMap.forEach { (_, iu) ->
                 iu.forEach {
                     Timber.d("[res] Inner ID: ${it.id} Inner Name: ${it.name}")
                 }

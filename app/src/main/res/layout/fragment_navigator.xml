@@ -22,7 +22,7 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:id="@+id/deleteProgress"
+        android:id="@+id/ioProgress"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:visibility="gone"

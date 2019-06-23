@@ -120,6 +120,7 @@ android {
         exclude "META-INF/NOTICE.txt"
         exclude "META-INF/MANIFEST.MF"
         exclude "META-INF/rxjava.properties"
+        exclude "resources.arsc"
     }
 
     lintOptions {

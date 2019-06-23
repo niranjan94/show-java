@@ -42,7 +42,9 @@ import org.objectweb.asm.tree.MethodNode
 import timber.log.Timber
 import java.io.BufferedInputStream
 import java.io.InputStream
+import java.util.*
 import java.util.zip.ZipFile
+import kotlin.collections.ArrayList
 
 /**
  * The [JarExtractionWorker] worker handles optimization and extraction of the jar/dex file from the source
@@ -138,7 +140,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
             while (entries.hasMoreElements()) {
                 val zipEntry = entries.nextElement()
                 if (!zipEntry.isDirectory) {
-                    val extension = FilenameUtils.getExtension(zipEntry.name).toLowerCase()
+                    val extension = FilenameUtils.getExtension(zipEntry.name).toLowerCase(Locale.ROOT)
                     if (arrayOf("dex", "odex").contains(extension)) {
                         addClassesFromDex(zipFile.getInputStream(zipEntry), extension)
                     }

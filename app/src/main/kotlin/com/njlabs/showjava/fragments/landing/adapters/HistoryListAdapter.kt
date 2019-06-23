@@ -74,7 +74,7 @@ class HistoryListAdapter(
         return ViewHolder(view, itemClick)
     }
 
-    override fun onBindViewHolder(holder: HistoryListAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindSourceInfo(historyItems[position])
     }
 

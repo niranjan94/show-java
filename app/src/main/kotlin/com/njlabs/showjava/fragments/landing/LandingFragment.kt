@@ -134,7 +134,7 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
                 swipeRefresh.isRefreshing = false
                 if (resume && historyListAdapter != null) {
                     historyListAdapter?.updateData(historyItems)
-                    setListVisibility(!historyItems.isEmpty())
+                    setListVisibility(historyItems.isNotEmpty())
                 } else {
                     setupList()
                 }

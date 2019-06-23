@@ -99,7 +99,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         outputJavaSrcDirectory.mkdirs()
 
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            data.keyValueMap.forEach { t, u ->
+            data.keyValueMap.forEach { (t, u) ->
                 Timber.d("[WORKER] [INPUT] $t: $u")
             }
         }

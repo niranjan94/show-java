@@ -59,8 +59,8 @@ class NavigatorViewModel: ViewModel() {
                     files.add(FileItem(file, fileSize, lastModDate))
                 }
             }
-            directories.sortBy { it.name?.toLowerCase() }
-            files.sortBy { it.name?.toLowerCase() }
+            directories.sortBy { it.name?.toLowerCase(Locale.ROOT) }
+            files.sortBy { it.name?.toLowerCase(Locale.ROOT) }
             directories.addAll(files)
             directories
         }

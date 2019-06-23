@@ -77,7 +77,7 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
                 navigationView.menu.findItem(R.id.get_pro_option)?.isVisible = false
             }
         }
-        purchaseUtils.initializeCheckout(false, true)
+        purchaseUtils.initializeCheckout(false, lessVerbose = true)
         if (inEea && userPreferences.consentStatus == ConsentStatus.UNKNOWN.ordinal) {
             Ads(context).loadConsentScreen()
         }

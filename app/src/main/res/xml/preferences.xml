@@ -81,7 +81,6 @@
         <EditTextPreference
             android:inputType="number"
             android:defaultValue="500"
-            android:numeric="integer"
             android:key="chunkSize"
             android:maxLines="1"
             android:singleLine="true"
@@ -89,7 +88,6 @@
 
         <EditTextPreference
             android:inputType="number"
-            android:numeric="integer"
             android:key="maxAttempts"
             android:defaultValue="2"
             android:maxLines="1"
@@ -99,7 +97,6 @@
         <EditTextPreference
             android:inputType="number"
             android:key="memoryThreshold"
-            android:numeric="integer"
             android:defaultValue="80"
             android:maxLines="1"
             android:singleLine="true"

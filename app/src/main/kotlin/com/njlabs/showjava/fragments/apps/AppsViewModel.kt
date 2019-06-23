@@ -27,6 +27,8 @@ import com.njlabs.showjava.utils.ktx.isSystemPackage
 import com.njlabs.showjava.utils.rx.ProcessStatus
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AppsViewModel(application: Application): AndroidViewModel(application) {
 
@@ -57,7 +59,7 @@ class AppsViewModel(application: Application): AndroidViewModel(application) {
                 packageInfo
             })
             installedApps.sortBy {
-                it.label.toLowerCase()
+                it.label.toLowerCase(Locale.ROOT)
             }
 
 

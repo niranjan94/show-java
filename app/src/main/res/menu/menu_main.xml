@@ -42,12 +42,20 @@
             tools:ignore="AlwaysShowAction" />
 
         <item
+            android:id="@+id/save_code"
+            android:icon="@drawable/ic_save_white"
+            android:orderInCategory="0"
+            android:title="@string/saveSource"
+            android:visible="false"
+            app:showAsAction="always"
+            tools:ignore="AlwaysShowAction" />
+
+        <item
             android:id="@+id/delete_code"
             android:icon="@drawable/ic_delete_white"
             android:orderInCategory="0"
             android:title="@string/deleteSource"
             android:visible="false"
-            app:showAsAction="always"
             tools:ignore="AlwaysShowAction" />
     </group>
 

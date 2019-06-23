@@ -136,7 +136,7 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
             val isCancelled = statusesMap.values.any { it == WorkInfo.State.CANCELLED }
 
             if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                statusesMap.forEach { t, u ->
+                statusesMap.forEach { (t, u) ->
                     Timber.d("[status] Worker: $t State: ${u.name}")
                 }
             }

@@ -4,6 +4,7 @@ import android.graphics.*
 import androidx.annotation.Nullable
 import com.njlabs.showjava.utils.ktx.getCircularBitmap
 import java.security.MessageDigest
+import java.util.*
 import kotlin.experimental.and
 
 /**
@@ -55,7 +56,7 @@ object Identicon {
         return bitmap.getCircularBitmap()
     }
 
-    fun mapToBit(seed: String, rows: Int): Array<BooleanArray>? {
+    private fun mapToBit(seed: String, rows: Int): Array<BooleanArray>? {
         checkRows(rows)
         val mapping = Array(rows) { BooleanArray(rows) }
         val bits = getHash(seed) ?: return null
@@ -129,7 +130,7 @@ object Identicon {
         val md5 = getHexMd5(src)
         if (md5 != null) {
             val rgb = md5.substring(md5.length - 6, md5.length)
-            return Color.parseColor("#" + rgb.toUpperCase())
+            return Color.parseColor("#" + rgb.toUpperCase(Locale.ROOT))
         }
 
         return Color.BLACK

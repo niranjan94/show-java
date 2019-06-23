@@ -94,7 +94,7 @@ class AppsListAdapter(
         return ViewHolder(view, itemClick)
     }
 
-    override fun onBindViewHolder(holder: AppsListAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindPackageInfo(apps[position])
     }
 

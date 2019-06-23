@@ -18,7 +18,6 @@
 
 package com.njlabs.showjava.utils.secure
 
-import android.app.Activity
 import android.widget.Toast
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.R

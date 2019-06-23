@@ -18,7 +18,6 @@
 
 package com.njlabs.showjava.fragments.explorer.navigator
 
-import android.app.ProgressDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
@@ -53,8 +52,6 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
     private lateinit var filesListAdapter: FilesListAdapter
     private var currentDirectory: File? = null
     private var sourceArchive: File? = null
-
-    private var zipProgressDialog: ProgressDialog? = null
 
     private var fileItems: ArrayList<FileItem> = ArrayList()
     private var selectedApp: SourceInfo? = null
@@ -191,22 +188,14 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
         }
     }
 
-    private fun showProgressDialog() {
-        if (zipProgressDialog == null) {
-            zipProgressDialog = ProgressDialog(context)
-            zipProgressDialog!!.isIndeterminate = false
-            zipProgressDialog!!.setCancelable(false)
-            zipProgressDialog!!.setInverseBackgroundForced(false)
-            zipProgressDialog!!.setCanceledOnTouchOutside(false)
-            zipProgressDialog!!.setMessage(getString(R.string.compressingSource))
-        }
-        zipProgressDialog!!.show()
+    private fun showProgressView() {
+        ioProgress.visibility = View.VISIBLE
+        filesList.visibility = View.GONE
     }
 
-    private fun dismissProgressDialog() {
-        if (zipProgressDialog != null && zipProgressDialog!!.isShowing) {
-            zipProgressDialog!!.dismiss()
-        }
+    private fun hideProgressView() {
+        ioProgress.visibility = View.GONE
+        filesList.visibility = View.VISIBLE
     }
 
     /**
@@ -223,7 +212,7 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
         }
 
         context?.let {
-            dismissProgressDialog()
+            hideProgressView()
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.setDataAndType(
@@ -262,12 +251,15 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
                     return true
                 }
             }
+            R.id.save_code -> {
+
+            }
             R.id.share_code -> {
                 sourceArchive?.let {
                     shareArchive(it)
                     return true
                 }
-                showProgressDialog()
+                showProgressView()
                 disposables.add(viewModel.archiveDirectory(
                     selectedApp!!.sourceDirectory, selectedApp!!.packageName
                 )
@@ -307,8 +299,7 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
 
     private fun deleteSource() {
         selectedApp?.let {
-            deleteProgress.visibility = View.VISIBLE
-            filesList.visibility = View.GONE
+            showProgressView()
             disposables.add(viewModel.deleteDirectory(it.sourceDirectory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -343,6 +334,7 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
         super.onSetToolbar(menu)
         menu.findItem(R.id.share_code).isVisible = true
         menu.findItem(R.id.delete_code).isVisible = true
+        menu.findItem(R.id.save_code).isVisible = true
         updateToolbarTitle()
     }
 
@@ -350,6 +342,7 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
         super.onResetToolbar(menu)
         menu.findItem(R.id.share_code).isVisible = false
         menu.findItem(R.id.delete_code).isVisible = false
+        menu.findItem(R.id.save_code).isVisible = false
     }
 
     override fun onBackPressed():Boolean {

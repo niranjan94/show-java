@@ -18,7 +18,6 @@
 
 package com.njlabs.showjava.fragments.settings
 
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -69,13 +68,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
         if (!activity.inEea || activity.isPro()) {
             adPreferences.parent?.removePreference(adPreferences)
         } else {
-            adPreferences.setOnPreferenceClickListener {
+            adPreferences.onPreferenceClickListener = Preference.OnPreferenceClickListener {
                 Ads(activity).loadConsentScreen()
-                return@setOnPreferenceClickListener true
+                true
             }
         }
 
-        findPreference("clearSourceHistory").setOnPreferenceClickListener {
+        findPreference("clearSourceHistory").onPreferenceClickListener = Preference.OnPreferenceClickListener  {
             activity.firebaseAnalytics.logEvent(Constants.EVENTS.CLEAR_SOURCE_HISTORY, null)
             AlertDialog.Builder(context!!)
                 .setTitle(getString(R.string.deleteSourceHistory))
@@ -91,19 +90,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        findPreference("customFont").setOnPreferenceChangeListener { _, newValue ->
+        findPreference("customFont").onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
             activity.firebaseAnalytics.logEvent(Constants.EVENTS.CHANGE_FONT, bundle)
             Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
-            activity.let {
-                //it.startActivity(Intent(it, SettingsActivity::class.java))
-                it.finish()
-            }
+            activity.finish()
             true
         }
 
-        findPreference("darkMode").setOnPreferenceChangeListener { _, newValue ->
+        findPreference("darkMode").onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
             activity.firebaseAnalytics.logEvent(Constants.EVENTS.TOGGLE_DARK_MODE, bundle)
@@ -117,10 +113,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
 
-            activity.let {
-                //it.startActivity(Intent(it, SettingsActivity::class.java))
-                it.finish()
-            }
+            activity.finish()
 
             true
         }

@@ -109,6 +109,7 @@
     <string name="openSourceLicense">Open source licenses</string>
     <string name="tapViewOpenSourceLicenses">Tap to view open source licenses</string>
     <string name="startingDexToJar">Starting DEX to JAR Conversion</string>
+    <string name="saveSource">Save source to external memory</string>
     <string name="shareSource">Share source</string>
     <string name="deleteSource">Delete source</string>
     <string name="decompilerUnavailable">Decompiler Unavailable</string>

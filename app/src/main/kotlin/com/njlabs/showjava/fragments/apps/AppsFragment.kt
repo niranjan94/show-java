@@ -35,6 +35,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_apps.*
 import timber.log.Timber
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class AppsFragment : BaseFragment<AppsViewModel>() {
@@ -117,7 +119,7 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
         appsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         historyListAdapter = AppsListAdapter(apps) { selectedApp: PackageInfo, view: View ->
             containerActivity.collapseSearch()
-            if (selectedApp.name.toLowerCase().contains(BuildConfig.APPLICATION_ID.toLowerCase())) {
+            if (selectedApp.name.toLowerCase(Locale.ROOT).contains(BuildConfig.APPLICATION_ID.toLowerCase(Locale.ROOT))) {
                 Toast.makeText(context, getString(R.string.checkoutSourceLink), Toast.LENGTH_SHORT).show()
             }
             openProcessActivity(selectedApp, view)
@@ -138,9 +140,9 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
     }
 
     private fun searchApps(query: String?) {
-        val cleanedQuery = query?.trim()?.toLowerCase() ?: ""
+        val cleanedQuery = query?.trim()?.toLowerCase(Locale.ROOT) ?: ""
         historyListAdapter.updateList(filteredApps.filter {
-            cleanedQuery == "" || it.label.toLowerCase().contains(cleanedQuery)
+            cleanedQuery == "" || it.label.toLowerCase(Locale.ROOT).contains(cleanedQuery)
         })
     }
 

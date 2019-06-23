@@ -18,7 +18,6 @@
 
 package com.njlabs.showjava.utils.ktx
 
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Paint
 import android.graphics.Canvas
@@ -32,6 +31,7 @@ import android.os.Parcelable
 import java.io.File
 import java.io.InputStream
 import java.io.Serializable
+import kotlin.math.max
 
 /**
  * Convert an [InputStream] to a file given a path as a [String]
@@ -94,7 +94,7 @@ fun Bundle.putSmart(k: String, v: Any?) = when (v) {
 fun Bitmap.getCircularBitmap(config: Bitmap.Config = Bitmap.Config.ARGB_8888): Bitmap {
     // circle configuration
     val circlePaint = Paint().apply { isAntiAlias = true }
-    val circleRadius = Math.max(width, height) / 2f
+    val circleRadius = max(width, height) / 2f
 
     // output bitmap
     val outputBitmapPaint = Paint(circlePaint).apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN) }
