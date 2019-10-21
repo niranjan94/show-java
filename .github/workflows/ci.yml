@@ -1,0 +1,23 @@
+name: CI
+on: [push]
+
+env: 
+  MALLOC_ARENA_MAX: 1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@latest
+      - name: setup JDK
+        uses: actions/setup-java@latest
+        with:
+          java-version: 1.8
+      - name: install gettext
+        run: sudo apt install gettext-base
+      - name: prepare google-services.json
+        run: cp -f app/mock-google-services.json app/google-services.json
+      - name: set keys.properties
+        run: cat app/keys.properties.example | envsubst > app/keys.properties
+      - name: build
+        run: ./gradlew assembleRelease --stacktrace -w
