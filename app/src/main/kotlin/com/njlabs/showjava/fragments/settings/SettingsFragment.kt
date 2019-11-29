@@ -59,22 +59,23 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
-        bindPreferenceSummaryToValue(findPreference("chunkSize"))
-        bindPreferenceSummaryToValue(findPreference("maxAttempts"))
-        bindPreferenceSummaryToValue(findPreference("memoryThreshold"))
+        findPreference<Preference>("chunkSize")?.let {bindPreferenceSummaryToValue(it) }
+        findPreference<Preference>("maxAttempts")?.let { bindPreferenceSummaryToValue(it) }
+        findPreference<Preference>("memoryThreshold")?.let { bindPreferenceSummaryToValue(it) }
 
-        val adPreferences = findPreference("adPreferences")
-
-        if (!activity.inEea || activity.isPro()) {
-            adPreferences.parent?.removePreference(adPreferences)
-        } else {
-            adPreferences.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                Ads(activity).loadConsentScreen()
-                true
+        findPreference<Preference>("adPreferences")?.let {
+            if (!activity.inEea || activity.isPro()) {
+                it.parent?.removePreference(it)
+            } else {
+                it.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+                    Ads(activity).loadConsentScreen()
+                    true
+                }
             }
         }
 
-        findPreference("clearSourceHistory").onPreferenceClickListener = Preference.OnPreferenceClickListener  {
+
+        findPreference<Preference>("clearSourceHistory")?.onPreferenceClickListener = Preference.OnPreferenceClickListener  {
             activity.firebaseAnalytics.logEvent(Constants.EVENTS.CLEAR_SOURCE_HISTORY, null)
             AlertDialog.Builder(context!!)
                 .setTitle(getString(R.string.deleteSourceHistory))
@@ -90,7 +91,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        findPreference("customFont").onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+        findPreference<Preference>("customFont")?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
             activity.firebaseAnalytics.logEvent(Constants.EVENTS.CHANGE_FONT, bundle)
@@ -99,7 +100,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        findPreference("darkMode").onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+        findPreference<Preference>("darkMode")?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
             activity.firebaseAnalytics.logEvent(Constants.EVENTS.TOGGLE_DARK_MODE, bundle)

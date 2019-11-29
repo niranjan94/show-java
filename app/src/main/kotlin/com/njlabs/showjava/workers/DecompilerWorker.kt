@@ -52,7 +52,7 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
     private val decompiler: String = params.inputData.getString("decompiler").toString()
     private val chunkSize: Int = params.inputData.getInt("chunkSize", UserPreferences.DEFAULTS.CHUNK_SIZE)
     private val memoryThreshold: Int = params.inputData.getInt("memoryThreshold", UserPreferences.DEFAULTS.MEMORY_THRESHOLD)
-    private val inputPackageFile: File = File(params.inputData.getString("inputPackageFile"))
+    private val inputPackageFile: File = File(params.inputData.getString("inputPackageFile")!!)
 
     private val decompilerExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 

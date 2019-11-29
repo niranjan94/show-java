@@ -121,12 +121,11 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
         disposables.clear()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         this.menu = menu
-        menu?.let {
-            onSetToolbar(it)
-        }
+        onSetToolbar(menu)
     }
 
     override fun onPause() {

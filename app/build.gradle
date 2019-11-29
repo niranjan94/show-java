@@ -179,18 +179,18 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Firebase-related dependencies
-    implementation 'com.google.firebase:firebase-core:17.0.0'
-    implementation 'com.google.firebase:firebase-ads:18.0.0'
+    implementation 'com.google.firebase:firebase-core:17.2.1'
+    implementation 'com.google.firebase:firebase-ads:18.3.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     // AndroidX support libraries
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "com.google.android.material:material:1.0.0"
-    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation "androidx.preference:preference:1.0.0"
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
-    implementation 'androidx.core:core:1.0.2'
+    implementation "androidx.preference:preference:1.1.0"
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation 'androidx.core:core:1.1.0'
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
     implementation "com.google.android.ads.consent:consent-library:1.0.7"
     implementation "com.android.volley:volley:1.1.1"
@@ -212,7 +212,7 @@ dependencies {
     implementation files("libs/dex-translator-0.0.9.15.jar")
 
     // CFR Decompiler
-    implementation 'org.benf:cfr:0.144'
+    implementation 'org.benf:cfr:0.148'
 
     // DX Tool. We are using jar-jar to repackage the dx lib.
     // As android comes with the same classes in the lib-art.jar package that is usually a tad bit
@@ -231,14 +231,14 @@ dependencies {
     // implementation "ch.qos.logback:logback-core:1.2.3"
 
     // APK parser
-    implementation 'net.dongliu:apk-parser:2.6.9'
+    implementation 'net.dongliu:apk-parser:2.6.10'
 
     // Fernflower decompiler
     implementation "com.github.fesh0r:fernflower:a0a8f0a8dd"
 
     // RxAndroid & friends
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
-    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
 
     // Testing tools
     testImplementation "junit:junit:4.12"
@@ -255,20 +255,17 @@ dependencies {
     //noinspection GradleDependency
     implementation "commons-io:commons-io:2.5" // Fix to 2.5 for compatibility
     implementation "com.jakewharton.timber:timber:4.7.1"
-    implementation('org.solovyev.android:checkout:1.2.1', {
+    implementation('org.solovyev.android:checkout:1.2.2', {
         exclude group: "com.google.code.findbugs", module: "jsr305"
     })
     implementation "pub.devrel:easypermissions:3.0.0"
-    implementation("org.solovyev.android:checkout:1.2.1", {
-        exclude group: "com.google.code.findbugs", module: "jsr305"
-    })
     implementation("com.github.kobakei:MaterialFabSpeedDial:1.2.1", {
         exclude group: "com.google.android.material", module: "material"
     })
     implementation "com.daimajia.numberprogressbar:library:1.4@aar"
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
     implementation "com.github.angads25:filepicker:1.1.1"
-    implementation "com.github.javiersantos:PiracyChecker:1.2.5"
+    implementation "com.github.javiersantos:PiracyChecker:1.2.6"
     implementation 'com.scottyab:secure-preferences-lib:0.1.7'
     implementation "com.github.nekocode:Badge:2.1"
 
