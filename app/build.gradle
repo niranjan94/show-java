@@ -96,8 +96,10 @@ android {
         buildConfigField "String", "GIT_SHA", "\"${getGitHash()}\""
         buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
         buildConfigField "String", "PLAY_LICENSE_KEY", "\"${props.getProperty("googlePlayLicenseKey")}\""
-        buildConfigField "String", "IAP_PRODUCT_ID", "\"${props.getProperty("IapProductId")}\""
+        buildConfigField "String", "IAP_PRODUCT_ID", "\"${props.getProperty("iapProductId")}\""
         buildConfigField "String", "BACKEND_URL", "\"${props.getProperty("backendUrl")}\""
+        buildConfigField "String", "ENCRYPTION_KEY", "\"${props.getProperty("encryptionKey")}\""
+        buildConfigField "String", "ENCRYPTION_SALT", "\"${props.getProperty("encryptionSalt")}\""
         buildConfigField "String", "PURCHASE_VERIFIER_PATH", "\"${props.getProperty("purchaseVerifierPath")}\""
         buildConfigField "Boolean", "IS_CI", "${isCi}"
         buildConfigField "Boolean", "EXTENDED_VALIDATION", "false"
@@ -169,7 +171,7 @@ configurations.all {
     }
 }
 
-def work_version = "2.1.0-beta02"
+def work_version = '2.1.0-rc01'
 
 dependencies {
     // Multi-dex
@@ -191,6 +193,7 @@ dependencies {
     implementation "androidx.preference:preference:1.1.0"
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'androidx.core:core:1.1.0'
+    implementation "com.github.rumboalla.KryptoPrefs:kryptoprefs:0.4.3"
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
     implementation "com.google.android.ads.consent:consent-library:1.0.7"
     implementation "com.android.volley:volley:1.1.1"
@@ -266,8 +269,11 @@ dependencies {
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
     implementation "com.github.angads25:filepicker:1.1.1"
     implementation "com.github.javiersantos:PiracyChecker:1.2.6"
-    implementation 'com.scottyab:secure-preferences-lib:0.1.7'
     implementation "com.github.nekocode:Badge:2.1"
+    debugImplementation("com.facebook.stetho:stetho:1.5.1", {
+        exclude group: "com.android.support", module: "support-annotations"
+        exclude group: "com.google.code.findbugs", module: "jsr305"
+    })
 
     implementation fileTree(dir: "build/libs", include: ["*.jar"])
 }

@@ -37,6 +37,7 @@ import com.crashlytics.android.Crashlytics
 import com.google.firebase.iid.FirebaseInstanceId
 import io.fabric.sdk.android.Fabric
 import com.crashlytics.android.core.CrashlyticsCore
+import com.njlabs.showjava.utils.StethoUtils
 import com.njlabs.showjava.utils.ktx.Storage
 
 
@@ -87,6 +88,7 @@ class MainApplication : MultiDexApplication() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+            StethoUtils.install(this)
         } else {
             Timber.plant(ProductionTree())
         }

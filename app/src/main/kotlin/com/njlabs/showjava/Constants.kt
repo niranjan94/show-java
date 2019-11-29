@@ -24,6 +24,7 @@ package com.njlabs.showjava
 object Constants {
 
     const val STORAGE_PERMISSION_REQUEST = 1009
+    const val SHARED_PREFERENCES_NAME = "com.njlabs.showjava.state"
     const val FRAGMENT_TAG = "com.njlabs.showjava.fragments.primary"
     const val FRAGMENT_BACKSTACK = "com.njlabs.showjava.fragments.backstack.primary"
 

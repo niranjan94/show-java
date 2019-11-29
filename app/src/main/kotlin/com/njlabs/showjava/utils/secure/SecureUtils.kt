@@ -28,10 +28,12 @@ import com.github.javiersantos.piracychecker.*
 import com.github.javiersantos.piracychecker.enums.InstallerID
 import com.github.javiersantos.piracychecker.enums.PiracyCheckerError
 import com.github.javiersantos.piracychecker.enums.PirateApp
+import com.kryptoprefs.preferences.KryptoBuilder
+import com.kryptoprefs.preferences.KryptoPrefs
 import com.njlabs.showjava.BuildConfig
+import com.njlabs.showjava.Constants
 import com.njlabs.showjava.utils.RequestQueue
 import com.njlabs.showjava.utils.SingletonHolder
-import com.securepreferences.SecurePreferences
 import io.michaelrocks.paranoid.Obfuscate
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
@@ -48,17 +50,20 @@ class SecureUtils(val context: Context) {
     private val packageName = "com.njlabs.showjava"
     private val backendUrl = BuildConfig.BACKEND_URL
     private var hasPurchasedPro: Boolean? = null
-    private var preferences: SecurePreferences? = null
+    private var preferences: KryptoPrefs? = null
 
     val iapProductId = BuildConfig.IAP_PRODUCT_ID
 
     val purchaseVerifierPath = BuildConfig.PURCHASE_VERIFIER_PATH
 
-    private fun getPreferences(): SecurePreferences {
+    private fun getPreferences(): KryptoPrefs {
         if (preferences == null) {
-            preferences = SecurePreferences(context)
+            preferences = KryptoBuilder.pref(
+                context, Constants.SHARED_PREFERENCES_NAME,
+                BuildConfig.ENCRYPTION_KEY, BuildConfig.ENCRYPTION_SALT, 16
+            )
         }
-        return preferences as SecurePreferences
+        return preferences!!
     }
 
     fun isSafeExtended(allow: (() -> Unit), doNotAllow: ((PiracyCheckerError, PirateApp?) -> Unit), onError: (() -> Unit)) {
@@ -108,12 +113,12 @@ class SecureUtils(val context: Context) {
 
     fun onPurchaseComplete(purchase: Purchase) {
         hasPurchasedPro = true
-        getPreferences().edit().putBoolean(purchase.sku, true).commit()
+        getPreferences().putBoolean(purchase.sku, true)
     }
 
     fun onPurchaseRevert() {
         hasPurchasedPro = false
-        getPreferences().edit().putBoolean(iapProductId, false).commit()
+        getPreferences().putBoolean(iapProductId, false)
     }
 
     @SuppressLint("PrivateApi")

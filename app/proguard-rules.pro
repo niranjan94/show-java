@@ -50,6 +50,7 @@
 -keep class com.njlabs.showjava.MainApplication { *; }
 -keep class com.njlabs.showjava.decompilers.** { *; }
 -keep class jadx.core.clsp.** { *; }
+-keep class com.facebook.stetho.** { *; }
 
 -keepattributes SourceFile,LineNumberTable
 

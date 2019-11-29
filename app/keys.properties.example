@@ -10,3 +10,5 @@ privacyPolicyUrl=https://example.com/privacy-policy/
 minifyEnabled=true
 shrinkResources=true
 crashlyticsApiKey=$CRASHLYTICS_API_KEY
+encryptionKey=abc
+encryptionSalt=abc
