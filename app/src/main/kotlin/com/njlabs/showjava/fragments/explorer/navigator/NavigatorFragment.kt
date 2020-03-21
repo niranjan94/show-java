@@ -29,6 +29,8 @@ import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.FileItem
 import com.njlabs.showjava.data.SourceInfo
@@ -37,15 +39,14 @@ import com.njlabs.showjava.fragments.explorer.navigator.adapters.FilesListAdapte
 import com.njlabs.showjava.fragments.explorer.viewer.CodeViewerFragment
 import com.njlabs.showjava.fragments.explorer.viewer.ImageViewerFragment
 import com.njlabs.showjava.utils.ktx.bundleOf
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_navigator.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
 
 
 class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
-    override val viewModelClass = NavigatorViewModel::class.java
+    override val viewModel by viewModels<NavigatorViewModel>()
 
     override val layoutResource = R.layout.fragment_navigator
 
@@ -88,19 +89,17 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
         currentDirectory = startDirectory
         updateToolbarTitle()
         swipeRefresh.isRefreshing = true
-        disposables.add(viewModel.loadFiles(startDirectory)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .onErrorReturn {
-                Timber.e(it)
+        lifecycleScope.launch {
+            val listItems: ArrayList<FileItem> = try {
+                viewModel.loadFiles(startDirectory)
+            } catch (e: Exception) {
+                Timber.e(e)
                 Toast.makeText(context, R.string.errorLoadingFiles, Toast.LENGTH_SHORT).show()
-                ArrayList()
+                arrayListOf()
             }
-            .subscribe {
-                updateList(it)
-                swipeRefresh.isRefreshing = false
-            }
-        )
+            swipeRefresh.isRefreshing = false
+            updateList(listItems)
+        }
     }
 
     private fun updateList(fileItems: ArrayList<FileItem>?) {
@@ -260,25 +259,23 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
                     return true
                 }
                 showProgressView()
-                disposables.add(viewModel.archiveDirectory(
-                    selectedApp!!.sourceDirectory, selectedApp!!.packageName
-                )
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .onErrorReturn {
-                        Timber.e(it)
+                lifecycleScope.launch {
+                    sourceArchive = try {
+                        viewModel.archiveDirectory(
+                            selectedApp!!.sourceDirectory, selectedApp!!.packageName
+                        )
+                    } catch (e: Exception) {
+                        Timber.e(e)
                         null
                     }
-                    .subscribe {
-                        sourceArchive = it
-                        shareArchive(it)
-                    }
-                )
+                    shareArchive(sourceArchive)
+                }
+
                 return true
 
             }
             R.id.delete_code -> {
-                AlertDialog.Builder(context!!)
+                AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.deleteSource))
                     .setMessage(getString(R.string.deleteSourceConfirm))
                     .setIcon(R.drawable.ic_error_outline_black)
@@ -300,18 +297,15 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
     private fun deleteSource() {
         selectedApp?.let {
             showProgressView()
-            disposables.add(viewModel.deleteDirectory(it.sourceDirectory)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    Toast.makeText(
-                        context,
-                        getString(R.string.sourceDeleted),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    finish()
-                }
-            )
+            lifecycleScope.launch {
+                viewModel.deleteDirectory(it.sourceDirectory)
+                Toast.makeText(
+                    context,
+                    getString(R.string.sourceDeleted),
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            }
         }
     }
 

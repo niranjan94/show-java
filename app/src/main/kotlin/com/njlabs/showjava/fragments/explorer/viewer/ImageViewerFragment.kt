@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.ImageViewState
@@ -34,6 +35,7 @@ import org.apache.commons.io.FilenameUtils
 
 class ImageViewerFragment: BaseFragment<ViewModel>() {
     override val layoutResource = R.layout.fragment_image_viewer
+    override val viewModel by viewModels<ViewModel>()
 
     override var isBlack: Boolean = true
     private val bundleState = "ImageViewState"

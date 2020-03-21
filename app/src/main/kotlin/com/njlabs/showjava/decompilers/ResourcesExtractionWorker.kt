@@ -206,7 +206,7 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
      */
     @Throws(Exception::class)
     private fun saveIcon() {
-        val packageInfo = context.packageManager.getPackageArchiveInfo(inputPackageFile.canonicalPath, 0)
+        val packageInfo = context.packageManager.getPackageArchiveInfo(inputPackageFile.canonicalPath, 0)!!
         val bitmap = getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(context.packageManager))
         val iconOutput = FileOutputStream(workingDirectory.resolve("icon.png"))
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, iconOutput)

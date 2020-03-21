@@ -25,8 +25,8 @@ import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.utils.ktx.isSystemPackage
 import com.njlabs.showjava.utils.rx.ProcessStatus
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -39,33 +39,29 @@ class AppsViewModel(application: Application): AndroidViewModel(application) {
      *
      * @return [Observable] which can be used to track the loading progress and completion state.
      */
-    fun loadApps(withSystemApps: Boolean): Observable<ProcessStatus<ArrayList<PackageInfo>>> {
-        return Observable.create { emitter: ObservableEmitter<ProcessStatus<ArrayList<PackageInfo>>> ->
+    suspend fun loadApps(withSystemApps: Boolean, updateProgress: suspend (progress: Float, status: String, secondaryStatus: String) -> Unit): ArrayList<PackageInfo> {
+        var installedApps = ArrayList<PackageInfo>()
+        withContext(Dispatchers.IO) {
             var packages = application.packageManager.getInstalledPackages(0)
             packages = packages.filter { pack ->
                 withSystemApps || !isSystemPackage(pack)
             }
-            val installedApps = ArrayList(packages.mapIndexed { index, pack ->
+            installedApps = ArrayList(packages.mapIndexed { index, pack ->
                 val packageInfo = PackageInfo.fromApkPackageInfo(application, pack)
                 packageInfo.icon = pack.applicationInfo.loadIcon(application.packageManager)
                 val currentCount = index + 1
-                emitter.onNext(
-                    ProcessStatus(
-                        (currentCount.toFloat() / packages.size.toFloat()) * 100f,
-                        application.getString(R.string.loadingApp, packageInfo.label),
-                        application.getString(R.string.loadingStatistic, currentCount, packages.size)
-                    )
+                updateProgress(
+                    (currentCount.toFloat() / packages.size.toFloat()) * 100f,
+                    application.getString(R.string.loadingApp, packageInfo.label),
+                    application.getString(R.string.loadingStatistic, currentCount, packages.size)
                 )
                 packageInfo
             })
             installedApps.sortBy {
                 it.label.toLowerCase(Locale.ROOT)
             }
-
-
-            emitter.onNext(ProcessStatus(installedApps))
-            emitter.onComplete()
         }
+        return installedApps
     }
 
 }

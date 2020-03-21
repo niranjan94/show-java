@@ -32,6 +32,7 @@ import android.view.animation.RotateAnimation
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.work.WorkInfo
@@ -51,6 +52,7 @@ import timber.log.Timber
 
 class DecompilerProcessFragment : BaseFragment<ViewModel>() {
     override val layoutResource = R.layout.fragment_decompiler_process
+    override val viewModel by viewModels<ViewModel>()
 
     private val statusesMap = mutableMapOf(
         "jar-extraction" to WorkInfo.State.ENQUEUED,
@@ -70,7 +72,7 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
         memoryUsage.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE
         memoryStatus.visibility = if (showMemoryUsage) View.VISIBLE else View.GONE
 
-        val decompilerIndex = arguments!!.getInt("decompilerIndex", 0)
+        val decompilerIndex = requireArguments().getInt("decompilerIndex", 0)
 
         inputPackageLabel.text = packageInfo.label
 
@@ -86,11 +88,11 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
         setupGears()
 
         cancelButton.setOnClickListener {
-            DecompilerWorker.cancel(context!!, packageInfo.name)
+            DecompilerWorker.cancel(requireContext(), packageInfo.name)
             finish()
         }
 
-        WorkManager.getInstance(context!!)
+        WorkManager.getInstance(requireContext())
             .getWorkInfosForUniqueWorkLiveData(packageInfo.name)
             .observe(this, Observer<List<WorkInfo>> { statuses ->
                 statuses.forEach {
@@ -203,7 +205,7 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
                     return
                 }
                 try {
-                    val percentage = message.toDouble()
+                    val percentage = message!!.toDouble()
                     memoryStatus.text = "$message%"
                     val textColor = ContextCompat.getColor(
                         context,

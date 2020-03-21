@@ -24,6 +24,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
@@ -31,17 +33,18 @@ import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.apps.adapters.AppsListAdapter
 import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
 import com.njlabs.showjava.utils.ktx.bundleOf
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_apps.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 class AppsFragment : BaseFragment<AppsViewModel>() {
-    override val viewModelClass = AppsViewModel::class.java
     override val layoutResource = R.layout.fragment_apps
+    override val viewModel by viewModels<AppsViewModel>()
 
     private lateinit var historyListAdapter: AppsListAdapter
 
@@ -79,31 +82,24 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
     }
 
     private fun loadApps() {
-        disposables.add(viewModel.loadApps(withSystemApps)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { processStatus ->
-                    if (!processStatus.isDone) {
-                        progressBar.progress = processStatus.progress.toInt()
-                        statusText.text = processStatus.status
-                        processStatus.secondaryStatus?.let {
+        lifecycleScope.launch {
+            try {
+                apps = viewModel.loadApps(withSystemApps) { progress, status, secondaryStatus ->
+                    withContext(Dispatchers.Main) {
+                        progressBar.progress = progress.toInt()
+                        statusText.text = status
+                        secondaryStatus.let {
                             secondaryStatusText.text = it
                         }
-                    } else {
-                        if (processStatus.result != null) {
-                            apps = processStatus.result
-                            filteredApps = processStatus.result
-                        }
-                        setupList()
-                        filterApps(R.id.userRadioButton)
                     }
-                },
-                { e ->
-                    Timber.e(e)
                 }
-            )
-        )
+                filteredApps = apps
+                setupList()
+                filterApps(R.id.userRadioButton)
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
     }
 
     private fun showList(isListVisible: Boolean) {

@@ -34,9 +34,7 @@ import androidx.appcompat.widget.Toolbar
 import com.google.ads.consent.ConsentInformation
 import com.google.ads.consent.ConsentStatus
 import com.google.ads.mediation.admob.AdMobAdapter
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.*
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.BuildConfig
 import com.njlabs.showjava.Constants
@@ -44,12 +42,13 @@ import com.njlabs.showjava.MainApplication
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.about.AboutActivity
 import com.njlabs.showjava.activities.purchase.PurchaseActivity
-import com.njlabs.showjava.utils.secure.SecureUtils
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.ktx.checkDataConnection
+import com.njlabs.showjava.utils.secure.SecureUtils
 import io.reactivex.disposables.CompositeDisposable
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
+import java.util.*
 
 
 abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -161,9 +160,9 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                     .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
 
                 if (BuildConfig.DEBUG) {
-                    adRequest
-                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                        .addTestDevice(getString(R.string.deviceId))
+                    val testDeviceIds = listOf(AdRequest.DEVICE_ID_EMULATOR, getString(R.string.deviceId))
+                    val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
+                    MobileAds.setRequestConfiguration(configuration)
                 }
 
                 it.adListener = object : AdListener() {

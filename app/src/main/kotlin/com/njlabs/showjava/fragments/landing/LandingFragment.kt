@@ -21,6 +21,8 @@ package com.njlabs.showjava.fragments.landing
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
@@ -34,18 +36,17 @@ import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
 import com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment
 import com.njlabs.showjava.fragments.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.utils.ktx.bundleOf
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_landing.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
 
 class LandingFragment : BaseFragment<LandingViewModel>() {
 
-    override val viewModelClass: Class<LandingViewModel> = LandingViewModel::class.java
     override val layoutResource: Int = R.layout.fragment_landing
 
     private lateinit var filePickerDialog: FilePickerDialog
+    override val viewModel by viewModels<LandingViewModel>()
 
     private var historyListAdapter: HistoryListAdapter? = null
     private var historyItems = ArrayList<SourceInfo>()
@@ -79,7 +80,7 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
             if (files.isNotEmpty()) {
                 val selectedFile = File(files.first())
                 if (selectedFile.exists() && selectedFile.isFile) {
-                    PackageInfo.fromFile(context!!, selectedFile)?.let {
+                    PackageInfo.fromFile(requireContext(), selectedFile)?.let {
                         containerActivity.gotoFragment(
                             DecompilerFragment(), bundleOf(
                                 "packageInfo" to it
@@ -122,24 +123,21 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
 
     private fun populateHistory(resume: Boolean = false) {
         swipeRefresh.isRefreshing = true
-        disposables.add(viewModel.loadHistory()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .onErrorReturn {
-                Timber.e(it)
+        lifecycleScope.launch {
+            historyItems = try {
+                viewModel.loadHistory()
+            } catch (e: Exception) {
+                Timber.e(e)
                 ArrayList()
             }
-            .subscribe {
-                historyItems = it
-                swipeRefresh.isRefreshing = false
-                if (resume && historyListAdapter != null) {
-                    historyListAdapter?.updateData(historyItems)
-                    setListVisibility(historyItems.isNotEmpty())
-                } else {
-                    setupList()
-                }
+            swipeRefresh.isRefreshing = false
+            if (resume && historyListAdapter != null) {
+                historyListAdapter?.updateData(historyItems)
+                setListVisibility(historyItems.isNotEmpty())
+            } else {
+                setupList()
             }
-        )
+        }
     }
 
     private fun setListVisibility(isListVisible: Boolean = true) {

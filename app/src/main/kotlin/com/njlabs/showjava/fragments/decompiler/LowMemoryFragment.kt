@@ -20,6 +20,7 @@ package com.njlabs.showjava.fragments.decompiler
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
@@ -35,6 +36,7 @@ import kotlinx.android.synthetic.main.fragment_low_memory.*
  */
 class LowMemoryFragment : BaseFragment<ViewModel>() {
     override val layoutResource = R.layout.fragment_low_memory
+    override val viewModel by viewModels<ViewModel>()
 
     override fun init(savedInstanceState: Bundle?) {
         val packageInfo = arguments?.getParcelable<PackageInfo>("packageInfo")

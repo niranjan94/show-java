@@ -30,6 +30,7 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.Constants
@@ -56,6 +57,7 @@ import java.net.URI
 class DecompilerFragment: BaseFragment<ViewModel>() {
 
     override val layoutResource = R.layout.fragment_decompiler
+    override val viewModel by viewModels<ViewModel>()
 
     private lateinit var packageInfo: PackageInfo
 
@@ -70,7 +72,7 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
                 TextUtils.concat(
                     packageInfo.label,
                     " ", " ",
-                    getSystemBadge(context!!).toSpannable()
+                    getSystemBadge(requireContext()).toSpannable()
                 )
             )
         else
@@ -119,7 +121,7 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
 
         disposables.add(
             Observable.fromCallable {
-                packageInfo.loadIcon(context!!)
+                packageInfo.loadIcon(requireContext())
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -127,6 +129,7 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         resources.getDrawable(R.drawable.ic_list_generic, null)
                     } else {
+                        @Suppress("DEPRECATION")
                         resources.getDrawable(R.drawable.ic_list_generic)
                     }
                 }
@@ -151,7 +154,7 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
                 }
             } else {
                 val info = PackageInfo.fromFile(
-                    context!!,
+                    requireContext(),
                     File(URI.create(dataString)).canonicalFile
                 )
                 if (info != null) {
@@ -203,7 +206,7 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
             "type" to packageInfo.type.ordinal
         )
 
-        BaseDecompiler.start(context!!, inputMap)
+        BaseDecompiler.start(requireContext(), inputMap)
 
         firebaseAnalytics.logEvent(
             Constants.EVENTS.SELECT_DECOMPILER, bundleOf(

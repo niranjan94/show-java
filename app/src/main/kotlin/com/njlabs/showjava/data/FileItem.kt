@@ -60,7 +60,7 @@ class FileItem() : Parcelable {
 
 
     constructor(parcel: Parcel) : this() {
-        file = File(parcel.readString())
+        file = File(parcel.readString()!!)
         fileSize = parcel.readString() as String
         metaInfo = parcel.readString() as String
     }

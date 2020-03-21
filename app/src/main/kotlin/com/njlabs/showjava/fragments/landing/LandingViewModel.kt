@@ -22,17 +22,19 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.njlabs.showjava.data.SourceInfo
 import com.njlabs.showjava.utils.ktx.Storage
-import io.reactivex.Observable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
 
 class LandingViewModel(application: Application): AndroidViewModel(application) {
 
-    fun loadHistory(): Observable<ArrayList<SourceInfo>> {
+    suspend fun loadHistory(): ArrayList<SourceInfo> {
         val appStorage = Storage.getInstance().appStorage
-        return Observable.fromCallable {
-            val historyItems = ArrayList<SourceInfo>()
+        val historyItems = ArrayList<SourceInfo>()
+
+        withContext(Dispatchers.IO) {
             appStorage.mkdirs()
             val nomedia = File(appStorage, ".nomedia")
             if (!nomedia.exists() || !nomedia.isFile) {
@@ -54,8 +56,8 @@ class LandingViewModel(application: Application): AndroidViewModel(application) 
                         }
                     }
             }
-            historyItems
         }
+        return historyItems
     }
 
 }

@@ -126,7 +126,7 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
         var fragmentClass = LandingFragment::class.java.name
 
         if (intent.hasExtra("fragmentClass")) {
-            fragmentClass = intent.getStringExtra("fragmentClass")
+            fragmentClass = intent.getStringExtra("fragmentClass")!!
         } else if (!intent.dataString.isNullOrEmpty() || intent.hasExtra("packageInfo")) {
             fragmentClass = DecompilerFragment::class.java.name
         }

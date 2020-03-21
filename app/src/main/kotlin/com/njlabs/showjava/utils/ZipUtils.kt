@@ -77,7 +77,7 @@ object ZipUtils {
     @Throws(Exception::class)
     private fun addFolderToZip(path: String, srcFolder: String, zip: ZipOutputStream) {
         val folder = File(srcFolder)
-        for (fileName in folder.list()) {
+        for (fileName in folder.list()!!) {
             if (path == "") {
                 addFileToZip(folder.name, "$srcFolder/$fileName", zip)
             } else {

@@ -70,7 +70,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected val workingDirectory: File = appStorage.resolve("sources/$packageName/")
     protected val cacheDirectory: File = appStorage.resolve("sources/.cache/")
 
-    protected val inputPackageFile: File = File(data.getString("inputPackageFile"))
+    protected val inputPackageFile: File = File(data.getString("inputPackageFile")!!)
 
     protected val outputDexFiles: File = workingDirectory.resolve("dex-files")
     protected val outputJarFiles: File = workingDirectory.resolve("jar-files")

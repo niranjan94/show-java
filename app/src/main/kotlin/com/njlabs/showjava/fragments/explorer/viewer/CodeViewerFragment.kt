@@ -27,6 +27,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import com.njlabs.showjava.R
 import com.njlabs.showjava.fragments.BaseFragment
@@ -39,6 +40,7 @@ import java.io.File
 
 class CodeViewerFragment: BaseFragment<ViewModel>(), CodeView.OnHighlightListener {
     override val layoutResource = R.layout.fragment_code_viewer
+    override val viewModel by viewModels<ViewModel>()
 
     override var isBlack: Boolean = true
 
@@ -59,8 +61,8 @@ class CodeViewerFragment: BaseFragment<ViewModel>(), CodeView.OnHighlightListene
 
     override fun init(savedInstanceState: Bundle?) {
 
-        file = File(arguments?.getString("filePath"))
-        holder.setBackgroundColor(ContextCompat.getColor(context!!, R.color.grey_900))
+        file = File(requireArguments().getString("filePath")!!)
+        holder.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.grey_900))
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             codeView.visibility = View.INVISIBLE

@@ -209,7 +209,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
             setStep(context.getString(R.string.writingJarFile))
 
-            outputDexFiles.listFiles().forEachIndexed { index, outputDexFile ->
+            outputDexFiles.listFiles()?.forEachIndexed { index, outputDexFile ->
                 if (outputDexFile.exists() && outputDexFile.isFile) {
                     val dexExceptionHandlerMod = DexExceptionHandlerMod()
                     val reader = DexFileReader(outputDexFile)
@@ -288,7 +288,7 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
         return successIf(
             try {
-                outputJarFiles.listFiles().isNotEmpty() || outputDexFiles.listFiles().isNotEmpty()
+                outputJarFiles.listFiles()!!.isNotEmpty() || outputDexFiles.listFiles()!!.isNotEmpty()
             } catch (e: IllegalStateException) {
                 false
             }

@@ -58,7 +58,7 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
             "lomem" to "true"
         )
         val cfrDriver = CfrDriver.Builder().withOptions(options).build()
-        cfrDriver.analyse(jarFiles.map { it.canonicalPath })
+        cfrDriver.analyse(jarFiles?.map { it.canonicalPath })
     }
 
     /**
@@ -73,7 +73,7 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
 
         val args = JadxArgs()
         args.outDirSrc = javaOutputDir
-        args.inputFiles = dexInputFiles.listFiles().toMutableList()
+        args.inputFiles = dexInputFiles.listFiles()?.toMutableList()
         args.threadsCount = 1
 
         val jadx = JadxDecompiler(args)
@@ -100,7 +100,7 @@ class JavaExtractionWorker(context: Context, data: Data) : BaseDecompiler(contex
             )
         )
 
-        javaOutputDir.listFiles().forEach { decompiledJarFile ->
+        javaOutputDir.listFiles()?.forEach { decompiledJarFile ->
             if (decompiledJarFile.exists() && decompiledJarFile.isFile && decompiledJarFile.extension == "jar") {
                 ZipUtils.unzip(decompiledJarFile, javaOutputDir, printStream!!)
                 decompiledJarFile.delete()

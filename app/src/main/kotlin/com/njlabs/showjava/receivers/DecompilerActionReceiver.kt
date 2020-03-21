@@ -36,8 +36,10 @@ class DecompilerActionReceiver : BroadcastReceiver() {
             Constants.WORKER.ACTION.STOP -> {
                 val id = intent.getStringExtra("id")
                 Timber.d("[cancel-request] ID: $id")
-                context?.let {
-                    DecompilerWorker.cancel(it, id)
+                id?.let {
+                    context?.let {
+                        DecompilerWorker.cancel(it, id)
+                    }
                 }
             }
             else -> {

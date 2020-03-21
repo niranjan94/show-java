@@ -80,7 +80,7 @@ class PackageInfo() : Parcelable {
 
     fun loadIcon(context: Context): Drawable {
         return when(type) {
-            Type.APK -> context.packageManager.getPackageArchiveInfo(filePath, 0)
+            Type.APK -> context.packageManager.getPackageArchiveInfo(filePath, 0)!!
                 .applicationInfo.loadIcon(context.packageManager)
             Type.JAR, Type.DEX ->
                 BitmapDrawable(context.resources, Identicon.createFromObject(this.name + this.label))
@@ -119,7 +119,7 @@ class PackageInfo() : Parcelable {
          * Get [PackageInfo] for an apk using the [context] and the [file].
          */
         private fun fromApk(context: Context, file: File): PackageInfo? {
-            val pack = context.packageManager.getPackageArchiveInfo(file.canonicalPath, 0)
+            val pack = context.packageManager.getPackageArchiveInfo(file.canonicalPath, 0)!!
             return PackageInfo(
                 pack.applicationInfo.loadLabel(context.packageManager).toString(),
                 pack.packageName,

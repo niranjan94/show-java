@@ -22,7 +22,8 @@ import androidx.lifecycle.ViewModel
 import com.crashlytics.android.Crashlytics
 import com.njlabs.showjava.data.FileItem
 import com.njlabs.showjava.utils.ZipUtils
-import io.reactivex.Observable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
@@ -34,13 +35,14 @@ class NavigatorViewModel: ViewModel() {
     /**
      * Load all files in the given directory
      */
-    fun loadFiles(currentDirectory: File): Observable<ArrayList<FileItem>> {
-        return Observable.fromCallable {
-            val directories = ArrayList<FileItem>()
+    suspend fun loadFiles(currentDirectory: File): ArrayList<FileItem> {
+        val directories = ArrayList<FileItem>()
+
+        withContext(Dispatchers.IO) {
             val files = ArrayList<FileItem>()
             val items = currentDirectory.listFiles()
             if (items.isNullOrEmpty()) {
-                return@fromCallable directories
+                return@withContext
             }
             items.forEach { file ->
                 val lastModDate = DateFormat.getDateTimeInstance()
@@ -62,15 +64,15 @@ class NavigatorViewModel: ViewModel() {
             directories.sortBy { it.name?.toLowerCase(Locale.ROOT) }
             files.sortBy { it.name?.toLowerCase(Locale.ROOT) }
             directories.addAll(files)
-            directories
         }
+        return directories
     }
 
     /**
      * Package an entire directory containing the source code into a .zip archive.
      */
-    fun archiveDirectory(sourceDirectory: File, packageName: String): Observable<File> {
-        return Observable.fromCallable {
+    suspend fun archiveDirectory(sourceDirectory: File, packageName: String): File {
+        return withContext(Dispatchers.IO) {
             ZipUtils.zipDir(sourceDirectory, packageName)
         }
     }
@@ -78,8 +80,8 @@ class NavigatorViewModel: ViewModel() {
     /**
      * Delete the source directory
      */
-    fun deleteDirectory(sourceDirectory: File): Observable<Unit> {
-        return Observable.fromCallable {
+    suspend fun deleteDirectory(sourceDirectory: File) {
+        withContext(Dispatchers.IO) {
             try {
                 if (sourceDirectory.exists()) {
                     FileUtils.deleteDirectory(sourceDirectory)
