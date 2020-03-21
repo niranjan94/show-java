@@ -63,14 +63,8 @@ class CodeViewerFragment: BaseFragment<ViewModel>(), CodeView.OnHighlightListene
 
         file = File(requireArguments().getString("filePath")!!)
         holder.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.grey_900))
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            codeView.visibility = View.INVISIBLE
-            codeLoadProgress.visibility = View.VISIBLE
-        } else {
-            codeView.visibility = View.VISIBLE
-            codeLoadProgress.visibility = View.GONE
-        }
+        codeView.visibility = View.INVISIBLE
+        codeLoadProgress.visibility = View.VISIBLE
 
         var language = file.extension
         extensionTypeMap[language]?.let {
@@ -143,10 +137,8 @@ class CodeViewerFragment: BaseFragment<ViewModel>(), CodeView.OnHighlightListene
         menu.findItem(R.id.wrap_text).isChecked = wrapLine
         menu.findItem(R.id.zoomable).isChecked = zoomable
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            menu.findItem(R.id.line_number).isVisible = true
-            menu.findItem(R.id.line_number).isChecked = showLineNumbers
-        }
+        menu.findItem(R.id.line_number).isVisible = true
+        menu.findItem(R.id.line_number).isChecked = showLineNumbers
 
         val packageName = arguments?.getString("name")
 

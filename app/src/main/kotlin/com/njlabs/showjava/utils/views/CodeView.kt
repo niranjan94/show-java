@@ -104,22 +104,20 @@ class CodeView @JvmOverloads constructor(
 
                     Ref: https://labs.mwrinfosecurity.com/blog/2013/09/24/webview-addjavascriptinterface-remote-code-execution/
                  */
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    addJavascriptInterface(object : Any() {
-                        @JavascriptInterface
-                        fun onStartCodeHighlight() {
-                            onHighlightListener?.onStartCodeHighlight()
-                        }
-                        @JavascriptInterface
-                        fun onFinishCodeHighlight() {
-                            onHighlightListener?.onFinishCodeHighlight()
-                        }
-                        @JavascriptInterface
-                        fun onLineClicked(lineNumber: Int, content: String) {
-                            onHighlightListener?.onLineClicked(lineNumber, content)
-                        }
-                    }, "android")
-                }
+                addJavascriptInterface(object : Any() {
+                    @JavascriptInterface
+                    fun onStartCodeHighlight() {
+                        onHighlightListener?.onStartCodeHighlight()
+                    }
+                    @JavascriptInterface
+                    fun onFinishCodeHighlight() {
+                        onHighlightListener?.onFinishCodeHighlight()
+                    }
+                    @JavascriptInterface
+                    fun onLineClicked(lineNumber: Int, content: String) {
+                        onHighlightListener?.onLineClicked(lineNumber, content)
+                    }
+                }, "android")
             }
         } else {
             removeJavascriptInterface("android")

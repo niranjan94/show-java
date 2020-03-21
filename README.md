@@ -25,18 +25,25 @@ This is a Decompiler that extracts the source code of an Android application (in
 
 ## Compatibility Matrix
 
-### Version 3.0
+### Version 3.1
 
 JaDX and Fernflower use newer Java features such as some types of lambda's which are not available on pre-N versions of Android. 
 
-|             | CFR 0.140          | JaDX 0.9.0         | Fernflower         |
+|             | CFR 0.149          | JaDX 0.9.0         | Fernflower         |
 |------------:|:------------------:|:------------------:|:------------------:|
 | Oreo        | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Nougat      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | Marshmallow | :white_check_mark: |        -           |         -          |
 | Lollipop    | :white_check_mark: |        -           |         -          |
 | KitKat      | :white_check_mark: |        -           |         -          |
-| Jelly Bean  | :white_check_mark: |        -           |         -          |
+
+### Version 3.0
+
+JaDX and Fernflower use newer Java features such as some types of lambda's which are not available on pre-N versions of Android. 
+
+|                       | CFR 0.140          | JaDX 0.9.0         | Fernflower         |
+|----------------------:|:------------------:|:------------------:|:------------------:|
+| Jelly Bean to KitKat  | :white_check_mark: |        -           |         -          |
 
 > Available from the [Play Store](https://play.google.com/store/apps/details?id=com.njlabs.showjava) on all Android devices running Jelly Bean and above.
 

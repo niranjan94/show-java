@@ -26,9 +26,9 @@ apply plugin: "io.michaelrocks.paranoid"
 apply plugin: "ru.tinkoff.gradle.jarjar"
 
 def versionMajor = 3
-def versionMinor = 0
-def versionPatch = 6
-def versionBuild = 4
+def versionMinor = 1
+def versionPatch = 0
+def versionBuild = 0
 
 def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
@@ -65,7 +65,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 29
         multiDexEnabled true
         multiDexKeepProguard file("multidex-config.pro")

@@ -63,9 +63,7 @@ fun <V> Map<String, V>.toBundle(bundle: Bundle = Bundle()): Bundle = bundle.appl
  */
 fun Bundle.putSmart(k: String, v: Any?) = when (v) {
     is IBinder -> {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            putBinder(k, v)
-        } else { }
+        putBinder(k, v)
     }
     is Bundle -> putBundle(k, v)
     is Byte -> putByte(k, v)
