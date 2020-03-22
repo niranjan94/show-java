@@ -24,6 +24,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -34,14 +35,11 @@ import com.njlabs.showjava.activities.BaseActivity
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.ktx.Storage
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SettingsFragment : PreferenceFragmentCompat() {
-
-    private lateinit var deleteSubscription: Disposable
 
     private var progressBarView: View? = null
     private var containerView: View? = null
@@ -77,7 +75,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         findPreference<Preference>("clearSourceHistory")?.onPreferenceClickListener = Preference.OnPreferenceClickListener  {
             activity.firebaseAnalytics.logEvent(Constants.EVENTS.CLEAR_SOURCE_HISTORY, null)
-            AlertDialog.Builder(context!!)
+            AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.deleteSourceHistory))
                 .setMessage(getString(R.string.deleteSourceHistoryConfirm))
                 .setIcon(R.drawable.ic_error_outline_black)
@@ -123,31 +121,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun deleteSources() {
         progressBarView?.visibility = View.VISIBLE
         containerView?.visibility = View.INVISIBLE
-        deleteSubscription = deleteHistory()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                Toast.makeText(
-                    context,
-                    getString(R.string.sourceHistoryDeleted),
-                    Toast.LENGTH_SHORT
-                ).show()
-                progressBarView?.visibility = View.GONE
-                containerView?.visibility = View.VISIBLE
-            }
-    }
-
-    private fun deleteHistory(): Observable<Any> {
-        return Observable.fromCallable {
-            Storage.getInstance().appStorage.resolve("sources")
-                .deleteRecursively()
+        lifecycleScope.launch {
+            deleteHistory()
+            Toast.makeText(
+                context,
+                getString(R.string.sourceHistoryDeleted),
+                Toast.LENGTH_SHORT
+            ).show()
+            progressBarView?.visibility = View.GONE
+            containerView?.visibility = View.VISIBLE
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (::deleteSubscription.isInitialized && !deleteSubscription.isDisposed) {
-            deleteSubscription.dispose()
+    private suspend fun deleteHistory() {
+        withContext(Dispatchers.IO) {
+            Storage.getInstance().appStorage.resolve("sources").deleteRecursively()
         }
     }
 

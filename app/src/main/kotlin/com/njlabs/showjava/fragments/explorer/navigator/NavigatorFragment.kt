@@ -39,6 +39,7 @@ import com.njlabs.showjava.fragments.explorer.navigator.adapters.FilesListAdapte
 import com.njlabs.showjava.fragments.explorer.viewer.CodeViewerFragment
 import com.njlabs.showjava.fragments.explorer.viewer.ImageViewerFragment
 import com.njlabs.showjava.utils.ktx.bundleOf
+import com.njlabs.showjava.utils.ktx.sourceDir
 import kotlinx.android.synthetic.main.fragment_navigator.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -317,7 +318,7 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
         } else {
             containerActivity.setSubtitle(
                 currentDirectory?.canonicalPath?.replace(
-                    "${Environment.getExternalStorageDirectory()}/show-java/sources/${selectedApp?.packageName}/",
+                    sourceDir(selectedApp?.packageName!!).canonicalPath,
                     ""
                 )
             )

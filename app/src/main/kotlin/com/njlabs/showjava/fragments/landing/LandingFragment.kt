@@ -18,6 +18,7 @@
 
 package com.njlabs.showjava.fragments.landing
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.angads25.filepicker.model.DialogConfigs
 import com.github.angads25.filepicker.model.DialogProperties
 import com.github.angads25.filepicker.view.FilePickerDialog
+import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
@@ -40,6 +42,7 @@ import kotlinx.android.synthetic.main.fragment_landing.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
+
 
 class LandingFragment : BaseFragment<LandingViewModel>() {
 
@@ -118,7 +121,16 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
     }
 
     private fun pickFile() {
-        filePickerDialog.show()
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "*/*"
+        val mimetypes = arrayOf(
+            "application/vnd.android.package-archive",
+            "application/java-archive",
+            "application/x-dex"
+        )
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes)
+        startActivityForResult(intent, Constants.FILE_PICKER_REQUEST)
     }
 
     private fun populateHistory(resume: Boolean = false) {
@@ -162,6 +174,17 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
                 ))
             }
             historyListView.adapter = historyListAdapter
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Timber.d("onActivityResult resultCode=${Constants.FILE_PICKER_REQUEST}")
+        if (resultCode == Constants.FILE_PICKER_REQUEST) {
+            Timber.d("onActivityResult data.dataString=${data?.dataString}")
+            Timber.d("onActivityResult data.data=${data?.data}")
+            Timber.d("onActivityResult data=${data}")
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 

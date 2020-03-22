@@ -26,6 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.SourceInfo
+import com.njlabs.showjava.utils.ktx.sourceDir
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import java.io.File
 
@@ -41,8 +42,7 @@ class HistoryListAdapter(
             with(sourceInfo) {
                 itemView.itemLabel.text = sourceInfo.packageLabel
                 itemView.itemSecondaryLabel.text = sourceInfo.packageName
-                val iconPath =
-                    "${Environment.getExternalStorageDirectory()}/show-java/sources/${sourceInfo.packageName}/icon.png"
+                val iconPath = sourceDir(sourceInfo.packageName).resolve("icon.png").canonicalPath
                 if (File(iconPath).exists()) {
                     val iconBitmap = BitmapFactory.decodeFile(iconPath)
                     itemView.itemIcon.setImageDrawable(

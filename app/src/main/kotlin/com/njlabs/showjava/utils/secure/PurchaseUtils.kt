@@ -19,13 +19,13 @@
 package com.njlabs.showjava.utils.secure
 
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.BaseActivity
 import io.michaelrocks.paranoid.Obfuscate
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 import org.solovyev.android.checkout.*
 import timber.log.Timber
 
@@ -36,7 +36,6 @@ class PurchaseUtils(
     val isLoading: (Boolean) -> Unit = {}
 ) {
 
-    private val disposables: CompositeDisposable = CompositeDisposable()
     private var completeCallback: () -> Unit = {}
 
     lateinit var checkout: ActivityCheckout
@@ -119,64 +118,60 @@ class PurchaseUtils(
     private fun onPurchaseComplete(purchase: Purchase) {
         Timber.d("Purchase complete: %s", purchase.sku)
         isLoading(true)
-        disposables.add(
-            secureUtils.makeJsonRequest(
-                secureUtils.purchaseVerifierPath, mapOf(
-                    "packageName" to activityContext.packageName,
-                    "productId" to purchase.sku,
-                    "token" to purchase.token
+        activityContext.lifecycleScope.launch {
+            val result: JSONObject
+            try {
+                result = secureUtils.makeJsonRequest(
+                    secureUtils.purchaseVerifierPath, mapOf(
+                        "packageName" to activityContext.packageName,
+                        "productId" to purchase.sku,
+                        "token" to purchase.token
+                    )
                 )
-            ).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {
-                        isLoading(false)
-                        Timber.d("Verification done: %s", it.toString())
-                        if (secureUtils.isPurchaseValid(purchase, it)) {
-                            if (!secureUtils.hasPurchasedPro()) {
-                                activityContext.firebaseAnalytics.logEvent(
-                                    FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, null
-                                )
-                                Toast.makeText(
-                                    activityContext,
-                                    R.string.purchaseSuccess,
-                                    Toast.LENGTH_LONG
-                                )
-                                    .show()
-                            }
-                            secureUtils.onPurchaseComplete(purchase)
-                            completeCallback()
-                        } else {
-                            if (!lessVerbose) {
-                                Toast.makeText(
-                                    activityContext,
-                                    R.string.purchaseVerificationFailed,
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                            secureUtils.onPurchaseRevert()
-                        }
-                    }, {
-                        isLoading(false)
-                        Timber.e(it)
-                        if (!lessVerbose) {
-                            Toast.makeText(
-                                activityContext,
-                                R.string.purchaseVerificationFailed,
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-                )
-        )
-        secureUtils.onPurchaseComplete(purchase)
+            } catch (e: Exception) {
+                Timber.e(e)
+                if (!lessVerbose) {
+                    Toast.makeText(
+                        activityContext,
+                        R.string.purchaseVerificationFailed,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                return@launch
+            } finally {
+                isLoading(false)
+            }
+            Timber.d("Verification done: %s", result.toString())
+            if (secureUtils.isPurchaseValid(purchase, result)) {
+                if (!secureUtils.hasPurchasedPro()) {
+                    activityContext.firebaseAnalytics.logEvent(
+                        FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, null
+                    )
+                    Toast.makeText(
+                            activityContext,
+                            R.string.purchaseSuccess,
+                            Toast.LENGTH_LONG
+                        )
+                        .show()
+                }
+                secureUtils.onPurchaseComplete(purchase)
+                completeCallback()
+            } else {
+                if (!lessVerbose) {
+                    Toast.makeText(
+                        activityContext,
+                        R.string.purchaseVerificationFailed,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                secureUtils.onPurchaseRevert()
+            }
+        }
     }
 
     fun onDestroy() {
-        disposables.clear()
         if (this::checkout.isInitialized) {
             checkout.stop()
         }
     }
-
 }

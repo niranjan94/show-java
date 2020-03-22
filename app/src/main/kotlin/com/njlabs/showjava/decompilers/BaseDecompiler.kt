@@ -32,9 +32,7 @@ import com.njlabs.showjava.utils.ktx.Storage
 import com.njlabs.showjava.utils.ktx.cleanMemory
 import com.njlabs.showjava.utils.streams.ProgressStream
 import com.njlabs.showjava.workers.DecompilerWorker
-import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
 import org.apache.commons.io.FileUtils
 import timber.log.Timber
 import java.io.File
@@ -45,7 +43,7 @@ import java.util.concurrent.TimeUnit
  * The base decompiler. This reads the input [Data] into easy to use properties of the class.
  * All other components of the decompiler will extend this one.
  */
-abstract class BaseDecompiler(val context: Context, val data: Data) {
+abstract class BaseDecompiler(val context: Context, val data: Data): CoroutineScope by CoroutineScope(Dispatchers.IO) {
     var printStream: PrintStream? = null
 
     private var id = data.getString("id")
@@ -77,7 +75,6 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected val outputSrcDirectory: File = workingDirectory.resolve("src")
     protected val outputJavaSrcDirectory: File = outputSrcDirectory.resolve("java")
 
-    private val disposables = CompositeDisposable()
     private var onLowMemory: ((Boolean) -> Unit)? = null
     private var memoryThresholdCrossCount = 0
     protected open val maxMemoryAdjustmentFactor = 1.3
@@ -95,9 +92,10 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      */
     open fun doWork(): ListenableWorker.Result {
         cleanMemory()
-        monitorMemory()
+        launch {
+            monitorMemory()
+        }
         outputJavaSrcDirectory.mkdirs()
-
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             data.keyValueMap.forEach { (t, u) ->
                 Timber.d("[WORKER] [INPUT] $t: $u")
@@ -122,36 +120,34 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
         return this
     }
 
-    private fun monitorMemory() {
-        disposables.add(
-            Observable.interval(1000, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe {
-                    val maxAdjusted = Runtime.getRuntime().maxMemory() / maxMemoryAdjustmentFactor
-                    val used = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()).toDouble().let { m ->
-                        if (m > maxAdjusted) maxAdjusted else m
-                    }
-                    val usedPercentage = (used / maxAdjusted) * 100
-
-                    Timber.d("[mem] ----")
-                    Timber.d("[mem] Used: ${FileUtils.byteCountToDisplaySize(used.toLong())}")
-                    Timber.d("[mem] Max: ${FileUtils.byteCountToDisplaySize(maxAdjusted.toLong())} at factor $maxMemoryAdjustmentFactor")
-                    Timber.d("[mem] Used %: $usedPercentage")
-
-                    broadcastStatus("memory", "%.2f".format(usedPercentage), "memory")
-
-                    if (usedPercentage > memoryThreshold) {
-                        if (memoryThresholdCrossCount > 2) {
-                            onLowMemory?.invoke(true)
-                        } else {
-                            memoryThresholdCrossCount++
-                        }
-                    } else {
-                        memoryThresholdCrossCount = 0
-                    }
+    private suspend fun monitorMemory() {
+        withContext(Dispatchers.IO) {
+            while (true) {
+                val maxAdjusted = Runtime.getRuntime().maxMemory() / maxMemoryAdjustmentFactor
+                val used = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()).toDouble().let { m ->
+                    if (m > maxAdjusted) maxAdjusted else m
                 }
-        )
+                val usedPercentage = (used / maxAdjusted) * 100
+
+                Timber.d("[mem] ----")
+                Timber.d("[mem] Used: ${FileUtils.byteCountToDisplaySize(used.toLong())}")
+                Timber.d("[mem] Max: ${FileUtils.byteCountToDisplaySize(maxAdjusted.toLong())} at factor $maxMemoryAdjustmentFactor")
+                Timber.d("[mem] Used %: $usedPercentage")
+
+                broadcastStatus("memory", "%.2f".format(usedPercentage), "memory")
+
+                if (usedPercentage > memoryThreshold) {
+                    if (memoryThresholdCrossCount > 2) {
+                        onLowMemory?.invoke(true)
+                    } else {
+                        memoryThresholdCrossCount++
+                    }
+                } else {
+                    memoryThresholdCrossCount = 0
+                }
+                delay(1000)
+            }
+        }
     }
 
     /**
@@ -180,7 +176,6 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
     protected fun exit(exception: Exception?): ListenableWorker.Result {
         Timber.e(exception)
         onStopped()
-        disposables.clear()
         return if (runAttemptCount >= (maxAttempts - 1))
             ListenableWorker.Result.failure()
         else
@@ -191,7 +186,7 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
      * Return a success only if the conditions is true. Else exit with an exception.
      */
     protected fun successIf(condition: Boolean): ListenableWorker.Result {
-        disposables.clear()
+        cancel()
         return if (condition)
             ListenableWorker.Result.success()
         else
@@ -235,14 +230,15 @@ abstract class BaseDecompiler(val context: Context, val data: Data) {
             context.getString(R.string.appHasBeenDecompiled, packageLabel),
             ""
         )
+        cancel()
     }
 
     /**
      * Cancel notification on worker stop
      */
     open fun onStopped() {
+        cancel()
         Timber.d("[cancel-request] cancelled")
-        disposables.clear()
         processNotifier?.cancel()
     }
 

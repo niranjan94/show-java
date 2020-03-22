@@ -29,9 +29,6 @@ import androidx.work.WorkManager
 import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.logging.ProductionTree
-import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.iid.FirebaseInstanceId
@@ -39,11 +36,14 @@ import io.fabric.sdk.android.Fabric
 import com.crashlytics.android.core.CrashlyticsCore
 import com.njlabs.showjava.utils.StethoUtils
 import com.njlabs.showjava.utils.ktx.Storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class MainApplication : MultiDexApplication() {
 
-    val disposables = CompositeDisposable()
     lateinit var instanceId: String
 
     override fun onCreate() {
@@ -94,13 +94,9 @@ class MainApplication : MultiDexApplication() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            disposables.add(
+            GlobalScope.launch {
                 cleanStaleNotifications()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
-                    .onErrorReturn {}
-                    .subscribe()
-            )
+            }
         }
     }
 
@@ -108,11 +104,11 @@ class MainApplication : MultiDexApplication() {
      * Clean any stale notifications not linked to any decompiler process
      */
     @RequiresApi(Build.VERSION_CODES.M)
-    fun cleanStaleNotifications(): Observable<Unit> {
-        return Observable.fromCallable {
+    suspend fun cleanStaleNotifications() {
+        withContext(Dispatchers.IO) {
             val manager = applicationContext
                 .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val workManager = WorkManager.getInstance(this)
+            val workManager = WorkManager.getInstance(this@MainApplication)
             manager.activeNotifications.forEach { notification ->
                 val status = workManager.getWorkInfosForUniqueWorkLiveData(notification.tag)
                     .value?.any { it.state.isFinished }
@@ -121,10 +117,5 @@ class MainApplication : MultiDexApplication() {
                 }
             }
         }
-    }
-
-    override fun onTerminate() {
-        super.onTerminate()
-        disposables.clear()
     }
 }

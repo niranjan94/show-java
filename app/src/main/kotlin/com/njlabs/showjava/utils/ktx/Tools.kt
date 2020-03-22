@@ -21,6 +21,7 @@ package com.njlabs.showjava.utils.ktx
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import java.security.MessageDigest
@@ -70,11 +71,23 @@ fun hashString(algorithm: String, input: String): String {
  * Check if the device is connected to a network.
  */
 fun checkDataConnection(context: Context): Boolean {
-    val connectivityMgr =
+    val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    return (connectivityMgr.activeNetworkInfo != null &&
-            connectivityMgr.activeNetworkInfo.isAvailable &&
-            connectivityMgr.activeNetworkInfo.isConnected)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val networkCapabilities = connectivityManager.activeNetwork ?: return false
+        val actNw =
+            connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+        return when {
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+    } else {
+        @Suppress("DEPRECATION") val activeNetworkInfo = connectivityManager.activeNetworkInfo ?: return false
+        @Suppress("DEPRECATION") return (activeNetworkInfo.isAvailable && activeNetworkInfo.isConnected)
+    }
 }
 
 /**

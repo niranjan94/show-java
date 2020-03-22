@@ -46,7 +46,7 @@ private fun getAppStorage(context: Context?): File {
     if (isExternalStorageWritable()) {
         context!!.getExternalFilesDir("app-store")?.let { return it }
     }
-    return File(context!!.filesDir, "show-java")
+    return File(context!!.filesDir, "show-java").resolve("app-store")
 }
 
 fun isExternalStorageWritable(): Boolean {

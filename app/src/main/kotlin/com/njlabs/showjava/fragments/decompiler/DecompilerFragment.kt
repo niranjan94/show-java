@@ -32,6 +32,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
@@ -44,15 +45,16 @@ import com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment
 import com.njlabs.showjava.utils.ktx.bundleOf
 import com.njlabs.showjava.utils.ktx.sourceDir
 import com.njlabs.showjava.utils.ktx.toBundle
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_decompiler.*
 import kotlinx.android.synthetic.main.layout_app_list_item.view.*
 import kotlinx.android.synthetic.main.layout_pick_decompiler_list_item.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.net.URI
+import kotlin.Exception
 
 class DecompilerFragment: BaseFragment<ViewModel>() {
 
@@ -119,27 +121,22 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
             decompilersUnavailableNotification.visibility = View.VISIBLE
         }
 
-        disposables.add(
-            Observable.fromCallable {
-                packageInfo.loadIcon(requireContext())
+        lifecycleScope.launch {
+            val icon = try {
+                withContext(Dispatchers.IO) {
+                    packageInfo.loadIcon(requireContext())
+                }
+            } catch (e: Exception) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    resources.getDrawable(R.drawable.ic_list_generic, null)
+                } else {
+                    @Suppress("DEPRECATION")
+                    resources.getDrawable(R.drawable.ic_list_generic)
+                }
             }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturn {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        resources.getDrawable(R.drawable.ic_list_generic, null)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        resources.getDrawable(R.drawable.ic_list_generic)
-                    }
-                }
-                .subscribe {
-                    itemIcon?.setImageDrawable(it)
-                }
-        )
-
+            itemIcon?.setImageDrawable(icon)
+        }
         assertSourceExistence(true)
-
     }
 
     private fun loadPackageInfoFromArguments() {

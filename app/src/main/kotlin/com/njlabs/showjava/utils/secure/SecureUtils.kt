@@ -35,13 +35,16 @@ import com.njlabs.showjava.Constants
 import com.njlabs.showjava.utils.RequestQueue
 import com.njlabs.showjava.utils.SingletonHolder
 import io.michaelrocks.paranoid.Obfuscate
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.solovyev.android.checkout.Billing
 import org.solovyev.android.checkout.Purchase
 import timber.log.Timber
 import java.security.MessageDigest
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 
 @Obfuscate
@@ -148,35 +151,29 @@ class SecureUtils(val context: Context) {
     /**
      * Make a JSON Request to the backend and return and observable
      */
-    fun makeJsonRequest(requestPath: String, payload: Map<String, String>): Observable<JSONObject> {
-        return Observable.create { emitter: ObservableEmitter<JSONObject> ->
-            val jsonBody = JSONObject()
-            var backendUrl = this.backendUrl
-            var path = requestPath
-            if (!backendUrl.endsWith("/")) {
-                backendUrl += "/"
-            }
-            if (path.startsWith("/")) {
-                path = path.removePrefix("/")
-            }
-            payload.entries.forEach {
-                jsonBody.put(it.key, it.value)
-            }
-            val request = JsonObjectRequest(
-                backendUrl + path,
-                jsonBody,
-                Response.Listener<JSONObject> {
-                    emitter.onNext(it)
-                    emitter.onComplete()
-                }, Response.ErrorListener {
-                    if (!emitter.isDisposed) {
-                        emitter.onError(it)
-                        emitter.onComplete()
-                    }
-                }
-            )
-            RequestQueue.getInstance(context).addToRequestQueue(request)
+    suspend fun makeJsonRequest(requestPath: String, payload: Map<String, String>) = suspendCoroutine<JSONObject> { cont ->
+        val jsonBody = JSONObject()
+        var backendUrl = this.backendUrl
+        var path = requestPath
+        if (!backendUrl.endsWith("/")) {
+            backendUrl += "/"
         }
+        if (path.startsWith("/")) {
+            path = path.removePrefix("/")
+        }
+        payload.entries.forEach {
+            jsonBody.put(it.key, it.value)
+        }
+        val request = JsonObjectRequest(
+            backendUrl + path,
+            jsonBody,
+            Response.Listener<JSONObject> {
+                cont.resume(it)
+            }, Response.ErrorListener {
+                cont.resumeWithException(it)
+            }
+        )
+        RequestQueue.getInstance(context).addToRequestQueue(request)
     }
 
     companion object : SingletonHolder<SecureUtils, Context>(::SecureUtils)

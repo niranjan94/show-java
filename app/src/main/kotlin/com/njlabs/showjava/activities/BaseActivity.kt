@@ -45,10 +45,8 @@ import com.njlabs.showjava.activities.purchase.PurchaseActivity
 import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.ktx.checkDataConnection
 import com.njlabs.showjava.utils.secure.SecureUtils
-import io.reactivex.disposables.CompositeDisposable
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
-import java.util.*
 
 
 abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -61,7 +59,6 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
 
     lateinit var firebaseAnalytics: FirebaseAnalytics
 
-    protected val disposables = CompositeDisposable()
     var inEea = false
 
     abstract fun init(savedInstanceState: Bundle?)
@@ -249,7 +246,6 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
             if (!EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 Toast.makeText(
@@ -261,11 +257,8 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
             } else {
                 postPermissionsGrant()
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.clear()
     }
 }

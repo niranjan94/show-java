@@ -29,7 +29,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.ContainerActivity
 import com.njlabs.showjava.utils.UserPreferences
-import io.reactivex.disposables.CompositeDisposable
 import androidx.transition.TransitionInflater
 
 
@@ -39,7 +38,6 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
     abstract fun init(savedInstanceState: Bundle?)
 
     protected abstract val viewModel: T
-    protected val disposables = CompositeDisposable()
 
     protected lateinit var userPreferences: UserPreferences
     protected lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -113,7 +111,6 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
         super.onDestroy()
         containerActivity.supportActionBar?.title = originalTitle
         containerActivity.setSubtitle("")
-        disposables.clear()
     }
 
 
@@ -125,7 +122,6 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
 
     override fun onPause() {
         super.onPause()
-        disposables.clear()
         containerActivity.supportActionBar?.title = originalTitle
         containerActivity.setSubtitle("")
         menu?.let {

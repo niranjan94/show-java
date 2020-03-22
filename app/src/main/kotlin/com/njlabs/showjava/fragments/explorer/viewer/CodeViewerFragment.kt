@@ -20,22 +20,22 @@ package com.njlabs.showjava.fragments.explorer.viewer
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import com.njlabs.showjava.R
 import com.njlabs.showjava.fragments.BaseFragment
+import com.njlabs.showjava.utils.ktx.sourceDir
 import com.njlabs.showjava.utils.views.CodeView
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_code_viewer.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class CodeViewerFragment: BaseFragment<ViewModel>(), CodeView.OnHighlightListener {
@@ -81,31 +81,24 @@ class CodeViewerFragment: BaseFragment<ViewModel>(), CodeView.OnHighlightListene
         showLineNumbers = codeViewPreferences.getBoolean("showLineNumbers", true)
         invertColors = codeViewPreferences.getBoolean("invertColors", true)
 
-        disposables.add(
-            loadFile(file)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturn {
-                    it.localizedMessage
+        lifecycleScope.launch {
+            val fileContent = try {
+                withContext(Dispatchers.IO) {
+                    file.readText()
                 }
-                .subscribe { fileContent ->
-                    codeView.setCode(fileContent)
-                        .setLanguage(language)
-                        .setWrapLine(wrapLine)
-                        .setDarkMode(invertColors)
-                        .setFontSize(14F)
-                        .setZoomEnabled(zoomable)
-                        .setShowLineNumber(showLineNumbers)
-                        .setOnHighlightListener(this)
-                        .load()
-                }
-        )
+            } catch (e: Exception) {
+                e.localizedMessage
+            }
 
-    }
-
-    private fun loadFile(fileToLoad: File): Observable<String> {
-        return Observable.fromCallable {
-            fileToLoad.readText()
+            codeView.setCode(fileContent)
+                .setLanguage(language)
+                .setWrapLine(wrapLine)
+                .setDarkMode(invertColors)
+                .setFontSize(14F)
+                .setZoomEnabled(zoomable)
+                .setShowLineNumber(showLineNumbers)
+                .setOnHighlightListener(this@CodeViewerFragment)
+                .load()
         }
     }
 
@@ -140,11 +133,11 @@ class CodeViewerFragment: BaseFragment<ViewModel>(), CodeView.OnHighlightListene
         menu.findItem(R.id.line_number).isVisible = true
         menu.findItem(R.id.line_number).isChecked = showLineNumbers
 
-        val packageName = arguments?.getString("name")
+        val packageName = arguments?.getString("name")!!
 
         containerActivity.supportActionBar?.title = file.name
         val subtitle = file.canonicalPath.replace(
-            "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+            sourceDir(packageName).canonicalPath,
             ""
         )
 

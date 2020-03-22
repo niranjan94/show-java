@@ -126,7 +126,6 @@ android {
         exclude "META-INF/LICENSE.txt"
         exclude "META-INF/NOTICE.txt"
         exclude "META-INF/MANIFEST.MF"
-        exclude "META-INF/rxjava.properties"
         exclude "resources.arsc"
         pickFirst 'META-INF/library_release.kotlin_module'
 
@@ -215,9 +214,6 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:$work_version", {
         exclude group: "com.google.guava", module: "listenablefuture"
     })
-    implementation("androidx.work:work-rxjava2:$work_version", {
-        exclude group: "com.google.guava", module: "listenablefuture"
-    })
 
     // Dex2Jar & friends
     implementation "asm:asm-all:3.3.1"
@@ -252,10 +248,6 @@ dependencies {
     // Fernflower decompiler
     implementation "com.github.fesh0r:fernflower:a0a8f0a8dd"
 
-    // RxAndroid & friends
-    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
-    implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
-
     // Testing tools
     testImplementation "junit:junit:4.13"
     androidTestImplementation "junit:junit:4.13"
@@ -280,7 +272,6 @@ dependencies {
     })
     implementation "com.daimajia.numberprogressbar:library:1.4@aar"
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
-    implementation "com.github.angads25:filepicker:1.1.1"
     implementation "com.github.javiersantos:PiracyChecker:1.2.6"
     implementation "com.github.nekocode:Badge:2.1"
     debugImplementation("com.facebook.stetho:stetho:1.5.1", {

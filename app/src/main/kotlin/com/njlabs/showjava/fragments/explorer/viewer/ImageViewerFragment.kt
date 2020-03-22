@@ -30,6 +30,7 @@ import com.davemorrissey.labs.subscaleview.ImageViewState
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.njlabs.showjava.R
 import com.njlabs.showjava.fragments.BaseFragment
+import com.njlabs.showjava.utils.ktx.sourceDir
 import kotlinx.android.synthetic.main.fragment_image_viewer.*
 import org.apache.commons.io.FilenameUtils
 
@@ -57,7 +58,7 @@ class ImageViewerFragment: BaseFragment<ViewModel>() {
             this.subtitle = FilenameUtils
                 .getFullPath(filePath)
                 .replace(
-                    "${Environment.getExternalStorageDirectory()}/show-java/sources/$packageName/",
+                    sourceDir(this.packageName).canonicalPath,
                     ""
                 )
             imageView.setImage(ImageSource.uri(filePath!!), imageViewState)
