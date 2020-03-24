@@ -40,7 +40,8 @@ import com.njlabs.showjava.utils.secure.PurchaseUtils
 import kotlinx.android.synthetic.main.activity_container.*
 
 
-class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+class ContainerActivity : BaseActivity(), SearchView.OnQueryTextListener,
+    SearchView.OnCloseListener {
 
     private lateinit var purchaseUtils: PurchaseUtils
 
@@ -131,7 +132,8 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
             fragmentClass = DecompilerFragment::class.java.name
         }
 
-        val fragment: BaseFragment<*> = Class.forName(fragmentClass).newInstance() as BaseFragment<*>
+        val fragment: BaseFragment<*> =
+            Class.forName(fragmentClass).newInstance() as BaseFragment<*>
         val extras = intent.extras
         extras?.putString("dataString", intent.dataString)
 
@@ -204,7 +206,8 @@ class ContainerActivity: BaseActivity(), SearchView.OnQueryTextListener, SearchV
         if (sharedView != null) {
             transaction.addSharedElement(
                 sharedView,
-                bundle?.getString("transitionName", "sharedElementTransition") ?: "sharedElementTransition"
+                bundle?.getString("transitionName", "sharedElementTransition")
+                        ?: "sharedElementTransition"
             )
 
         } else {

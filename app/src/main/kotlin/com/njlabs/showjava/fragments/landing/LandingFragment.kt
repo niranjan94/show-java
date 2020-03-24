@@ -18,16 +18,13 @@
 
 package com.njlabs.showjava.fragments.landing
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.angads25.filepicker.model.DialogConfigs
-import com.github.angads25.filepicker.model.DialogProperties
-import com.github.angads25.filepicker.view.FilePickerDialog
 import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
@@ -38,17 +35,16 @@ import com.njlabs.showjava.fragments.decompiler.DecompilerFragment
 import com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment
 import com.njlabs.showjava.fragments.landing.adapters.HistoryListAdapter
 import com.njlabs.showjava.utils.ktx.bundleOf
+import com.njlabs.showjava.utils.ktx.getFileFromContentUri
 import kotlinx.android.synthetic.main.fragment_landing.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.io.File
 
 
 class LandingFragment : BaseFragment<LandingViewModel>() {
 
     override val layoutResource: Int = R.layout.fragment_landing
 
-    private lateinit var filePickerDialog: FilePickerDialog
     override val viewModel by viewModels<LandingViewModel>()
 
     private var historyListAdapter: HistoryListAdapter? = null
@@ -67,33 +63,6 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
         }
 
         setupFab()
-
-        val properties = DialogProperties()
-        properties.selection_mode = DialogConfigs.SINGLE_MODE
-        properties.selection_type = DialogConfigs.FILE_SELECT
-        properties.root = Environment.getExternalStorageDirectory()
-        properties.error_dir = properties.root
-        properties.offset = properties.root
-        properties.extensions = arrayOf("apk", "jar", "dex", "odex")
-
-        filePickerDialog = FilePickerDialog(context, properties)
-        filePickerDialog.setTitle(getString(R.string.selectFile))
-
-        filePickerDialog.setDialogSelectionListener { files ->
-            if (files.isNotEmpty()) {
-                val selectedFile = File(files.first())
-                if (selectedFile.exists() && selectedFile.isFile) {
-                    PackageInfo.fromFile(requireContext(), selectedFile)?.let {
-                        containerActivity.gotoFragment(
-                            DecompilerFragment(), bundleOf(
-                                "packageInfo" to it
-                            )
-                        )
-                    }
-                }
-            }
-        }
-
         populateHistory()
 
         swipeRefresh.setOnRefreshListener {
@@ -169,20 +138,35 @@ class LandingFragment : BaseFragment<LandingViewModel>() {
             historyListView.setHasFixedSize(true)
             historyListView.layoutManager = LinearLayoutManager(context)
             historyListAdapter = HistoryListAdapter(historyItems) { selectedHistoryItem ->
-                containerActivity.gotoFragment(NavigatorFragment(), bundleOf(
-                    "selectedApp" to selectedHistoryItem
-                ))
+                containerActivity.gotoFragment(
+                    NavigatorFragment(), bundleOf(
+                        "selectedApp" to selectedHistoryItem
+                    )
+                )
             }
             historyListView.adapter = historyListAdapter
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Timber.d("onActivityResult resultCode=${Constants.FILE_PICKER_REQUEST}")
-        if (resultCode == Constants.FILE_PICKER_REQUEST) {
-            Timber.d("onActivityResult data.dataString=${data?.dataString}")
-            Timber.d("onActivityResult data.data=${data?.data}")
-            Timber.d("onActivityResult data=${data}")
+        if (requestCode == Constants.FILE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                data?.data?.let { contentUri ->
+                    lifecycleScope.launch {
+                        getFileFromContentUri(requireContext(), contentUri)?.let { selectedFile ->
+                            if (selectedFile.exists() && selectedFile.isFile) {
+                                PackageInfo.fromFile(requireContext(), selectedFile)?.let {
+                                    containerActivity.gotoFragment(
+                                        DecompilerFragment(), bundleOf(
+                                            "packageInfo" to it
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }

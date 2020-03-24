@@ -18,13 +18,7 @@
 
 package com.njlabs.showjava.utils.ktx
 
-import android.graphics.Bitmap
-import android.graphics.Paint
-import android.graphics.Canvas
-import android.graphics.Rect
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
-import android.os.Build
+import android.graphics.*
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcelable
@@ -81,7 +75,8 @@ fun Bundle.putSmart(k: String, v: Any?) = when (v) {
     is Boolean -> putBoolean(k, v)
     is Int -> putInt(k, v)
     is IntArray -> putIntArray(k, v)
-    else -> { }
+    else -> {
+    }
 }
 
 /**
@@ -95,7 +90,8 @@ fun Bitmap.getCircularBitmap(config: Bitmap.Config = Bitmap.Config.ARGB_8888): B
     val circleRadius = max(width, height) / 2f
 
     // output bitmap
-    val outputBitmapPaint = Paint(circlePaint).apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN) }
+    val outputBitmapPaint =
+        Paint(circlePaint).apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN) }
     val outputBounds = Rect(0, 0, width, height)
     val output = Bitmap.createBitmap(width, height, config)
 

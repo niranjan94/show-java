@@ -43,7 +43,8 @@ import java.util.concurrent.TimeUnit
  * The base decompiler. This reads the input [Data] into easy to use properties of the class.
  * All other components of the decompiler will extend this one.
  */
-abstract class BaseDecompiler(val context: Context, val data: Data): CoroutineScope by CoroutineScope(Dispatchers.IO) {
+abstract class BaseDecompiler(val context: Context, val data: Data) :
+    CoroutineScope by CoroutineScope(Dispatchers.IO) {
     var printStream: PrintStream? = null
 
     private var id = data.getString("id")
@@ -59,7 +60,8 @@ abstract class BaseDecompiler(val context: Context, val data: Data): CoroutineSc
     protected val packageName = data.getString("name").toString()
     protected val packageLabel = data.getString("label").toString()
 
-    protected val keepIntermediateFiles = data.getBoolean("keepIntermediateFiles", UserPreferences.DEFAULTS.KEEP_INTERMEDIATE_FILES)
+    protected val keepIntermediateFiles =
+        data.getBoolean("keepIntermediateFiles", UserPreferences.DEFAULTS.KEEP_INTERMEDIATE_FILES)
 
     private val appStorage: File by lazy {
         Storage.getInstance(context).appStorage
@@ -124,7 +126,8 @@ abstract class BaseDecompiler(val context: Context, val data: Data): CoroutineSc
         withContext(Dispatchers.IO) {
             while (true) {
                 val maxAdjusted = Runtime.getRuntime().maxMemory() / maxMemoryAdjustmentFactor
-                val used = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()).toDouble().let { m ->
+                val used = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime()
+                    .freeMemory()).toDouble().let { m ->
                     if (m > maxAdjusted) maxAdjusted else m
                 }
                 val usedPercentage = (used / maxAdjusted) * 100
@@ -298,5 +301,5 @@ abstract class BaseDecompiler(val context: Context, val data: Data): CoroutineSc
         }
     }
 
-    class OutOfMemoryError: Exception()
+    class OutOfMemoryError : Exception()
 }

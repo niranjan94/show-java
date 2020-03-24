@@ -28,7 +28,7 @@ import timber.log.Timber
 import java.io.File
 import java.io.IOException
 
-class LandingViewModel(application: Application): AndroidViewModel(application) {
+class LandingViewModel(application: Application) : AndroidViewModel(application) {
 
     suspend fun loadHistory(): ArrayList<SourceInfo> {
         val appStorage = Storage.getInstance().appStorage

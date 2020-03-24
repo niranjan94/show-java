@@ -54,6 +54,7 @@ class Ads(val context: Context) {
                         .putInt("consentStatus", consentStatus.ordinal)
                         .commit()
                 }
+
                 override fun onFailedToUpdateConsentInfo(errorDescription: String) {
                     getPreferences().edit()
                         .putInt("consentStatus", ConsentStatus.UNKNOWN.ordinal)
@@ -66,36 +67,41 @@ class Ads(val context: Context) {
      * Load the consent screen and prepare to display.
      */
     fun loadConsentScreen(): ConsentForm? {
-        consentForm = ConsentForm.Builder(context, URL(context.getString(R.string.privacyPolicyUrl)))
-            .withListener(object : ConsentFormListener() {
-                override fun onConsentFormLoaded() {
-                    if (context is Activity && !context.isFinishing) {
-                        consentForm.show()
+        consentForm =
+            ConsentForm.Builder(context, URL(context.getString(R.string.privacyPolicyUrl)))
+                .withListener(object : ConsentFormListener() {
+                    override fun onConsentFormLoaded() {
+                        if (context is Activity && !context.isFinishing) {
+                            consentForm.show()
+                        }
                     }
-                }
 
-                override fun onConsentFormOpened() {
-                    Timber.d("[consent-screen] onConsentFormOpened")
-                }
-
-                override fun onConsentFormClosed(consentStatus: ConsentStatus?, userPrefersAdFree: Boolean?) {
-                    consentStatus?.let {
-                        ConsentInformation.getInstance(context).consentStatus = it
-                        getPreferences().edit().putInt("consentStatus", consentStatus.ordinal).apply()
+                    override fun onConsentFormOpened() {
+                        Timber.d("[consent-screen] onConsentFormOpened")
                     }
-                    if (userPrefersAdFree != null && userPrefersAdFree) {
-                        context.startActivity(Intent(context, PurchaseActivity::class.java))
-                    }
-                }
 
-                override fun onConsentFormError(errorDescription: String?) {
-                    Timber.d("[consent-screen] onConsentFormError: $errorDescription")
-                }
-            })
-            .withPersonalizedAdsOption()
-            .withNonPersonalizedAdsOption()
-            .withAdFreeOption()
-            .build()
+                    override fun onConsentFormClosed(
+                        consentStatus: ConsentStatus?,
+                        userPrefersAdFree: Boolean?
+                    ) {
+                        consentStatus?.let {
+                            ConsentInformation.getInstance(context).consentStatus = it
+                            getPreferences().edit().putInt("consentStatus", consentStatus.ordinal)
+                                .apply()
+                        }
+                        if (userPrefersAdFree != null && userPrefersAdFree) {
+                            context.startActivity(Intent(context, PurchaseActivity::class.java))
+                        }
+                    }
+
+                    override fun onConsentFormError(errorDescription: String?) {
+                        Timber.d("[consent-screen] onConsentFormError: $errorDescription")
+                    }
+                })
+                .withPersonalizedAdsOption()
+                .withNonPersonalizedAdsOption()
+                .withAdFreeOption()
+                .build()
         consentForm.load()
         return consentForm
     }

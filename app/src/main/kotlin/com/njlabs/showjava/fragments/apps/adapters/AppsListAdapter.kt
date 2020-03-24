@@ -52,7 +52,10 @@ class AppsListAdapter(
 
     private lateinit var systemBadgeInstance: BadgeDrawable
 
-    inner class ViewHolder(private val view: View, private val itemClick: (PackageInfo, View) -> Unit) :
+    inner class ViewHolder(
+        private val view: View,
+        private val itemClick: (PackageInfo, View) -> Unit
+    ) :
         androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
 
         private val systemBadge: BadgeDrawable

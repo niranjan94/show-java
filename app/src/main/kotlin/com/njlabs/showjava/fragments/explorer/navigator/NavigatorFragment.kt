@@ -21,7 +21,6 @@ package com.njlabs.showjava.fragments.explorer.navigator
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -46,7 +45,7 @@ import timber.log.Timber
 import java.io.File
 
 
-class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
+class NavigatorFragment : BaseFragment<NavigatorViewModel>() {
     override val viewModel by viewModels<NavigatorViewModel>()
 
     override val layoutResource = R.layout.fragment_navigator
@@ -125,20 +124,24 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
             } else {
                 when {
                     arrayOf("jpeg", "jpg", "png").contains(selectedFile.file.extension) -> {
-                        containerActivity.gotoFragment(ImageViewerFragment(), bundleOf(
-                            "filePath" to selectedFile.file.canonicalPath,
-                            "name" to selectedApp?.packageName
-                        ))
+                        containerActivity.gotoFragment(
+                            ImageViewerFragment(), bundleOf(
+                                "filePath" to selectedFile.file.canonicalPath,
+                                "name" to selectedApp?.packageName
+                            )
+                        )
                     }
                     arrayOf(
                         "java", "xml", "json", "txt", "properties",
                         "yml", "yaml", "md", "html", "class",
                         "js", "css", "scss", "sass"
                     ).contains(selectedFile.file.extension) -> {
-                        containerActivity.gotoFragment(CodeViewerFragment(), bundleOf(
-                            "filePath" to selectedFile.file.canonicalPath,
-                            "name" to selectedApp?.packageName
-                        ))
+                        containerActivity.gotoFragment(
+                            CodeViewerFragment(), bundleOf(
+                                "filePath" to selectedFile.file.canonicalPath,
+                                "name" to selectedApp?.packageName
+                            )
+                        )
                     }
                     else -> {
                         context?.let {
@@ -294,7 +297,6 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
     }
 
 
-
     private fun deleteSource() {
         selectedApp?.let {
             showProgressView()
@@ -340,7 +342,7 @@ class NavigatorFragment: BaseFragment<NavigatorViewModel>() {
         menu.findItem(R.id.save_code).isVisible = false
     }
 
-    override fun onBackPressed():Boolean {
+    override fun onBackPressed(): Boolean {
         if (isAtRoot()) {
             return false
         }

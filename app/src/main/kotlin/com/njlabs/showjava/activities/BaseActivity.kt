@@ -47,6 +47,7 @@ import com.njlabs.showjava.utils.ktx.checkDataConnection
 import com.njlabs.showjava.utils.secure.SecureUtils
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
+import timber.log.Timber
 
 
 abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -71,7 +72,8 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
         mainApplication = application as MainApplication
         firebaseAnalytics.setUserProperty("instance_id", mainApplication.instanceId)
 
-        userPreferences = UserPreferences(getSharedPreferences(UserPreferences.NAME, Context.MODE_PRIVATE))
+        userPreferences =
+            UserPreferences(getSharedPreferences(UserPreferences.NAME, Context.MODE_PRIVATE))
         secureUtils = SecureUtils.getInstance(applicationContext)
 
         if (userPreferences.customFont) {
@@ -144,7 +146,7 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
     }
 
     private fun setupGoogleAds() {
-        findViewById<AdView>(R.id.adView)?.let {it ->
+        findViewById<AdView>(R.id.adView)?.let { it ->
             it.visibility = View.GONE
             if (!isPro()) {
                 val extras = Bundle()
@@ -157,8 +159,10 @@ abstract class BaseActivity : AppCompatActivity(), EasyPermissions.PermissionCal
                     .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
 
                 if (BuildConfig.DEBUG) {
-                    val testDeviceIds = listOf(AdRequest.DEVICE_ID_EMULATOR, getString(R.string.deviceId))
-                    val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
+                    val testDeviceIds =
+                        listOf(AdRequest.DEVICE_ID_EMULATOR, getString(R.string.deviceId))
+                    val configuration =
+                        RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
                     MobileAds.setRequestConfiguration(configuration)
                 }
 

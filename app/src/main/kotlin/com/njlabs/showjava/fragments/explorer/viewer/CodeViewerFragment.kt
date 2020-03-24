@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class CodeViewerFragment: BaseFragment<ViewModel>(), CodeView.OnHighlightListener {
+class CodeViewerFragment : BaseFragment<ViewModel>(), CodeView.OnHighlightListener {
     override val layoutResource = R.layout.fragment_code_viewer
     override val viewModel by viewModels<ViewModel>()
 

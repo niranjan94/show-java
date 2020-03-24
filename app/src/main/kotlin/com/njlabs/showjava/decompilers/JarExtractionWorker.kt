@@ -140,7 +140,8 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
             while (entries.hasMoreElements()) {
                 val zipEntry = entries.nextElement()
                 if (!zipEntry.isDirectory) {
-                    val extension = FilenameUtils.getExtension(zipEntry.name).toLowerCase(Locale.ROOT)
+                    val extension =
+                        FilenameUtils.getExtension(zipEntry.name).toLowerCase(Locale.ROOT)
                     if (arrayOf("dex", "odex").contains(extension)) {
                         addClassesFromDex(zipFile.getInputStream(zipEntry), extension)
                     }
@@ -288,7 +289,8 @@ class JarExtractionWorker(context: Context, data: Data) : BaseDecompiler(context
 
         return successIf(
             try {
-                outputJarFiles.listFiles()!!.isNotEmpty() || outputDexFiles.listFiles()!!.isNotEmpty()
+                outputJarFiles.listFiles()!!.isNotEmpty() || outputDexFiles.listFiles()!!
+                    .isNotEmpty()
             } catch (e: IllegalStateException) {
                 false
             }

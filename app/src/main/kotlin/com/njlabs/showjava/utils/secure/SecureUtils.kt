@@ -35,8 +35,6 @@ import com.njlabs.showjava.Constants
 import com.njlabs.showjava.utils.RequestQueue
 import com.njlabs.showjava.utils.SingletonHolder
 import io.michaelrocks.paranoid.Obfuscate
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.solovyev.android.checkout.Billing
 import org.solovyev.android.checkout.Purchase
@@ -69,7 +67,11 @@ class SecureUtils(val context: Context) {
         return preferences!!
     }
 
-    fun isSafeExtended(allow: (() -> Unit), doNotAllow: ((PiracyCheckerError, PirateApp?) -> Unit), onError: (() -> Unit)) {
+    fun isSafeExtended(
+        allow: (() -> Unit),
+        doNotAllow: ((PiracyCheckerError, PirateApp?) -> Unit),
+        onError: (() -> Unit)
+    ) {
         Timber.d("[pa] isSafeExtended")
         context.piracyChecker {
             enableGooglePlayLicensing(BuildConfig.PLAY_LICENSE_KEY)
@@ -151,30 +153,31 @@ class SecureUtils(val context: Context) {
     /**
      * Make a JSON Request to the backend and return and observable
      */
-    suspend fun makeJsonRequest(requestPath: String, payload: Map<String, String>) = suspendCoroutine<JSONObject> { cont ->
-        val jsonBody = JSONObject()
-        var backendUrl = this.backendUrl
-        var path = requestPath
-        if (!backendUrl.endsWith("/")) {
-            backendUrl += "/"
-        }
-        if (path.startsWith("/")) {
-            path = path.removePrefix("/")
-        }
-        payload.entries.forEach {
-            jsonBody.put(it.key, it.value)
-        }
-        val request = JsonObjectRequest(
-            backendUrl + path,
-            jsonBody,
-            Response.Listener<JSONObject> {
-                cont.resume(it)
-            }, Response.ErrorListener {
-                cont.resumeWithException(it)
+    suspend fun makeJsonRequest(requestPath: String, payload: Map<String, String>) =
+        suspendCoroutine<JSONObject> { cont ->
+            val jsonBody = JSONObject()
+            var backendUrl = this.backendUrl
+            var path = requestPath
+            if (!backendUrl.endsWith("/")) {
+                backendUrl += "/"
             }
-        )
-        RequestQueue.getInstance(context).addToRequestQueue(request)
-    }
+            if (path.startsWith("/")) {
+                path = path.removePrefix("/")
+            }
+            payload.entries.forEach {
+                jsonBody.put(it.key, it.value)
+            }
+            val request = JsonObjectRequest(
+                backendUrl + path,
+                jsonBody,
+                Response.Listener<JSONObject> {
+                    cont.resume(it)
+                }, Response.ErrorListener {
+                    cont.resumeWithException(it)
+                }
+            )
+            RequestQueue.getInstance(context).addToRequestQueue(request)
+        }
 
     companion object : SingletonHolder<SecureUtils, Context>(::SecureUtils)
 }

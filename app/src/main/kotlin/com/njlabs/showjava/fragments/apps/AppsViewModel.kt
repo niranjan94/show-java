@@ -29,7 +29,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AppsViewModel(application: Application): AndroidViewModel(application) {
+class AppsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val application: MainApplication = getApplication()
 
@@ -38,7 +38,10 @@ class AppsViewModel(application: Application): AndroidViewModel(application) {
      *
      * @return [Observable] which can be used to track the loading progress and completion state.
      */
-    suspend fun loadApps(withSystemApps: Boolean, updateProgress: suspend (progress: Float, status: String, secondaryStatus: String) -> Unit): ArrayList<PackageInfo> {
+    suspend fun loadApps(
+        withSystemApps: Boolean,
+        updateProgress: suspend (progress: Float, status: String, secondaryStatus: String) -> Unit
+    ): ArrayList<PackageInfo> {
         var installedApps = ArrayList<PackageInfo>()
         withContext(Dispatchers.IO) {
             var packages = application.packageManager.getInstalledPackages(0)

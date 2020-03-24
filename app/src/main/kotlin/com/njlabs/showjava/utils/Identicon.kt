@@ -1,6 +1,7 @@
 package com.njlabs.showjava.utils
 
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.annotation.Nullable
 import com.njlabs.showjava.utils.ktx.getCircularBitmap
 import java.security.MessageDigest

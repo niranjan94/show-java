@@ -21,7 +21,6 @@ package com.njlabs.showjava.utils
 import android.app.Application
 import android.content.Context
 import timber.log.Timber
-import java.lang.Exception
 
 object StethoUtils {
     fun install(application: Application) {

@@ -90,13 +90,19 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
             try {
                 if (!zipEntry.isDirectory && zipEntry.name != "AndroidManifest.xml") {
                     sendStatus(zipEntry.name)
-                    if (FilenameUtils.isExtension(zipEntry.name, "xml") && !zipEntry.name.startsWith("assets")) {
+                    if (FilenameUtils.isExtension(
+                            zipEntry.name,
+                            "xml"
+                        ) && !zipEntry.name.startsWith("assets")) {
                         writeXML(zipEntry.name)
-                    } else if (FilenameUtils.isExtension(zipEntry.name, images) || zipEntry.name.startsWith("assets")) {
+                    } else if (FilenameUtils.isExtension(
+                            zipEntry.name,
+                            images
+                        ) || zipEntry.name.startsWith("assets")) {
                         writeFile(zipFile.getInputStream(zipEntry), zipEntry.name)
                     }
                 }
-            } catch (e: java.lang.Exception) {
+            } catch (e: Exception) {
                 sendStatus("Skipped ${zipEntry.name}")
             }
         }
@@ -206,8 +212,10 @@ class ResourcesExtractionWorker(context: Context, data: Data) : BaseDecompiler(c
      */
     @Throws(Exception::class)
     private fun saveIcon() {
-        val packageInfo = context.packageManager.getPackageArchiveInfo(inputPackageFile.canonicalPath, 0)!!
-        val bitmap = getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(context.packageManager))
+        val packageInfo =
+            context.packageManager.getPackageArchiveInfo(inputPackageFile.canonicalPath, 0)!!
+        val bitmap =
+            getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(context.packageManager))
         val iconOutput = FileOutputStream(workingDirectory.resolve("icon.png"))
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, iconOutput)
         iconOutput.close()

@@ -81,9 +81,9 @@ class DecompilerProcessFragment : BaseFragment<ViewModel>() {
         val decompilerDescriptions = resources.getStringArray(R.array.decompilerDescriptions)
 
         decompilerItemCard.findViewById<TextView>(R.id.decompilerName).text =
-                decompilers[decompilerIndex]
+            decompilers[decompilerIndex]
         decompilerItemCard.findViewById<TextView>(R.id.decompilerDescription).text =
-                decompilerDescriptions[decompilerIndex]
+            decompilerDescriptions[decompilerIndex]
 
         setupGears()
 

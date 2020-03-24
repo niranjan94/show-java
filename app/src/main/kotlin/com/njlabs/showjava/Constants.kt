@@ -23,8 +23,8 @@ package com.njlabs.showjava
  */
 object Constants {
 
-    const val STORAGE_PERMISSION_REQUEST = 1009
-    const val FILE_PICKER_REQUEST = 1010
+    const val STORAGE_PERMISSION_REQUEST = 101
+    const val FILE_PICKER_REQUEST = 102
 
     const val SHARED_PREFERENCES_NAME = "com.njlabs.showjava.state"
     const val FRAGMENT_TAG = "com.njlabs.showjava.fragments.primary"
@@ -51,8 +51,10 @@ object Constants {
             const val STATUS_TITLE = "com.njlabs.showjava.worker.STATUS_TITLE"
             const val STATUS_MESSAGE = "com.njlabs.showjava.worker.STATUS_MESSAGE"
 
-            const val PROGRESS_NOTIFICATION_CHANNEL = "com.njlabs.showjava.worker.notification.progress"
-            const val COMPLETION_NOTIFICATION_CHANNEL = "com.njlabs.showjava.worker.notification.completion"
+            const val PROGRESS_NOTIFICATION_CHANNEL =
+                "com.njlabs.showjava.worker.notification.progress"
+            const val COMPLETION_NOTIFICATION_CHANNEL =
+                "com.njlabs.showjava.worker.notification.completion"
             const val PROGRESS_NOTIFICATION_ID = 1094
             const val COMPLETED_NOTIFICATION_ID = 1095
         }

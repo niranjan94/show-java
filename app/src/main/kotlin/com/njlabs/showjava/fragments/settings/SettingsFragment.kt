@@ -57,7 +57,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
-        findPreference<Preference>("chunkSize")?.let {bindPreferenceSummaryToValue(it) }
+        findPreference<Preference>("chunkSize")?.let { bindPreferenceSummaryToValue(it) }
         findPreference<Preference>("maxAttempts")?.let { bindPreferenceSummaryToValue(it) }
         findPreference<Preference>("memoryThreshold")?.let { bindPreferenceSummaryToValue(it) }
 
@@ -73,49 +73,52 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
 
-        findPreference<Preference>("clearSourceHistory")?.onPreferenceClickListener = Preference.OnPreferenceClickListener  {
-            activity.firebaseAnalytics.logEvent(Constants.EVENTS.CLEAR_SOURCE_HISTORY, null)
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.deleteSourceHistory))
-                .setMessage(getString(R.string.deleteSourceHistoryConfirm))
-                .setIcon(R.drawable.ic_error_outline_black)
-                .setPositiveButton(
-                    android.R.string.yes
-                ) { _, _ ->
-                    deleteSources()
-                }
-                .setNegativeButton(android.R.string.no, null)
-                .show()
-            true
-        }
+        findPreference<Preference>("clearSourceHistory")?.onPreferenceClickListener =
+            Preference.OnPreferenceClickListener {
+                activity.firebaseAnalytics.logEvent(Constants.EVENTS.CLEAR_SOURCE_HISTORY, null)
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.deleteSourceHistory))
+                    .setMessage(getString(R.string.deleteSourceHistoryConfirm))
+                    .setIcon(R.drawable.ic_error_outline_black)
+                    .setPositiveButton(
+                        android.R.string.yes
+                    ) { _, _ ->
+                        deleteSources()
+                    }
+                    .setNegativeButton(android.R.string.no, null)
+                    .show()
+                true
+            }
 
-        findPreference<Preference>("customFont")?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
-            activity.firebaseAnalytics.logEvent(Constants.EVENTS.CHANGE_FONT, bundle)
-            Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
-            activity.finish()
-            true
-        }
+        findPreference<Preference>("customFont")?.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _, newValue ->
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
+                activity.firebaseAnalytics.logEvent(Constants.EVENTS.CHANGE_FONT, bundle)
+                Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
+                activity.finish()
+                true
+            }
 
-        findPreference<Preference>("darkMode")?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
-            activity.firebaseAnalytics.logEvent(Constants.EVENTS.TOGGLE_DARK_MODE, bundle)
+        findPreference<Preference>("darkMode")?.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _, newValue ->
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.VALUE, newValue.toString())
+                activity.firebaseAnalytics.logEvent(Constants.EVENTS.TOGGLE_DARK_MODE, bundle)
 
-            AppCompatDelegate.setDefaultNightMode(
-                if (newValue as Boolean)
-                    AppCompatDelegate.MODE_NIGHT_YES
-                else
-                    AppCompatDelegate.MODE_NIGHT_NO
-            )
+                AppCompatDelegate.setDefaultNightMode(
+                    if (newValue as Boolean)
+                        AppCompatDelegate.MODE_NIGHT_YES
+                    else
+                        AppCompatDelegate.MODE_NIGHT_NO
+                )
 
-            Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.themeChangeCloseInfo, Toast.LENGTH_SHORT).show()
 
-            activity.finish()
+                activity.finish()
 
-            true
-        }
+                true
+            }
     }
 
     private fun deleteSources() {
@@ -140,10 +143,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun numberCheck(newValue: Any): Boolean {
-        return if (newValue.toString().trim() != "" && newValue.toString().trim().matches("\\d*".toRegex())) {
+        return if (newValue.toString().trim() != "" && newValue.toString().trim()
+                .matches("\\d*".toRegex())) {
             true
         } else {
-            Toast.makeText(activity, R.string.onlyPositiveIntegersAllowed, Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, R.string.onlyPositiveIntegersAllowed, Toast.LENGTH_SHORT)
+                .show()
             false
         }
     }

@@ -23,7 +23,7 @@ import com.njlabs.showjava.decompilers.BaseDecompiler
 import timber.log.Timber
 import java.io.OutputStream
 import java.nio.charset.Charset
-import java.util.Arrays
+import java.util.*
 
 
 /**
@@ -40,7 +40,8 @@ class ProgressStream(val decompiler: BaseDecompiler) : OutputStream() {
         for (part in arrayOf(
             "TRYBLOCK", "stack info", "Produces", "ASTORE", "targets",
             "WARN jadx", "thread-1", "ERROR jadx", "JadxRuntimeException",
-            "java.lang")) {
+            "java.lang"
+        )) {
             if (string.contains(part, true)) {
                 return true
             }

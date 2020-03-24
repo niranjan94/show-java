@@ -25,14 +25,15 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import androidx.transition.TransitionInflater
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.njlabs.showjava.R
 import com.njlabs.showjava.activities.ContainerActivity
 import com.njlabs.showjava.utils.UserPreferences
-import androidx.transition.TransitionInflater
 
 
-abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextListener,
+    SearchView.OnCloseListener {
 
     protected abstract val layoutResource: Int
     abstract fun init(savedInstanceState: Bundle?)
@@ -53,7 +54,7 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             sharedElementEnterTransition =
-                    TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+                TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         }
     }
 
@@ -132,10 +133,16 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
     protected open fun setDecor(overrideIsBlack: Boolean = isBlack) {
         if (overrideIsBlack) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                containerActivity.window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.grey_900_darker)
+                containerActivity.window.statusBarColor =
+                    ContextCompat.getColor(requireContext(), R.color.grey_900_darker)
                 containerActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             }
-            containerActivity.toolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.grey_900))
+            containerActivity.toolbar.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.grey_900
+                )
+            )
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 containerActivity.window
@@ -144,7 +151,12 @@ abstract class BaseFragment<T : ViewModel> : Fragment(), SearchView.OnQueryTextL
                         WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                     )
             }
-            containerActivity.toolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+            containerActivity.toolbar.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.colorPrimary
+                )
+            )
         }
     }
 

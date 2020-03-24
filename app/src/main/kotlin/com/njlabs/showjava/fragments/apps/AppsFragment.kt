@@ -115,8 +115,10 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
         appsList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         historyListAdapter = AppsListAdapter(apps) { selectedApp: PackageInfo, view: View ->
             containerActivity.collapseSearch()
-            if (selectedApp.name.toLowerCase(Locale.ROOT).contains(BuildConfig.APPLICATION_ID.toLowerCase(Locale.ROOT))) {
-                Toast.makeText(context, getString(R.string.checkoutSourceLink), Toast.LENGTH_SHORT).show()
+            if (selectedApp.name.toLowerCase(Locale.ROOT)
+                    .contains(BuildConfig.APPLICATION_ID.toLowerCase(Locale.ROOT))) {
+                Toast.makeText(context, getString(R.string.checkoutSourceLink), Toast.LENGTH_SHORT)
+                    .show()
             }
             openProcessActivity(selectedApp, view)
         }
@@ -124,10 +126,12 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
     }
 
     private fun openProcessActivity(packageInfo: PackageInfo, view: View) {
-        containerActivity.gotoFragment(DecompilerFragment(), bundleOf(
-            "packageInfo" to packageInfo,
-            "transitionName" to getString(R.string.appsListItemTransitionName)
-        ), view.findViewById(R.id.itemCard))
+        containerActivity.gotoFragment(
+            DecompilerFragment(), bundleOf(
+                "packageInfo" to packageInfo,
+                "transitionName" to getString(R.string.appsListItemTransitionName)
+            ), view.findViewById(R.id.itemCard)
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -144,7 +148,7 @@ class AppsFragment : BaseFragment<AppsViewModel>() {
 
     private fun filterApps(filterId: Int) {
         filteredApps = apps.filter {
-            when(filterId) {
+            when (filterId) {
                 R.id.systemRadioButton -> it.isSystemPackage
                 R.id.userRadioButton -> !it.isSystemPackage
                 else -> true

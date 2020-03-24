@@ -30,7 +30,7 @@ import java.io.IOException
 import java.text.DateFormat
 import java.util.*
 
-class NavigatorViewModel: ViewModel() {
+class NavigatorViewModel : ViewModel() {
 
     /**
      * Load all files in the given directory

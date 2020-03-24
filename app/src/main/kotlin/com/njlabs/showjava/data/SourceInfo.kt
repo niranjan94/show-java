@@ -60,7 +60,15 @@ class SourceInfo() : Parcelable {
         sourceDirectory = sourceDir(packageName)
     }
 
-    constructor(packageLabel: String, packageName: String, hasJavaSource: Boolean, hasXmlSource:Boolean, createdAt: String, updatedAt: String, sourceSize: Long) : this() {
+    constructor(
+        packageLabel: String,
+        packageName: String,
+        hasJavaSource: Boolean,
+        hasXmlSource: Boolean,
+        createdAt: String,
+        updatedAt: String,
+        sourceSize: Long
+    ) : this() {
         this.packageLabel = packageLabel
         this.packageName = packageName
         this.hasJavaSource = hasJavaSource
@@ -193,6 +201,7 @@ class SourceInfo() : Parcelable {
         override fun createFromParcel(parcel: Parcel): SourceInfo {
             return SourceInfo(parcel)
         }
+
         override fun newArray(size: Int): Array<SourceInfo?> {
             return arrayOfNulls(size)
         }

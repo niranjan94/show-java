@@ -20,7 +20,6 @@ package com.njlabs.showjava.fragments.explorer.viewer
 
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.viewModels
@@ -34,7 +33,7 @@ import com.njlabs.showjava.utils.ktx.sourceDir
 import kotlinx.android.synthetic.main.fragment_image_viewer.*
 import org.apache.commons.io.FilenameUtils
 
-class ImageViewerFragment: BaseFragment<ViewModel>() {
+class ImageViewerFragment : BaseFragment<ViewModel>() {
     override val layoutResource = R.layout.fragment_image_viewer
     override val viewModel by viewModels<ViewModel>()
 

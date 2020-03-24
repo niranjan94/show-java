@@ -28,7 +28,6 @@ import com.njlabs.showjava.utils.ktx.getVersion
 import com.njlabs.showjava.utils.ktx.isSystemPackage
 import com.njlabs.showjava.utils.ktx.jarPackageName
 import java.io.File
-import java.lang.NullPointerException
 
 /**
  * [PackageInfo] holds information about an apk/jar/dex file in preparation for sending it for
@@ -54,7 +53,14 @@ class PackageInfo() : Parcelable {
         file = File(filePath)
     }
 
-    constructor(label: String, name: String, version: String, filePath: String, type: Type, isSystemPackage: Boolean = false) : this() {
+    constructor(
+        label: String,
+        name: String,
+        version: String,
+        filePath: String,
+        type: Type,
+        isSystemPackage: Boolean = false
+    ) : this() {
         this.label = label
         this.name = name
         this.version = version
@@ -79,11 +85,14 @@ class PackageInfo() : Parcelable {
     }
 
     fun loadIcon(context: Context): Drawable {
-        return when(type) {
+        return when (type) {
             Type.APK -> context.packageManager.getPackageArchiveInfo(filePath, 0)!!
                 .applicationInfo.loadIcon(context.packageManager)
             Type.JAR, Type.DEX ->
-                BitmapDrawable(context.resources, Identicon.createFromObject(this.name + this.label))
+                BitmapDrawable(
+                    context.resources,
+                    Identicon.createFromObject(this.name + this.label)
+                )
         }
     }
 
@@ -104,7 +113,10 @@ class PackageInfo() : Parcelable {
         /**
          * Get [PackageInfo] for an apk using the [context] and [android.content.pm.PackageInfo] instance.
          */
-        fun fromApkPackageInfo(context: Context, pack: android.content.pm.PackageInfo): PackageInfo {
+        fun fromApkPackageInfo(
+            context: Context,
+            pack: android.content.pm.PackageInfo
+        ): PackageInfo {
             return PackageInfo(
                 pack.applicationInfo.loadLabel(context.packageManager).toString(),
                 pack.packageName,
@@ -156,7 +168,7 @@ class PackageInfo() : Parcelable {
          */
         fun fromFile(context: Context, file: File): PackageInfo? {
             return try {
-                when(file.extension) {
+                when (file.extension) {
                     "apk" -> fromApk(context, file)
                     "jar" -> fromJar(file)
                     "dex", "odex" -> fromDex(file)

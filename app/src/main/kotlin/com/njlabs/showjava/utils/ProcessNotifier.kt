@@ -53,7 +53,8 @@ class ProcessNotifier(
     private var time: Long = 0
     private var isCancelled: Boolean = false
 
-    private var manager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private var manager: NotificationManager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     private lateinit var builder: NotificationCompat.Builder
     private lateinit var notification: Notification
@@ -61,14 +62,24 @@ class ProcessNotifier(
     private lateinit var packageLabel: String
     private lateinit var packageFile: File
 
-    fun withPackageInfo(packageName: String, packageLabel: String, packageFile: File): ProcessNotifier {
+    fun withPackageInfo(
+        packageName: String,
+        packageLabel: String,
+        packageFile: File
+    ): ProcessNotifier {
         this.packageName = packageName
         this.packageFile = packageFile
         this.packageLabel = packageLabel
         return this
     }
 
-    fun buildFor(title: String, packageName: String, packageLabel: String, packageFile: File, decompilerIndex: Int): ProcessNotifier {
+    fun buildFor(
+        title: String,
+        packageName: String,
+        packageLabel: String,
+        packageFile: File,
+        decompilerIndex: Int
+    ): ProcessNotifier {
 
         this.packageName = packageName
         this.packageFile = packageFile
@@ -79,14 +90,16 @@ class ProcessNotifier(
         stopIntent.putExtra("id", packageName)
         stopIntent.putExtra("packageFilePath", packageFile.canonicalFile)
         stopIntent.putExtra("packageName", packageName)
-        val pendingIntentForStop = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntentForStop =
+            PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val viewIntent = Intent(context, ContainerActivity::class.java)
         viewIntent.putExtra("packageInfo", PackageInfo(packageLabel, packageName))
         viewIntent.putExtra("decompilerIndex", decompilerIndex)
         viewIntent.putExtra("fragmentClass", DecompilerProcessFragment::class.java.name)
 
-        val manager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val manager: NotificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val pendingIntentForView = PendingIntent.getActivity(
             context,
             0,
@@ -108,18 +121,19 @@ class ProcessNotifier(
         val actionIcon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             R.drawable.ic_stop_black else R.drawable.ic_stat_stop
 
-        builder = NotificationCompat.Builder(context, Constants.WORKER.PROGRESS_NOTIFICATION_CHANNEL)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setContentTitle(packageLabel)
-            .setContentText(title)
-            .setSmallIcon(R.drawable.ic_stat_code)
-            .setContentIntent(pendingIntentForView)
-            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-            .addAction(actionIcon, "Stop decompiler", pendingIntentForStop)
-            .setOngoing(true)
-            .setSound(null)
-            .setAutoCancel(false)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
+        builder =
+            NotificationCompat.Builder(context, Constants.WORKER.PROGRESS_NOTIFICATION_CHANNEL)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setContentTitle(packageLabel)
+                .setContentText(title)
+                .setSmallIcon(R.drawable.ic_stat_code)
+                .setContentIntent(pendingIntentForView)
+                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
+                .addAction(actionIcon, "Stop decompiler", pendingIntentForStop)
+                .setOngoing(true)
+                .setSound(null)
+                .setAutoCancel(false)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
 
         manager.notify(
             notificationTag,
@@ -171,7 +185,8 @@ class ProcessNotifier(
     }
 
     private fun complete(intent: Intent, title: String, text: String, icon: Int) {
-        val manager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val manager: NotificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val resultPendingIntent = PendingIntent.getActivity(
             context,
             0,
@@ -186,13 +201,14 @@ class ProcessNotifier(
             )
             manager.createNotificationChannel(channel)
         }
-        val builder = NotificationCompat.Builder(context, Constants.WORKER.COMPLETION_NOTIFICATION_CHANNEL)
-            .setContentTitle(title)
-            .setContentText(text)
-            .setSmallIcon(icon)
-            .setContentIntent(resultPendingIntent)
-            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-            .setAutoCancel(true)
+        val builder =
+            NotificationCompat.Builder(context, Constants.WORKER.COMPLETION_NOTIFICATION_CHANNEL)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(icon)
+                .setContentIntent(resultPendingIntent)
+                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
+                .setAutoCancel(true)
         manager.notify(
             packageName,
             Constants.WORKER.COMPLETED_NOTIFICATION_ID,
@@ -230,11 +246,13 @@ class ProcessNotifier(
     fun success() {
         val intent = Intent(context, ContainerActivity::class.java)
         intent.putExtra("fragmentClass", NavigatorFragment::class.java.name)
-        intent.putExtra("selectedApp", SourceInfo.from(
-            sourceDir(
-                packageName
+        intent.putExtra(
+            "selectedApp", SourceInfo.from(
+                sourceDir(
+                    packageName
+                )
             )
-        ))
+        )
         complete(
             intent,
             context.getString(R.string.appHasBeenDecompiled, packageLabel),

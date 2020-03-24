@@ -54,9 +54,8 @@ import kotlinx.coroutines.withContext
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.net.URI
-import kotlin.Exception
 
-class DecompilerFragment: BaseFragment<ViewModel>() {
+class DecompilerFragment : BaseFragment<ViewModel>() {
 
     override val layoutResource = R.layout.fragment_decompiler
     override val viewModel by viewModels<ViewModel>()
@@ -147,7 +146,8 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
                 if (it.containsKey("packageInfo")) {
                     packageInfo = it.getParcelable("packageInfo")
                 } else {
-                    Toast.makeText(context, R.string.errorLoadingInputFile, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.errorLoadingInputFile, Toast.LENGTH_SHORT)
+                        .show()
                 }
             } else {
                 val info = PackageInfo.fromFile(
@@ -176,9 +176,11 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
         val sourceInfo = SourceInfo.from(sourceDir(packageInfo.name))
         if (addListener) {
             historyCard.setOnClickListener {
-                containerActivity.gotoFragment(NavigatorFragment(), bundleOf(
-                    "selectedApp" to sourceInfo
-                ))
+                containerActivity.gotoFragment(
+                    NavigatorFragment(), bundleOf(
+                        "selectedApp" to sourceInfo
+                    )
+                )
             }
         }
         if (sourceInfo.exists()) {
@@ -213,11 +215,13 @@ class DecompilerFragment: BaseFragment<ViewModel>() {
 
         firebaseAnalytics.logEvent(Constants.EVENTS.DECOMPILE_APP, inputMap.toBundle())
 
-        containerActivity.gotoFragment(DecompilerProcessFragment(), bundleOf(
-            "packageInfo" to packageInfo,
-            "decompilerIndex" to decompilerIndex,
-            "transitionName" to getString(R.string.decompilerListItemTransitionName)
-        ), view)
+        containerActivity.gotoFragment(
+            DecompilerProcessFragment(), bundleOf(
+                "packageInfo" to packageInfo,
+                "decompilerIndex" to decompilerIndex,
+                "transitionName" to getString(R.string.decompilerListItemTransitionName)
+            ), view
+        )
     }
 
 }

@@ -67,7 +67,9 @@ class CodeView @JvmOverloads constructor(
         fun onLineClicked(lineNumber: Int, content: String)
     }
 
-    init { init(context) }
+    init {
+        init(context)
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -109,10 +111,12 @@ class CodeView @JvmOverloads constructor(
                     fun onStartCodeHighlight() {
                         onHighlightListener?.onStartCodeHighlight()
                     }
+
                     @JavascriptInterface
                     fun onFinishCodeHighlight() {
                         onHighlightListener?.onFinishCodeHighlight()
                     }
+
                     @JavascriptInterface
                     fun onLineClicked(lineNumber: Int, content: String) {
                         onHighlightListener?.onLineClicked(lineNumber, content)
@@ -177,7 +181,9 @@ class CodeView @JvmOverloads constructor(
         showHideLineNumber(showLineNumber)
     }
 
-    fun load() { reload() }
+    fun load() {
+        reload()
+    }
 
     override fun reload() {
         loadDataWithBaseURL(

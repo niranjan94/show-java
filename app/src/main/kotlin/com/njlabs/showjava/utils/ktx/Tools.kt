@@ -85,7 +85,8 @@ fun checkDataConnection(context: Context): Boolean {
             else -> false
         }
     } else {
-        @Suppress("DEPRECATION") val activeNetworkInfo = connectivityManager.activeNetworkInfo ?: return false
+        @Suppress("DEPRECATION") val activeNetworkInfo =
+            connectivityManager.activeNetworkInfo ?: return false
         @Suppress("DEPRECATION") return (activeNetworkInfo.isAvailable && activeNetworkInfo.isConnected)
     }
 }

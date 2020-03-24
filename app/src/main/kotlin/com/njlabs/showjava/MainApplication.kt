@@ -26,20 +26,20 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
-import com.njlabs.showjava.utils.Ads
-import com.njlabs.showjava.utils.UserPreferences
-import com.njlabs.showjava.utils.logging.ProductionTree
-import timber.log.Timber
 import com.crashlytics.android.Crashlytics
-import com.google.firebase.iid.FirebaseInstanceId
-import io.fabric.sdk.android.Fabric
 import com.crashlytics.android.core.CrashlyticsCore
+import com.google.firebase.iid.FirebaseInstanceId
+import com.njlabs.showjava.utils.Ads
 import com.njlabs.showjava.utils.StethoUtils
+import com.njlabs.showjava.utils.UserPreferences
 import com.njlabs.showjava.utils.ktx.Storage
+import com.njlabs.showjava.utils.logging.ProductionTree
+import io.fabric.sdk.android.Fabric
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 
 class MainApplication : MultiDexApplication() {
