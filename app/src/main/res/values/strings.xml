@@ -185,5 +185,8 @@
 
     <string name="appsListItemTransitionName">appsListItemTransition</string>
     <string name="decompilerListItemTransitionName">decompilerListItemTransition</string>
+    <string name="title_jadx_24">JADX Decompiler</string>
+    <string name="title_fernflower_24">Fernflower</string>
+    <string name="title_cfr_16">CFR</string>
 
 </resources>

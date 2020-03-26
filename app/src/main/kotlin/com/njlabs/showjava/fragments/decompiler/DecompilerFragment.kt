@@ -38,7 +38,7 @@ import com.njlabs.showjava.Constants
 import com.njlabs.showjava.R
 import com.njlabs.showjava.data.PackageInfo
 import com.njlabs.showjava.data.SourceInfo
-import com.njlabs.showjava.decompilers.BaseDecompiler
+import com.njlabs.showjava.extractors.BaseExtractor
 import com.njlabs.showjava.fragments.BaseFragment
 import com.njlabs.showjava.fragments.apps.adapters.getSystemBadge
 import com.njlabs.showjava.fragments.explorer.navigator.NavigatorFragment
@@ -86,7 +86,7 @@ class DecompilerFragment : BaseFragment<ViewModel>() {
         val decompilerDescriptions = resources.getStringArray(R.array.decompilerDescriptions)
 
         decompilersValues.forEachIndexed { index, decompiler ->
-            if (!BaseDecompiler.isAvailable(decompiler)) {
+            if (!BaseExtractor.isAvailable(decompiler)) {
                 return@forEachIndexed
             }
             val view = LayoutInflater.from(pickerList.context)
@@ -205,7 +205,7 @@ class DecompilerFragment : BaseFragment<ViewModel>() {
             "type" to packageInfo.type.ordinal
         )
 
-        BaseDecompiler.start(requireContext(), inputMap)
+        BaseExtractor.start(requireContext(), inputMap)
 
         firebaseAnalytics.logEvent(
             Constants.EVENTS.SELECT_DECOMPILER, bundleOf(

@@ -85,7 +85,6 @@ class CodeView @JvmOverloads constructor(
         webChromeClient = WebChromeClient()
         settings.javaScriptEnabled = true
         settings.cacheMode = WebSettings.LOAD_NO_CACHE
-        settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
         settings.loadWithOverviewMode = true
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && BuildConfig.DEBUG) {
             setWebContentsDebuggingEnabled(true)

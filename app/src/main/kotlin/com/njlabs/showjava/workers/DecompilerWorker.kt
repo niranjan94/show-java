@@ -24,10 +24,10 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.crashlytics.android.Crashlytics
-import com.njlabs.showjava.decompilers.BaseDecompiler
-import com.njlabs.showjava.decompilers.JarExtractionWorker
-import com.njlabs.showjava.decompilers.JavaExtractionWorker
-import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
+import com.njlabs.showjava.extractors.BaseExtractor
+import com.njlabs.showjava.extractors.JarExtractor
+import com.njlabs.showjava.extractors.JavaExtractor
+import com.njlabs.showjava.extractors.ResourcesExtractor
 import com.njlabs.showjava.utils.ProcessNotifier
 import com.njlabs.showjava.utils.UserPreferences
 import timber.log.Timber
@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit
  */
 class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
 
-    private var worker: BaseDecompiler? = null
+    private var worker: BaseExtractor? = null
     private lateinit var step: String
     private val maxAttempts =
         params.inputData.getInt("maxAttempts", UserPreferences.DEFAULTS.MAX_ATTEMPTS)
@@ -65,15 +65,24 @@ class DecompilerWorker(val context: Context, params: WorkerParameters) : Worker(
     init {
         if (tags.contains("jar-extraction")) {
             step = "jar-extraction"
-            worker = JarExtractionWorker(context, params.inputData)
+            worker = JarExtractor(
+                context,
+                params.inputData
+            )
         }
         if (tags.contains("java-extraction")) {
             step = "java-extraction"
-            worker = JavaExtractionWorker(context, params.inputData)
+            worker = JavaExtractor(
+                context,
+                params.inputData
+            )
         }
         if (tags.contains("resources-extraction")) {
             step = "resources-extraction"
-            worker = ResourcesExtractionWorker(context, params.inputData)
+            worker = ResourcesExtractor(
+                context,
+                params.inputData
+            )
         }
     }
 

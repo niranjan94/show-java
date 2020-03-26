@@ -128,7 +128,6 @@ android {
         exclude "META-INF/MANIFEST.MF"
         exclude "resources.arsc"
         pickFirst 'META-INF/library_release.kotlin_module'
-
     }
 
     lintOptions {
@@ -151,7 +150,7 @@ android {
         release {
             manifestPlaceholders = [crashlytics:"true"]
             minifyEnabled true
-            shrinkResources true
+            shrinkResources false
             buildConfigField "Boolean", "EXTENDED_VALIDATION", "true"
         }
         debug {
@@ -169,6 +168,7 @@ android {
         test.java.srcDirs += "src/test/kotlin"
         androidTest.java.srcDirs += "src/androidTest/kotlin"
     }
+    dynamicFeatures = [':modules:decompilers:jadx_24', ':modules:decompilers:fernflower_24', ':modules:decompilers:cfr_16']
 }
 
 configurations.all {
@@ -180,6 +180,10 @@ configurations.all {
 def work_version = '2.1.0-rc01'
 
 dependencies {
+    api 'androidx.core:core-ktx:1.2.0'
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.5'
 
     // Multi-dex
@@ -223,30 +227,13 @@ dependencies {
     implementation files("libs/dex-tools-0.0.9.15.jar")
     implementation files("libs/dex-translator-0.0.9.15.jar")
 
-    // CFR Decompiler
-    implementation 'org.benf:cfr:0.149'
-
     // DX Tool. We are using jar-jar to repackage the dx lib.
     // As android comes with the same classes in the lib-art.jar package that is usually a tad bit
     // older than what we need and hence missing stuff.
     jarJar files("libs/dx-1.16.jar")
 
-    // JaDX & friends
-    implementation files("libs/jadx-core-0.9.0.jar")
-    implementation files("libs/dx-1.16.jar")
-    implementation files("libs/android-5.1.jar")
-    implementation 'org.slf4j:slf4j-api:1.7.26'
-    implementation 'org.slf4j:slf4j-simple:1.7.26'
-    implementation 'uk.com.robust-it:cloning:1.9.12'
-    // Fix version to 1.9.11. Update to 1.9.12 causes compilation to fail due to org.objenesis:3.0.1
-    // implementation "ch.qos.logback:logback-classic:1.2.3"
-    // implementation "ch.qos.logback:logback-core:1.2.3"
-
     // APK parser
     implementation 'net.dongliu:apk-parser:2.6.10'
-
-    // Fernflower decompiler
-    implementation "com.github.fesh0r:fernflower:a0a8f0a8dd"
 
     // Testing tools
     testImplementation "junit:junit:4.13"
@@ -284,76 +271,6 @@ dependencies {
 
 jarJar {
     rules = ["dx-1.16.jar": "com.android.** xyz.codezero.android.@1"]
-}
-
-apply plugin: "hiBeaver"
-
-import com.bryansharp.gradle.hibeaver.utils.MethodLogAdapter
-import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.MethodVisitor
-import org.objectweb.asm.Opcodes
-
-hiBeaver {
-    hiBeaverModifyName = "showJavaDexModifications"
-    showHelp = false
-    keepQuiet = false
-    watchTimeConsume = false
-
-    modifyMatchMaps = [
-            /*
-             * JaDX does not log class-by-class progress updates.
-             * So we patch the the method that saves the class at the bytecode level
-             * to invoke a log method at com.njlabs.showjava.Logger
-             *
-             * Note: this needs to be tested and adjusted for every update of JaDX.
-             */
-            "jadx.core.dex.visitors.SaveCode": [
-                    ["methodName": "save", "methodDesc": "(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V", "adapter": {
-                        ClassVisitor cv, int access, String name, String desc, String signature, String[] exceptions ->
-                            MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions)
-                            MethodVisitor adapter = new MethodLogAdapter(methodVisitor) {
-                                @Override
-                                void visitCode() {
-                                    super.visitCode()
-                                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0)
-                                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 1)
-                                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 2)
-                                    methodVisitor.visitMethodInsn(
-                                            Opcodes.INVOKESTATIC,
-                                            className2Path("com.njlabs.showjava.utils.streams.Logger"),
-                                            "logJadxClassWrite",
-                                            "(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V",
-                                            false
-                                    )
-                                }
-                            }
-                            return adapter
-                    }]
-            ],
-            /*
-             * JaDX uses java.nio.* classes for checking if the file system is case sensitive or not.
-             * But java.nio.* classes are not available on on Android API < 26.
-             * So, we will patch the method to return true thereby skipping all java.nio.* usages.
-             *
-             * Note: this needs to be tested and adjusted for every update of JaDX.
-             */
-            "jadx.core.utils.files.FileUtils": [
-                    ["methodName": "isCaseSensitiveFS", "methodDesc": "(Ljava/io/File;)Z", "adapter": {
-                        ClassVisitor cv, int access, String name, String desc, String signature, String[] exceptions ->
-                            MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions)
-                            MethodVisitor adapter = new MethodLogAdapter(methodVisitor) {
-                                @Override
-                                void visitCode() {
-                                    methodVisitor.visitCode()
-                                    methodVisitor.visitInsn(Opcodes.ICONST_1)
-                                    methodVisitor.visitInsn(Opcodes.IRETURN)
-                                    methodVisitor.visitEnd()
-                                }
-                            }
-                            return adapter
-                    }]
-            ]
-    ]
 }
 
 apply plugin: "com.google.gms.google-services"

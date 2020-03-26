@@ -48,7 +48,7 @@
 -keep class xyz.codezero.android.dex.** { *; }
 -keep class kotlin.** { *; }
 -keep class com.njlabs.showjava.MainApplication { *; }
--keep class com.njlabs.showjava.decompilers.** { *; }
+-keep class com.njlabs.showjava.extractors.** { *; }
 -keep class jadx.core.clsp.** { *; }
 -keep class com.facebook.stetho.** { *; }
 

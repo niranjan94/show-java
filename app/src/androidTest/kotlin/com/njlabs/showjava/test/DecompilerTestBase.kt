@@ -23,10 +23,10 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import androidx.work.ListenableWorker
 import com.njlabs.showjava.data.PackageInfo
-import com.njlabs.showjava.decompilers.BaseDecompiler
-import com.njlabs.showjava.decompilers.JarExtractionWorker
-import com.njlabs.showjava.decompilers.JavaExtractionWorker
-import com.njlabs.showjava.decompilers.ResourcesExtractionWorker
+import com.njlabs.showjava.extractors.BaseExtractor
+import com.njlabs.showjava.extractors.JarExtractor
+import com.njlabs.showjava.extractors.JavaExtractor
+import com.njlabs.showjava.extractors.ResourcesExtractor
 import junit.framework.TestCase
 import org.junit.Assume
 import org.junit.Before
@@ -81,7 +81,7 @@ abstract class DecompilerTestBase {
     fun checkDecompilerAvailability() {
         Assume.assumeTrue(
             "Assume $decompiler is available on API ${Build.VERSION.SDK_INT}.",
-            BaseDecompiler.isAvailable(decompiler)
+            BaseExtractor.isAvailable(decompiler)
         )
     }
 
@@ -89,7 +89,7 @@ abstract class DecompilerTestBase {
     fun testDecompiler() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
 
-        val data = BaseDecompiler.formData(hashMapOf(
+        val data = BaseExtractor.formData(hashMapOf(
             "shouldIgnoreLibs" to true,
             "keepIntermediateFiles" to true,
             "chunkSize" to 2000,
@@ -117,19 +117,24 @@ abstract class DecompilerTestBase {
         }
 
         var result: ListenableWorker.Result
-        var worker: BaseDecompiler
+        var worker: BaseExtractor
 
-        worker = JarExtractionWorker(context, data)
+        worker =
+            JarExtractor(context, data)
         result = worker.doWork()
         worker.onStopped()
         TestCase.assertEquals("Can extract JAR", ListenableWorker.Result.success(), result)
 
-        worker = JavaExtractionWorker(context, data)
+        worker =
+            JavaExtractor(context, data)
         result = worker.doWork()
         worker.onStopped()
         TestCase.assertEquals("Can extract JAVA Code", ListenableWorker.Result.success(), result)
 
-        worker = ResourcesExtractionWorker(context, data)
+        worker = ResourcesExtractor(
+            context,
+            data
+        )
         result = worker.doWork()
         worker.onStopped()
         TestCase.assertEquals("Can extract resources", ListenableWorker.Result.success(), result)

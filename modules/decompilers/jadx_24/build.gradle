@@ -1,0 +1,167 @@
+/*
+ * Show Java - A java/apk decompiler for android
+ * Copyright (c) 2020 Niranjan Rajendran
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+apply plugin: "com.android.dynamic-feature"
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    packagingOptions {
+        exclude "resources.arsc"
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled false
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    sourceSets {
+        main.resources.srcDirs += "src/main/config"
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+        androidTest.java.srcDirs += "src/androidTest/kotlin"
+    }
+}
+
+dependencies {
+    implementation project(":app")
+
+    // JaDX & friends
+    implementation files("libs/jadx-core-0.9.0.jar")
+    implementation files("libs/d2j-dx-1.16.jar") // Calling it dx-1.16.jar causes this to interfere with jar-jar from the main module
+    implementation files("libs/android-5.1.jar")
+    implementation 'org.slf4j:slf4j-api:1.7.26'
+    implementation 'org.slf4j:slf4j-simple:1.7.26'
+
+    //noinspection GradleDependency
+    implementation 'uk.com.robust-it:cloning:1.9.11'
+    // Fix version to 1.9.11. Update to 1.9.12 causes compilation to fail due to org.objenesis:3.0.1
+
+    // implementation "ch.qos.logback:logback-classic:1.2.3"
+    // implementation "ch.qos.logback:logback-core:1.2.3"
+}
+
+apply plugin: "hiBeaver"
+
+import com.bryansharp.gradle.hibeaver.utils.MethodLogAdapter
+import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.Opcodes
+
+hiBeaver {
+    hiBeaverModifyName = "showJavaDexModifications"
+    showHelp = false
+    keepQuiet = false
+    watchTimeConsume = false
+
+    modifyMatchMaps = [
+            /*
+             * JaDX does not log class-by-class progress updates.
+             * So we patch the the method that saves the class at the bytecode level
+             * to invoke a log method at com.njlabs.showjava.Logger
+             *
+             * Note: this needs to be tested and adjusted for every update of JaDX.
+             */
+            "jadx.core.dex.visitors.SaveCode": [
+                    ["methodName": "save", "methodDesc": "(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V", "adapter": {
+                        ClassVisitor cv, int access, String name, String desc, String signature, String[] exceptions ->
+                            MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions)
+                            MethodVisitor adapter = new MethodLogAdapter(methodVisitor) {
+                                @Override
+                                void visitCode() {
+                                    super.visitCode()
+                                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0)
+                                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 1)
+                                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 2)
+                                    methodVisitor.visitMethodInsn(
+                                            Opcodes.INVOKESTATIC,
+                                            className2Path("xyz.decompile.decompilers.jadx.Logger"),
+                                            "logJadxClassWrite",
+                                            "(Ljava/io/File;Ljadx/api/JadxArgs;Ljadx/core/dex/nodes/ClassNode;)V",
+                                            false
+                                    )
+                                }
+                            }
+                            return adapter
+                    }]
+            ],
+
+            "jadx.core.xmlgen.entry.ValuesParser": [
+                    ["methodName": "decodeAndroid", "methodDesc": "()V", "adapter": {
+                        ClassVisitor cv, int access, String name, String desc, String signature, String[] exceptions ->
+                            MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions)
+                            MethodVisitor adapter = new MethodLogAdapter(methodVisitor) {
+                                @Override
+                                void visitCode() {
+                                    super.visitCode()
+                                }
+
+                                @Override
+                                void visitLdcInsn(Object o) {
+                                    if (o == "/resources.arsc") {
+                                         super.visitLdcInsn("/jadx-resources.arsc")
+                                    } else {
+                                        super.visitLdcInsn(o)
+                                    }
+                                }
+                            }
+                            return adapter
+                    }]
+            ],
+            /*
+             * JaDX uses java.nio.* classes for checking if the file system is case sensitive or not.
+             * But java.nio.* classes are not available on on Android API < 26.
+             * So, we will patch the method to return true thereby skipping all java.nio.* usages.
+             *
+             * Note: this needs to be tested and adjusted for every update of JaDX.
+             */
+            "jadx.core.utils.files.FileUtils": [
+                    ["methodName": "isCaseSensitiveFS", "methodDesc": "(Ljava/io/File;)Z", "adapter": {
+                        ClassVisitor cv, int access, String name, String desc, String signature, String[] exceptions ->
+                            MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions)
+                            MethodVisitor adapter = new MethodLogAdapter(methodVisitor) {
+                                @Override
+                                void visitCode() {
+                                    methodVisitor.visitCode()
+                                    methodVisitor.visitInsn(Opcodes.ICONST_1)
+                                    methodVisitor.visitInsn(Opcodes.IRETURN)
+                                    methodVisitor.visitEnd()
+                                }
+                            }
+                            return adapter
+                    }]
+            ]
+    ]
+}
