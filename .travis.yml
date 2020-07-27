@@ -49,3 +49,13 @@ before_script:
 script:
 #  - ./gradlew connectedAndroidTest --stacktrace -w
   - ./gradlew assembleRelease --stacktrace -w
+
+1	{ 
+2	  "package_label": "com.coloros.gamespaceui.GameSpaceApplication", 
+3	  "package_name": "com.coloros.gamespaceui", 
+4	  "has_java_sources": true, 
+5	  "has_xml_sources": true, 
+6	  "created_at": "2020-07-27T16:24:21.133+0000", 
+7	  "updated_at": "2020-07-27T16:29:33.397+0000", 
+8	  "source_size": 42430582 
+9	} 
